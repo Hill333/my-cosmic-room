@@ -2,42 +2,33 @@
 
 ## Suggested opening prompt
 
-> Read README.md, docs/SPEC.md and docs/PRD.md in this project. The specification is complete; its §1 decision register resolves every open decision as a proposal and §19.4 lists the ones I should confirm first. Ask me those confirmations in one message, then start implementation from milestone M0 in SPEC §18, following the module map in §16.2 and the tests in §17. Build with placeholder art first. Do not deploy or publish anything unless I ask.
+> Read README.md, CHANGELOG.md, docs/SPEC.md and docs/NEXT_SESSION.md in this project. Milestone M0 is committed. Continue with milestone M1 (clock engine) from SPEC §18, following the module map in §16.2 and acceptance tests AT-01 to AT-22 in §17. Keep placeholder art. Do not deploy or publish anything unless I ask; commit only when I ask.
 
 ## What exists now
 
-- [docs/PRD.md](PRD.md): concept-approved product requirements (unchanged).
-- [docs/SPEC.md](SPEC.md): full specification. Every requirement is tagged [C] confirmed, [P] proposed or [D] deferred. Covers screens and flows, room and wardrobe, two-theme state, clock rendering and manipulation, level tables and generators, elapsed-time maths and hints, validation and feedback, mission/reward state machine, catalogue and save format, repeat play, accessibility and language, string table seed (EN + TR + NL), asset inventory and production approach including the Codex CLI generation pipeline (§15.6), implementation boundaries, acceptance tests AT-01 to AT-38, milestones M0 to M5.
-- [docs/concepts/](concepts/README.md): six concept images; references only, not game art.
-- No source code, no dependencies, no site registration, no deployment. The git repository has no commits yet.
+- [docs/PRD.md](PRD.md) and [docs/SPEC.md](SPEC.md): unchanged product requirements and specification.
+- M0 implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)): Vite + Preact + TypeScript scaffold; `src/core` (time, save, inventory invariants, settings reducer; `elapsed.ts`, `generate.ts`, `mission.ts` are typed stubs); `src/catalog` (complete first-release catalogue); `src/strings` (EN/TR/NL); `src/state` (single-signal store, autosave); `src/ui` (Stage, S0 title, S1 room stub); `assets/manifest.json` with 134 entries and SVG placeholders; `tools/` (build-manifest, gen-placeholders, check-assets, gen-assets).
+- Codex CLI smoke test passed: `assets/.gen/space/decorations/starLamp.png` (sol-med) and `moonBed.png` (astra-light). Presets: astra-light = `gpt-6-astra` at effort low, sol-med = `gpt-5.6-sol` at effort medium, pinned in `tools/gen-assets.ts`.
+- Tests: 46 unit (Vitest), 2 e2e (Playwright on the installed Google Chrome, project `chrome`). CI workflow runs lint, typecheck, unit, build and e2e.
+- No deployment.
 
-## Decisions to confirm before coding (SPEC §1, §19.4)
+## Decisions
 
-1. D1 Language: string table with English, Turkish and Dutch (Dutch was requested on 12 September 2026 and is confirmed), first-launch language choice. Alternative: fewer languages.
-2. D3 Rewards: 12 earnable items per theme in two collections, prize pair previewed before and chosen after the mission, stars after the pool is empty. Alternative: fewer items or choose-before.
-3. D4 Room interaction: seven typed placement slots, no dragging. Alternative: constrained dragging.
-4. D5 Character: one shared heroine, wardrobe shared across rooms, hair included with three styles.
-5. D11 Reading puzzles use 12-hour digits ("3:30") by default; a parent toggle enables 24-hour digits with a day-period badge.
-6. D9 Title: keep "My Cosmic Room" or pick one of the candidates in the register.
-7. D16 Asset generation presets are confirmed (astra-light for high-complexity assets because astra is the more capable model, sol-med for low-complexity ones). Only the exact model identifiers behind the two preset names still need verifying against the installed Codex CLI.
+The §19.4 confirmations (D1, D3, D4, D5, D11, D9, D16) were presented on 12 September 2026 and not overridden, so the proposals stand. The user can still change them; SPEC §1 lists what each override touches.
 
-Everything else in the register (persistence, audio, browsers, stack, hosting, mission names, companions) can be changed later without rework.
+## M1 scope (SPEC §18)
+
+Deliverable: AnalogClock, DigitalDisplay, time maths, generators, elapsed decomposition, mission reducer. Done when AT-01 to AT-22 pass with a placeholder UI harness.
+
+1. `core/elapsed.ts`: `formatDuration` (§8.2, via string helpers), `durationChoices` (§8.3), `decomposeJumps` (§8.4). Tests AT-11 to AT-14, AT-16.
+2. `core/generate.ts`: `pickTarget` with §7.2 weighting, `makeReadingChoices` (§7.4), `makeActivityAMission` (§7.3), `pickInterval` and `makeActivityBMission` (§7.5, `firstEverAtE3`). Tests AT-05 to AT-10, AT-15, AT-17, property-based over 5,000 seeded missions per level.
+3. `core/mission.ts` reducer (§10.1) and `core/inventory.ts` `nextPair`, place, wear, stars (§10.2–§10.5). Tests AT-18 to AT-22, AT-33 property test on §11.4 invariants.
+4. `ui/components/AnalogClock.tsx` (§6.1 geometry, hands via `rotate(angle 100 100)`), `DigitalDisplay.tsx` (§6.2), SET interaction (§6.4: drag, buttons, keyboard).
+5. A dev harness screen (dev builds only, `?screen=harness`) to eyeball clocks at every level.
 
 ## Context to retain
 
-- The child is seven and already reads whole hours. Default levels: Reading R2 (half hours), Elapsed E1 (whole-hour gaps).
-- Two distinct playrooms are required in the first release; both share the same learning content and reward loop.
-- Elapsed time must include 14:30 → 19:15 = 4 hours 45 minutes with distractors 4 h 15 min and 5 h, and the hint jumps +4 h → 18:30, +30 min → 19:00, +15 min → 19:15. The generator guarantees this in each theme's first E3 mission (SPEC §7.5).
-- The hour hand must move continuously with the minutes (3:30 → 105°).
-- No timers, lives, penalties, purchases, ads, analytics or accounts.
-- Asset generation goes through Codex CLI (installed locally, version 0.153.4) using two presets chosen by asset complexity: astra-light (astra is the more capable model) for scenes, characters and multi-part items, sol-med for simple single objects (SPEC §15.6). Only `gpt-6-astra` is configured locally today, so verify the preset names in M0.
-
-## First implementation steps (M0, SPEC §18)
-
-1. Scaffold Vite + Preact + TypeScript (strict), ESLint, Prettier, Vitest, Playwright.
-2. Create the module map from SPEC §16.2 with empty modules and the `Save` type from §11.3.
-3. Implement `core/time.ts` and `core/save.ts` with their unit tests (AT-01 to AT-04, AT-31, AT-32).
-4. Build `Stage` scaling and S0 with placeholder room cards and the language choice.
-5. Add the placeholder asset generator and `assets/manifest.json` covering every catalogue id in §11.2.
-6. Write `tools/gen-assets.ts` and run the Codex CLI smoke test: one asset with sol-med, one with astra-light (SPEC §15.6).
-7. Commit the first milestone when the user asks for a commit.
+- The child is seven and already reads whole hours. Defaults: Reading R2 (half hours), Elapsed E1 (whole-hour gaps).
+- 14:30 → 19:15 = 4 hours 45 minutes, distractors 4 h 15 min and 5 h, jumps +4 h → 18:30, +30 min → 19:00, +15 min → 19:15; guaranteed in each theme's first E3 mission.
+- Hour hand moves continuously (3:30 → 105°). No timers, lives, penalties, purchases, ads, analytics or accounts.
+- `core/` must stay free of DOM and Preact imports (enforced by ESLint).
