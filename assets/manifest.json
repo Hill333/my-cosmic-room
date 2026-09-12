@@ -1,0 +1,2231 @@
+{
+  "version": 1,
+  "assets": {
+    "shared/heroine/body": {
+      "path": "shared/heroine/body.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "body",
+      "label": "Heroine body",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/extra/bowHeadband": {
+      "path": "shared/heroine/extra/bowHeadband.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "extra",
+      "label": "Bow headband",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/extra/flowerClip": {
+      "path": "shared/heroine/extra/flowerClip.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "extra",
+      "label": "Flower hair clip",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/extra/rocketBackpack": {
+      "path": "shared/heroine/extra/rocketBackpack.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "extra",
+      "label": "Rocket backpack",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/extra/starClip": {
+      "path": "shared/heroine/extra/starClip.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "extra",
+      "label": "Star hair clip",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/face/cheering": {
+      "path": "shared/heroine/face/cheering.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        300,
+        200
+      ],
+      "layer": "face",
+      "label": "Face cheering",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/face/happy": {
+      "path": "shared/heroine/face/happy.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        300,
+        200
+      ],
+      "layer": "face",
+      "label": "Face happy",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/face/neutral": {
+      "path": "shared/heroine/face/neutral.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        300,
+        200
+      ],
+      "layer": "face",
+      "label": "Face neutral",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/face/thinking": {
+      "path": "shared/heroine/face/thinking.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        300,
+        200
+      ],
+      "layer": "face",
+      "label": "Face thinking",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/hair/buns": {
+      "path": "shared/heroine/hair/buns.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "hair",
+      "label": "Brown hair in two buns",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/hair/loose": {
+      "path": "shared/heroine/hair/loose.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "hair",
+      "label": "Loose brown hair with a clip",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/hair/ponytail": {
+      "path": "shared/heroine/hair/ponytail.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "hair",
+      "label": "Brown hair in a high ponytail",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/cloudPyjamas": {
+      "path": "shared/heroine/outfit/cloudPyjamas.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Cloud pyjamas",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/floralPyjamas": {
+      "path": "shared/heroine/outfit/floralPyjamas.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Floral pyjamas",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/floralSweater": {
+      "path": "shared/heroine/outfit/floralSweater.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Floral sweater with pinafore",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/planetTee": {
+      "path": "shared/heroine/outfit/planetTee.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Lilac planet tee with mint skirt",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/spacesuit": {
+      "path": "shared/heroine/outfit/spacesuit.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Colourful spacesuit",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/starHoodie": {
+      "path": "shared/heroine/outfit/starHoodie.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Star hoodie with trousers",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/outfit/strawberryDress": {
+      "path": "shared/heroine/outfit/strawberryDress.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "outfit",
+      "label": "Strawberry dress",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/referenceSheet": {
+      "path": "shared/heroine/referenceSheet.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        2400,
+        1600
+      ],
+      "label": "Heroine reference sheet",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a character reference sheet of one seven-year-old girl heroine, brown hair in two buns, lilac planet tee, mint skirt, yellow socks, white sneakers: front view standing, then the same face with neutral, happy, thinking and cheering expressions, then the head with three hair styles: two buns, high ponytail, loose with a clip",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/shoes/bunnySlippers": {
+      "path": "shared/heroine/shoes/bunnySlippers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Bunny slippers",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/shoes/catSlippers": {
+      "path": "shared/heroine/shoes/catSlippers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Cat slippers",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/shoes/maryJanes": {
+      "path": "shared/heroine/shoes/maryJanes.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Pink mary-janes",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/shoes/rainbowSandals": {
+      "path": "shared/heroine/shoes/rainbowSandals.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Rainbow sandals",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/shoes/sneakers": {
+      "path": "shared/heroine/shoes/sneakers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Yellow socks with white sneakers",
+      "source": "hand-drawn"
+    },
+    "shared/heroine/shoes/spaceBoots": {
+      "path": "shared/heroine/shoes/spaceBoots.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "shoes",
+      "label": "Space boots",
+      "source": "hand-drawn"
+    },
+    "shared/sceneB/parcel": {
+      "path": "shared/sceneB/parcel.svg",
+      "theme": "shared",
+      "category": "sceneB",
+      "size": [
+        240,
+        240
+      ],
+      "label": "Parcel",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small wrapped parcel in kraft paper with a coral bow",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/tiles/hairBuns": {
+      "path": "shared/tiles/hairBuns.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Brown hair in two buns",
+      "derivedFrom": "shared/heroine/hair/buns"
+    },
+    "shared/tiles/hairLoose": {
+      "path": "shared/tiles/hairLoose.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Loose brown hair with a clip",
+      "derivedFrom": "shared/heroine/hair/loose"
+    },
+    "shared/tiles/hairPonytail": {
+      "path": "shared/tiles/hairPonytail.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Brown hair in a high ponytail",
+      "derivedFrom": "shared/heroine/hair/ponytail"
+    },
+    "shared/tiles/outfitFloralSweater": {
+      "path": "shared/tiles/outfitFloralSweater.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Floral sweater with pinafore",
+      "derivedFrom": "shared/heroine/outfit/floralSweater"
+    },
+    "shared/tiles/outfitPlanetTee": {
+      "path": "shared/tiles/outfitPlanetTee.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Lilac planet tee with mint skirt",
+      "derivedFrom": "shared/heroine/outfit/planetTee"
+    },
+    "shared/tiles/outfitStarHoodie": {
+      "path": "shared/tiles/outfitStarHoodie.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star hoodie with trousers",
+      "derivedFrom": "shared/heroine/outfit/starHoodie"
+    },
+    "shared/tiles/shoesMaryJanes": {
+      "path": "shared/tiles/shoesMaryJanes.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Pink mary-janes",
+      "derivedFrom": "shared/heroine/shoes/maryJanes"
+    },
+    "shared/tiles/shoesSneakers": {
+      "path": "shared/tiles/shoesSneakers.svg",
+      "theme": "shared",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Yellow socks with white sneakers",
+      "derivedFrom": "shared/heroine/shoes/sneakers"
+    },
+    "shared/ui/logo": {
+      "path": "shared/ui/logo.svg",
+      "theme": "shared",
+      "category": "logo",
+      "size": [
+        1200,
+        400
+      ],
+      "label": "Title logo",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a playful rounded title logo reading \"My Cosmic Room\" in chunky friendly letters, lavender and coral with a small star and moon, on plain white",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/ui/starChart": {
+      "path": "shared/ui/starChart.svg",
+      "theme": "shared",
+      "category": "ui",
+      "size": [
+        600,
+        400
+      ],
+      "label": "Star chart poster",
+      "source": "hand-drawn"
+    },
+    "space/companion/pip/cheer": {
+      "path": "space/companion/pip/cheer.svg",
+      "theme": "space",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Pip cheer",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly turquoise alien with one antenna topped by a star, jumping with both arms up, cheering",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png",
+          "space/companion/pip/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/companion/pip/hmm": {
+      "path": "space/companion/pip/hmm.svg",
+      "theme": "space",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Pip hmm",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly turquoise alien with one antenna topped by a star, tilting its head with a puzzled friendly \"hmm\" look",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png",
+          "space/companion/pip/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/companion/pip/idle": {
+      "path": "space/companion/pip/idle.svg",
+      "theme": "space",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Pip idle",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly turquoise alien with one antenna topped by a star, standing and smiling",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png",
+          "space/companion/pip/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/companion/pip/special": {
+      "path": "space/companion/pip/special.svg",
+      "theme": "space",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Pip special",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly turquoise alien with one antenna topped by a star, spinning with a giggle, motion lines",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png",
+          "space/companion/pip/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/astroBunny": {
+      "path": "space/decorations/astroBunny.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        200,
+        200
+      ],
+      "pivot": [
+        100,
+        200
+      ],
+      "slot": "SHELF",
+      "label": "Astro bunny",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small plush bunny wearing a tiny astronaut helmet, sitting",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/astronautFigure": {
+      "path": "space/decorations/astronautFigure.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        200,
+        200
+      ],
+      "pivot": [
+        100,
+        200
+      ],
+      "slot": "SHELF",
+      "label": "Astronaut figure",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small toy astronaut figure standing, white suit with a round helmet",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/galaxyPoster": {
+      "path": "space/decorations/galaxyPoster.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Galaxy poster",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed poster of a swirling pastel galaxy with tiny stars",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/moonBed": {
+      "path": "space/decorations/moonBed.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        640,
+        420
+      ],
+      "pivot": [
+        320,
+        420
+      ],
+      "slot": "BED",
+      "label": "Moon bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a child's bed shaped like a crescent moon with star-patterned purple bedding and a soft pillow",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T09:58:18.126Z",
+        "status": "generated"
+      }
+    },
+    "space/decorations/paperStars": {
+      "path": "space/decorations/paperStars.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        300,
+        380
+      ],
+      "pivot": [
+        150,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Paper stars",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a string of hanging yellow paper stars on a thin thread",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/plainBed": {
+      "path": "space/decorations/plainBed.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        640,
+        420
+      ],
+      "pivot": [
+        320,
+        420
+      ],
+      "slot": "BED",
+      "label": "Plain bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a simple child's bed with a plain blue blanket, white pillow and a low rounded headboard",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/plainLamp": {
+      "path": "space/decorations/plainLamp.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        200,
+        280
+      ],
+      "pivot": [
+        100,
+        280
+      ],
+      "slot": "LAMP",
+      "label": "Plain lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small plain bedside lamp with a mint shade and a wooden base",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/plainRug": {
+      "path": "space/decorations/plainRug.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Plain rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plain round lavender rug seen from slightly above",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/planetMobile": {
+      "path": "space/decorations/planetMobile.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        300,
+        380
+      ],
+      "pivot": [
+        150,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Planet mobile",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a hanging mobile with four small pastel planets and a moon on threads under a wooden bar",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/purpleBeanbag": {
+      "path": "space/decorations/purpleBeanbag.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        340,
+        260
+      ],
+      "pivot": [
+        170,
+        260
+      ],
+      "slot": "NOOK",
+      "label": "Purple beanbag",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a soft round purple beanbag on the floor",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/rainbowRug": {
+      "path": "space/decorations/rainbowRug.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Rainbow rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a semicircular rainbow rug with soft pastel stripes seen from slightly above",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/rocketPoster": {
+      "path": "space/decorations/rocketPoster.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Rocket poster",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed poster of a friendly cartoon rocket on a lavender background",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/decorations/starLamp": {
+      "path": "space/decorations/starLamp.svg",
+      "theme": "space",
+      "category": "decoration",
+      "size": [
+        200,
+        280
+      ],
+      "pivot": [
+        100,
+        280
+      ],
+      "slot": "LAMP",
+      "label": "Star lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a bedside lamp shaped like a glowing yellow star on a short stand",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T09:57:28.992Z",
+        "status": "generated"
+      }
+    },
+    "space/entry/toyRocket": {
+      "path": "space/entry/toyRocket.svg",
+      "theme": "space",
+      "category": "entry",
+      "size": [
+        320,
+        400
+      ],
+      "pivot": [
+        160,
+        400
+      ],
+      "label": "Toy rocket",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a chunky toy rocket standing on three fins, white and coral with a round window and a lavender nose cone",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/entry/toyRocketReaction": {
+      "path": "space/entry/toyRocketReaction.svg",
+      "theme": "space",
+      "category": "entry",
+      "size": [
+        320,
+        400
+      ],
+      "pivot": [
+        160,
+        400
+      ],
+      "label": "Toy rocket reacting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the same chunky toy rocket wobbling with small smoke puffs at its base and its round window glowing yellow",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png",
+          "space/entry/toyRocket"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/room/background": {
+      "path": "space/room/background.svg",
+      "theme": "space",
+      "category": "room",
+      "size": [
+        3072,
+        2048
+      ],
+      "label": "Space room background",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a cosy child's bedroom in peach, lavender and mint with a round window showing stars and planets, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/cockpitFrame": {
+      "path": "space/sceneA/cockpitFrame.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        3072,
+        2048
+      ],
+      "label": "Cockpit frame",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the inside of a friendly purple spaceship cockpit seen from the pilot seat, with a large empty light rectangular panel in the centre, dials and buttons around the edges and stars through the window",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/launchFlame": {
+      "path": "space/sceneA/launchFlame.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        400,
+        500
+      ],
+      "pivot": [
+        200,
+        0
+      ],
+      "label": "Launch flame",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a bright cartoon rocket exhaust flame with yellow, orange and coral layers and small smoke puffs",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/rocket": {
+      "path": "space/sceneA/rocket.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        600,
+        900
+      ],
+      "pivot": [
+        300,
+        900
+      ],
+      "label": "Rocket on the pad",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a friendly cartoon rocket standing on a launch pad, white and coral with a lavender nose cone and three fins",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/step/countdown": {
+      "path": "space/sceneA/step/countdown.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step countdown",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small display board showing large empty digits",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/step/fuel": {
+      "path": "space/sceneA/step/fuel.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step fuel",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small red fuel canister with a hose",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/step/hatch": {
+      "path": "space/sceneA/step/hatch.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step hatch",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a round rocket hatch door with a porthole window",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneA/step/lights": {
+      "path": "space/sceneA/step/lights.svg",
+      "theme": "space",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step lights",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a row of three glowing runway lights",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneB/moon": {
+      "path": "space/sceneB/moon.svg",
+      "theme": "space",
+      "category": "sceneB",
+      "size": [
+        400,
+        400
+      ],
+      "label": "Destination moon",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small round pale yellow moon with three soft craters",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneB/planet": {
+      "path": "space/sceneB/planet.svg",
+      "theme": "space",
+      "category": "sceneB",
+      "size": [
+        400,
+        400
+      ],
+      "label": "Origin planet",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small round lavender planet with a pale ring",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/sceneB/rocketParcel": {
+      "path": "space/sceneB/rocketParcel.svg",
+      "theme": "space",
+      "category": "sceneB",
+      "size": [
+        600,
+        400
+      ],
+      "label": "Rocket carrying a parcel",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly rocket flying sideways carrying a wrapped parcel with a bow under its belly, tiny flame behind",
+        "references": [
+          "docs/concepts/01-room-and-wardrobe.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "space/tiles/astroBunny": {
+      "path": "space/tiles/astroBunny.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Astro bunny",
+      "derivedFrom": "space/decorations/astroBunny"
+    },
+    "space/tiles/astronautFigure": {
+      "path": "space/tiles/astronautFigure.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Astronaut figure",
+      "derivedFrom": "space/decorations/astronautFigure"
+    },
+    "space/tiles/bunnySlippers": {
+      "path": "space/tiles/bunnySlippers.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Bunny slippers",
+      "derivedFrom": "shared/heroine/shoes/bunnySlippers"
+    },
+    "space/tiles/cloudPyjamas": {
+      "path": "space/tiles/cloudPyjamas.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Cloud pyjamas",
+      "derivedFrom": "shared/heroine/outfit/cloudPyjamas"
+    },
+    "space/tiles/galaxyPoster": {
+      "path": "space/tiles/galaxyPoster.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Galaxy poster",
+      "derivedFrom": "space/decorations/galaxyPoster"
+    },
+    "space/tiles/moonBed": {
+      "path": "space/tiles/moonBed.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Moon bed",
+      "derivedFrom": "space/decorations/moonBed"
+    },
+    "space/tiles/paperStars": {
+      "path": "space/tiles/paperStars.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Paper stars",
+      "derivedFrom": "space/decorations/paperStars"
+    },
+    "space/tiles/plainBed": {
+      "path": "space/tiles/plainBed.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain bed",
+      "derivedFrom": "space/decorations/plainBed"
+    },
+    "space/tiles/plainLamp": {
+      "path": "space/tiles/plainLamp.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain lamp",
+      "derivedFrom": "space/decorations/plainLamp"
+    },
+    "space/tiles/plainRug": {
+      "path": "space/tiles/plainRug.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain rug",
+      "derivedFrom": "space/decorations/plainRug"
+    },
+    "space/tiles/planetMobile": {
+      "path": "space/tiles/planetMobile.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Planet mobile",
+      "derivedFrom": "space/decorations/planetMobile"
+    },
+    "space/tiles/purpleBeanbag": {
+      "path": "space/tiles/purpleBeanbag.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Purple beanbag",
+      "derivedFrom": "space/decorations/purpleBeanbag"
+    },
+    "space/tiles/rainbowRug": {
+      "path": "space/tiles/rainbowRug.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Rainbow rug",
+      "derivedFrom": "space/decorations/rainbowRug"
+    },
+    "space/tiles/rocketBackpack": {
+      "path": "space/tiles/rocketBackpack.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Rocket backpack",
+      "derivedFrom": "shared/heroine/extra/rocketBackpack"
+    },
+    "space/tiles/rocketPoster": {
+      "path": "space/tiles/rocketPoster.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Rocket poster",
+      "derivedFrom": "space/decorations/rocketPoster"
+    },
+    "space/tiles/spaceBoots": {
+      "path": "space/tiles/spaceBoots.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Space boots",
+      "derivedFrom": "shared/heroine/shoes/spaceBoots"
+    },
+    "space/tiles/spacesuit": {
+      "path": "space/tiles/spacesuit.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Colourful spacesuit",
+      "derivedFrom": "shared/heroine/outfit/spacesuit"
+    },
+    "space/tiles/starClip": {
+      "path": "space/tiles/starClip.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star hair clip",
+      "derivedFrom": "shared/heroine/extra/starClip"
+    },
+    "space/tiles/starLamp": {
+      "path": "space/tiles/starLamp.svg",
+      "theme": "space",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star lamp",
+      "derivedFrom": "space/decorations/starLamp"
+    },
+    "sweet/companion/mimi/cheer": {
+      "path": "sweet/companion/mimi/cheer.svg",
+      "theme": "sweet",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Mimi cheer",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly grey-and-white cat with a yellow bandana, standing on hind legs with paws up, cheering",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/companion/mimi/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/companion/mimi/hmm": {
+      "path": "sweet/companion/mimi/hmm.svg",
+      "theme": "sweet",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Mimi hmm",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly grey-and-white cat with a yellow bandana, tilting its head with a puzzled friendly \"hmm\" look",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/companion/mimi/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/companion/mimi/idle": {
+      "path": "sweet/companion/mimi/idle.svg",
+      "theme": "sweet",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Mimi idle",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly grey-and-white cat with a yellow bandana, sitting and smiling",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/companion/mimi/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/companion/mimi/special": {
+      "path": "sweet/companion/mimi/special.svg",
+      "theme": "sweet",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Mimi special",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly grey-and-white cat with a yellow bandana, stretching and purring with little hearts",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/companion/mimi/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/bunnyPlush": {
+      "path": "sweet/decorations/bunnyPlush.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        200,
+        200
+      ],
+      "pivot": [
+        100,
+        200
+      ],
+      "slot": "SHELF",
+      "label": "Bunny plush",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small soft grey plush bunny sitting upright",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/bunting": {
+      "path": "sweet/decorations/bunting.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        300,
+        380
+      ],
+      "pivot": [
+        150,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Bunting",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a hanging string of small pastel triangle flags",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/butterflyMobile": {
+      "path": "sweet/decorations/butterflyMobile.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        300,
+        380
+      ],
+      "pivot": [
+        150,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Butterfly mobile",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a hanging mobile with five pastel butterflies on threads under a wooden ring",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/daisyBed": {
+      "path": "sweet/decorations/daisyBed.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        640,
+        420
+      ],
+      "pivot": [
+        320,
+        420
+      ],
+      "slot": "BED",
+      "label": "Daisy bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a child's bed with a headboard shaped like a big white daisy and green leaf-patterned bedding",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/flowerCushion": {
+      "path": "sweet/decorations/flowerCushion.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        340,
+        260
+      ],
+      "pivot": [
+        170,
+        260
+      ],
+      "slot": "NOOK",
+      "label": "Flower cushion",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a round floor cushion shaped like a pink flower with a yellow centre",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/heartLamp": {
+      "path": "sweet/decorations/heartLamp.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        200,
+        280
+      ],
+      "pivot": [
+        100,
+        280
+      ],
+      "slot": "LAMP",
+      "label": "Heart lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a bedside lamp shaped like a glowing pink heart on a short stand",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/pastelRug": {
+      "path": "sweet/decorations/pastelRug.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Pastel rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a round rug with soft pastel pink, mint and lilac rings seen from slightly above",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/plainBed": {
+      "path": "sweet/decorations/plainBed.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        640,
+        420
+      ],
+      "pivot": [
+        320,
+        420
+      ],
+      "slot": "BED",
+      "label": "Plain bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a simple child's bed with a plain pink blanket, white pillow and a low rounded headboard",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/plainLamp": {
+      "path": "sweet/decorations/plainLamp.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        200,
+        280
+      ],
+      "pivot": [
+        100,
+        280
+      ],
+      "slot": "LAMP",
+      "label": "Plain lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small plain bedside lamp with a pink shade and a wooden base",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/plainRug": {
+      "path": "sweet/decorations/plainRug.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Plain rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plain round cream rug with small pastel dots seen from slightly above",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/sunPoster": {
+      "path": "sweet/decorations/sunPoster.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Sun poster",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed poster of a smiling yellow sun over pastel hills",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/tulipPicture": {
+      "path": "sweet/decorations/tulipPicture.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Tulip picture",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed picture of three pastel tulips in a little vase",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/decorations/yellowCushion": {
+      "path": "sweet/decorations/yellowCushion.svg",
+      "theme": "sweet",
+      "category": "decoration",
+      "size": [
+        340,
+        260
+      ],
+      "pivot": [
+        170,
+        260
+      ],
+      "slot": "NOOK",
+      "label": "Yellow cushion",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plump yellow square sofa cushion on the floor",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/entry/toyLetterbox": {
+      "path": "sweet/entry/toyLetterbox.svg",
+      "theme": "sweet",
+      "category": "entry",
+      "size": [
+        240,
+        300
+      ],
+      "pivot": [
+        120,
+        300
+      ],
+      "label": "Toy letterbox",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small toy letterbox on a short post, pastel pink with a mint flag down",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/entry/toyLetterboxFlag": {
+      "path": "sweet/entry/toyLetterboxFlag.svg",
+      "theme": "sweet",
+      "category": "entry",
+      "size": [
+        240,
+        300
+      ],
+      "pivot": [
+        120,
+        300
+      ],
+      "label": "Toy letterbox flag up",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "the same small toy letterbox with its mint flag raised and a tiny envelope popping out",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/entry/toyLetterbox"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/room/background": {
+      "path": "sweet/room/background.svg",
+      "theme": "sweet",
+      "category": "room",
+      "size": [
+        3072,
+        2048
+      ],
+      "label": "Sweet room background",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a cosy child's playroom in peach and mint with flower wallpaper, a window with a sunny garden, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/kitchenFrame": {
+      "path": "sweet/sceneA/kitchenFrame.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        3072,
+        2048
+      ],
+      "label": "Kitchen frame",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a cosy pastel toy kitchen wall with a window, shelves of cups and a large empty light rectangular panel in the centre",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/step/cake": {
+      "path": "sweet/sceneA/step/cake.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step cake",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small round strawberry cake on a plate",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/step/cups": {
+      "path": "sweet/sceneA/step/cups.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step cups",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "three small pastel teacups on saucers",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/step/guests": {
+      "path": "sweet/sceneA/step/guests.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step guests",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "two small plush toys, a bear and a bunny, sitting side by side",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/step/teapot": {
+      "path": "sweet/sceneA/step/teapot.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        300,
+        300
+      ],
+      "label": "Step teapot",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a round mint teapot with a flower on the lid",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneA/teaTable": {
+      "path": "sweet/sceneA/teaTable.svg",
+      "theme": "sweet",
+      "category": "sceneA",
+      "size": [
+        1200,
+        700
+      ],
+      "pivot": [
+        600,
+        700
+      ],
+      "label": "Tea table",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small round tea-party table with a pink cloth, a teapot, cups and a cake, with a few stuffed toys sitting around it",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneB/balloonParcel": {
+      "path": "sweet/sceneB/balloonParcel.svg",
+      "theme": "sweet",
+      "category": "sceneB",
+      "size": [
+        600,
+        700
+      ],
+      "label": "Balloon parcel with cat courier",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a wrapped parcel with a bow carried by three pastel balloons, with a small grey-and-white cat in a yellow bandana riding on top",
+        "references": [
+          "docs/concepts/early-playroom.png",
+          "sweet/companion/mimi/idle"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneB/toyShop": {
+      "path": "sweet/sceneB/toyShop.svg",
+      "theme": "sweet",
+      "category": "sceneB",
+      "size": [
+        600,
+        500
+      ],
+      "label": "Toy shop",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small pastel toy shop front with a striped awning and a round sign",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/sceneB/window": {
+      "path": "sweet/sceneB/window.svg",
+      "theme": "sweet",
+      "category": "sceneB",
+      "size": [
+        600,
+        500
+      ],
+      "label": "Playroom window",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a playroom window with mint curtains seen from outside, flower box below",
+        "references": [
+          "docs/concepts/early-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "sweet/tiles/bowHeadband": {
+      "path": "sweet/tiles/bowHeadband.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Bow headband",
+      "derivedFrom": "shared/heroine/extra/bowHeadband"
+    },
+    "sweet/tiles/bunnyPlush": {
+      "path": "sweet/tiles/bunnyPlush.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Bunny plush",
+      "derivedFrom": "sweet/decorations/bunnyPlush"
+    },
+    "sweet/tiles/bunting": {
+      "path": "sweet/tiles/bunting.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Bunting",
+      "derivedFrom": "sweet/decorations/bunting"
+    },
+    "sweet/tiles/butterflyMobile": {
+      "path": "sweet/tiles/butterflyMobile.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Butterfly mobile",
+      "derivedFrom": "sweet/decorations/butterflyMobile"
+    },
+    "sweet/tiles/catSlippers": {
+      "path": "sweet/tiles/catSlippers.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Cat slippers",
+      "derivedFrom": "shared/heroine/shoes/catSlippers"
+    },
+    "sweet/tiles/daisyBed": {
+      "path": "sweet/tiles/daisyBed.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Daisy bed",
+      "derivedFrom": "sweet/decorations/daisyBed"
+    },
+    "sweet/tiles/floralPyjamas": {
+      "path": "sweet/tiles/floralPyjamas.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Floral pyjamas",
+      "derivedFrom": "shared/heroine/outfit/floralPyjamas"
+    },
+    "sweet/tiles/flowerClip": {
+      "path": "sweet/tiles/flowerClip.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Flower hair clip",
+      "derivedFrom": "shared/heroine/extra/flowerClip"
+    },
+    "sweet/tiles/flowerCushion": {
+      "path": "sweet/tiles/flowerCushion.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Flower cushion",
+      "derivedFrom": "sweet/decorations/flowerCushion"
+    },
+    "sweet/tiles/heartLamp": {
+      "path": "sweet/tiles/heartLamp.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart lamp",
+      "derivedFrom": "sweet/decorations/heartLamp"
+    },
+    "sweet/tiles/pastelRug": {
+      "path": "sweet/tiles/pastelRug.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Pastel rug",
+      "derivedFrom": "sweet/decorations/pastelRug"
+    },
+    "sweet/tiles/plainBed": {
+      "path": "sweet/tiles/plainBed.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain bed",
+      "derivedFrom": "sweet/decorations/plainBed"
+    },
+    "sweet/tiles/plainLamp": {
+      "path": "sweet/tiles/plainLamp.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain lamp",
+      "derivedFrom": "sweet/decorations/plainLamp"
+    },
+    "sweet/tiles/plainRug": {
+      "path": "sweet/tiles/plainRug.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain rug",
+      "derivedFrom": "sweet/decorations/plainRug"
+    },
+    "sweet/tiles/rainbowSandals": {
+      "path": "sweet/tiles/rainbowSandals.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Rainbow sandals",
+      "derivedFrom": "shared/heroine/shoes/rainbowSandals"
+    },
+    "sweet/tiles/strawberryDress": {
+      "path": "sweet/tiles/strawberryDress.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Strawberry dress",
+      "derivedFrom": "shared/heroine/outfit/strawberryDress"
+    },
+    "sweet/tiles/sunPoster": {
+      "path": "sweet/tiles/sunPoster.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Sun poster",
+      "derivedFrom": "sweet/decorations/sunPoster"
+    },
+    "sweet/tiles/tulipPicture": {
+      "path": "sweet/tiles/tulipPicture.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Tulip picture",
+      "derivedFrom": "sweet/decorations/tulipPicture"
+    },
+    "sweet/tiles/yellowCushion": {
+      "path": "sweet/tiles/yellowCushion.svg",
+      "theme": "sweet",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Yellow cushion",
+      "derivedFrom": "sweet/decorations/yellowCushion"
+    }
+  }
+}
