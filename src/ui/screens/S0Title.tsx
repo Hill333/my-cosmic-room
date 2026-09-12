@@ -10,15 +10,14 @@ import { IconButton } from '../components/IconButton.tsx';
 
 /** S0 Title and room choice (SPEC §3.3). */
 export function S0Title() {
-  const heading = useRef<HTMLHeadingElement>(null);
   const lastCard = useRef<HTMLButtonElement | null>(null);
   const chosen = languageChosen.value;
 
-  // Focus: the language dialog focuses itself; afterwards the last-used room card is
-  // pre-focused (SPEC §3.3), so Enter opens it straight away.
+  // Focus: the language dialog focuses itself (its effect runs first, so the title must not
+  // take focus back); afterwards the last-used room card is pre-focused (SPEC §3.3), so
+  // Enter opens it straight away.
   useEffect(() => {
     if (chosen) lastCard.current?.focus({ preventScroll: true });
-    else heading.current?.focus({ preventScroll: true });
   }, [chosen]);
 
   const openRoom = (theme: Theme) => {
@@ -38,7 +37,7 @@ export function S0Title() {
     <main class="screen s0" aria-labelledby="s0-title">
       {!languageChosen.value && <LanguageChoice onChoose={chooseLanguage} />}
       <header class="s0-header">
-        <h1 id="s0-title" class="title-lockup" tabIndex={-1} ref={heading}>
+        <h1 id="s0-title" class="title-lockup" tabIndex={-1}>
           {t('app.title')}
         </h1>
         <p class="s0-sub">{t('s0.choose')}</p>

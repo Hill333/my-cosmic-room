@@ -143,6 +143,7 @@ export const en = {
   's5.starFull': 'Your star chart is full!',
   's5.backRoom': 'Back to my room',
   's5.preview': 'Room preview',
+  's5.starCount': '{n} of {total} stars',
 
   'prog.title': 'Ready for a bigger challenge?',
   'prog.try': 'Try {level}',
@@ -172,6 +173,7 @@ export const en = {
   'ui.soundOff': 'Sound off',
   'ui.parentCorner': 'Parent corner',
   'ui.language': 'Language',
+  'ui.answers': 'Answers',
 
   'collection.space.moonSleepover': 'Moon Sleepover',
   'collection.space.rainbowExplorer': 'Rainbow Explorer',

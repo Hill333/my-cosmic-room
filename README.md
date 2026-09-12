@@ -7,7 +7,7 @@ Browser clock-learning game concept for a seven-year-old: two distinct playrooms
 - [Saved visual concepts](docs/concepts/README.md)
 - [Next-session handoff](docs/NEXT_SESSION.md)
 
-Current state: milestones M0 (skeleton) and M1 (clock engine: time maths, generators, elapsed decomposition, mission reducer, AnalogClock / DigitalDisplay / SET clock, dev harness) implemented; see [CHANGELOG.md](CHANGELOG.md). Not deployed.
+Current state: milestones M0 (skeleton), M1 (clock engine: time maths, generators, elapsed decomposition, mission reducer, AnalogClock / DigitalDisplay / SET clock, dev harness) and M2 (missions playable: S2 board, S3/S4 puzzle screens with hints, feedback and keyboard operation, S5 prize choice, leave dialog, resume from the save) implemented with placeholder art; see [CHANGELOG.md](CHANGELOG.md). Not deployed.
 
 ## Development
 
@@ -28,4 +28,4 @@ npm run assets:gen -- --smoke  # generate one sol-med and one astra-light asset 
 npm run assets:gen             # generate every placeholder entry
 ```
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions).
+Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=S2`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions).

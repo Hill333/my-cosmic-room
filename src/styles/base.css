@@ -621,9 +621,30 @@ button:disabled {
   font-size: 22px;
 }
 
+/*
+ * Motion (SPEC §13.3): the S6 setting on the stage's data-motion wins; "system" follows
+ * prefers-reduced-motion. Reduced motion means no confetti, no sweep, no reveal delays and
+ * every state change still visible (animations end in their final frame immediately).
+ */
+.stage[data-motion='reduced'] *,
+.stage[data-motion='reduced'] *::before,
+.stage[data-motion='reduced'] *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+  animation-delay: 0s !important;
+}
+.stage[data-motion='reduced'] .confetti {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
-  * {
+  .stage[data-motion='system'] *,
+  .stage[data-motion='system'] *::before,
+  .stage[data-motion='system'] *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+  .stage[data-motion='system'] .confetti {
+    display: none;
   }
 }

@@ -145,6 +145,7 @@ export const tr: Record<StringKey, string> = {
   's5.starFull': 'Yıldız tablon doldu!',
   's5.backRoom': 'Odama dön',
   's5.preview': 'Oda önizlemesi',
+  's5.starCount': '{n} / {total} yıldız',
 
   'prog.title': 'Daha büyük bir zorluğa hazır mısın?',
   'prog.try': '{level} dene',
@@ -174,6 +175,7 @@ export const tr: Record<StringKey, string> = {
   'ui.soundOff': 'Ses kapalı',
   'ui.parentCorner': 'Ebeveyn köşesi',
   'ui.language': 'Dil',
+  'ui.answers': 'Cevaplar',
 
   'collection.space.moonSleepover': 'Ay Uykusu',
   'collection.space.rainbowExplorer': 'Gökkuşağı Kâşifi',

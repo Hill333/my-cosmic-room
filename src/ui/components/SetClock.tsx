@@ -25,6 +25,8 @@ interface Props {
   /** Day-period badge of the target in 24-hour reading mode (SPEC §6.4). */
   period?: DayPeriod | null;
   status?: SetStatus;
+  /** Wrong-attempt count; alternates the shake animation so every wrong check shakes (SPEC §9.2). */
+  attempt?: number;
   /** Locks the clock after a correct answer. */
   disabled?: boolean;
   onCheck: (time: TimeValue) => void;
@@ -44,6 +46,7 @@ export function SetClock({
   showGhost = false,
   period = null,
   status = 'idle',
+  attempt = 0,
   disabled = false,
   onCheck,
   onChange,
@@ -154,10 +157,11 @@ export function SetClock({
   };
 
   return (
-    <div class={`set-clock set-clock-${status}`} data-testid="set-clock">
+    <div class={`set-clock set-clock-${status}`} data-testid="set-clock" data-shake={attempt % 2}>
       <div
         ref={face}
         class="set-clock-face"
+        data-testid="set-clock-face"
         style={{ width: `${size}px` }}
         role="group"
         aria-label={t('a.set.clockLabel')}
@@ -187,18 +191,42 @@ export function SetClock({
         </p>
       )}
       <div class="set-clock-strip" role="group">
-        <button type="button" class="btn" disabled={disabled} onClick={() => nudge(-60)}>
+        <button
+          type="button"
+          class="btn"
+          disabled={disabled}
+          data-testid="set-minus-hour"
+          onClick={() => nudge(-60)}
+        >
           {t('a.set.minusHour')}
         </button>
-        <button type="button" class="btn" disabled={disabled} onClick={() => nudge(60)}>
+        <button
+          type="button"
+          class="btn"
+          disabled={disabled}
+          data-testid="set-plus-hour"
+          onClick={() => nudge(60)}
+        >
           {t('a.set.plusHour')}
         </button>
         {!wholeHours && (
           <>
-            <button type="button" class="btn" disabled={disabled} onClick={() => nudge(-step)}>
+            <button
+              type="button"
+              class="btn"
+              disabled={disabled}
+              data-testid="set-minus-step"
+              onClick={() => nudge(-step)}
+            >
               {t('a.set.minusStep', { m: step })}
             </button>
-            <button type="button" class="btn" disabled={disabled} onClick={() => nudge(step)}>
+            <button
+              type="button"
+              class="btn"
+              disabled={disabled}
+              data-testid="set-plus-step"
+              onClick={() => nudge(step)}
+            >
               {t('a.set.plusStep', { m: step })}
             </button>
           </>

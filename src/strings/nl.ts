@@ -146,6 +146,7 @@ export const nl: Record<StringKey, string> = {
   's5.starFull': 'Je sterrenkaart is vol!',
   's5.backRoom': 'Terug naar mijn kamer',
   's5.preview': 'Voorbeeld van de kamer',
+  's5.starCount': '{n} van {total} sterren',
 
   'prog.title': 'Klaar voor een grotere uitdaging?',
   'prog.try': 'Probeer {level}',
@@ -175,6 +176,7 @@ export const nl: Record<StringKey, string> = {
   'ui.soundOff': 'Geluid uit',
   'ui.parentCorner': 'Ouderhoek',
   'ui.language': 'Taal',
+  'ui.answers': 'Antwoorden',
 
   'collection.space.moonSleepover': 'Maanlogeerpartij',
   'collection.space.rainbowExplorer': 'Regenboogontdekker',

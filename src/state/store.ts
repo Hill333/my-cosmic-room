@@ -45,6 +45,7 @@ export const languageChosen = computed(() => save.value.settings.language !== nu
 export const lastTheme = computed<Theme>(() => save.value.settings.lastTheme);
 export const soundOn = computed(() => save.value.settings.sound);
 export const mission = computed(() => save.value.mission);
+export const motion = computed(() => save.value.settings.motion);
 
 /** Seed for a new mission: `?seed=<n>` in dev builds (SPEC §16.4), otherwise random. */
 export function newSeed(): number {

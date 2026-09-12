@@ -1,0 +1,887 @@
+/* S2 board, S3/S4 puzzle frame, S5 complete and the shared puzzle components (SPEC §3.5–§3.8, §9). */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.btn-small {
+  min-height: 64px;
+  padding: 6px 24px;
+  font-size: 24px;
+}
+
+/* Dialog (SPEC §13.1) */
+.dialog {
+  width: 760px;
+  text-align: center;
+}
+.dialog-title {
+  margin: 0 0 16px;
+  font-size: 44px;
+}
+.dialog-body {
+  margin: 0 0 32px;
+  font-size: 28px;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+/* Room scene shared by S1, S5 and the preview */
+.room-scene {
+  position: absolute;
+  inset: 0;
+}
+.entry-object {
+  position: absolute;
+  right: 48px;
+  top: 130px;
+  width: 160px;
+  height: 160px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 24px;
+}
+.entry-object img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.entry-object:hover img {
+  transform: translateY(-6px) rotate(-6deg);
+}
+
+/* Sparkle on a newly applied item (SPEC §10.3) */
+.sparkle {
+  animation: sparkle 1.2s ease-out 2;
+  filter: drop-shadow(0 0 12px var(--star));
+}
+@keyframes sparkle {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 var(--star));
+  }
+  50% {
+    filter: drop-shadow(0 0 24px var(--star)) brightness(1.15);
+  }
+}
+
+/* S2 Mission board */
+.s2-header {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.s2-title {
+  margin: 0;
+  padding: 12px 32px;
+  border: 4px solid var(--plum);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 44px;
+}
+.mission-cards {
+  position: absolute;
+  top: 140px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+}
+.mission-card {
+  width: 620px;
+  padding: 24px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.mission-card-art {
+  height: 150px;
+  object-fit: contain;
+}
+.mission-card-title {
+  margin: 0;
+  font-size: 40px;
+}
+.mission-card-desc {
+  margin: 0;
+  font-size: 24px;
+  min-height: 62px;
+}
+.level-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.chips .chip {
+  font-size: 22px;
+  padding: 6px 18px;
+}
+.chips-locked {
+  margin: 0;
+  font-size: 22px;
+}
+.prizes-box {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  width: 1000px;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.prizes-title {
+  margin: 0;
+  font-size: 32px;
+  white-space: nowrap;
+}
+.prizes-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 40px;
+}
+.prize {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 28px;
+  font-weight: 700;
+}
+.prize img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: #fff;
+}
+.prizes-empty {
+  margin: 0;
+  font-size: 26px;
+}
+.prizes-stars {
+  font-weight: 800;
+}
+
+/* S3 / S4 frame (SPEC §3.6) */
+.mission-topleft {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+.mission-topright {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.prize-icons {
+  display: flex;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: #fff;
+}
+.prize-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+.mission-heroine {
+  position: absolute;
+  left: 20px;
+  bottom: 120px;
+  width: 240px;
+  height: 360px;
+}
+.mission-companion {
+  position: absolute;
+  right: 40px;
+  bottom: 140px;
+  width: 220px;
+  height: 220px;
+}
+.companion {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.companion img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.companion-cheer {
+  animation: companion-cheer 700ms ease-in-out 2;
+}
+.companion-hmm {
+  animation: companion-hmm 900ms ease-in-out 1;
+}
+@keyframes companion-cheer {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px) rotate(-4deg);
+  }
+}
+@keyframes companion-hmm {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+.mission-panel {
+  position: absolute;
+  left: 268px;
+  top: 80px;
+  width: 1000px;
+  height: 860px;
+  padding: 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+.mission-title {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 36px;
+  line-height: 1.2;
+}
+.mission-name::after {
+  content: ' —';
+}
+.mission-story {
+  font-size: 28px;
+  font-weight: 700;
+}
+.puzzle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.question {
+  margin: 0 0 8px;
+  font-size: 36px;
+  font-weight: 800;
+  text-align: center;
+}
+.puzzle-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 0;
+}
+.read-clock {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.feedback {
+  margin: 0;
+  min-height: 40px;
+  font-size: 30px;
+  font-weight: 800;
+  text-align: center;
+}
+.feedback-wrong {
+  color: var(--coral);
+}
+.feedback-correct {
+  color: #1f7a4d;
+}
+.puzzle-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 84px;
+}
+.footer-next {
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+.progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 26px;
+  font-weight: 700;
+}
+.progress-dots {
+  display: flex;
+  gap: 10px;
+}
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid var(--plum);
+  background: #fff;
+}
+.dot-done {
+  background: var(--plum);
+}
+.dot-now {
+  background: var(--star);
+}
+.btn-hint[aria-pressed='true'] {
+  background: var(--lilac);
+  box-shadow: none;
+}
+.btn-pulse {
+  animation: pulse 600ms ease-in-out 1;
+}
+@keyframes pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* Preparation tracker (SPEC §3.6) */
+.tracker {
+  position: absolute;
+  left: 268px;
+  bottom: 4px;
+  width: 1000px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+.tracker-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  border: 3px solid var(--plum);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  opacity: 0.55;
+}
+.tracker-step img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+.tracker-lit {
+  opacity: 1;
+  background: var(--star);
+}
+
+/* Answer choices (SPEC §9.1) */
+.choice-group {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+}
+.choice-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.choice-letter {
+  font-size: 32px;
+  font-weight: 900;
+}
+.choice {
+  position: relative;
+  min-width: 280px;
+  min-height: 96px;
+  padding: 10px 24px;
+  border: 4px solid var(--plum);
+  border-radius: var(--radius);
+  background: #fff;
+  font-size: 44px;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 6px 0 rgba(59, 42, 94, 0.25);
+}
+.choice:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.choices-clocks .choice {
+  min-width: 280px;
+  padding: 14px;
+}
+.choices-durations .choice {
+  font-size: 32px;
+  min-width: 290px;
+}
+.choice-wrong {
+  animation: shake 400ms ease-in-out 1;
+  opacity: 0.55;
+}
+.choice-correct {
+  border-width: 8px;
+  border-color: #1f7a4d;
+  background: #e8f7ee;
+  opacity: 1;
+}
+.choice-mark {
+  font-size: 24px;
+  font-weight: 800;
+}
+.choice-mark-wrong {
+  color: var(--coral);
+}
+.choice-mark-correct {
+  position: absolute;
+  top: -22px;
+  right: -22px;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #1f7a4d;
+  color: #fff;
+  font-size: 34px;
+  border: 4px solid #fff;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+/* SET shake alternates between two identical keyframes so every wrong check shakes. */
+.set-clock-wrong[data-shake='1'] .clock-svg {
+  animation-name: clock-shake-b;
+}
+@keyframes clock-shake-b {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+/* READ hint (SPEC §9.3): minute-hand sweep, counting caption, hour-hand highlight. */
+@property --mins {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.clock-minute-wrap {
+  transform-origin: 100px 100px;
+  transform-box: view-box;
+}
+.clock-sweep .clock-minute-wrap {
+  animation: sweep 1.2s ease-out both;
+}
+@keyframes sweep {
+  from {
+    transform: rotate(calc(-1 * var(--minute-deg)));
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+.clock-sweep .clock-hand-hour {
+  animation: hour-glow 900ms ease-in-out 1.2s 2;
+}
+@keyframes hour-glow {
+  50% {
+    stroke: var(--star);
+    filter: drop-shadow(0 0 8px var(--coral));
+  }
+}
+.read-hint {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hint-counter,
+.hint-hour {
+  margin: 0;
+  padding: 12px 20px;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: #fff;
+  font-size: 28px;
+  font-weight: 800;
+}
+.hint-count {
+  animation: count 1.2s ease-out both;
+  counter-reset: mins var(--mins);
+}
+.hint-count::before {
+  content: counter(mins);
+}
+@keyframes count {
+  from {
+    --mins: 0;
+  }
+  to {
+    --mins: var(--target);
+  }
+}
+.hint-hour {
+  animation: appear 300ms ease-out 1.2s both;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* MATCH hint: the display split into hour and minute parts with captions. */
+.match-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.match-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.match-colon {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.hint-caption {
+  padding: 6px 16px;
+  border: 3px solid var(--plum);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* S4 journey strip and elapsed puzzle (SPEC §3.7) */
+.journey {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+}
+.journey-end {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+}
+.journey-path {
+  position: relative;
+  flex: 1;
+  height: 0;
+  border-top: 6px dashed var(--lavender);
+}
+.journey-vehicle {
+  position: absolute;
+  top: -36px;
+  width: 72px;
+  height: 72px;
+  margin-left: -36px;
+  object-fit: contain;
+  transition: left 600ms ease-in-out;
+}
+.journey-times {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.journey-times-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+.jumps-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-height: 64px;
+}
+.jumps-panel {
+  border: 3px dashed var(--lavender);
+  border-radius: 24px;
+  background: #fff;
+  padding: 0 8px;
+}
+.mission-b .puzzle-body {
+  gap: 10px;
+}
+.mission-b .question {
+  margin-bottom: 0;
+}
+.jumps {
+  display: block;
+  font-family: var(--font);
+}
+.jump-base {
+  stroke: var(--lavender);
+  stroke-width: 4;
+}
+.jump-point circle {
+  fill: var(--plum);
+}
+.jump-pill {
+  fill: var(--plum);
+}
+.jump-pill-text {
+  fill: #fff;
+  font-size: 24px;
+  font-weight: 800;
+}
+.jump-arc {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.jump-arrowhead {
+  fill: var(--blue);
+}
+.jump-label {
+  fill: var(--plum);
+  font-size: 28px;
+  font-weight: 900;
+}
+.jump-reveal {
+  animation: appear 300ms ease-out both;
+}
+
+/* S5 Mission complete (SPEC §3.8) */
+.s5-room {
+  position: absolute;
+  inset: 0;
+}
+.s5-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(59, 42, 94, 0.55);
+}
+.s5-card {
+  position: absolute;
+  left: 50%;
+  top: 60px;
+  transform: translateX(-50%);
+  width: 1040px;
+  padding: 32px 48px 36px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.s5-title {
+  margin: 0;
+  font-size: 64px;
+  color: var(--purple);
+}
+.s5-sub {
+  margin: 0;
+  font-size: 28px;
+}
+.s5-choose {
+  margin: 8px 0 0;
+  font-size: 40px;
+}
+.prize-tiles {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+.prize-tile {
+  position: relative;
+  width: 320px;
+  height: 340px;
+  padding: 24px 16px 16px;
+  border: 5px solid var(--plum);
+  border-radius: 32px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 30px;
+  font-weight: 800;
+}
+.prize-tile img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+.prize-tile-selected {
+  border-width: 10px;
+  border-color: var(--purple);
+  background: #f3ecff;
+}
+.prize-tile-check {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--purple);
+  color: #fff;
+  font-size: 40px;
+  border: 4px solid #fff;
+}
+.prize-tile-check:empty {
+  display: none;
+}
+.s5-actions {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 8px;
+}
+.s5-preview {
+  position: absolute;
+  left: 32px;
+  bottom: 32px;
+  width: 384px;
+  height: 256px;
+  overflow: hidden;
+  border: 5px solid var(--plum);
+  border-radius: 24px;
+  background: var(--plum);
+}
+.s5-preview-scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1536px;
+  height: 1024px;
+  transform: scale(0.25);
+  transform-origin: 0 0;
+}
+.star-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.star-chart {
+  display: grid;
+  grid-template-columns: repeat(6, 56px);
+  gap: 6px;
+  font-size: 44px;
+  color: #c9bde0;
+}
+.star-filled {
+  color: var(--star);
+  text-shadow: 0 2px 0 var(--plum);
+}
+.star-count {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Confetti (SPEC §3.8; skipped under reduced motion) */
+.confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.confetti-piece {
+  position: absolute;
+  top: -30px;
+  left: calc(var(--i) * 4.2%);
+  width: 18px;
+  height: 28px;
+  background: var(--star);
+  border-radius: 4px;
+  animation: confetti-fall 3s linear infinite;
+  animation-delay: calc(var(--i) * -0.13s);
+}
+.confetti-piece:nth-child(3n) {
+  background: var(--coral);
+}
+.confetti-piece:nth-child(3n + 1) {
+  background: var(--mint);
+}
+@keyframes confetti-fall {
+  to {
+    transform: translateY(1100px) rotate(720deg);
+  }
+}
+
+/* SET inside the panel: the five strip buttons fit on one row under the 440 px clock. */
+.puzzle .set-clock {
+  gap: 12px;
+}
+.puzzle .set-clock-strip .btn {
+  min-height: 64px;
+  padding: 6px 22px;
+  font-size: 24px;
+}

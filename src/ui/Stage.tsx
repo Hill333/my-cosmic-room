@@ -4,6 +4,7 @@
  */
 import type { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import type { MotionSetting } from '../core/types.ts';
 
 export const STAGE_WIDTH = 1536;
 export const STAGE_HEIGHT = 1024;
@@ -24,15 +25,18 @@ export function useStageScale(): number {
 
 interface StageProps {
   background: string;
+  /** Motion setting (SPEC §13.3); the CSS reads it from `data-motion` on the stage. */
+  motion?: MotionSetting;
   children: ComponentChildren;
 }
 
-export function Stage({ background, children }: StageProps) {
+export function Stage({ background, motion = 'system', children }: StageProps) {
   const scale = useStageScale();
   return (
     <div class="stage-viewport" style={{ background }} data-scale={scale.toFixed(3)}>
       <div
         class="stage"
+        data-motion={motion}
         style={{
           width: `${STAGE_WIDTH}px`,
           height: `${STAGE_HEIGHT}px`,

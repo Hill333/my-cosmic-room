@@ -39,6 +39,8 @@ interface Props {
   ghost?: TimeValue | null;
   /** Day-period badge under the clock in 24-hour reading mode. */
   period?: DayPeriod | null;
+  /** READ hint (SPEC §9.3): the minute hand sweeps from 12 to its position, then the hour hand glows. */
+  sweep?: boolean;
   /** Styling hooks for the SET clock. */
   interactive?: boolean;
   dragging?: Hand | null;
@@ -69,6 +71,7 @@ export function AnalogClock({
   decorative = false,
   ghost = null,
   period = null,
+  sweep = false,
   interactive = false,
   dragging = null,
   minuteLocked = false,
@@ -77,7 +80,13 @@ export function AnalogClock({
   const c = CLOCK.centre;
   const hourDeg = hourAngle(time);
   const minuteDeg = minuteAngle(time);
-  const classes = ['clock', `clock-${theme}`, interactive && 'clock-interactive', className]
+  const classes = [
+    'clock',
+    `clock-${theme}`,
+    interactive && 'clock-interactive',
+    sweep && 'clock-sweep',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
   const a11y = decorative
@@ -85,7 +94,11 @@ export function AnalogClock({
     : { role: 'img' as const, 'aria-label': label ?? t('clock.analog') };
 
   return (
-    <div class={classes} style={{ width: `${size}px` }} data-dragging={dragging ?? undefined}>
+    <div
+      class={classes}
+      style={{ width: `${size}px`, '--minute-deg': `${minuteDeg}deg` }}
+      data-dragging={dragging ?? undefined}
+    >
       <svg viewBox="0 0 200 200" width={size} height={size} class="clock-svg" {...a11y}>
         <circle
           class="clock-face"
@@ -166,16 +179,18 @@ export function AnalogClock({
             stroke-width={CLOCK.hourHand.width}
             transform={`rotate(${hourDeg} ${c} ${c})`}
           />
-          <line
-            class={`clock-hand clock-hand-minute${minuteLocked ? ' clock-hand-locked' : ''}`}
-            data-hand="minute"
-            x1={c}
-            y1={c}
-            x2={c}
-            y2={c - CLOCK.minuteHand.length}
-            stroke-width={CLOCK.minuteHand.width}
-            transform={`rotate(${minuteDeg} ${c} ${c})`}
-          />
+          <g class="clock-minute-wrap">
+            <line
+              class={`clock-hand clock-hand-minute${minuteLocked ? ' clock-hand-locked' : ''}`}
+              data-hand="minute"
+              x1={c}
+              y1={c}
+              x2={c}
+              y2={c - CLOCK.minuteHand.length}
+              stroke-width={CLOCK.minuteHand.width}
+              transform={`rotate(${minuteDeg} ${c} ${c})`}
+            />
+          </g>
           <circle class="clock-cap" cx={c} cy={c} r={CLOCK.capRadius} />
         </g>
       </svg>
