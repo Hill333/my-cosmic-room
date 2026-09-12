@@ -79,19 +79,12 @@ after the third loose-hair figure at 21:03, when the generator paused until 01:3
 costs 3–6 % of the five-hour window, a sol-med overlay 1–3 %. `assets/.gen/run.log` (ignored
 by git, so only on this machine) has every check and asset.
 
-**Still placeholders (4 figures):** `shared/heroine/figure/planetTee-loose`,
-`spacesuit-loose`, `starHoodie-loose`, `strawberryDress-loose`. Until they exist, "Loose with
-clip" shows the two-buns figure for those outfits and its wardrobe tile shows the loose head
-from `planetTee-loose` only once that figure exists (the tile is a placeholder now). To finish:
-`npm run assets:gen` (picks up the four placeholder entries; pauses by itself if the window is
-full), then `npm run assets:post` (normalises them, writes the default anchors and the hair
-tile), then check them with `?screen=S1&debug=heroine` wearing each outfit with loose hair;
-the three existing loose figures use `face` y 200 × 0.9, `head` y 92, `back` y 430, so copy
-those into the new entries' `anchors` if the defaults look off. Post-processing also guesses
-the ankle cut (`feet.cutY`) from the socks; the buns and ponytail figures of the same outfits
-use 775 (planet tee), 770 (sweater), 762 (dress) and 809 (hoodie), so set the new figures'
-cut near those (a bare leg gets the cut ~25 px above the socks so the overlay's own sock
-shows), re-run `npm run assets:post -- --only <figure> --force` and check the matrix sheet.
+**All 21 figures exist** since 13 September 01:39: the four remaining loose-hair figures
+(`planetTee-loose`, `spacesuit-loose`, `starHoodie-loose`, `strawberryDress-loose`) were
+generated after the window reset (53–70 s each, first attempt; five-hour window 34 % and weekly
+51 % afterwards), post-processed, and given the tuned loose anchors (`face` y 200 × 0.9, `head`
+y 92, `back` y 430); their ankle cuts were guessed from the socks (786, 788, 813, 789). Check
+them once in `?screen=S1&debug=heroine` wearing each outfit with loose hair.
 
 **Optional regeneration (not needed for the fix).** The shoe overlays were generated with
 narrower, closer-together legs than the figures, which is why the socks used to peek out; the
@@ -105,8 +98,6 @@ clipped now) if generated as low boots.
 
 ## Known limitations
 
-- Four loose-hair figures are still placeholders (see "Codex usage state" above); the
-  generator resumes them with `npm run assets:gen`.
 - Shoes are clipped at the figure's ankle (`clipAtAnkle`), so the sneakers' yellow crew socks
   show as ankle socks and the space boots as low boots (their cuff strap is above the clip);
   the slippers' ears stand in front of the shin. The extruded leg under the cut is a flat

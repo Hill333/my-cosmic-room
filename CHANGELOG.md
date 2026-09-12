@@ -49,8 +49,9 @@ native-speaker wording review of Turkish and Dutch, and the deployment itself.
   area empty; slot, heroine, companion, entry and lamp geometry retuned; S0 thumbnails
   re-derived.
 - A hairstyle whose figure is still a placeholder shows the outfit's two-buns figure (the
-  ponytail and loose sets were generated last; four loose figures were left for the next
-  Codex window, see docs/NEXT_SESSION.md). The heroine stands 450 stage px tall (was 420).
+  ponytail and loose sets were generated last; the last four loose figures were generated on
+  13 September after the Codex window reset, so all 21 figures now exist). The heroine stands
+  450 stage px tall (was 420).
 - Dev aids: `?screen=S1&theme=sweet` opens the Sweet room directly; `tools/screenshots.ts`
   writes the review screenshots in `docs/screenshots/` (both rooms, the four dress-up tabs,
   the title cards, S5) with Playwright against the dev server.
