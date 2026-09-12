@@ -4,9 +4,11 @@ import { sharedItems } from './shared.ts';
 import { spaceCollections, spaceItems } from './space.ts';
 import { sweetCollections, sweetItems } from './sweet.ts';
 import type { Collection, Item } from './types.ts';
+import { figureId } from './helpers.ts';
 
 export type { Collection, Item } from './types.ts';
 export { defaultHeroine } from './shared.ts';
+export { figureId } from './helpers.ts';
 
 export const allItems: readonly Item[] = [...sharedItems, ...spaceItems, ...sweetItems];
 export const allCollections: readonly Collection[] = [...spaceCollections, ...sweetCollections];
@@ -25,6 +27,11 @@ export function requireItem(id: ItemId): Item {
 
 export function isWardrobeKind(kind: ItemKind): boolean {
   return kind !== 'decoration';
+}
+
+/** Manifest id of the figure the heroine shows for an outfit and a hairstyle (SPEC §4.5). */
+export function heroineFigure(outfit: ItemId, hair: ItemId): string {
+  return figureId(requireItem(outfit).art.figure!, requireItem(hair).art.figure!);
 }
 
 /** Earnable items of a theme in pool order (collection order, then item order). SPEC §10.2. */

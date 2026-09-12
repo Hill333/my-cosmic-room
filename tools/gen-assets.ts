@@ -2,18 +2,34 @@
  * Drives Codex CLI per manifest entry (SPEC §15.6). Not part of the app bundle.
  *
  *   node tools/gen-assets.ts [--smoke] [--only <id>...] [--regen <id>...] [--preset <p>]
- *                            [--limit <n>] [--dry-run]
+ *                            [--limit <n>] [--dry-run] [--variant <name>] [--log <path>]
  *
  * Generates every entry whose gen.status is 'placeholder' (or the ids named with --regen),
  * never touches 'approved' entries, and records preset, attempts and timestamps in the
  * manifest. Raw output lands in assets/.gen/<id>.png with the agent's last message next
  * to it; post-processing into assets/<theme>/... is a separate step (SPEC §15.6).
+ *
+ * `--variant <name>` writes assets/.gen/<id>.<name>.png instead (a candidate to compare; copy
+ * the chosen one over <id>.png before post-processing) and only bumps `attempts`.
+ *
+ * Usage guard: before every generation the Codex five-hour and weekly windows are read
+ * (tools/codex-limits.ts). At 95 % or more of the five-hour window (or when the server reports
+ * a reached limit, or a run's output mentions a rate or usage limit) the run prints
+ * `PAUSED until <local time>` and sleeps until the window resets, then continues. At 95 % of
+ * the weekly window the run stops. Every check is appended to the run log
+ * (default assets/.gen/run.log, ignored by git).
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import type { AssetEntry, GenPreset } from '../src/assetTypes.ts';
+import { formatLimits, readCodexLimits, type CodexLimits } from './codex-limits.ts';
 import { ASSETS_DIR, ROOT, assetFile, readManifest, writeManifest } from './lib/manifest.ts';
+
+const PAUSE_AT_PERCENT = 95;
+const RESET_GRACE_MS = 60_000;
+const LIMIT_PATTERN = /rate limit|usage limit|too many requests|limit reached|quota/i;
+const MAX_LIMIT_RETRIES = 2;
 
 // --- Presets (D16). astra is the more capable model: high-complexity assets at light effort;
 // sol at medium effort for simple single objects. Model ids verified against Codex CLI 0.153.4.
@@ -30,6 +46,8 @@ const STYLE_BLOCK =
 const SINGLE_OBJECT =
   'Single object, centred, plain white background, no text, no shadow, no watermark.';
 const ROOM_CLAUSE = 'Full scene, no text, no watermark.';
+const FIGURE_CLAUSE =
+  'Single character, centred, plain white background, no text, no shadow, no watermark.';
 
 interface Args {
   smoke: boolean;
@@ -38,6 +56,8 @@ interface Args {
   preset: GenPreset | null;
   limit: number;
   dryRun: boolean;
+  variant: string | null;
+  log: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -48,6 +68,8 @@ function parseArgs(argv: string[]): Args {
     preset: null,
     limit: Infinity,
     dryRun: false,
+    variant: null,
+    log: resolve(ASSETS_DIR, '.gen', 'run.log'),
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
@@ -58,13 +80,68 @@ function parseArgs(argv: string[]): Args {
     else if (a === '--regen') args.regen.push(next());
     else if (a === '--preset') args.preset = next() as GenPreset;
     else if (a === '--limit') args.limit = Number(next());
+    else if (a === '--variant') args.variant = next();
+    else if (a === '--log') args.log = resolve(ROOT, next());
     else throw new Error(`Unknown argument ${a}`);
   }
   return args;
 }
 
-function rawPath(id: string): string {
-  return resolve(ASSETS_DIR, '.gen', `${id}.png`);
+function rawPath(id: string, variant: string | null = null): string {
+  return resolve(ASSETS_DIR, '.gen', `${id}${variant ? '.' + variant : ''}.png`);
+}
+
+let runLog = resolve(ASSETS_DIR, '.gen', 'run.log');
+
+function log(line: string): void {
+  const stamped = `${new Date().toISOString()} ${line}`;
+  mkdirSync(dirname(runLog), { recursive: true });
+  appendFileSync(runLog, stamped + '\n');
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function counter(l: CodexLimits | null): string {
+  if (!l?.primary) return '5h n/a';
+  return `5h ${l.primary.usedPercent}%${l.secondary ? `, weekly ${l.secondary.usedPercent}%` : ''}`;
+}
+
+/**
+ * Reads the usage windows and waits while the five-hour window is (nearly) full. Returns the
+ * last reading; throws when the weekly window is at the threshold (the run must stop).
+ */
+async function guardLimits(reason: string): Promise<CodexLimits | null> {
+  for (;;) {
+    let limits: CodexLimits;
+    try {
+      limits = await readCodexLimits();
+    } catch (err) {
+      log(`limits check (${reason}) failed: ${(err as Error).message}; continuing`);
+      console.log(`  limits: unavailable (${(err as Error).message})`);
+      return null;
+    }
+    log(`limits check (${reason}): ${formatLimits(limits)}`);
+    if (limits.secondary && limits.secondary.usedPercent >= PAUSE_AT_PERCENT) {
+      throw new Error(
+        `weekly window at ${limits.secondary.usedPercent}% (resets ${new Date(limits.secondary.resetsAt * 1000).toLocaleString()}); stopping`,
+      );
+    }
+    const full =
+      (limits.primary && limits.primary.usedPercent >= PAUSE_AT_PERCENT) ||
+      limits.rateLimitReachedType !== null;
+    if (!full) return limits;
+    const resetsAt = limits.primary
+      ? limits.primary.resetsAt * 1000 + RESET_GRACE_MS
+      : Date.now() + 15 * 60 * 1000;
+    const wait = Math.max(RESET_GRACE_MS, resetsAt - Date.now());
+    const until = new Date(resetsAt).toLocaleString();
+    console.log(`PAUSED until ${until} (${formatLimits(limits)})`);
+    log(`PAUSED until ${until} for ${(wait / 60000).toFixed(1)} min`);
+    await sleep(wait);
+    log('resumed after pause');
+  }
 }
 
 function referenceFile(ref: string, manifest: ReturnType<typeof readManifest>): string | null {
@@ -77,13 +154,15 @@ function referenceFile(ref: string, manifest: ReturnType<typeof readManifest>): 
   return existsSync(file) && !file.endsWith('.svg') ? file : null;
 }
 
-function buildPrompt(id: string, entry: AssetEntry): string {
+function buildPrompt(id: string, entry: AssetEntry, variant: string | null): string {
   const [w, h] = entry.size;
   const clause =
     entry.category === 'room' || (entry.category === 'sceneA' && entry.size[0] > 2000)
       ? ROOM_CLAUSE
-      : SINGLE_OBJECT;
-  const out = `assets/.gen/${id}.png`;
+      : entry.category === 'heroine' && entry.layer === 'figure'
+        ? FIGURE_CLAUSE
+        : SINGLE_OBJECT;
+  const out = `assets/.gen/${id}${variant ? '.' + variant : ''}.png`;
   return (
     `You are generating one piece of game art. Use your image generation tool. ${STYLE_BLOCK} ` +
     `Subject: ${entry.gen!.prompt}. ${clause} ` +
@@ -98,11 +177,13 @@ function runCodex(
   entry: AssetEntry,
   refs: string[],
   dryRun: boolean,
-): { ok: boolean; log: string } {
+  variant: string | null,
+): { ok: boolean; log: string; seconds: number; limited: boolean } {
   const preset = PRESETS[entry.gen!.preset];
-  const out = rawPath(id);
+  const out = rawPath(id, variant);
   mkdirSync(dirname(out), { recursive: true });
-  const lastMessage = resolve(ASSETS_DIR, '.gen', `${id}.last.md`);
+  const suffix = variant ? '.' + variant : '';
+  const lastMessage = resolve(ASSETS_DIR, '.gen', `${id}${suffix}.last.md`);
   const args = [
     'exec',
     '-m',
@@ -117,10 +198,10 @@ function runCodex(
     ROOT,
     '-o',
     lastMessage,
-    buildPrompt(id, entry),
+    buildPrompt(id, entry, variant),
   ];
   const cmdLine = `codex ${args.map((a) => (a.includes(' ') ? JSON.stringify(a) : a)).join(' ')}`;
-  if (dryRun) return { ok: true, log: cmdLine };
+  if (dryRun) return { ok: true, log: cmdLine, seconds: 0, limited: false };
   const started = Date.now();
   const result = spawnSync('codex', args, {
     cwd: ROOT,
@@ -128,15 +209,17 @@ function runCodex(
     timeout: 15 * 60 * 1000,
     maxBuffer: 64 * 1024 * 1024,
   });
-  const seconds = ((Date.now() - started) / 1000).toFixed(0);
-  const log = `${cmdLine}\n\n--- exit ${result.status} after ${seconds}s ---\n${result.stdout ?? ''}\n${result.stderr ?? ''}`;
-  writeFileSync(resolve(ASSETS_DIR, '.gen', `${id}.log`), log);
+  const seconds = Math.round((Date.now() - started) / 1000);
+  const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+  const log = `${cmdLine}\n\n--- exit ${result.status} after ${seconds}s ---\n${output}`;
+  writeFileSync(resolve(ASSETS_DIR, '.gen', `${id}${suffix}.log`), log);
   const ok = result.status === 0 && existsSync(out) && statSync(out).size > 0;
-  return { ok, log };
+  return { ok, log, seconds, limited: !ok && LIMIT_PATTERN.test(output) };
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
+  runLog = args.log;
   const manifest = readManifest();
   let candidates = Object.entries(manifest.assets).filter(([, e]) => e.gen);
 
@@ -164,30 +247,59 @@ function main(): void {
     return;
   }
   console.log(`gen-assets: ${candidates.length} asset(s)${args.dryRun ? ' (dry run)' : ''}`);
+  if (!args.dryRun)
+    log(
+      `run start: ${candidates.length} asset(s)${args.variant ? ` variant ${args.variant}` : ''}: ${candidates.map(([id]) => id).join(', ')}`,
+    );
 
   let failures = 0;
+  let index = 0;
   for (const [id, entry] of candidates) {
+    index += 1;
     const refs = entry
       .gen!.references.map((r) => referenceFile(r, manifest))
       .filter((r): r is string => r !== null);
     const preset = entry.gen!.preset;
+    if (!args.dryRun) await guardLimits(`before ${id}`);
     process.stdout.write(
-      `- ${id} [${preset} → ${PRESETS[preset].model}/${PRESETS[preset].effort}] ... `,
+      `- [${index}/${candidates.length}] ${id} [${preset} → ${PRESETS[preset].model}/${PRESETS[preset].effort}] ... `,
     );
-    const { ok, log } = runCodex(id, entry, refs, args.dryRun);
+    let result = runCodex(id, entry, refs, args.dryRun, args.variant);
     if (args.dryRun) {
-      console.log('\n  ' + log);
+      console.log('\n  ' + result.log);
       continue;
     }
     entry.gen!.attempts += 1;
-    if (ok) {
-      entry.gen!.generatedAt = new Date().toISOString();
-      entry.gen!.status = 'generated';
-      console.log(`ok → assets/.gen/${id}.png`);
+    // A run that ran into a usage limit is retried after the window resets (same attempt count
+    // bump per run, so the manifest history stays honest).
+    for (let retry = 0; result.limited && retry < MAX_LIMIT_RETRIES; retry++) {
+      console.log(`limit reached during the run; pausing`);
+      log(`${id}: output mentions a usage limit after ${result.seconds}s; pausing and retrying`);
+      await sleep(RESET_GRACE_MS);
+      await guardLimits(`retry ${retry + 1} of ${id}`);
+      result = runCodex(id, entry, refs, false, args.variant);
+      entry.gen!.attempts += 1;
+    }
+    const after = await readCodexLimits().catch(() => null);
+    const raw = `assets/.gen/${id}${args.variant ? '.' + args.variant : ''}.png`;
+    if (result.ok) {
+      if (!args.variant) {
+        entry.gen!.generatedAt = new Date().toISOString();
+        entry.gen!.status = 'generated';
+      }
+      console.log(`ok → ${raw} (${result.seconds}s; ${counter(after)})`);
+      log(
+        `${id}: ok ${preset} ${result.seconds}s attempts=${entry.gen!.attempts} → ${raw}; ${counter(after)}`,
+      );
     } else {
       failures += 1;
-      console.log(`FAILED (see assets/.gen/${id}.log)`);
-      console.log(log.split('\n').slice(-12).join('\n'));
+      console.log(
+        `FAILED (see ${raw.replace(/\.png$/, '.log')}; ${result.seconds}s; ${counter(after)})`,
+      );
+      console.log(result.log.split('\n').slice(-12).join('\n'));
+      log(
+        `${id}: FAILED ${preset} ${result.seconds}s attempts=${entry.gen!.attempts}; ${counter(after)}`,
+      );
     }
     // Persist after every asset so an interrupted run keeps its history. Only this entry's
     // gen record is merged into a fresh read of the manifest, so a concurrent post-processing
@@ -204,7 +316,12 @@ function main(): void {
       writeManifest(fresh);
     }
   }
+  if (!args.dryRun) log(`run end: ${failures} failure(s)`);
   if (failures) process.exit(1);
 }
 
-main();
+main().catch((err) => {
+  console.error(`gen-assets: ${(err as Error).message}`);
+  log(`run aborted: ${(err as Error).message}`);
+  process.exit(2);
+});

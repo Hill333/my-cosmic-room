@@ -6,7 +6,7 @@ import { collectedCount } from '../../core/inventory.ts';
 import { suggestedLevel } from '../../core/mission.ts';
 import { earnableTotal, requireItem } from '../../catalog/index.ts';
 import { ENTRY_GEOMETRY } from '../../catalog/slots.ts';
-import { devTick, dispatch, save, soundOn } from '../../state/store.ts';
+import { devFace, devTick, dispatch, save, soundOn } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
@@ -189,6 +189,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
           slots={themeState.slots}
           heroine={state.heroine}
           sparkle={sparkle}
+          face={import.meta.env.DEV ? devFace.value : 'neutral'}
           lampOn={themeState.lampOn}
           stars={themeState.stars}
           interaction={{
@@ -225,7 +226,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
             <span class="entry-envelope" aria-hidden="true" />
           )}
         </button>
-        {import.meta.env.DEV && <SlotDebugLoader theme={theme} />}
+        {import.meta.env.DEV && <DebugLoader theme={theme} />}
       </div>
       <header class="s1-topleft">
         <h1 id="s1-title" class="room-badge" tabIndex={-1} ref={heading}>
@@ -371,15 +372,19 @@ function entryStyle(theme: Theme) {
   };
 }
 
-/** `?debug=slots` (SPEC §16.4): loads the slot overlay on demand, dev builds only. */
-function SlotDebugLoader({ theme }: { theme: Theme }) {
+/**
+ * `?debug=slots` and `?debug=heroine` (SPEC §16.4): load the slot geometry overlay or the
+ * heroine anchor overlay on demand, dev builds only.
+ */
+function DebugLoader({ theme }: { theme: Theme }) {
   const [Overlay, setOverlay] = useState<FunctionComponent<{ theme: Theme }> | null>(null);
   const wanted =
-    typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('debug') === 'slots';
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('debug') : null;
   useEffect(() => {
-    if (wanted && !Overlay) {
+    if (wanted === 'slots' && !Overlay) {
       void import('../components/SlotDebug.tsx').then((m) => setOverlay(() => m.SlotDebug));
+    } else if (wanted === 'heroine' && !Overlay) {
+      void import('../components/HeroineDebug.tsx').then((m) => setOverlay(() => m.HeroineDebug));
     }
   }, [wanted, Overlay]);
   return wanted && Overlay ? <Overlay theme={theme} /> : null;

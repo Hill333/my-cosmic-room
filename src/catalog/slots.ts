@@ -22,8 +22,8 @@ export const COMPANION_Z = 41;
 
 /** Where the heroine's feet land (bottom centre of the 600 × 900 canvas) and her stage height. */
 export const HEROINE_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
-  space: { x: 470, y: 850, height: 420 },
-  sweet: { x: 470, y: 850, height: 420 },
+  space: { x: 470, y: 856, height: 450 },
+  sweet: { x: 470, y: 856, height: 450 },
 };
 
 /** Companion feet (bottom centre of the 400 × 480 pose) and stage height. */
@@ -40,30 +40,36 @@ export const ENTRY_GEOMETRY: Record<Theme, { x: number; y: number; height: numbe
 
 /** Star chart poster (SPEC §10.5): a small fixed poster, top-left corner and stage width (3:2). */
 export const STAR_CHART_GEOMETRY: Record<Theme, { x: number; y: number; width: number }> = {
-  space: { x: 24, y: 138, width: 172 },
-  sweet: { x: 52, y: 168, width: 148 },
+  space: { x: 430, y: 130, width: 172 },
+  sweet: { x: 330, y: 150, width: 148 },
 };
 
 export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
+  // Space (M3b backdrop, docs/concepts/01-room-and-wardrobe.png): the lamp stands on the
+  // painted nightstand under the arched window, the shelf toy on top of the low bookshelf at
+  // the left, the poster on the blank wall left of the window, the beanbag in front of the
+  // bookshelf; the wall centre stays clear for the hanging (SPEC §15.2 item 4).
   space: {
     BED: { x: 1200, y: 840, scale: 1.35, z: 50 },
     RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
-    LAMP: { x: 1138, y: 508, scale: 0.85, z: 20 },
-    WALL: { x: 1080, y: 168, scale: 0.9, z: 12 },
-    SHELF: { x: 1100, y: 292, scale: 0.8, z: 21 },
-    HANGING: { x: 880, y: 92, scale: 1.1, z: 22 },
-    NOOK: { x: 215, y: 885, scale: 1.25, z: 52 },
+    LAMP: { x: 1125, y: 548, scale: 0.85, z: 20 },
+    WALL: { x: 960, y: 180, scale: 0.9, z: 12 },
+    SHELF: { x: 280, y: 400, scale: 0.8, z: 21 },
+    HANGING: { x: 700, y: 40, scale: 1.1, z: 22 },
+    NOOK: { x: 250, y: 900, scale: 1.25, z: 52 },
   },
-  // Sweet: the lamp stands on the painted nightstand, the shelf toy sits on the tall
-  // cabinet's middle shelf and the bed stands in front of the cabinet (SPEC §15.2 item 4).
+  // Sweet (M3b backdrop, docs/concepts/early-playroom.png): the lamp stands on the painted
+  // mint cabinet under the window, the shelf toy on an empty shelf of the tall unit at the
+  // left, the poster on the blank wall, the bunting across the ceiling left of the window,
+  // the bed in front of the window wall, the cushion in front of the shelf unit.
   sweet: {
-    BED: { x: 1290, y: 872, scale: 1.15, z: 50 },
+    BED: { x: 1080, y: 890, scale: 1.25, z: 50 },
     RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
-    LAMP: { x: 1050, y: 456, scale: 0.85, z: 20 },
-    WALL: { x: 1050, y: 296, scale: 0.9, z: 12 },
-    SHELF: { x: 1265, y: 365, scale: 0.75, z: 21 },
-    HANGING: { x: 880, y: 44, scale: 1, z: 22 },
-    NOOK: { x: 240, y: 890, scale: 1.25, z: 52 },
+    LAMP: { x: 1440, y: 468, scale: 0.85, z: 20 },
+    WALL: { x: 900, y: 330, scale: 0.9, z: 12 },
+    SHELF: { x: 140, y: 500, scale: 0.75, z: 21 },
+    HANGING: { x: 640, y: 44, scale: 1, z: 22 },
+    NOOK: { x: 300, y: 900, scale: 1.25, z: 52 },
   },
 };
 

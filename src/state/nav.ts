@@ -26,8 +26,10 @@ export function missionScreen(mission: Mission | null): Screen | null {
 
 function initialScreen(): Screen {
   if (import.meta.env.DEV && typeof window !== 'undefined') {
-    const id = new URLSearchParams(window.location.search).get('screen');
-    if (id === 'S1') return { id: 'S1', theme: 'space' };
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('screen');
+    const theme = params.get('theme') === 'sweet' ? 'sweet' : 'space';
+    if (id === 'S1') return { id: 'S1', theme };
     if (id === 'S2') return { id: 'S2', theme: save.value.settings.lastTheme };
     if (id === 'S6') return { id: 'S6', returnTo: { id: 'S0' } };
     if (id === 'harness') return { id: 'harness' };

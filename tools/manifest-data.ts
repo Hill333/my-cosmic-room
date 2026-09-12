@@ -3,7 +3,13 @@
  * non-catalogue assets from SPEC §15.3. Prompts are one sentence; the style block is
  * added by tools/gen-assets.ts (SPEC §15.6).
  */
-import type { AssetEntry, GenPreset } from '../src/assetTypes.ts';
+import type {
+  AnchorKind,
+  AssetEntry,
+  FigureAnchors,
+  GenPreset,
+  TileCrop,
+} from '../src/assetTypes.ts';
 import type { SlotType } from '../src/core/types.ts';
 
 export const SPACE_REF = 'docs/concepts/01-room-and-wardrobe.png';
@@ -27,7 +33,6 @@ export const SIZE_OVERRIDES: Record<string, { size: [number, number]; pivot: [nu
 };
 
 export const TILE_SIZE: [number, number] = [360, 360];
-export const HEROINE_CANVAS: [number, number] = [600, 900];
 
 /** Decoration prompts and presets by item name (SPEC §15.6 rubric). */
 export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset }> = {
@@ -171,6 +176,140 @@ export const GARMENT_LABELS: Record<string, string> = {
   'sweet.bowHeadband': 'bow headband',
 };
 
+/** Heroine figures (SPEC §4.5): one raster per outfit × hairstyle, all generated from the sheet. */
+export const HEROINE_CANVAS: [number, number] = [600, 900];
+
+/**
+ * Default anchors on the 600 × 900 figure canvas, tuned on the first generated figures (the
+ * pose is the same in every figure); post-processing scales the y values to where the girl
+ * actually lands on the canvas, and `?debug=heroine` nudges them per figure.
+ */
+export const DEFAULT_ANCHORS: FigureAnchors = {
+  face: { x: 300, y: 190, scale: 1 },
+  head: { x: 300, y: 80, scale: 0.8 },
+  feet: { x: 300, y: 895, scale: 0.78 },
+  back: { x: 300, y: 420, scale: 0.9 },
+};
+
+/** Outfit descriptions by figure name (the outfit item's `art.figure`). */
+export const OUTFIT_PROMPTS: Record<string, string> = {
+  planetTee:
+    'a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt',
+  floralSweater:
+    'a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress',
+  starHoodie:
+    'a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers',
+  cloudPyjamas:
+    'light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds',
+  spacesuit:
+    "a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring",
+  floralPyjamas:
+    'soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers',
+  strawberryDress:
+    'a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem',
+};
+
+/** Hairstyle descriptions by figure name (the hair item's `art.figure`). */
+export const HAIR_PROMPTS: Record<string, string> = {
+  buns: 'the same brown hair in two buns as in the reference sheet',
+  ponytail:
+    'her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet',
+  loose:
+    'her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet',
+};
+
+export function figurePrompt(outfit: string, hair: string): string {
+  return (
+    `the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with ${HAIR_PROMPTS[hair]}, ` +
+    `full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing ${OUTFIT_PROMPTS[outfit]}, ` +
+    'plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile'
+  );
+}
+
+export const FACES: [string, string][] = [
+  ['happy', 'happy expression: closed smiling eyes and a big open smile'],
+  [
+    'thinking',
+    'thinking expression: eyes looking up to one side, one eyebrow raised, a small closed mouth pulled to one side',
+  ],
+  [
+    'cheering',
+    'cheering expression: closed happy eyes, raised eyebrows and a wide open cheering mouth',
+  ],
+];
+export const FACE_SIZE: [number, number] = [260, 220];
+
+export interface OverlaySpec {
+  prompt: string;
+  preset: GenPreset;
+  anchor: AnchorKind;
+  size: [number, number];
+  /** Point of the overlay that lands on the anchor; bottom centre for feet, centre otherwise. */
+  pivot: [number, number];
+  offset?: [number, number];
+  tileCrop: TileCrop;
+}
+
+const shoes = (prompt: string): OverlaySpec => ({
+  prompt: `a pair of ${prompt}, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer`,
+  preset: 'sol-med',
+  anchor: 'feet',
+  size: [300, 200],
+  pivot: [150, 200],
+  tileCrop: 'feet',
+});
+
+/** Shoe and extra overlays by item name (SPEC §4.5): generated cut-outs snapped to the figure. */
+export const OVERLAY_GEN: Record<string, OverlaySpec> = {
+  sneakers: shoes(
+    'white low sneakers with white laces, worn with yellow crew socks with two thin white stripes',
+  ),
+  maryJanes: shoes('pink mary-jane shoes with a strap and a tiny bow, worn with short white socks'),
+  bunnySlippers: shoes('fluffy white bunny slippers with pink inner ears and little faces'),
+  spaceBoots: shoes('chunky white space boots with lavender soles and small yellow stars'),
+  catSlippers: shoes('soft grey cat slippers with pointed ears, whiskers and pink noses'),
+  rainbowSandals: shoes(
+    'rainbow-striped sandals with a toe strap and an ankle strap, worn over short white socks',
+  ),
+  starClip: {
+    prompt: 'a small yellow star hair clip with a short clip bar, seen from the front',
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [110, 110],
+    pivot: [55, 55],
+    offset: [80, 50],
+    tileCrop: 'head',
+  },
+  flowerClip: {
+    prompt:
+      'a small lilac flower hair clip with a yellow centre and a short clip bar, seen from the front',
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [110, 110],
+    pivot: [55, 55],
+    offset: [80, 50],
+    tileCrop: 'head',
+  },
+  bowHeadband: {
+    prompt:
+      "a pink fabric headband with a big bow on top, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [300, 150],
+    pivot: [150, 105],
+    tileCrop: 'head',
+  },
+  rocketBackpack: {
+    prompt:
+      'a toy rocket backpack seen from the front as it shows behind the shoulders of a child: a chubby white and coral rocket with a lavender nose cone, a round window and two small fins, with two lavender straps',
+    preset: 'sol-med',
+    anchor: 'back',
+    size: [360, 440],
+    pivot: [180, 220],
+    tileCrop: 'torso',
+  },
+};
+
 /** Sound effects (SPEC §15.4), synthesized by tools/gen-sounds.ts into assets/<theme>/sound/. */
 export const SOUNDS: { id: string; theme: AssetEntry['theme']; label: string }[] = [
   { id: 'shared/sound/tap', theme: 'shared', label: 'Tap' },
@@ -210,7 +349,7 @@ export const EXTRA_ASSETS: Extra[] = [
     label: 'Space room background',
     ...gen(
       'astra-light',
-      "a cosy child's bedroom in peach, lavender and mint with a round window showing stars and planets, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+      "the child's bedroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls dotted with small pastel stars and tiny planets, a big arched window on the right third showing a deep purple night sky with a ringed planet, a blue planet and stars, a warm honey wooden plank floor, a low wooden bookshelf with books and a potted plant at the far left, a small wall shelf with a plant and books at the upper left, trailing green leaves, a small nightstand under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no shelf, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no mobile, no cushion, no beanbag and no character; keep the floor centre and the right half of the floor clear",
       [SPACE_REF],
     ),
   },
@@ -222,11 +361,12 @@ export const EXTRA_ASSETS: Extra[] = [
     label: 'Sweet room background',
     ...gen(
       'astra-light',
-      "a cosy child's playroom in peach and mint with flower wallpaper, a window with a sunny garden, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+      'the pastel playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls, a tall mint-green open shelf unit with a few books and a small framed picture at the far left with trailing green ivy on top, a big arched window on the upper right showing a sunny sky, a smiling sun, distant houses and a hedge, a pale honey wooden floor, a small mint cabinet under the window, a low white skirting board, a large open floor space in the centre; the centre wall must be blank (no poster, no banner, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no mobile, no cushion, no window seat and no character or cat; keep the floor centre and the right half of the floor clear',
       [SWEET_REF],
     ),
   },
-  // Heroine (vector, traced from one generated reference sheet)
+  // Heroine reference sheet (SPEC §15.2 item 2): the figures, faces, shoes and extras below
+  // are generated with it attached so they stay the same girl.
   {
     id: HEROINE_SHEET,
     theme: 'shared',
@@ -239,51 +379,21 @@ export const EXTRA_ASSETS: Extra[] = [
       [SPACE_REF],
     ),
   },
-  {
-    id: 'shared/heroine/body',
+  ...FACES.map(([name, expression]): Extra => ({
+    id: `shared/heroine/face/${name}`,
     theme: 'shared',
     category: 'heroine',
-    size: HEROINE_CANVAS,
-    layer: 'body',
-    label: 'Heroine body',
-    source: 'hand-drawn',
-  },
-  {
-    id: 'shared/heroine/face/neutral',
-    theme: 'shared',
-    category: 'heroine',
-    size: [300, 200],
+    size: FACE_SIZE,
+    pivot: [FACE_SIZE[0] / 2, FACE_SIZE[1] / 2],
     layer: 'face',
-    label: 'Face neutral',
-    source: 'hand-drawn',
-  },
-  {
-    id: 'shared/heroine/face/happy',
-    theme: 'shared',
-    category: 'heroine',
-    size: [300, 200],
-    layer: 'face',
-    label: 'Face happy',
-    source: 'hand-drawn',
-  },
-  {
-    id: 'shared/heroine/face/thinking',
-    theme: 'shared',
-    category: 'heroine',
-    size: [300, 200],
-    layer: 'face',
-    label: 'Face thinking',
-    source: 'hand-drawn',
-  },
-  {
-    id: 'shared/heroine/face/cheering',
-    theme: 'shared',
-    category: 'heroine',
-    size: [300, 200],
-    layer: 'face',
-    label: 'Face cheering',
-    source: 'hand-drawn',
-  },
+    anchor: 'face',
+    label: `Face ${name}`,
+    ...gen(
+      'astra-light',
+      `only the face of the exact same seven-year-old girl from the attached reference sheet with the ${expression}, matching the top row of the sheet: her eyes, eyebrows, small nose, pink blush and mouth painted on a flat oval patch of her exact skin colour, front view, at the same scale as the sheet's heads; no hair, no ears, no neck, no hands, no outline around the patch`,
+      [HEROINE_SHEET],
+    ),
+  })),
   // Companions: idle, cheer, hmm, special
   ...(['idle', 'cheer', 'hmm', 'special'] as const).map((pose): Extra => ({
     id: `space/companion/pip/${pose}`,

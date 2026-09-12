@@ -15,7 +15,7 @@ import { SLOT_TYPES } from '../../core/types.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { Companion, type CompanionPose } from './Companion.tsx';
-import { HeroinePreview } from './Heroine.tsx';
+import { HeroinePreview, type Face } from './Heroine.tsx';
 import { StarChart } from './StarChart.tsx';
 
 export type RoomMode = 'free' | 'decorate' | 'dressup';
@@ -48,7 +48,8 @@ interface Props {
   heroine?: HeroineState;
   /** Item that was just applied: gets the sparkle (SPEC §3.4, §10.3). */
   sparkle?: ItemId | null;
-  face?: 'neutral' | 'happy' | 'thinking' | 'cheering';
+  /** Expression overlay; `neutral` is the figure's own face (SPEC §4.5). */
+  face?: Face;
   /** Evening lighting from the LAMP reaction (SPEC §4.3), saved per theme. */
   lampOn?: boolean;
   /** Filled stars on the theme's poster (SPEC §10.5). */
@@ -118,7 +119,7 @@ export function RoomScene({
   slots,
   heroine,
   sparkle = null,
-  face = 'happy',
+  face = 'neutral',
   lampOn = false,
   stars = 0,
   interaction,
@@ -175,6 +176,8 @@ export function RoomScene({
   ]
     .filter(Boolean)
     .join(' ');
+  // The heroine's tap reaction (SPEC §4.3) also lights up her face.
+  const shownFace: Face = reaction?.target === 'heroine' && face === 'neutral' ? 'happy' : face;
   const heroineClass = [
     'room-heroine',
     sparkleOnHeroine && 'sparkle',
@@ -287,7 +290,7 @@ export function RoomScene({
             onClick={interaction.onHeroineClick}
             onAnimationEnd={interaction.onReactionEnd}
           >
-            <HeroinePreview face={face} heroine={heroine} />
+            <HeroinePreview face={shownFace} heroine={heroine} />
           </button>
           <button
             type="button"

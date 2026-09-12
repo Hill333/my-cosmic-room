@@ -57,9 +57,14 @@ describe('catalogue shape (SPEC §4.1, §4.4, §11.2)', () => {
       if (item.kind === 'decoration') {
         expect(item.slot).toBeDefined();
         expect(item.art.room).toBeDefined();
+      } else if (item.kind === 'outfit' || item.kind === 'hair') {
+        expect(item.slot).toBeUndefined();
+        expect(item.art.figure).toBeTruthy();
+        expect(item.art.heroineLayer).toBeUndefined();
       } else {
         expect(item.slot).toBeUndefined();
         expect(item.art.heroineLayer).toBeDefined();
+        expect(item.art.figure).toBeUndefined();
       }
       expect(item.art.tile).toBeTruthy();
     }

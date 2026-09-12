@@ -47,9 +47,5 @@ export const spaceItems: Item[] = [
   decoration('space', 'galaxyPoster', 'WALL', { collection: 'space.rainbowExplorer', order: 2 }),
   garment('space', 'spacesuit', 'outfit', { collection: 'space.rainbowExplorer', order: 3 }),
   garment('space', 'spaceBoots', 'shoes', { collection: 'space.rainbowExplorer', order: 4 }),
-  garment('space', 'rocketBackpack', 'extra', {
-    collection: 'space.rainbowExplorer',
-    order: 5,
-    back: true,
-  }),
+  garment('space', 'rocketBackpack', 'extra', { collection: 'space.rainbowExplorer', order: 5 }),
 ];

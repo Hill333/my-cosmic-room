@@ -5,19 +5,23 @@
  *
  *   node tools/build-manifest.ts
  */
-import { allItems } from '../src/catalog/index.ts';
+import { allItems, defaultHeroine, figureId, requireItem } from '../src/catalog/index.ts';
 import type { AssetEntry, AssetManifest, GenRecord } from '../src/assetTypes.ts';
 import {
   DECORATION_GEN,
+  DEFAULT_ANCHORS,
   EXTRA_ASSETS,
   GARMENT_LABELS,
   HEROINE_CANVAS,
+  HEROINE_SHEET,
+  OVERLAY_GEN,
   SIZE_OVERRIDES,
   SLOT_SIZES,
   SOUNDS,
   SPACE_REF,
   SWEET_REF,
   TILE_SIZE,
+  figurePrompt,
 } from './manifest-data.ts';
 import { readManifest, writeManifest } from './lib/manifest.ts';
 
@@ -34,6 +38,8 @@ function titleCase(label: string): string {
 }
 
 const desired = new Map<string, AssetEntry>();
+const defaultOutfit = requireItem(defaultHeroine.outfit).art.figure!;
+const defaultHair = requireItem(defaultHeroine.hair).art.figure!;
 
 for (const item of allItems) {
   const label = titleCase(
@@ -66,17 +72,37 @@ for (const item of allItems) {
       label,
       derivedFrom: item.art.room,
     });
-  } else if (item.art.heroineLayer && item.kind !== 'decoration') {
-    const layer = item.kind;
-    desired.set(item.art.heroineLayer, {
+  } else if (item.kind === 'outfit' || item.kind === 'hair') {
+    // The figure is created below (one per outfit × hairstyle); the tile is a cropped view
+    // of the figure that shows this garment with the default counterpart (SPEC §4.5).
+    const outfit = item.kind === 'outfit' ? item.art.figure! : defaultOutfit;
+    const hair = item.kind === 'hair' ? item.art.figure! : defaultHair;
+    desired.set(item.art.tile, {
+      path: placeholderPath(item.art.tile),
+      theme: item.theme,
+      category: 'tile',
+      size: TILE_SIZE,
+      label,
+      derivedFrom: figureId(outfit, hair),
+      tileCrop: item.kind === 'outfit' ? 'torso' : 'head',
+    });
+  } else if (item.art.heroineLayer) {
+    const name = item.art.heroineLayer.split('/').pop()!;
+    const spec = OVERLAY_GEN[name];
+    if (!spec) throw new Error(`No overlay spec for ${item.id} in tools/manifest-data.ts`);
+    const entry: AssetEntry = {
       path: placeholderPath(item.art.heroineLayer),
       theme: 'shared',
       category: 'garment',
-      size: HEROINE_CANVAS,
-      layer,
+      size: spec.size,
+      pivot: spec.pivot,
+      layer: item.kind === 'shoes' ? 'shoes' : 'extra',
+      anchor: spec.anchor,
       label,
-      source: 'hand-drawn',
-    });
+      gen: newGen(spec.preset, spec.prompt, [HEROINE_SHEET]),
+    };
+    if (spec.offset) entry.offset = spec.offset;
+    desired.set(item.art.heroineLayer, entry);
     desired.set(item.art.tile, {
       path: placeholderPath(item.art.tile),
       theme: item.theme,
@@ -84,18 +110,27 @@ for (const item of allItems) {
       size: TILE_SIZE,
       label,
       derivedFrom: item.art.heroineLayer,
+      tileCrop: spec.tileCrop,
     });
-    if (item.art.heroineBack) {
-      desired.set(item.art.heroineBack, {
-        path: placeholderPath(item.art.heroineBack),
-        theme: 'shared',
-        category: 'garment',
-        size: HEROINE_CANVAS,
-        layer: `${layer}Back` as AssetEntry['layer'],
-        label: `${label} (behind)`,
-        source: 'hand-drawn',
-      });
-    }
+  }
+}
+
+// Heroine figures (SPEC §4.5): one full-body raster per outfit × hairstyle.
+for (const outfit of allItems.filter((i) => i.kind === 'outfit')) {
+  for (const hair of allItems.filter((i) => i.kind === 'hair')) {
+    const id = figureId(outfit.art.figure!, hair.art.figure!);
+    desired.set(id, {
+      path: placeholderPath(id),
+      theme: 'shared',
+      category: 'heroine',
+      size: HEROINE_CANVAS,
+      layer: 'figure',
+      anchors: structuredClone(DEFAULT_ANCHORS),
+      label: `${titleCase(GARMENT_LABELS[outfit.id] ?? outfit.id)}, ${GARMENT_LABELS[hair.id] ?? hair.id}`,
+      gen: newGen('astra-light', figurePrompt(outfit.art.figure!, hair.art.figure!), [
+        HEROINE_SHEET,
+      ]),
+    });
   }
 }
 
@@ -144,6 +179,10 @@ for (const [id, entry] of desired) {
       merged.size = old.size;
       if (old.pivot) merged.pivot = old.pivot;
     }
+    // Hand-tuned figure anchors and overlay offsets / scales survive a rebuild.
+    if (old.anchors && entry.anchors) merged.anchors = old.anchors;
+    if (old.offset && entry.offset) merged.offset = old.offset;
+    if (old.scale !== undefined && entry.anchor) merged.scale = old.scale;
     if (old.duration !== undefined) merged.duration = old.duration;
     if (old.gen && entry.gen) {
       merged.gen = {

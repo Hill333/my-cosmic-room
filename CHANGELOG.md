@@ -15,6 +15,50 @@ parent-and-child session, the §15.6 art approval (no manifest entry is `approve
 title decision (the text lockup is shown; the generated logo is wired but off), the
 native-speaker wording review of Turkish and Dutch, and the deployment itself.
 
+## M3b Heroine and backdrops
+
+- Heroine as raster figures (SPEC §4.5, D17): the traced SVG heroine (`tools/gen-heroine.ts`,
+  `assets/shared/heroine/**.svg`) is replaced by generated full-body figures, one per
+  outfit × hairstyle (`shared/heroine/figure/<outfit>-<hair>`, 21 entries, astra-light, the
+  reference sheet attached, neutral face, white socks, no shoes), normalised by
+  `tools/post-assets.ts` onto the 600 × 900 canvas with the feet on the bottom edge. Shoes
+  (6) and extras (4) are generated overlays (sol-med) and the happy / thinking / cheering
+  faces are generated face patches (astra-light, feathered edge); each snaps to one of the
+  figure's manifest `anchors` (`face`, `feet`, `head`, `back`, each `{ x, y, scale }` in figure
+  px) by its `pivot` and `offset`; the rocket backpack uses the `back` anchor and is drawn
+  behind the figure. `catalog/heroine.ts` holds the pure geometry (`overlayBox`,
+  `overlayStyle`); `components/Heroine.tsx` keeps its props and the DOM contract (`.heroine`,
+  `data-outfit`, `data-shoes`, now also `data-hair`, `data-extra`, `data-face`). Catalogue:
+  outfits and hair carry `art.figure`; shoes and extras keep `art.heroineLayer`;
+  `heroineBack` is gone. The room shows the neutral figure (the happy face lights up during
+  the tap reaction); S5 shows the happy face; missions unchanged.
+- Wardrobe tiles are cropped views of the composited figure (`tileCrop`: torso for outfits
+  and the backpack, head for hair and clips, feet for shoes), derived by
+  `npm run assets:post` (`--tiles` redoes them all).
+- `?debug=heroine` (SPEC §16.4): dev overlay on S1 that draws the current figure's anchors and
+  the worn overlays' boxes, nudges them with the keyboard and copies the `anchors` JSON.
+- Codex usage guard (SPEC §15.6): `tools/codex-limits.ts` reads the five-hour and weekly
+  windows through `codex app-server`; `tools/gen-assets.ts` checks before every generation,
+  prints `PAUSED until <time>` and sleeps until the reset at 95 % (or a reported limit, or a
+  run whose output mentions a usage limit), stops at 95 % of the weekly window, prints the
+  counter after each image and appends everything to `assets/.gen/run.log`. `--variant <name>`
+  writes a candidate (`assets/.gen/<id>.<name>.png`) for side-by-side picks.
+- Room backdrops: `space/room/background` and `sweet/room/background` regenerated with the
+  concept image as the primary reference and a prompt describing its layout and palette
+  (two candidates each, the runner-up kept in `assets/.gen/`), slot regions and the standing
+  area empty; slot, heroine, companion, entry and lamp geometry retuned; S0 thumbnails
+  re-derived.
+- A hairstyle whose figure is still a placeholder shows the outfit's two-buns figure (the
+  ponytail and loose sets were generated last; four loose figures were left for the next
+  Codex window, see docs/NEXT_SESSION.md). The heroine stands 450 stage px tall (was 420).
+- Dev aids: `?screen=S1&theme=sweet` opens the Sweet room directly; `tools/screenshots.ts`
+  writes the review screenshots in `docs/screenshots/` (both rooms, the four dress-up tabs,
+  the title cards, S5) with Playwright against the dev server.
+- Tests: `catalog/heroine.test.ts` (5) covers the figure ids, the manifest shape (21 figures
+  with anchors, overlays with anchor and pivot, tiles with crops) and the overlay maths.
+  e2e unchanged in count (27); the AT-24/25/26 assertions on `data-outfit` / `data-shoes`
+  still hold on the raster heroine, so no spec needed changing.
+
 ## M5 Polish and release
 
 - Sounds (SPEC §13.3, §15.4): eleven short clips synthesized by `tools/gen-sounds.ts` (PCM

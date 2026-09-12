@@ -5,7 +5,7 @@
  *   node tools/check-assets.ts
  */
 import { existsSync } from 'node:fs';
-import { allItems } from '../src/catalog/index.ts';
+import { allItems, figureId } from '../src/catalog/index.ts';
 import { assetFile, readManifest } from './lib/manifest.ts';
 
 const manifest = readManifest();
@@ -13,9 +13,16 @@ const problems: string[] = [];
 
 for (const item of allItems) {
   for (const [role, id] of Object.entries(item.art)) {
-    if (!id) continue;
+    if (!id || role === 'figure') continue;
     if (!manifest.assets[id])
       problems.push(`${item.id}: art.${role} "${id}" is not in the manifest`);
+  }
+}
+// Every outfit × hairstyle needs its figure (SPEC §4.5).
+for (const outfit of allItems.filter((i) => i.kind === 'outfit')) {
+  for (const hair of allItems.filter((i) => i.kind === 'hair')) {
+    const id = figureId(outfit.art.figure!, hair.art.figure!);
+    if (!manifest.assets[id]) problems.push(`${outfit.id} × ${hair.id}: figure "${id}" missing`);
   }
 }
 for (const [id, entry] of Object.entries(manifest.assets)) {

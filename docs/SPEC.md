@@ -48,6 +48,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D14 | Mission composition | Activity A missions contain exactly two READ, one MATCH and one SET puzzle, shuffled, with SET never first. Activity B missions contain four elapsed-time puzzles. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. |
 | D15 | Companions | Space companion: a turquoise alien, placeholder name *Pip*. Sweet companion: a grey-and-white cat, placeholder name *Mimi*. Names are strings and can be changed. |
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
+| D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits), D9 (title). Everything else can be changed later without rework.
 
@@ -252,10 +253,13 @@ Slots: Hair, Outfit, Shoes, Extra.
 - Below the tabs: "What will you earn next?" with the two next prizes of this theme (§10.2) and a page indicator for the theme's collections (one dot per collection; the collection containing the next prize is highlighted).
 - Clothing is never consumed; changing outfit is always reversible.
 
-### 4.5 Heroine rendering
+### 4.5 Heroine rendering [D17]
 
-- The heroine is a layered sprite: body (with default face), hair layer behind and in front of the head, outfit layer, shoes layer, extra layer, face overlay for expressions (neutral, happy, thinking, cheering). All layers share one 600×900 canvas at 2× and are aligned by convention, so garments need no per-item offsets.
-- The same layered heroine is used on S1, S3, S4, S5 and the S0 cards, at different scales. Missions show the happy/thinking/cheering faces according to the puzzle state.
+- The heroine is a raster **figure** plus **overlays**. A figure is one full-body PNG per outfit × hairstyle (7 × 3 = 21), generated from the reference sheet with a neutral face, plain white socks and no shoes, cut out and normalised onto a 600×900 canvas at 2× (feet on the bottom edge, centred). The figure id is `shared/heroine/figure/<outfit>-<hair>`; outfits and hair styles name their figure part in the catalogue (`art.figure`).
+- Overlays are small generated cut-outs snapped to the figure: shoes at the **feet** anchor (they always cover the socks), an extra at the **head** anchor (clips, headband) or the **back** anchor (the rocket backpack, drawn behind the figure), and a face overlay at the **face** anchor for the happy, thinking and cheering expressions; neutral is the figure's own face.
+- Because generated figures are not pixel-identical, every figure entry in `manifest.json` carries `anchors: { face, feet, head, back }`, each `{ x, y, scale }` in figure px: the overlay's `pivot` (bottom centre for shoes, centre otherwise) plus its own `offset` lands on the anchor and the overlay is sized by `scale`. Post-processing writes a proportional guess; the `?debug=heroine` overlay (§16.4) nudges and copies the tuned values. This replaces the earlier "no per-item offsets" rule.
+- Wardrobe tiles are cropped views of the composited figure: the torso of `<outfit>-buns` for outfits (and for the backpack), the head of `planetTee-<hair>` for hair styles and clips, the feet for shoes.
+- The same heroine component is used on S1, S3, S4, S5 and the S0 cards, at different scales; only the current outfit × hairstyle figure is loaded. Missions show the happy/thinking/cheering faces according to the puzzle state; the room shows the neutral figure and lights up the happy face during the heroine's tap reaction.
 
 ## 5. Two-theme behaviour [P, D8]
 
@@ -889,9 +893,9 @@ Keys and all three languages for every gameplay string. Item names are in §11.2
 ### 15.2 Production approach
 
 1. **Placeholders first.** Every asset id in the manifest starts as a generated SVG placeholder (coloured rounded shape with the item's name). Gameplay, slots, wardrobe and missions are built and tested against placeholders, so art never blocks engineering.
-2. **Heroine as vector.** Generate one character reference sheet (front view, the four expressions, the three hair styles) through Codex CLI at the astra-light preset, then trace it as one SVG with named groups (body, face, hairBack, hairFront, outfit, shoes, extra). Each garment is an alternative group drawn on the same template, so alignment is guaranteed by construction and no per-item offsets exist. Faces are four small group variants.
+2. **Heroine as raster figures [D17].** Generate one character reference sheet (front view, the four expressions, the three hair styles) through Codex CLI at the astra-light preset, then generate, with the sheet attached, one full-body figure per outfit × hairstyle (astra-light; same pose, neutral face, white socks, no shoes), the six shoe pairs and four extras (sol-med, sheet attached) and the three expression faces (astra-light). Post-processing normalises each figure onto the 600×900 canvas and writes default anchors; overlays snap to the anchors, which are tuned by hand with `?debug=heroine` and recorded in the manifest (§4.5). Wardrobe tiles are cropped from the composited figure. The earlier traced-SVG approach (M1 to M5) is superseded.
 3. **Items and companions as generated cut-outs.** Generate each item separately through Codex CLI (§15.6), with the preset chosen by the complexity rubric, using one shared style prompt plus "single object, centred, plain white background, no text, no shadow", remove the background, crop to the silhouette, export PNG at 2× (tile 360 × 360; room layers sized to their slot). Record size and pivot in `manifest.json`. Regenerate any item whose outline weight or palette drifts.
-4. **Room backgrounds.** Generate each room through Codex CLI at the astra-light preset, *without* the seven slot contents (no bed, rug, lamp, poster, shelf toy, mobile, cushion) and with the heroine's standing area clear. Verify each slot region is empty before accepting. 3072 × 2048 PNG at 2×, compressed to about 1 MB.
+4. **Room backgrounds.** Generate each room through Codex CLI at the astra-light preset with the concept image as the primary reference and a prompt that describes the concept's layout and palette, *without* the seven slot contents (no bed, rug, lamp, poster, shelf toy, mobile, cushion) and with the heroine's standing area clear. Generate two candidates, pick the one closest to the concept whose slot regions are actually empty and keep the runner-up in `assets/.gen/`. Verify each slot region is empty before accepting. 3072 × 2048 PNG at 2× (1536 × 1024 when the tool's native size is smaller), compressed to about 1 MB.
 5. **UI icons** are hand-drawn SVG in the same outline style; **fonts** are bundled locally under an open licence with full Turkish coverage (verify ç ğ ı İ ö ş ü render in both weights).
 6. **Sounds** are short royalty-free or self-recorded clips, MP3 at 96 kbps, each under 50 KB.
 
@@ -902,11 +906,11 @@ Keys and all three languages for every gameplay string. Item names are in §11.2
 | Room backgrounds | 2 | PNG 2× | Slots and standing area left empty |
 | Slot starter decorations | 14 | PNG 2× (room layer; tile is a scaled copy) | 7 per room, §4.1 |
 | Earnable decorations | 12 | PNG 2× | 6 per theme, §11.2 |
-| Heroine base + faces | 1 + 4 | SVG groups | One template |
-| Hair | 3 | SVG groups | Starter, shared |
-| Outfits | 3 starter + 4 earned | SVG groups | |
-| Shoes | 2 starter + 4 earned | SVG groups | |
-| Extras | 4 earned | SVG groups | |
+| Heroine reference sheet | 1 | PNG | Attached to every heroine generation |
+| Heroine figures | 21 | PNG 2× (600 × 900) | One per outfit × hairstyle, with anchors |
+| Expression faces | 3 | PNG 2× | happy, thinking, cheering overlays |
+| Shoes | 2 starter + 4 earned | PNG 2× | Overlays at the feet anchor |
+| Extras | 4 earned | PNG 2× | Overlays at the head or back anchor |
 | Companions | 2 × 4 poses | PNG 2× or SVG | idle, cheer, hmm, special reaction |
 | Mission entry objects | 2 (+ 2 reaction states) | PNG 2× | toy rocket, toy letterbox |
 | Activity A scene art | Space: cockpit frame, rocket with 4 preparation overlays, launch flame; Sweet: kitchen frame, tea table with 4 overlays | about 14 | PNG 2× |
@@ -942,9 +946,9 @@ Assignment per category (counts approximate):
 
 | Assets | Preset |
 | --- | --- |
-| Room backgrounds (2); beds, starter and earned (4); mobiles (2); companions (8 poses); heroine reference sheet (1); Activity A frames (2); rocket with launch flame (2); set tea table (1); Activity B vehicles with courier (2); toy rocket entry object with reaction state (2); title logo (1) | astra-light, about 27 |
-| All other starter and earned decorations (about 26); preparation-step overlays (8); parcel, planet, moon, toy shop, playroom window (5); toy letterbox with flag state (2); hanging starters (2) | sol-med, about 45 |
-| UI icons, star chart, clocks, heroine garments | Not generated: hand-drawn SVG, garments traced on the template |
+| Room backgrounds (2); beds, starter and earned (4); mobiles (2); companions (8 poses); heroine reference sheet (1), heroine figures (21) and expression faces (3); Activity A frames (2); rocket with launch flame (2); set tea table (1); Activity B vehicles with courier (2); toy rocket entry object with reaction state (2); title logo (1) | astra-light, about 51 |
+| All other starter and earned decorations (about 26); preparation-step overlays (8); parcel, planet, moon, toy shop, playroom window (5); toy letterbox with flag state (2); hanging starters (2); heroine shoes (6) and extras (4) | sol-med, about 55 |
+| UI icons, star chart, clocks | Not generated: hand-drawn SVG |
 
 Escalation: a sol-med asset that fails the QA checklist three times is regenerated once at astra-light (the more capable model) before a human redraws it. The preset used is recorded in the manifest, so the split can be reviewed later.
 
@@ -958,12 +962,13 @@ codex exec -m <preset> \
   "<style block> <asset prompt> Save the result as assets/.gen/<id>.png at <w>x<h> pixels."
 ```
 
-- `-m` selects the preset; `-i` attaches the style reference (the Space room concept for Space assets, `early-playroom.png` for Sweet assets, the reference sheet for companions and garments); `-s workspace-write` limits writes to the repository; `-o` keeps the agent's final message as the generation log.
+- `-m` selects the preset; `-i` attaches the style reference (the Space room concept for Space assets, `early-playroom.png` for Sweet assets, the reference sheet for companions and every heroine figure, face, shoe and extra); `-s workspace-write` limits writes to the repository; `-o` keeps the agent's final message as the generation log.
+- Usage guard: before every generation the script reads the Codex five-hour and weekly windows through `codex app-server` (`tools/codex-limits.ts`). At 95 % of the five-hour window, or when the server reports a reached limit, or when a run's output mentions a rate or usage limit, it prints `PAUSED until <local time>`, sleeps until the window resets and continues; at 95 % of the weekly window it stops. Every check and every asset (preset, seconds, attempts, the counter after it) is appended to `assets/.gen/run.log`. `--variant <name>` writes a candidate next to the main file for a side-by-side pick (used for the room backgrounds).
 - M0 verifies with one asset per preset that the two preset names resolve in the installed Codex CLI and that it writes PNG files. If the names differ, only the script's preset table changes. If this Codex CLI version cannot emit image files, the same prompts are run through the image tool used for the concepts and the manifest records the fallback per asset.
 
 **Prompt structure.** A fixed style block from §15.1 (cosy dollhouse cartoon, rounded dark-plum outlines, flat fills with soft shading, palette hex values, "single object, centred, plain white background, no text, no shadow, no watermark") followed by the asset's one-sentence prompt from the manifest (for example "a child's bed shaped like a crescent moon with star-patterned purple bedding") and the output size. Backgrounds replace the single-object clause with "empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character". Companion prompts always attach the approved idle pose as a second reference.
 
-**Post-processing (scripted).** Background removal, crop to the silhouette with 8 px padding, resize to the manifest size, PNG compression, tile copy for the panel. Room layers keep their pivot in the manifest.
+**Post-processing (scripted).** Background removal, crop to the silhouette with 8 px padding, resize to the manifest size, PNG compression, tile copy for the panel. Room layers keep their pivot in the manifest. Heroine figures are normalised onto the 600×900 canvas (feet on the bottom edge, centred) and get default `anchors` the first time; overlays are fitted to their manifest size (faces get a soft elliptical edge); heroine tiles are cropped views of the composited figure (§4.5).
 
 **QA checklist (human, in the slot debug overlay).** Outline weight and palette match neighbouring assets; the silhouette reads at tile size; no text or artefacts; the item fits its slot without covering the heroine's standing area; companions and the reference sheet match across poses.
 
@@ -976,6 +981,9 @@ gen: {
   status: 'placeholder' | 'generated' | 'approved',
   fallback?: string            // set when the image tool fallback was used
 }
+// Heroine figures additionally: anchors: { face, feet, head, back: { x, y, scale } } (figure px)
+// Heroine overlays additionally: anchor: 'face' | 'feet' | 'head' | 'back', offset?: [x, y]
+// Heroine tiles additionally: tileCrop: 'torso' | 'head' | 'feet'
 ```
 
 Prompts, presets, attempts and the generated PNGs are committed with the manifest, so any asset can be regenerated or audited later.
@@ -1017,7 +1025,7 @@ Rule: `core/` imports nothing from the DOM or Preact and is fully unit-tested; `
 
 ### 16.4 Development aids (stripped from production builds)
 
-`?seed=<n>` fixes the RNG; `?screen=<id>` deep-links a screen; `?lang=` overrides the language; a slot debug overlay; a dev panel to grant items, set levels and jump to the last puzzle.
+`?seed=<n>` fixes the RNG; `?screen=<id>` deep-links a screen; `?lang=` overrides the language; a slot debug overlay (`?debug=slots`); a heroine anchor overlay (`?debug=heroine`: shows the current figure's four anchors and the worn overlays' boxes, nudges them with the keyboard and copies the JSON for the manifest); a dev panel to grant items, set levels and jump to the last puzzle.
 
 ### 16.5 Delivery
 

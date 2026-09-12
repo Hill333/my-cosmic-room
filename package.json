@@ -19,7 +19,6 @@
     "assets:placeholders": "node tools/gen-placeholders.ts",
     "assets:gen": "node tools/gen-assets.ts",
     "assets:post": "node tools/post-assets.ts",
-    "assets:heroine": "node tools/gen-heroine.ts",
     "assets:sounds": "node tools/gen-sounds.ts",
     "assets:thumbs": "node tools/gen-thumbs.ts",
     "measure": "node tools/measure-load.ts"

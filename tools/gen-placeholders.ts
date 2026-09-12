@@ -84,23 +84,29 @@ function label(entry: AssetEntry, w: number, h: number): string {
     .join('');
 }
 
-/** Heroine layers share one 600×900 canvas; each layer draws only its region (SPEC §4.5). */
+/**
+ * Heroine placeholders (SPEC §4.5): a figure is a whole standing doll on the 600 × 900 canvas;
+ * shoes, extras and faces are small overlays drawn to fill their own box.
+ */
 function heroineLayer(entry: AssetEntry, w: number, h: number): string {
   const tag = `<text x="${w / 2}" y="${h - 20}" font-family="system-ui, sans-serif" font-size="22" fill="${PALETTE.plum}" text-anchor="middle" opacity="0.7">${escape(entry.label)}</text>`;
   const stroke = `stroke="${PALETTE.plum}" stroke-width="6"`;
   switch (entry.layer) {
-    case 'body':
-      return `<ellipse cx="300" cy="200" rx="120" ry="130" fill="#F8D9C4" ${stroke}/><rect x="200" y="320" width="200" height="300" rx="60" fill="#F8D9C4" ${stroke}/><rect x="230" y="600" width="55" height="220" rx="26" fill="#F8D9C4" ${stroke}/><rect x="315" y="600" width="55" height="220" rx="26" fill="#F8D9C4" ${stroke}/>`;
+    case 'figure':
+      return (
+        `<ellipse cx="300" cy="150" rx="135" ry="110" fill="#7A4A2E" ${stroke}/><circle cx="170" cy="100" r="45" fill="#7A4A2E" ${stroke}/><circle cx="430" cy="100" r="45" fill="#7A4A2E" ${stroke}/>` +
+        `<ellipse cx="300" cy="205" rx="112" ry="118" fill="#F8D9C4" ${stroke}/>` +
+        `<circle cx="255" cy="195" r="12" fill="${PALETTE.plum}"/><circle cx="345" cy="195" r="12" fill="${PALETTE.plum}"/><path d="M270 245 Q300 270 330 245" fill="none" ${stroke} stroke-linecap="round"/>` +
+        `<rect x="195" y="330" width="210" height="290" rx="50" fill="${PALETTE.lilac}" ${stroke}/>` +
+        `<rect x="230" y="600" width="55" height="250" rx="26" fill="#F8D9C4" ${stroke}/><rect x="315" y="600" width="55" height="250" rx="26" fill="#F8D9C4" ${stroke}/>` +
+        `<ellipse cx="258" cy="865" rx="50" ry="28" fill="#fff" ${stroke}/><ellipse cx="342" cy="865" rx="50" ry="28" fill="#fff" ${stroke}/>${tag}`
+      );
     case 'face':
-      return `<circle cx="100" cy="90" r="12" fill="${PALETTE.plum}"/><circle cx="200" cy="90" r="12" fill="${PALETTE.plum}"/><path d="M110 140 Q150 175 190 140" fill="none" ${stroke} stroke-linecap="round"/>${tag}`;
-    case 'hair':
-      return `<ellipse cx="300" cy="150" rx="135" ry="110" fill="#7A4A2E" ${stroke}/><circle cx="170" cy="120" r="45" fill="#7A4A2E" ${stroke}/><circle cx="430" cy="120" r="45" fill="#7A4A2E" ${stroke}/>${tag}`;
-    case 'outfit':
-      return `<rect x="195" y="330" width="210" height="290" rx="50" fill="${PALETTE.lilac}" ${stroke}/>${tag}`;
+      return `<ellipse cx="${w / 2}" cy="${h / 2}" rx="${w / 2 - 6}" ry="${h / 2 - 6}" fill="#F8D9C4"/><circle cx="${w * 0.35}" cy="${h * 0.42}" r="12" fill="${PALETTE.plum}"/><circle cx="${w * 0.65}" cy="${h * 0.42}" r="12" fill="${PALETTE.plum}"/><path d="M${w * 0.38} ${h * 0.68} Q${w / 2} ${h * 0.82} ${w * 0.62} ${h * 0.68}" fill="none" ${stroke} stroke-linecap="round"/>`;
     case 'shoes':
-      return `<ellipse cx="258" cy="835" rx="52" ry="30" fill="${PALETTE.blue}" ${stroke}/><ellipse cx="342" cy="835" rx="52" ry="30" fill="${PALETTE.blue}" ${stroke}/>${tag}`;
+      return `<ellipse cx="${w * 0.3}" cy="${h * 0.7}" rx="${w * 0.2}" ry="${h * 0.22}" fill="${PALETTE.blue}" ${stroke}/><ellipse cx="${w * 0.7}" cy="${h * 0.7}" rx="${w * 0.2}" ry="${h * 0.22}" fill="${PALETTE.blue}" ${stroke}/>`;
     case 'extra':
-      return `<circle cx="420" cy="70" r="34" fill="${PALETTE.star}" ${stroke}/>${tag}`;
+      return `<rect x="6" y="6" width="${w - 12}" height="${h - 12}" rx="${Math.min(w, h) * 0.3}" fill="${PALETTE.star}" ${stroke}/>`;
     default:
       return tag;
   }

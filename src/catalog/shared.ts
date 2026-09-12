@@ -2,7 +2,7 @@ import type { Item } from './types.ts';
 
 /**
  * Shared heroine starter wardrobe (SPEC §4.4): 3 hair, 3 outfits, 2 shoes, 0 extras.
- * Hair and garments are SVG groups on the heroine template (SPEC §4.5, §15.2).
+ * Hair and outfits name the raster figure they belong to; shoes are overlays (SPEC §4.5, §15.2).
  */
 export const sharedItems: Item[] = [
   {
@@ -12,7 +12,7 @@ export const sharedItems: Item[] = [
     order: 0,
     starter: true,
     nameKey: 'item.shared.hairBuns',
-    art: { tile: 'shared/tiles/hairBuns', heroineLayer: 'shared/heroine/hair/buns' },
+    art: { tile: 'shared/tiles/hairBuns', figure: 'buns' },
   },
   {
     id: 'shared.hairPonytail',
@@ -21,7 +21,7 @@ export const sharedItems: Item[] = [
     order: 1,
     starter: true,
     nameKey: 'item.shared.hairPonytail',
-    art: { tile: 'shared/tiles/hairPonytail', heroineLayer: 'shared/heroine/hair/ponytail' },
+    art: { tile: 'shared/tiles/hairPonytail', figure: 'ponytail' },
   },
   {
     id: 'shared.hairLoose',
@@ -30,7 +30,7 @@ export const sharedItems: Item[] = [
     order: 2,
     starter: true,
     nameKey: 'item.shared.hairLoose',
-    art: { tile: 'shared/tiles/hairLoose', heroineLayer: 'shared/heroine/hair/loose' },
+    art: { tile: 'shared/tiles/hairLoose', figure: 'loose' },
   },
   {
     id: 'shared.outfitPlanetTee',
@@ -39,7 +39,7 @@ export const sharedItems: Item[] = [
     order: 0,
     starter: true,
     nameKey: 'item.shared.outfitPlanetTee',
-    art: { tile: 'shared/tiles/outfitPlanetTee', heroineLayer: 'shared/heroine/outfit/planetTee' },
+    art: { tile: 'shared/tiles/outfitPlanetTee', figure: 'planetTee' },
   },
   {
     id: 'shared.outfitFloralSweater',
@@ -48,10 +48,7 @@ export const sharedItems: Item[] = [
     order: 1,
     starter: true,
     nameKey: 'item.shared.outfitFloralSweater',
-    art: {
-      tile: 'shared/tiles/outfitFloralSweater',
-      heroineLayer: 'shared/heroine/outfit/floralSweater',
-    },
+    art: { tile: 'shared/tiles/outfitFloralSweater', figure: 'floralSweater' },
   },
   {
     id: 'shared.outfitStarHoodie',
@@ -60,10 +57,7 @@ export const sharedItems: Item[] = [
     order: 2,
     starter: true,
     nameKey: 'item.shared.outfitStarHoodie',
-    art: {
-      tile: 'shared/tiles/outfitStarHoodie',
-      heroineLayer: 'shared/heroine/outfit/starHoodie',
-    },
+    art: { tile: 'shared/tiles/outfitStarHoodie', figure: 'starHoodie' },
   },
   {
     id: 'shared.shoesSneakers',

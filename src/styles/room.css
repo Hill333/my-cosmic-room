@@ -806,3 +806,39 @@ button.room-companion {
   margin: 6px 0 0;
   padding-left: 18px;
 }
+/* Heroine anchor overlay (`?debug=heroine`) */
+.heroine-debug-box {
+  position: absolute;
+  outline: 2px dashed rgba(232, 115, 95, 0.9);
+}
+.heroine-debug-overlay {
+  position: absolute;
+  outline: 2px solid rgba(76, 125, 224, 0.7);
+  background: rgba(76, 125, 224, 0.1);
+}
+.heroine-debug-overlay.heroine-debug-selected {
+  outline-color: var(--coral);
+  background: rgba(232, 115, 95, 0.15);
+}
+.heroine-debug-anchor {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.heroine-debug-anchor.heroine-debug-selected {
+  background: var(--coral);
+  transform: scale(1.4);
+}
+.heroine-debug-help {
+  left: auto;
+  right: 32px;
+  bottom: auto;
+  top: 120px;
+}
+.heroine-debug-help ul {
+  list-style: none;
+  padding: 0;
+}
+.heroine-debug-current {
+  color: var(--star);
+  font-weight: 700;
+}

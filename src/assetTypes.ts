@@ -18,6 +18,18 @@ export type AssetCategory =
   | 'sound';
 
 export type GenPreset = 'sol-med' | 'astra-light';
+
+export type AnchorKind = 'face' | 'feet' | 'head' | 'back';
+export type TileCrop = 'torso' | 'head' | 'feet';
+
+/** One anchor of a heroine figure: a point in figure px and a multiplier on the overlay size. */
+export interface Anchor {
+  x: number;
+  y: number;
+  scale: number;
+}
+
+export type FigureAnchors = Record<AnchorKind, Anchor>;
 export type GenStatus = 'placeholder' | 'generated' | 'approved';
 
 export interface GenRecord {
@@ -40,17 +52,21 @@ export interface AssetEntry {
   /** Anchor point inside the image for room layers, in the same pixel space. */
   pivot?: [number, number];
   slot?: SlotType;
-  /** Heroine layer name for garments (SPEC §4.5). */
-  layer?:
-    | 'body'
-    | 'face'
-    | 'hairBack'
-    | 'hairFront'
-    | 'hair'
-    | 'outfit'
-    | 'shoes'
-    | 'extra'
-    | 'extraBack';
+  /**
+   * Heroine layer (SPEC §4.5): `figure` is a full-body raster (one per outfit × hairstyle);
+   * `shoes`, `extra` and `face` are overlays snapped to one of the figure's anchors.
+   */
+  layer?: 'figure' | 'face' | 'shoes' | 'extra';
+  /** Overlays: the figure anchor the overlay's pivot lands on; `back` draws behind the figure. */
+  anchor?: AnchorKind;
+  /** Overlays: extra shift from the anchor in figure px (a clip sits beside the parting). */
+  offset?: [number, number];
+  /** Overlays: own size multiplier on top of the anchor's (faces differ in how they fill their box). */
+  scale?: number;
+  /** Figures: where the overlays snap, in figure px; tuned with `?debug=heroine`. */
+  anchors?: FigureAnchors;
+  /** Wardrobe tiles derived from a figure or overlay: which region of the figure to show. */
+  tileCrop?: TileCrop;
   /** English label used on placeholders and in the debug overlay. */
   label: string;
   /** Tiles and other copies derived from another asset by post-processing. */

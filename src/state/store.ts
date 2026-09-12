@@ -47,8 +47,10 @@ export const soundOn = computed(() => save.value.settings.sound);
 export const mission = computed(() => save.value.mission);
 export const motion = computed(() => save.value.settings.motion);
 
-/** Bumped by development aids (the slot debug overlay) to re-render after in-place tuning. */
+/** Bumped by development aids (the debug overlays) to re-render after in-place tuning. */
 export const devTick = signal(0);
+/** Face overlay forced by the heroine debug overlay (`?debug=heroine`, dev builds only). */
+export const devFace = signal<'neutral' | 'happy' | 'thinking' | 'cheering'>('neutral');
 
 /** Seed for a new mission: `?seed=<n>` in dev builds (SPEC §16.4), otherwise random. */
 export function newSeed(): number {

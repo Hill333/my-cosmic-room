@@ -17,10 +17,11 @@ export interface Item {
   /** String-table key for the item's name. */
   nameKey: string;
   /**
-   * Asset ids in assets/manifest.json (SPEC §15.5). `heroineBack` is the part of a garment
-   * drawn behind the body (the rocket backpack's tank), if it has one.
+   * Asset ids in assets/manifest.json (SPEC §15.5). Outfits and hair styles carry a `figure`
+   * name: the heroine is one raster figure per outfit × hairstyle (`figureId`, SPEC §4.5).
+   * Shoes and extras carry `heroineLayer`, an overlay snapped to a figure anchor.
    */
-  art: { room?: string; tile: string; heroineLayer?: string; heroineBack?: string };
+  art: { room?: string; tile: string; heroineLayer?: string; figure?: string };
   reaction?: ItemReaction;
 }
 

@@ -1,245 +1,1105 @@
 {
   "version": 1,
   "assets": {
-    "shared/heroine/body": {
-      "path": "shared/heroine/body.svg",
-      "theme": "shared",
-      "category": "heroine",
-      "size": [
-        600,
-        900
-      ],
-      "layer": "body",
-      "label": "Heroine body",
-      "source": "hand-drawn"
-    },
     "shared/heroine/extra/bowHeadband": {
-      "path": "shared/heroine/extra/bowHeadband.svg",
+      "path": "shared/heroine/extra/bowHeadband.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        164,
+        150
+      ],
+      "pivot": [
+        82,
+        105
       ],
       "layer": "extra",
+      "anchor": "head",
       "label": "Bow headband",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pink fabric headband with a big bow on top, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:45:58.335Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/extra/flowerClip": {
-      "path": "shared/heroine/extra/flowerClip.svg",
+      "path": "shared/heroine/extra/flowerClip.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        110,
+        87
+      ],
+      "pivot": [
+        55,
+        44
       ],
       "layer": "extra",
+      "anchor": "head",
       "label": "Flower hair clip",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small lilac flower hair clip with a yellow centre and a short clip bar, seen from the front",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:46:48.452Z",
+        "status": "generated"
+      },
+      "offset": [
+        80,
+        50
+      ]
     },
     "shared/heroine/extra/rocketBackpack": {
-      "path": "shared/heroine/extra/rocketBackpack.svg",
+      "path": "shared/heroine/extra/rocketBackpack.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        360,
+        434
+      ],
+      "pivot": [
+        180,
+        217
       ],
       "layer": "extra",
+      "anchor": "back",
       "label": "Rocket backpack",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a toy rocket backpack seen from the front as it shows behind the shoulders of a child: a chubby white and coral rocket with a lavender nose cone, a round window and two small fins, with two lavender straps",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:47:37.682Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/extra/starClip": {
-      "path": "shared/heroine/extra/starClip.svg",
+      "path": "shared/heroine/extra/starClip.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        110,
+        82
+      ],
+      "pivot": [
+        55,
+        41
       ],
       "layer": "extra",
+      "anchor": "head",
       "label": "Star hair clip",
-      "source": "hand-drawn"
-    },
-    "shared/heroine/extraBack/rocketBackpack": {
-      "path": "shared/heroine/extraBack/rocketBackpack.svg",
-      "theme": "shared",
-      "category": "garment",
-      "size": [
-        600,
-        900
-      ],
-      "layer": "extraBack",
-      "label": "Rocket backpack (behind)",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small yellow star hair clip with a short clip bar, seen from the front",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:49:09.437Z",
+        "status": "generated"
+      },
+      "offset": [
+        80,
+        50
+      ]
     },
     "shared/heroine/face/cheering": {
-      "path": "shared/heroine/face/cheering.svg",
+      "path": "shared/heroine/face/cheering.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
-        300,
-        200
+        254,
+        220
+      ],
+      "pivot": [
+        127,
+        110
       ],
       "layer": "face",
+      "anchor": "face",
       "label": "Face cheering",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the face of the exact same seven-year-old girl from the attached reference sheet with the cheering expression: closed happy eyes, raised eyebrows and a wide open cheering mouth, matching the top row of the sheet: her eyes, eyebrows, small nose, pink blush and mouth painted on a flat oval patch of her exact skin colour, front view, at the same scale as the sheet's heads; no hair, no ears, no neck, no hands, no outline around the patch",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:50:02.668Z",
+        "status": "generated"
+      },
+      "scale": 0.7
     },
     "shared/heroine/face/happy": {
-      "path": "shared/heroine/face/happy.svg",
+      "path": "shared/heroine/face/happy.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
-        300,
-        200
+        260,
+        211
+      ],
+      "pivot": [
+        130,
+        106
       ],
       "layer": "face",
+      "anchor": "face",
       "label": "Face happy",
-      "source": "hand-drawn"
-    },
-    "shared/heroine/face/neutral": {
-      "path": "shared/heroine/face/neutral.svg",
-      "theme": "shared",
-      "category": "heroine",
-      "size": [
-        300,
-        200
-      ],
-      "layer": "face",
-      "label": "Face neutral",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the face of the exact same seven-year-old girl from the attached reference sheet with the happy expression: closed smiling eyes and a big open smile, matching the top row of the sheet: her eyes, eyebrows, small nose, pink blush and mouth painted on a flat oval patch of her exact skin colour, front view, at the same scale as the sheet's heads; no hair, no ears, no neck, no hands, no outline around the patch",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:51:00.861Z",
+        "status": "generated"
+      },
+      "scale": 0.72
     },
     "shared/heroine/face/thinking": {
-      "path": "shared/heroine/face/thinking.svg",
+      "path": "shared/heroine/face/thinking.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
-        300,
-        200
+        256,
+        220
+      ],
+      "pivot": [
+        128,
+        110
       ],
       "layer": "face",
+      "anchor": "face",
       "label": "Face thinking",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the face of the exact same seven-year-old girl from the attached reference sheet with the thinking expression: eyes looking up to one side, one eyebrow raised, a small closed mouth pulled to one side, matching the top row of the sheet: her eyes, eyebrows, small nose, pink blush and mouth painted on a flat oval patch of her exact skin colour, front view, at the same scale as the sheet's heads; no hair, no ears, no neck, no hands, no outline around the patch",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:52:01.265Z",
+        "status": "generated"
+      },
+      "scale": 0.75,
+      "offset": [
+        0,
+        -6
+      ]
     },
-    "shared/heroine/hair/buns": {
-      "path": "shared/heroine/hair/buns.svg",
+    "shared/heroine/figure/cloudPyjamas-buns": {
+      "path": "shared/heroine/figure/cloudPyjamas-buns.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "hair",
-      "label": "Brown hair in two buns",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:34:47.528Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/hair/loose": {
-      "path": "shared/heroine/hair/loose.svg",
+    "shared/heroine/figure/cloudPyjamas-loose": {
+      "path": "shared/heroine/figure/cloudPyjamas-loose.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "hair",
-      "label": "Loose brown hair with a clip",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T19:00:38.251Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/hair/ponytail": {
-      "path": "shared/heroine/hair/ponytail.svg",
+    "shared/heroine/figure/cloudPyjamas-ponytail": {
+      "path": "shared/heroine/figure/cloudPyjamas-ponytail.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "hair",
-      "label": "Brown hair in a high ponytail",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:52:53.553Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/cloudPyjamas": {
-      "path": "shared/heroine/outfit/cloudPyjamas.svg",
+    "shared/heroine/figure/floralPyjamas-buns": {
+      "path": "shared/heroine/figure/floralPyjamas-buns.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Cloud pyjamas",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:35:43.877Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/floralPyjamas": {
-      "path": "shared/heroine/outfit/floralPyjamas.svg",
+    "shared/heroine/figure/floralPyjamas-loose": {
+      "path": "shared/heroine/figure/floralPyjamas-loose.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Floral pyjamas",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T19:02:36.153Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/floralSweater": {
-      "path": "shared/heroine/outfit/floralSweater.svg",
+    "shared/heroine/figure/floralPyjamas-ponytail": {
+      "path": "shared/heroine/figure/floralPyjamas-ponytail.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Floral sweater with pinafore",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 306,
+          "y": 895,
+          "scale": 0.84
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:53:47.650Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/planetTee": {
-      "path": "shared/heroine/outfit/planetTee.svg",
+    "shared/heroine/figure/floralSweater-buns": {
+      "path": "shared/heroine/figure/floralSweater-buns.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Lilac planet tee with mint skirt",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:36:34.615Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/spacesuit": {
-      "path": "shared/heroine/outfit/spacesuit.svg",
+    "shared/heroine/figure/floralSweater-loose": {
+      "path": "shared/heroine/figure/floralSweater-loose.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Colourful spacesuit",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T19:03:30.084Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/starHoodie": {
-      "path": "shared/heroine/outfit/starHoodie.svg",
+    "shared/heroine/figure/floralSweater-ponytail": {
+      "path": "shared/heroine/figure/floralSweater-ponytail.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Star hoodie with trousers",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 194,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:54:45.374Z",
+        "status": "generated"
+      }
     },
-    "shared/heroine/outfit/strawberryDress": {
-      "path": "shared/heroine/outfit/strawberryDress.svg",
+    "shared/heroine/figure/planetTee-buns": {
+      "path": "shared/heroine/figure/planetTee-buns.png",
       "theme": "shared",
-      "category": "garment",
+      "category": "heroine",
       "size": [
         600,
         900
       ],
-      "layer": "outfit",
-      "label": "Strawberry dress",
-      "source": "hand-drawn"
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:37:26.969Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/planetTee-loose": {
+      "path": "shared/heroine/figure/planetTee-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/planetTee-ponytail": {
+      "path": "shared/heroine/figure/planetTee-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:55:50.266Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/spacesuit-buns": {
+      "path": "shared/heroine/figure/spacesuit-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:38:32.015Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/spacesuit-loose": {
+      "path": "shared/heroine/figure/spacesuit-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/spacesuit-ponytail": {
+      "path": "shared/heroine/figure/spacesuit-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:56:54.749Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/starHoodie-buns": {
+      "path": "shared/heroine/figure/starHoodie-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:39:27.426Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/starHoodie-loose": {
+      "path": "shared/heroine/figure/starHoodie-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/starHoodie-ponytail": {
+      "path": "shared/heroine/figure/starHoodie-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:58:02.854Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/strawberryDress-buns": {
+      "path": "shared/heroine/figure/strawberryDress-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:40:17.268Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/figure/strawberryDress-loose": {
+      "path": "shared/heroine/figure/strawberryDress-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 200,
+          "scale": 0.9
+        },
+        "head": {
+          "x": 300,
+          "y": 92,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 430,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/strawberryDress-ponytail": {
+      "path": "shared/heroine/figure/strawberryDress-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 194,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:59:13.673Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/referenceSheet": {
       "path": "shared/heroine/referenceSheet.png",
@@ -262,76 +1122,160 @@
       }
     },
     "shared/heroine/shoes/bunnySlippers": {
-      "path": "shared/heroine/shoes/bunnySlippers.svg",
+      "path": "shared/heroine/shoes/bunnySlippers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        300,
+        178
+      ],
+      "pivot": [
+        150,
+        178
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Bunny slippers",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of fluffy white bunny slippers with pink inner ears and little faces, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:41:05.018Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/shoes/catSlippers": {
-      "path": "shared/heroine/shoes/catSlippers.svg",
+      "path": "shared/heroine/shoes/catSlippers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        300,
+        159
+      ],
+      "pivot": [
+        150,
+        159
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Cat slippers",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of soft grey cat slippers with pointed ears, whiskers and pink noses, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:41:53.046Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/shoes/maryJanes": {
-      "path": "shared/heroine/shoes/maryJanes.svg",
+      "path": "shared/heroine/shoes/maryJanes.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        253,
+        200
+      ],
+      "pivot": [
+        127,
+        200
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Pink mary-janes",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of pink mary-jane shoes with a strap and a tiny bow, worn with short white socks, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:42:44.081Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/shoes/rainbowSandals": {
-      "path": "shared/heroine/shoes/rainbowSandals.svg",
+      "path": "shared/heroine/shoes/rainbowSandals.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        208,
+        200
+      ],
+      "pivot": [
+        104,
+        200
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Rainbow sandals",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of rainbow-striped sandals with a toe strap and an ankle strap, worn over short white socks, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:43:37.142Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/shoes/sneakers": {
-      "path": "shared/heroine/shoes/sneakers.svg",
+      "path": "shared/heroine/shoes/sneakers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        236,
+        200
+      ],
+      "pivot": [
+        118,
+        200
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Yellow socks with white sneakers",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of white low sneakers with white laces, worn with yellow crew socks with two thin white stripes, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:44:26.866Z",
+        "status": "generated"
+      }
     },
     "shared/heroine/shoes/spaceBoots": {
-      "path": "shared/heroine/shoes/spaceBoots.svg",
+      "path": "shared/heroine/shoes/spaceBoots.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        600,
-        900
+        224,
+        200
+      ],
+      "pivot": [
+        112,
+        200
       ],
       "layer": "shoes",
+      "anchor": "feet",
       "label": "Space boots",
-      "source": "hand-drawn"
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of chunky white space boots with lavender soles and small yellow stars, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-12T18:45:13.952Z",
+        "status": "generated"
+      }
     },
     "shared/sceneB/parcel": {
       "path": "shared/sceneB/parcel.png",
@@ -462,7 +1406,7 @@
       "duration": 0.47
     },
     "shared/tiles/hairBuns": {
-      "path": "shared/tiles/hairBuns.svg",
+      "path": "shared/tiles/hairBuns.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -470,7 +1414,8 @@
         360
       ],
       "label": "Brown hair in two buns",
-      "derivedFrom": "shared/heroine/hair/buns"
+      "derivedFrom": "shared/heroine/figure/planetTee-buns",
+      "tileCrop": "head"
     },
     "shared/tiles/hairLoose": {
       "path": "shared/tiles/hairLoose.svg",
@@ -481,10 +1426,11 @@
         360
       ],
       "label": "Loose brown hair with a clip",
-      "derivedFrom": "shared/heroine/hair/loose"
+      "derivedFrom": "shared/heroine/figure/planetTee-loose",
+      "tileCrop": "head"
     },
     "shared/tiles/hairPonytail": {
-      "path": "shared/tiles/hairPonytail.svg",
+      "path": "shared/tiles/hairPonytail.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -492,10 +1438,11 @@
         360
       ],
       "label": "Brown hair in a high ponytail",
-      "derivedFrom": "shared/heroine/hair/ponytail"
+      "derivedFrom": "shared/heroine/figure/planetTee-ponytail",
+      "tileCrop": "head"
     },
     "shared/tiles/outfitFloralSweater": {
-      "path": "shared/tiles/outfitFloralSweater.svg",
+      "path": "shared/tiles/outfitFloralSweater.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -503,10 +1450,11 @@
         360
       ],
       "label": "Floral sweater with pinafore",
-      "derivedFrom": "shared/heroine/outfit/floralSweater"
+      "derivedFrom": "shared/heroine/figure/floralSweater-buns",
+      "tileCrop": "torso"
     },
     "shared/tiles/outfitPlanetTee": {
-      "path": "shared/tiles/outfitPlanetTee.svg",
+      "path": "shared/tiles/outfitPlanetTee.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -514,10 +1462,11 @@
         360
       ],
       "label": "Lilac planet tee with mint skirt",
-      "derivedFrom": "shared/heroine/outfit/planetTee"
+      "derivedFrom": "shared/heroine/figure/planetTee-buns",
+      "tileCrop": "torso"
     },
     "shared/tiles/outfitStarHoodie": {
-      "path": "shared/tiles/outfitStarHoodie.svg",
+      "path": "shared/tiles/outfitStarHoodie.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -525,10 +1474,11 @@
         360
       ],
       "label": "Star hoodie with trousers",
-      "derivedFrom": "shared/heroine/outfit/starHoodie"
+      "derivedFrom": "shared/heroine/figure/starHoodie-buns",
+      "tileCrop": "torso"
     },
     "shared/tiles/shoesMaryJanes": {
-      "path": "shared/tiles/shoesMaryJanes.svg",
+      "path": "shared/tiles/shoesMaryJanes.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -536,10 +1486,11 @@
         360
       ],
       "label": "Pink mary-janes",
-      "derivedFrom": "shared/heroine/shoes/maryJanes"
+      "derivedFrom": "shared/heroine/shoes/maryJanes",
+      "tileCrop": "feet"
     },
     "shared/tiles/shoesSneakers": {
-      "path": "shared/tiles/shoesSneakers.svg",
+      "path": "shared/tiles/shoesSneakers.png",
       "theme": "shared",
       "category": "tile",
       "size": [
@@ -547,7 +1498,8 @@
         360
       ],
       "label": "Yellow socks with white sneakers",
-      "derivedFrom": "shared/heroine/shoes/sneakers"
+      "derivedFrom": "shared/heroine/shoes/sneakers",
+      "tileCrop": "feet"
     },
     "shared/ui/logo": {
       "path": "shared/ui/logo.png",
@@ -1049,11 +2001,11 @@
       "label": "Space room background",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a cosy child's bedroom in peach, lavender and mint with a round window showing stars and planets, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+        "prompt": "the child's bedroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls dotted with small pastel stars and tiny planets, a big arched window on the right third showing a deep purple night sky with a ringed planet, a blue planet and stars, a warm honey wooden plank floor, a low wooden bookshelf with books and a potted plant at the far left, a small wall shelf with a plant and books at the upper left, trailing green leaves, a small nightstand under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no shelf, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no mobile, no cushion, no beanbag and no character; keep the floor centre and the right half of the floor clear",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 1,
+        "attempts": 3,
         "generatedAt": "2026-09-12T11:27:32.835Z",
         "status": "generated"
       }
@@ -1312,7 +2264,7 @@
       "derivedFrom": "space/decorations/astronautFigure"
     },
     "space/tiles/bunnySlippers": {
-      "path": "space/tiles/bunnySlippers.svg",
+      "path": "space/tiles/bunnySlippers.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1320,10 +2272,11 @@
         360
       ],
       "label": "Bunny slippers",
-      "derivedFrom": "shared/heroine/shoes/bunnySlippers"
+      "derivedFrom": "shared/heroine/shoes/bunnySlippers",
+      "tileCrop": "feet"
     },
     "space/tiles/cloudPyjamas": {
-      "path": "space/tiles/cloudPyjamas.svg",
+      "path": "space/tiles/cloudPyjamas.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1331,7 +2284,8 @@
         360
       ],
       "label": "Cloud pyjamas",
-      "derivedFrom": "shared/heroine/outfit/cloudPyjamas"
+      "derivedFrom": "shared/heroine/figure/cloudPyjamas-buns",
+      "tileCrop": "torso"
     },
     "space/tiles/galaxyPoster": {
       "path": "space/tiles/galaxyPoster.png",
@@ -1433,7 +2387,7 @@
       "derivedFrom": "space/decorations/rainbowRug"
     },
     "space/tiles/rocketBackpack": {
-      "path": "space/tiles/rocketBackpack.svg",
+      "path": "space/tiles/rocketBackpack.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1441,7 +2395,8 @@
         360
       ],
       "label": "Rocket backpack",
-      "derivedFrom": "shared/heroine/extra/rocketBackpack"
+      "derivedFrom": "shared/heroine/extra/rocketBackpack",
+      "tileCrop": "torso"
     },
     "space/tiles/rocketPoster": {
       "path": "space/tiles/rocketPoster.png",
@@ -1455,7 +2410,7 @@
       "derivedFrom": "space/decorations/rocketPoster"
     },
     "space/tiles/spaceBoots": {
-      "path": "space/tiles/spaceBoots.svg",
+      "path": "space/tiles/spaceBoots.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1463,10 +2418,11 @@
         360
       ],
       "label": "Space boots",
-      "derivedFrom": "shared/heroine/shoes/spaceBoots"
+      "derivedFrom": "shared/heroine/shoes/spaceBoots",
+      "tileCrop": "feet"
     },
     "space/tiles/spacesuit": {
-      "path": "space/tiles/spacesuit.svg",
+      "path": "space/tiles/spacesuit.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1474,10 +2430,11 @@
         360
       ],
       "label": "Colourful spacesuit",
-      "derivedFrom": "shared/heroine/outfit/spacesuit"
+      "derivedFrom": "shared/heroine/figure/spacesuit-buns",
+      "tileCrop": "torso"
     },
     "space/tiles/starClip": {
-      "path": "space/tiles/starClip.svg",
+      "path": "space/tiles/starClip.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1485,7 +2442,8 @@
         360
       ],
       "label": "Star hair clip",
-      "derivedFrom": "shared/heroine/extra/starClip"
+      "derivedFrom": "shared/heroine/extra/starClip",
+      "tileCrop": "head"
     },
     "space/tiles/starLamp": {
       "path": "space/tiles/starLamp.png",
@@ -1967,11 +2925,11 @@
       "label": "Sweet room background",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a cosy child's playroom in peach and mint with flower wallpaper, a window with a sunny garden, a nightstand, a shelf and a ceiling hook; empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character",
+        "prompt": "the pastel playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls, a tall mint-green open shelf unit with a few books and a small framed picture at the far left with trailing green ivy on top, a big arched window on the upper right showing a sunny sky, a smiling sun, distant houses and a hedge, a pale honey wooden floor, a small mint cabinet under the window, a low white skirting board, a large open floor space in the centre; the centre wall must be blank (no poster, no banner, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no mobile, no cushion, no window seat and no character or cat; keep the floor centre and the right half of the floor clear",
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 1,
+        "attempts": 3,
         "generatedAt": "2026-09-12T13:42:46.000Z",
         "status": "generated"
       }
@@ -2185,7 +3143,7 @@
       "duration": 1.8
     },
     "sweet/tiles/bowHeadband": {
-      "path": "sweet/tiles/bowHeadband.svg",
+      "path": "sweet/tiles/bowHeadband.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2193,7 +3151,8 @@
         360
       ],
       "label": "Bow headband",
-      "derivedFrom": "shared/heroine/extra/bowHeadband"
+      "derivedFrom": "shared/heroine/extra/bowHeadband",
+      "tileCrop": "head"
     },
     "sweet/tiles/bunnyPlush": {
       "path": "sweet/tiles/bunnyPlush.png",
@@ -2229,7 +3188,7 @@
       "derivedFrom": "sweet/decorations/butterflyMobile"
     },
     "sweet/tiles/catSlippers": {
-      "path": "sweet/tiles/catSlippers.svg",
+      "path": "sweet/tiles/catSlippers.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2237,7 +3196,8 @@
         360
       ],
       "label": "Cat slippers",
-      "derivedFrom": "shared/heroine/shoes/catSlippers"
+      "derivedFrom": "shared/heroine/shoes/catSlippers",
+      "tileCrop": "feet"
     },
     "sweet/tiles/daisyBed": {
       "path": "sweet/tiles/daisyBed.png",
@@ -2251,7 +3211,7 @@
       "derivedFrom": "sweet/decorations/daisyBed"
     },
     "sweet/tiles/floralPyjamas": {
-      "path": "sweet/tiles/floralPyjamas.svg",
+      "path": "sweet/tiles/floralPyjamas.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2259,10 +3219,11 @@
         360
       ],
       "label": "Floral pyjamas",
-      "derivedFrom": "shared/heroine/outfit/floralPyjamas"
+      "derivedFrom": "shared/heroine/figure/floralPyjamas-buns",
+      "tileCrop": "torso"
     },
     "sweet/tiles/flowerClip": {
-      "path": "sweet/tiles/flowerClip.svg",
+      "path": "sweet/tiles/flowerClip.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2270,7 +3231,8 @@
         360
       ],
       "label": "Flower hair clip",
-      "derivedFrom": "shared/heroine/extra/flowerClip"
+      "derivedFrom": "shared/heroine/extra/flowerClip",
+      "tileCrop": "head"
     },
     "sweet/tiles/flowerCushion": {
       "path": "sweet/tiles/flowerCushion.png",
@@ -2339,7 +3301,7 @@
       "derivedFrom": "sweet/decorations/plainRug"
     },
     "sweet/tiles/rainbowSandals": {
-      "path": "sweet/tiles/rainbowSandals.svg",
+      "path": "sweet/tiles/rainbowSandals.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2347,10 +3309,11 @@
         360
       ],
       "label": "Rainbow sandals",
-      "derivedFrom": "shared/heroine/shoes/rainbowSandals"
+      "derivedFrom": "shared/heroine/shoes/rainbowSandals",
+      "tileCrop": "feet"
     },
     "sweet/tiles/strawberryDress": {
-      "path": "sweet/tiles/strawberryDress.svg",
+      "path": "sweet/tiles/strawberryDress.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2358,7 +3321,8 @@
         360
       ],
       "label": "Strawberry dress",
-      "derivedFrom": "shared/heroine/outfit/strawberryDress"
+      "derivedFrom": "shared/heroine/figure/strawberryDress-buns",
+      "tileCrop": "torso"
     },
     "sweet/tiles/sunPoster": {
       "path": "sweet/tiles/sunPoster.png",

@@ -361,7 +361,8 @@ button:disabled {
   gap: 28px;
 }
 
-/* Heroine layers (SPEC §4.5): one canvas, layers stacked. */
+/* Heroine (SPEC §4.5): the 600 × 900 figure fills the box; overlays are placed in percentages
+   of that canvas from the figure's manifest anchors (see components/Heroine.tsx). */
 .heroine {
   position: relative;
   display: block;
@@ -369,20 +370,16 @@ button:disabled {
   height: 100%;
   aspect-ratio: 600 / 900;
 }
-.heroine-layer,
-.heroine-face {
+.heroine-figure {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.heroine-face {
-  /* The face overlay is a 300 × 200 image placed over the head region of the 600 × 900 canvas. */
-  left: 25%;
-  top: 11%;
-  width: 50%;
-  height: 22.2%;
+.heroine-overlay {
+  position: absolute;
+  object-fit: contain;
 }
 
 /* S1 room chrome (SPEC §3.4); the scene itself is styled in room.css */

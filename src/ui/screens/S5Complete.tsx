@@ -56,6 +56,7 @@ export function S5Complete({ mission }: Props) {
           theme={theme}
           slots={state.themes[theme].slots}
           heroine={state.heroine}
+          face="happy"
           stars={state.themes[theme].stars}
         />
       </div>

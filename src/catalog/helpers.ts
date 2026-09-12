@@ -12,8 +12,6 @@ interface GarmentOptions {
   order: number;
   starter?: boolean;
   collection?: string;
-  /** The garment also has a layer drawn behind the body (SPEC §4.5). */
-  back?: boolean;
 }
 
 /** Builds a decoration item whose asset ids follow SPEC §15.5 naming. */
@@ -33,7 +31,10 @@ export function decoration(theme: Theme, name: string, slot: SlotType, o: Decora
   return item;
 }
 
-/** Builds an earnable garment. Garments are theme-tagged but wearable in both rooms (D5). */
+/**
+ * Builds an earnable garment. Garments are theme-tagged but wearable in both rooms (D5).
+ * Outfits are part of the figure (`art.figure`); shoes and extras are overlays.
+ */
 export function garment(theme: Theme, name: string, kind: WardrobeKind, o: GarmentOptions): Item {
   const item: Item = {
     id: `${theme}.${name}`,
@@ -42,9 +43,16 @@ export function garment(theme: Theme, name: string, kind: WardrobeKind, o: Garme
     order: o.order,
     starter: o.starter ?? false,
     nameKey: `item.${theme}.${name}`,
-    art: { tile: `${theme}/tiles/${name}`, heroineLayer: `shared/heroine/${kind}/${name}` },
+    art:
+      kind === 'outfit' || kind === 'hair'
+        ? { tile: `${theme}/tiles/${name}`, figure: name }
+        : { tile: `${theme}/tiles/${name}`, heroineLayer: `shared/heroine/${kind}/${name}` },
   };
   if (o.collection) item.collection = o.collection;
-  if (o.back) item.art.heroineBack = `shared/heroine/${kind}Back/${name}`;
   return item;
+}
+
+/** Manifest id of the heroine figure for an outfit and a hairstyle (SPEC §4.5). */
+export function figureId(outfitFigure: string, hairFigure: string): string {
+  return `shared/heroine/figure/${outfitFigure}-${hairFigure}`;
 }
