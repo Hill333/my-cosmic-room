@@ -155,4 +155,9 @@ export interface Save {
   themes: Record<Theme, ThemeState>;
   progress: Progress;
   mission: Mission | null;
+  /**
+   * Earned items never placed or worn yet: the "New" badge in the panels (SPEC §4.2, §10.1).
+   * Added in M3 as an additive field; a save without it loads with an empty list.
+   */
+  newItems: ItemId[];
 }

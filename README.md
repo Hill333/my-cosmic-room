@@ -7,7 +7,7 @@ Browser clock-learning game concept for a seven-year-old: two distinct playrooms
 - [Saved visual concepts](docs/concepts/README.md)
 - [Next-session handoff](docs/NEXT_SESSION.md)
 
-Current state: milestones M0 (skeleton), M1 (clock engine: time maths, generators, elapsed decomposition, mission reducer, AnalogClock / DigitalDisplay / SET clock, dev harness) and M2 (missions playable: S2 board, S3/S4 puzzle screens with hints, feedback and keyboard operation, S5 prize choice, leave dialog, resume from the save) implemented with placeholder art; see [CHANGELOG.md](CHANGELOG.md). Not deployed.
+Current state: milestones M0 (skeleton), M1 (clock engine), M2 (missions playable) and M3 (Space room: slots from catalogue geometry, Decorate and Dress-up panels, reward application, reactions, Space art generated through the Codex pipeline, hand-drawn heroine layers, bundled font) implemented; the Space room is playable end to end with real art, Sweet still uses placeholders; see [CHANGELOG.md](CHANGELOG.md). Not deployed.
 
 ## Development
 
@@ -25,7 +25,14 @@ Asset pipeline (SPEC §15):
 node tools/build-manifest.ts   # sync assets/manifest.json with the catalogue
 npm run assets:placeholders    # write SVG placeholders for missing files
 npm run assets:gen -- --smoke  # generate one sol-med and one astra-light asset via Codex CLI
-npm run assets:gen             # generate every placeholder entry
+npm run assets:gen             # generate every placeholder entry (raw PNGs in assets/.gen/)
+npm run assets:gen -- --only <id> --only <id>   # named entries; --regen <id> redoes a generated one
+npm run assets:post            # background removal, crop, resize, tile copy, manifest update
+npm run assets:post -- --only <id> --force      # redo named entries that already have a PNG
+npm run assets:heroine         # redraw the heroine SVG layers and wardrobe tiles
 ```
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=S2`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions).
+Generated entries stay `gen.status: 'generated'` until a person marks them `approved` in the
+manifest (the QA checklist is shown by `?debug=slots`); approved entries are never regenerated.
+
+Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=S2`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`).

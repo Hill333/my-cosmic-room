@@ -34,10 +34,11 @@
   gap: 28px;
 }
 
-/* Room scene shared by S1, S5 and the preview */
+/* Room scene shared by S1, S5 and the preview; isolated so slot z-orders stay inside it. */
 .room-scene {
   position: absolute;
   inset: 0;
+  isolation: isolate;
 }
 .entry-object {
   position: absolute;

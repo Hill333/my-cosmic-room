@@ -2,6 +2,75 @@
 
 All notable changes to My Cosmic Room. Milestones follow docs/SPEC.md §18.
 
+## Unreleased — M3 Space room
+
+- Slot geometry is catalogue data (`catalog/slots.ts`): anchor, scale and z-order per slot and
+  per theme, plus the heroine, companion and entry-object boxes. `RoomScene` lays the room out
+  from it (the asset's manifest `pivot` lands on the anchor); the heroine and Pip stand in
+  front of RUG and behind BED and NOOK. Dev aid `?debug=slots` (lazy-loaded, dev builds only)
+  draws every box and anchor, nudges geometry with the arrow keys, `[` `]` and copies JSON with
+  C, and lists the §15.6 QA checklist.
+- S1 (`screens/S1Room.tsx`): Decorate (D) and Dress up (W) buttons open a 440 px `SidePanel`
+  on the right while the room scales to the left; the close button and Escape close it and
+  focus returns to the panel's button (AT-38). The bottom bar and counter move out from under
+  the panel. Sound toggle added top right.
+- Decorate mode (`components/DecoratePanel.tsx`, SPEC §4.2): owned decorations grouped by slot
+  in table order, 180 × 180 tiles two per row with "In room" / "New" labels. Mouse: click a
+  tile, compatible slots get a dashed outline and pulsing marker, click the slot to place;
+  clicking elsewhere cancels. Keyboard: arrows between tiles, Enter places into the compatible
+  slot. Hover or focus shows a faint ghost in the slot. Placing dispatches `inventory/place`,
+  pops the item with a CSS scale and announces it through a live region.
+- Dress-up mode (`components/DressUpPanel.tsx`, SPEC §4.4): tabs Clothes / Shoes / Hair /
+  Extras (arrow keys, automatic selection), check mark and thick outline on the worn tile,
+  immediate `inventory/wear` (Extras has "Nothing" → `inventory/removeExtra`), rocket / heart
+  theme badge on earned garments, "What will you earn next?" from `nextPair` with one dot per
+  collection. The heroine turns slightly toward the panel.
+- "New" badge: additive save field `newItems: ItemId[]` (validated, defaulted to `[]` for
+  saves written before it, covered by invariants and `save.test.ts`); `grantItem` adds,
+  `placeItem` / `wearItem` remove, so both the reducer path and `mission/apply` clear it.
+- Reactions (SPEC §4.3, free play and dress-up mode, never in decorate mode): generic 400 ms
+  bob with a sparkle on any placed decoration; LAMP toggles evening lighting (tinted overlay
+  with a warm glow at the lamp, persisted through `inventory/lamp`); BED makes Pip jump onto
+  the bed and bounce twice; the toy rocket wobbles, puffs smoke and shows its lit-window art
+  before opening S2; the heroine waves and blinks; Pip spins with his special pose. All CSS
+  keyframes ending on `animationend` (with a timeout fallback), respecting `data-motion`; no
+  reaction writes to the save except the lamp.
+- Space art through the Codex pipeline (SPEC §15.6): 29 entries generated (14 astra-light,
+  15 sol-med, all one attempt, about one minute each): Space room background, seven Space
+  starters, Moon bed, Star lamp, Astronaut bunny, heroine reference sheet, Pip's four poses,
+  toy rocket and its reaction state, cockpit frame, rocket, launch flame, four step overlays,
+  planet, moon, rocket-with-parcel and parcel. Entries are marked `generated`, never
+  `approved` (that is the human QA step in the slot overlay). Prompts for wall, floor and
+  hanging items now say how the object is seen so it fits its slot.
+- `tools/post-assets.ts` (sharp): flood-fill background removal from the borders with a
+  feathered edge, crop to the silhouette with 8 px padding, fit to the manifest size without
+  enlarging, palette PNG compression, 360 × 360 tile copy, and the manifest entry's `path`,
+  `size` and `pivot` updated (pivots keep their ratio). Full-frame art (rooms, cockpit) is
+  kept at its native 1536 × 1024 (about 500 KB) instead of being upscaled to 2×.
+  `gen-assets.ts` now merges only the finished entry into a fresh read of the manifest, so a
+  generator and the post-processor can run side by side.
+- Heroine as scripted SVG layers (`tools/gen-heroine.ts`, SPEC §15.2 item 2): body, four
+  faces, three hair styles, five outfits (three starters, Cloud pyjamas, spacesuit), four
+  shoes (two starters, Bunny slippers, Space boots) and two extras (Star hair clip, Rocket
+  backpack) on the shared 600 × 900 template, with wardrobe tiles as cropped views of the same
+  drawings. Sweet garments stay placeholders until M4.
+- Font (SPEC §13.2): Nunito (SIL OFL) bundled locally as latin and latin-ext WOFF2 subsets,
+  variable weight 700–900; ç ğ ı İ ö ş ü ë ï é verified in the browser.
+- Strings added in EN/TR/NL: `ui.heroine`, `ui.tiles`, `ui.tabs`, `ui.themeBadge.*`,
+  `ui.collectionDots`, `ui.pickSlot`, `ui.placed`, `ui.worn`.
+- Fix: the room scene is an isolated stacking context, so slot z-orders no longer cover the S5
+  card; in decorate mode the heroine and Pip never intercept a slot click.
+- Tests: 130 unit (up from 126: `newItems` load / round trip / validation, "New" badge
+  lifecycle); 10 e2e (up from 7): `e2e/at23-apply-decoration.spec.ts` (AT-23),
+  `e2e/at24-apply-clothing.spec.ts` (AT-24), `e2e/at25-swap-revert.spec.ts` (AT-25 plus both
+  panels by mouse and keyboard, D / W / Escape, focus return, lamp persistence and the other
+  reactions leaving the save untouched). `e2e/helpers.ts` gained `seedSave`, `seededSave` and
+  `grantSpace` (write-once seeding through `addInitScript`).
+- Not done in M3: the story reaction after puzzle 4 (rocket launch before S5) and sounds;
+  Rainbow Explorer decorations, the Sweet theme and the title logo remain placeholders (M4);
+  the countdown step overlay was generated with segment digits and should be checked against
+  the "digits are UI" rule during QA.
+
 ## Unreleased — M2 Missions playable
 
 - Screens S2 Mission board (`ui/screens/S2Board.tsx`), S3 Activity A (`S3ActivityA.tsx`), S4

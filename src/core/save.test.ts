@@ -175,6 +175,32 @@ describe('reset', () => {
   });
 });
 
+describe('newItems (M3 additive field)', () => {
+  it('loads a v1 save written before the field existed with an empty list', () => {
+    const store = new MemoryStore();
+    const legacy = createFreshSave(NOW) as Partial<Save>;
+    delete legacy.newItems;
+    store.setItem(SAVE_KEY, JSON.stringify(legacy));
+    const result = loadSave(store, NOW);
+    expect(result.status).toBe('loaded');
+    expect(result.save.newItems).toEqual([]);
+  });
+  it('keeps the list through store, load, export and import', () => {
+    const { store, save } = seeded();
+    save.newItems = ['space.spaceBoots'];
+    storeSave(store, save, NOW);
+    expect(loadSave(store, NOW).save.newItems).toEqual(['space.spaceBoots']);
+    const imported = importSave(exportSave(save));
+    expect(imported.ok && imported.save.newItems).toEqual(['space.spaceBoots']);
+  });
+  it('rejects a malformed list and an unowned or starter entry', () => {
+    const save = createFreshSave(NOW);
+    expect(validateSave({ ...save, newItems: 'nope' }).ok).toBe(false);
+    expect(validateSave({ ...save, newItems: ['space.rainbowRug'] }).ok).toBe(false);
+    expect(validateSave({ ...save, newItems: ['space.plainRug'] }).ok).toBe(false);
+  });
+});
+
 describe('invariants (SPEC §11.4)', () => {
   it('flags unowned slot items, wrong kinds and star overflow', () => {
     const save = createFreshSave(NOW);

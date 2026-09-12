@@ -6,3 +6,4 @@ test-results
 assets/.gen
 docs/concepts
 package-lock.json
+assets/manifest.json

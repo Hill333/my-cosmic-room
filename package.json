@@ -17,7 +17,9 @@
     "e2e": "playwright test --project=chrome",
     "check:assets": "node tools/check-assets.ts",
     "assets:placeholders": "node tools/gen-placeholders.ts",
-    "assets:gen": "node tools/gen-assets.ts"
+    "assets:gen": "node tools/gen-assets.ts",
+    "assets:post": "node tools/post-assets.ts",
+    "assets:heroine": "node tools/gen-heroine.ts"
   },
   "dependencies": {
     "@preact/signals": "^2.11.2",
@@ -31,6 +33,7 @@
     "eslint": "^10.10.0",
     "globals": "^17.12.0",
     "prettier": "^3.9.6",
+    "sharp": "^0.35.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.70.0",
     "vite": "^8.3.0",

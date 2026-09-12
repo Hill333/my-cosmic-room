@@ -1,4 +1,6 @@
 import { expect, type Page } from '@playwright/test';
+import { createFreshSave } from '../src/core/save.ts';
+import type { Save } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -30,10 +32,49 @@ export interface StoredMission {
 
 export interface StoredSave {
   mission: StoredMission | null;
-  themes: Record<'space' | 'sweet', { owned: string[]; slots: Record<string, string> }>;
+  themes: Record<
+    'space' | 'sweet',
+    { owned: string[]; slots: Record<string, string>; lampOn: boolean }
+  >;
   heroine: { outfit: string; shoes: string; extra: string | null };
   wardrobe: string[];
   settings: { readingLevel: number; elapsedLevel: number };
+  newItems?: string[];
+  updatedAt: string | null;
+}
+
+/**
+ * Writes a valid v1 save into localStorage before the app loads, so a test can start from any
+ * inventory state (SPEC §11.3: the save is plain JSON under SAVE_KEY). Build it with
+ * `seededSave()` and edit the fields; the app validates it on load, so an inconsistent save
+ * would silently start fresh (the language dialog appearing is the tell).
+ */
+export async function seedSave(page: Page, save: Save): Promise<void> {
+  // Init scripts run on every navigation, so the seed is written once per browser session and
+  // reloads keep whatever the app saved since.
+  await page.addInitScript(
+    ([key, json]) => {
+      if (sessionStorage.getItem('mcr.e2e.seeded') === '1') return;
+      sessionStorage.setItem('mcr.e2e.seeded', '1');
+      localStorage.setItem(key, json);
+    },
+    [SAVE_KEY, JSON.stringify(save)] as const,
+  );
+}
+
+/** A fresh save with the language already chosen, ready for `seedSave`. */
+export function seededSave(language: 'en' | 'tr' | 'nl' = 'en'): Save {
+  const save = createFreshSave();
+  save.settings.language = language;
+  return save;
+}
+
+/** Grants earnable Space items so the next pair is the one a test needs (SPEC §10.2). */
+export function grantSpace(save: Save, decorations: string[], garments: string[]): Save {
+  save.themes.space.owned.push(...decorations);
+  save.wardrobe.push(...garments);
+  save.newItems.push(...decorations, ...garments);
+  return save;
 }
 
 export async function readSave(page: Page): Promise<StoredSave> {

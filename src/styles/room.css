@@ -1,0 +1,653 @@
+/* S1 room scene, slots, panels, tiles and reactions (SPEC §3.4, §4, §13). All layout in stage px. */
+
+/* The room stays visible and scaled to the left of the 440 px panel (SPEC §3.4). */
+.room-wrap {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transition: transform 250ms ease-out;
+}
+.room-wrap-scaled {
+  transform: scale(0.7135);
+}
+.s1-panel-open .s1-bottom {
+  right: 440px;
+}
+.s1-panel-open .s1-topright {
+  right: 472px;
+}
+
+/* Slots (SPEC §4.1): boxes come from catalog/slots.ts via inline styles. */
+.room-slots .slot,
+.slot-ghost {
+  position: absolute;
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+.room-slots .slot img,
+.slot-ghost {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+.room-slots button.slot {
+  cursor: pointer;
+  border-radius: 24px;
+}
+.room-slots button.slot:hover img {
+  filter: brightness(1.06);
+}
+.slot-ghost {
+  opacity: 0.45;
+  z-index: 60;
+}
+
+/* Decorate mode: the heroine and companion never block a slot click; reactions are off. */
+.s1[data-mode='decorate'] .room-heroine,
+.s1[data-mode='decorate'] .room-companion {
+  pointer-events: none;
+}
+/* Decorate mode: compatible slots get a dashed outline and a pulsing marker (SPEC §4.2). */
+.s1[data-mode='decorate'] .room-slots .slot {
+  outline: 4px dashed rgba(59, 42, 94, 0.35);
+  outline-offset: 6px;
+}
+.s1[data-mode='decorate'] .room-slots .slot-target {
+  outline: 6px dashed var(--plum);
+  outline-offset: 8px;
+  background: rgba(255, 216, 107, 0.25);
+}
+.slot-marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  background: var(--star);
+  border: 5px solid var(--plum);
+  animation: slot-pulse 900ms ease-in-out infinite;
+}
+@keyframes slot-pulse {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* Placement pop (SPEC §4.2) */
+.slot-pop img {
+  animation: slot-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+  transform-origin: 50% 90%;
+}
+@keyframes slot-pop {
+  0% {
+    transform: scale(0.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Heroine and companion in the room */
+.room-heroine,
+.room-companion {
+  position: absolute;
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+button.room-heroine,
+button.room-companion {
+  cursor: pointer;
+  border-radius: 40px;
+}
+.room-companion .companion,
+.room-companion .companion img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.heroine-turned .heroine {
+  transform: perspective(900px) rotateY(-16deg);
+  transition: transform 250ms ease-out;
+}
+.room-heroine .heroine {
+  transition: transform 250ms ease-out;
+  transform-origin: 50% 100%;
+}
+
+/* Evening lighting from the LAMP reaction (SPEC §4.3); the lamp keeps a warm glow. */
+.room-lighting {
+  position: absolute;
+  inset: 0;
+  z-index: 58;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 1138px 470px,
+    rgba(255, 216, 107, 0) 0,
+    rgba(255, 216, 107, 0.15) 160px,
+    rgba(45, 25, 95, 0.42) 480px,
+    rgba(35, 20, 80, 0.55) 1000px
+  );
+  animation: lighting-in 400ms ease-out 1;
+}
+@keyframes lighting-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Reactions (SPEC §4.3): all CSS keyframes; data-motion zeroes them in base.css. */
+.react-generic img,
+.react-lamp img {
+  animation: react-bob 400ms ease-out 1;
+  transform-origin: 50% 100%;
+}
+.react-generic::after,
+.react-lamp::after {
+  content: '✦';
+  position: absolute;
+  right: -6px;
+  top: -18px;
+  font-size: 56px;
+  color: var(--star);
+  text-shadow: 0 0 10px #fff;
+  animation: react-sparkle 400ms ease-out 1 forwards;
+  pointer-events: none;
+}
+@keyframes react-bob {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-18px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes react-sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(30deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(60deg);
+  }
+}
+.react-lamp img {
+  filter: drop-shadow(0 0 20px var(--star));
+}
+/* BED: the companion jumps onto the bed and bounces twice. */
+.react-jump {
+  animation: react-jump 1400ms ease-in-out 1;
+}
+@keyframes react-jump {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(calc(var(--jump-dx) * 0.5), calc(var(--jump-dy) - 140px));
+  }
+  40% {
+    transform: translate(var(--jump-dx), var(--jump-dy));
+  }
+  55% {
+    transform: translate(var(--jump-dx), calc(var(--jump-dy) - 60px));
+  }
+  68% {
+    transform: translate(var(--jump-dx), var(--jump-dy));
+  }
+  80% {
+    transform: translate(var(--jump-dx), calc(var(--jump-dy) - 40px));
+  }
+  90% {
+    transform: translate(var(--jump-dx), var(--jump-dy));
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+/* Companion: Pip spins (Mimi stretches, same keyframe, different pose art). */
+.react-spin .companion {
+  animation: react-spin 700ms ease-in-out 1;
+}
+@keyframes react-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+/* Heroine waves and blinks. */
+.react-wave .heroine {
+  animation: react-wave 800ms ease-in-out 1;
+}
+.react-wave .heroine-face {
+  animation: react-blink 800ms ease-in-out 1;
+}
+@keyframes react-wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg) translateY(-6px);
+  }
+  50% {
+    transform: rotate(4deg) translateY(-10px);
+  }
+  75% {
+    transform: rotate(-3deg) translateY(-4px);
+  }
+}
+@keyframes react-blink {
+  0%,
+  35%,
+  55%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.15);
+  }
+}
+
+/* Toy rocket wobble with smoke puffs (SPEC §4.3); the window lights up in the reaction art. */
+.entry-object {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 24px;
+  z-index: 45;
+}
+.entry-object img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+.entry-object:hover img {
+  transform: translateY(-6px) rotate(-6deg);
+}
+.entry-react img {
+  animation: entry-wobble 700ms ease-in-out 1;
+  transform-origin: 50% 100%;
+}
+.entry-smoke {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid var(--plum);
+  opacity: 0;
+  pointer-events: none;
+}
+.entry-react .entry-smoke {
+  animation: entry-smoke 700ms ease-out 1;
+}
+@keyframes entry-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-8deg) translateY(-10px);
+  }
+  40% {
+    transform: rotate(8deg) translateY(-16px);
+  }
+  60% {
+    transform: rotate(-6deg) translateY(-10px);
+  }
+  80% {
+    transform: rotate(4deg) translateY(-4px);
+  }
+}
+@keyframes entry-smoke {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50px, 30px) scale(1.6);
+  }
+}
+
+/* Side panel (SPEC §3.4, §13.1): 440 px, slides in from the right. */
+.side-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 440px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 6px solid var(--plum);
+  box-shadow: -12px 0 0 rgba(59, 42, 94, 0.15);
+  animation: panel-in 250ms ease-out 1;
+}
+.side-panel:focus-visible {
+  outline-offset: -8px;
+}
+@keyframes panel-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 16px 28px;
+  background: var(--lavender);
+  border-bottom: 5px solid var(--plum);
+}
+.s1-sweet .panel-header {
+  background: var(--pink);
+}
+.panel-title {
+  margin: 0;
+  font-size: 44px;
+}
+.panel-close {
+  flex: none;
+}
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 32px;
+  scrollbar-width: thin;
+}
+.panel-hint {
+  min-height: 34px;
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Tiles (SPEC §4.2, §4.4): 180 × 180 stage px, two per row. */
+.tile-group {
+  margin: 0 0 8px;
+}
+.tile-group .tile-grid {
+  padding-bottom: 20px;
+}
+.tile-group-title {
+  margin: 8px 0 8px;
+  font-size: 28px;
+}
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 180px);
+  gap: 24px 16px;
+  justify-content: start;
+}
+.tile {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  padding: 10px 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  border: 4px solid var(--plum);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 5px 0 rgba(59, 42, 94, 0.2);
+}
+.tile img {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.tile-name {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+}
+.tile:hover {
+  transform: translateY(-3px);
+}
+.tile[aria-pressed='true'],
+.tile-worn,
+.tile-armed {
+  border-width: 7px;
+  padding-top: 7px;
+  background: var(--cream);
+}
+.tile-armed {
+  background: var(--star);
+}
+.tile-check {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  font-weight: 900;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--plum);
+  opacity: 0;
+}
+.tile[aria-pressed='true'] .tile-check {
+  opacity: 1;
+}
+.tile-theme {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 24px;
+}
+.tile-badge {
+  position: absolute;
+  left: 50%;
+  bottom: -14px;
+  transform: translateX(-50%);
+  padding: 2px 12px;
+  border-radius: 999px;
+  border: 3px solid var(--plum);
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.tile-badge-inroom {
+  background: var(--mint);
+}
+.tile-badge-new {
+  background: var(--star);
+}
+.tile-inroom img {
+  opacity: 0.6;
+}
+.tile-nothing-mark {
+  width: 104px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  font-size: 64px;
+  color: var(--lavender);
+}
+
+/* Wardrobe tabs (SPEC §4.4) */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+.tab {
+  min-height: 56px;
+  padding: 6px 18px;
+  font-size: 22px;
+}
+.tab[aria-selected='true'] {
+  background: var(--plum);
+  color: #fff;
+}
+.next-prizes {
+  margin-top: 28px;
+  padding: 16px 18px 14px;
+  border: 4px solid var(--plum);
+  border-radius: 28px;
+  background: #fff;
+}
+.next-prizes-title {
+  margin: 0 0 12px;
+  font-size: 26px;
+}
+.next-prizes-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 14px;
+}
+.next-prize {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+}
+.next-prize img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: var(--cream);
+}
+.next-prizes-empty {
+  margin: 0;
+  font-size: 22px;
+}
+.collection-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--plum);
+  background: #fff;
+}
+.dot-active {
+  background: var(--plum);
+  transform: scale(1.2);
+}
+
+/* Slot debug overlay (SPEC §16.4), dev builds only */
+.slot-debug {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  font-family: ui-monospace, monospace;
+}
+.slot-debug-box {
+  position: absolute;
+  outline: 2px solid rgba(232, 115, 95, 0.9);
+  background: rgba(232, 115, 95, 0.08);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.slot-debug-selected {
+  outline: 4px solid var(--blue);
+  background: rgba(76, 125, 224, 0.12);
+}
+.slot-debug-label {
+  position: absolute;
+  left: 0;
+  top: -22px;
+  padding: 0 6px;
+  font-size: 16px;
+  color: #fff;
+  background: var(--coral);
+  white-space: nowrap;
+}
+.slot-debug-selected .slot-debug-label {
+  background: var(--blue);
+}
+.slot-debug-anchor {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 2px solid #fff;
+}
+.slot-debug-help {
+  position: absolute;
+  left: 32px;
+  bottom: 140px;
+  max-width: 460px;
+  padding: 10px 14px;
+  font-size: 16px;
+  color: #fff;
+  background: rgba(59, 42, 94, 0.85);
+  border-radius: 12px;
+  pointer-events: auto;
+}
+.slot-debug-help ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}

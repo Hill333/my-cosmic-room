@@ -60,20 +60,31 @@ export function nextPair(save: Save, theme: Theme): ItemId[] {
   return ids.slice(0, 2);
 }
 
-/** Adds an item to the theme's owned list or to the shared wardrobe. No-op when owned. */
+/**
+ * Adds an item to the theme's owned list or to the shared wardrobe and marks it "New"
+ * (SPEC §4.2: earned and never placed or worn). No-op when owned.
+ */
 export function grantItem(save: Save, theme: Theme, id: ItemId): Save {
   const item = itemById(id);
   if (!item || item.theme !== theme) return save;
+  const newItems = save.newItems.includes(id) ? save.newItems : [...save.newItems, id];
   if (item.kind === 'decoration') {
     const state = save.themes[theme];
     if (state.owned.includes(id)) return save;
     return {
       ...save,
       themes: { ...save.themes, [theme]: { ...state, owned: [...state.owned, id] } },
+      newItems,
     };
   }
   if (save.wardrobe.includes(id)) return save;
-  return { ...save, wardrobe: [...save.wardrobe, id] };
+  return { ...save, wardrobe: [...save.wardrobe, id], newItems };
+}
+
+/** Removes the "New" badge once an item has been placed or worn. */
+function markSeen(save: Save, id: ItemId): Save {
+  if (!save.newItems.includes(id)) return save;
+  return { ...save, newItems: save.newItems.filter((x) => x !== id) };
 }
 
 /**
@@ -85,14 +96,17 @@ export function placeItem(save: Save, theme: Theme, id: ItemId): Save {
   const state = save.themes[theme];
   if (!item || item.kind !== 'decoration' || !item.slot || item.theme !== theme) return save;
   if (!state.owned.includes(id)) return save;
-  if (state.slots[item.slot] === id) return save;
-  return {
-    ...save,
-    themes: {
-      ...save.themes,
-      [theme]: { ...state, slots: { ...state.slots, [item.slot]: id } },
+  if (state.slots[item.slot] === id) return markSeen(save, id);
+  return markSeen(
+    {
+      ...save,
+      themes: {
+        ...save.themes,
+        [theme]: { ...state, slots: { ...state.slots, [item.slot]: id } },
+      },
     },
-  };
+    id,
+  );
 }
 
 /** Equips an owned wardrobe item on the heroine (SPEC §4.4, §10.3). */
@@ -100,8 +114,8 @@ export function wearItem(save: Save, id: ItemId): Save {
   const item = itemById(id);
   if (!item || !isWardrobeKind(item.kind) || !save.wardrobe.includes(id)) return save;
   const kind = item.kind as WardrobeKind;
-  if (save.heroine[kind] === id) return save;
-  return { ...save, heroine: { ...save.heroine, [kind]: id } };
+  if (save.heroine[kind] === id) return markSeen(save, id);
+  return markSeen({ ...save, heroine: { ...save.heroine, [kind]: id } }, id);
 }
 
 /** Fills one star on the theme's chart, capped at 24 (SPEC §10.5). */
@@ -165,6 +179,18 @@ export function checkInvariants(save: Save): string[] {
   check(h.shoes, 'shoes', false);
   check(h.extra, 'extra', true);
 
+  const everything = new Set(
+    save.themes.space.owned.concat(save.themes.sweet.owned, save.wardrobe),
+  );
+  for (const id of save.newItems) {
+    const item = itemById(id);
+    if (!item) problems.push(`newItems references unknown item ${id}`);
+    else if (item.starter) problems.push(`newItems holds starter ${id}`);
+    else if (!everything.has(id)) problems.push(`newItems holds unowned item ${id}`);
+  }
+  if (new Set(save.newItems).size !== save.newItems.length)
+    problems.push('newItems has duplicates');
+
   const mission = save.mission;
   if (mission) {
     const owned = new Set(save.themes[mission.theme].owned.concat(save.wardrobe));
@@ -181,6 +207,11 @@ export function checkInvariants(save: Save): string[] {
     }
   }
   return problems;
+}
+
+/** True while an earned item has never been placed or worn (SPEC §4.2 "New"). */
+export function isNewItem(save: Save, id: ItemId): boolean {
+  return save.newItems.includes(id);
 }
 
 /** Owned earnable items of a theme (starters excluded); feeds the collection counter. */

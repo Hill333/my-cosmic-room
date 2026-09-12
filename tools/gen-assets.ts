@@ -189,7 +189,20 @@ function main(): void {
       console.log(`FAILED (see assets/.gen/${id}.log)`);
       console.log(log.split('\n').slice(-12).join('\n'));
     }
-    writeManifest(manifest); // persist after every asset so an interrupted run keeps its history
+    // Persist after every asset so an interrupted run keeps its history. Only this entry's
+    // gen record is merged into a fresh read of the manifest, so a concurrent post-processing
+    // run (tools/post-assets.ts) or a second generator never loses its writes.
+    const fresh = readManifest();
+    const target = fresh.assets[id];
+    if (target?.gen && target.gen.status !== 'approved') {
+      target.gen = {
+        ...target.gen,
+        attempts: entry.gen!.attempts,
+        generatedAt: entry.gen!.generatedAt,
+        status: entry.gen!.status,
+      };
+      writeManifest(fresh);
+    }
   }
   if (failures) process.exit(1);
 }

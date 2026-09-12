@@ -230,12 +230,12 @@
       "source": "hand-drawn"
     },
     "shared/heroine/referenceSheet": {
-      "path": "shared/heroine/referenceSheet.svg",
+      "path": "shared/heroine/referenceSheet.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
-        2400,
-        1600
+        1518,
+        859
       ],
       "label": "Heroine reference sheet",
       "gen": {
@@ -244,9 +244,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:29:53.404Z",
+        "status": "generated"
       }
     },
     "shared/heroine/shoes/bunnySlippers": {
@@ -322,12 +322,12 @@
       "source": "hand-drawn"
     },
     "shared/sceneB/parcel": {
-      "path": "shared/sceneB/parcel.svg",
+      "path": "shared/sceneB/parcel.png",
       "theme": "shared",
       "category": "sceneB",
       "size": [
         240,
-        240
+        221
       ],
       "label": "Parcel",
       "gen": {
@@ -336,9 +336,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:29:39.137Z",
+        "status": "generated"
       }
     },
     "shared/tiles/hairBuns": {
@@ -461,11 +461,11 @@
       "source": "hand-drawn"
     },
     "space/companion/pip/cheer": {
-      "path": "space/companion/pip/cheer.svg",
+      "path": "space/companion/pip/cheer.png",
       "theme": "space",
       "category": "companion",
       "size": [
-        400,
+        349,
         480
       ],
       "label": "Pip cheer",
@@ -476,17 +476,17 @@
           "docs/concepts/01-room-and-wardrobe.png",
           "space/companion/pip/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:30:44.736Z",
+        "status": "generated"
       }
     },
     "space/companion/pip/hmm": {
-      "path": "space/companion/pip/hmm.svg",
+      "path": "space/companion/pip/hmm.png",
       "theme": "space",
       "category": "companion",
       "size": [
-        400,
+        216,
         480
       ],
       "label": "Pip hmm",
@@ -497,17 +497,17 @@
           "docs/concepts/01-room-and-wardrobe.png",
           "space/companion/pip/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:31:36.294Z",
+        "status": "generated"
       }
     },
     "space/companion/pip/idle": {
-      "path": "space/companion/pip/idle.svg",
+      "path": "space/companion/pip/idle.png",
       "theme": "space",
       "category": "companion",
       "size": [
-        400,
+        272,
         480
       ],
       "label": "Pip idle",
@@ -518,17 +518,17 @@
           "docs/concepts/01-room-and-wardrobe.png",
           "space/companion/pip/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:32:25.427Z",
+        "status": "generated"
       }
     },
     "space/companion/pip/special": {
-      "path": "space/companion/pip/special.svg",
+      "path": "space/companion/pip/special.png",
       "theme": "space",
       "category": "companion",
       "size": [
-        400,
+        387,
         480
       ],
       "label": "Pip special",
@@ -539,21 +539,21 @@
           "docs/concepts/01-room-and-wardrobe.png",
           "space/companion/pip/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:33:16.211Z",
+        "status": "generated"
       }
     },
     "space/decorations/astroBunny": {
-      "path": "space/decorations/astroBunny.svg",
+      "path": "space/decorations/astroBunny.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        200,
+        163,
         200
       ],
       "pivot": [
-        100,
+        82,
         200
       ],
       "slot": "SHELF",
@@ -564,34 +564,34 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:30:34.877Z",
+        "status": "generated"
       }
     },
     "space/decorations/astronautFigure": {
-      "path": "space/decorations/astronautFigure.svg",
+      "path": "space/decorations/astronautFigure.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        200,
+        127,
         200
       ],
       "pivot": [
-        100,
+        64,
         200
       ],
       "slot": "SHELF",
       "label": "Astronaut figure",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a small toy astronaut figure standing, white suit with a round helmet",
+        "prompt": "a small toy astronaut figure standing upright, white suit with a round helmet, seen straight on",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:31:23.101Z",
+        "status": "generated"
       }
     },
     "space/decorations/galaxyPoster": {
@@ -610,7 +610,7 @@
       "label": "Galaxy poster",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a framed poster of a swirling pastel galaxy with tiny stars",
+        "prompt": "a framed poster of a swirling pastel galaxy with tiny stars, hanging flat on a wall and seen straight on",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
@@ -620,15 +620,15 @@
       }
     },
     "space/decorations/moonBed": {
-      "path": "space/decorations/moonBed.svg",
+      "path": "space/decorations/moonBed.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        640,
+        481,
         420
       ],
       "pivot": [
-        320,
+        241,
         420
       ],
       "slot": "BED",
@@ -645,40 +645,40 @@
       }
     },
     "space/decorations/paperStars": {
-      "path": "space/decorations/paperStars.svg",
+      "path": "space/decorations/paperStars.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        300,
+        73,
         380
       ],
       "pivot": [
-        150,
+        37,
         0
       ],
       "slot": "HANGING",
       "label": "Paper stars",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a string of hanging yellow paper stars on a thin thread",
+        "prompt": "a vertical string of yellow paper stars hanging down from a single point at the top on a thin thread",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:32:09.127Z",
+        "status": "generated"
       }
     },
     "space/decorations/plainBed": {
-      "path": "space/decorations/plainBed.svg",
+      "path": "space/decorations/plainBed.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        640,
+        539,
         420
       ],
       "pivot": [
-        320,
+        270,
         420
       ],
       "slot": "BED",
@@ -689,59 +689,59 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:34:06.849Z",
+        "status": "generated"
       }
     },
     "space/decorations/plainLamp": {
-      "path": "space/decorations/plainLamp.svg",
+      "path": "space/decorations/plainLamp.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         200,
-        280
+        274
       ],
       "pivot": [
         100,
-        280
+        274
       ],
       "slot": "LAMP",
       "label": "Plain lamp",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a small plain bedside lamp with a mint shade and a wooden base",
+        "prompt": "a small plain bedside lamp with a mint shade and a wooden base, seen straight on",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:32:51.760Z",
+        "status": "generated"
       }
     },
     "space/decorations/plainRug": {
-      "path": "space/decorations/plainRug.svg",
+      "path": "space/decorations/plainRug.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         620,
-        300
+        274
       ],
       "pivot": [
         310,
-        150
+        137
       ],
       "slot": "RUG",
       "label": "Plain rug",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a plain round lavender rug seen from slightly above",
+        "prompt": "a plain round lavender rug lying flat on the floor, seen from slightly above",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:33:38.773Z",
+        "status": "generated"
       }
     },
     "space/decorations/planetMobile": {
@@ -760,7 +760,7 @@
       "label": "Planet mobile",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a hanging mobile with four small pastel planets and a moon on threads under a wooden bar",
+        "prompt": "a hanging mobile with four small pastel planets and a moon on threads under a wooden bar, hanging from a single point at the top",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
@@ -770,16 +770,16 @@
       }
     },
     "space/decorations/purpleBeanbag": {
-      "path": "space/decorations/purpleBeanbag.svg",
+      "path": "space/decorations/purpleBeanbag.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         340,
-        260
+        251
       ],
       "pivot": [
         170,
-        260
+        251
       ],
       "slot": "NOOK",
       "label": "Purple beanbag",
@@ -789,9 +789,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:34:26.255Z",
+        "status": "generated"
       }
     },
     "space/decorations/rainbowRug": {
@@ -810,7 +810,7 @@
       "label": "Rainbow rug",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a semicircular rainbow rug with soft pastel stripes seen from slightly above",
+        "prompt": "a semicircular rainbow rug with soft pastel stripes lying flat on the floor, seen from slightly above",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
@@ -820,47 +820,47 @@
       }
     },
     "space/decorations/rocketPoster": {
-      "path": "space/decorations/rocketPoster.svg",
+      "path": "space/decorations/rocketPoster.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        320,
+        256,
         260
       ],
       "pivot": [
-        160,
+        128,
         130
       ],
       "slot": "WALL",
       "label": "Rocket poster",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a framed poster of a friendly cartoon rocket on a lavender background",
+        "prompt": "a framed poster of a friendly cartoon rocket on a lavender background, hanging flat on a wall and seen straight on",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:35:14.219Z",
+        "status": "generated"
       }
     },
     "space/decorations/starLamp": {
-      "path": "space/decorations/starLamp.svg",
+      "path": "space/decorations/starLamp.png",
       "theme": "space",
       "category": "decoration",
       "size": [
-        200,
-        280
+        184,
+        242
       ],
       "pivot": [
-        100,
-        280
+        92,
+        242
       ],
       "slot": "LAMP",
       "label": "Star lamp",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a bedside lamp shaped like a glowing yellow star on a short stand",
+        "prompt": "a bedside lamp shaped like a glowing yellow star on a short stand, seen straight on",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
@@ -870,15 +870,15 @@
       }
     },
     "space/entry/toyRocket": {
-      "path": "space/entry/toyRocket.svg",
+      "path": "space/entry/toyRocket.png",
       "theme": "space",
       "category": "entry",
       "size": [
-        320,
+        287,
         400
       ],
       "pivot": [
-        160,
+        144,
         400
       ],
       "label": "Toy rocket",
@@ -888,21 +888,21 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:35:03.067Z",
+        "status": "generated"
       }
     },
     "space/entry/toyRocketReaction": {
-      "path": "space/entry/toyRocketReaction.svg",
+      "path": "space/entry/toyRocketReaction.png",
       "theme": "space",
       "category": "entry",
       "size": [
-        320,
+        281,
         400
       ],
       "pivot": [
-        160,
+        141,
         400
       ],
       "label": "Toy rocket reacting",
@@ -913,18 +913,18 @@
           "docs/concepts/01-room-and-wardrobe.png",
           "space/entry/toyRocket"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:35:55.104Z",
+        "status": "generated"
       }
     },
     "space/room/background": {
-      "path": "space/room/background.svg",
+      "path": "space/room/background.png",
       "theme": "space",
       "category": "room",
       "size": [
-        3072,
-        2048
+        1536,
+        1024
       ],
       "label": "Space room background",
       "gen": {
@@ -933,18 +933,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:27:32.835Z",
+        "status": "generated"
       }
     },
     "space/sceneA/cockpitFrame": {
-      "path": "space/sceneA/cockpitFrame.svg",
+      "path": "space/sceneA/cockpitFrame.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
-        3072,
-        2048
+        1536,
+        1024
       ],
       "label": "Cockpit frame",
       "gen": {
@@ -953,21 +953,21 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:36:50.832Z",
+        "status": "generated"
       }
     },
     "space/sceneA/launchFlame": {
-      "path": "space/sceneA/launchFlame.svg",
+      "path": "space/sceneA/launchFlame.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
-        400,
+        275,
         500
       ],
       "pivot": [
-        200,
+        138,
         0
       ],
       "label": "Launch flame",
@@ -977,21 +977,21 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:37:38.662Z",
+        "status": "generated"
       }
     },
     "space/sceneA/rocket": {
-      "path": "space/sceneA/rocket.svg",
+      "path": "space/sceneA/rocket.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
-        600,
+        513,
         900
       ],
       "pivot": [
-        300,
+        257,
         900
       ],
       "label": "Rocket on the pad",
@@ -1001,18 +1001,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:38:28.178Z",
+        "status": "generated"
       }
     },
     "space/sceneA/step/countdown": {
-      "path": "space/sceneA/step/countdown.svg",
+      "path": "space/sceneA/step/countdown.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
         300,
-        300
+        191
       ],
       "label": "Step countdown",
       "gen": {
@@ -1021,18 +1021,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:36:58.376Z",
+        "status": "generated"
       }
     },
     "space/sceneA/step/fuel": {
-      "path": "space/sceneA/step/fuel.svg",
+      "path": "space/sceneA/step/fuel.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
         300,
-        300
+        239
       ],
       "label": "Step fuel",
       "gen": {
@@ -1041,18 +1041,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:37:41.743Z",
+        "status": "generated"
       }
     },
     "space/sceneA/step/hatch": {
-      "path": "space/sceneA/step/hatch.svg",
+      "path": "space/sceneA/step/hatch.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
         300,
-        300
+        288
       ],
       "label": "Step hatch",
       "gen": {
@@ -1061,18 +1061,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:38:32.196Z",
+        "status": "generated"
       }
     },
     "space/sceneA/step/lights": {
-      "path": "space/sceneA/step/lights.svg",
+      "path": "space/sceneA/step/lights.png",
       "theme": "space",
       "category": "sceneA",
       "size": [
         300,
-        300
+        97
       ],
       "label": "Step lights",
       "gen": {
@@ -1081,18 +1081,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:03:39.234Z",
+        "status": "generated"
       }
     },
     "space/sceneB/moon": {
-      "path": "space/sceneB/moon.svg",
+      "path": "space/sceneB/moon.png",
       "theme": "space",
       "category": "sceneB",
       "size": [
         400,
-        400
+        396
       ],
       "label": "Destination moon",
       "gen": {
@@ -1101,18 +1101,18 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:04:32.369Z",
+        "status": "generated"
       }
     },
     "space/sceneB/planet": {
-      "path": "space/sceneB/planet.svg",
+      "path": "space/sceneB/planet.png",
       "theme": "space",
       "category": "sceneB",
       "size": [
         400,
-        400
+        274
       ],
       "label": "Origin planet",
       "gen": {
@@ -1121,13 +1121,13 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:05:26.631Z",
+        "status": "generated"
       }
     },
     "space/sceneB/rocketParcel": {
-      "path": "space/sceneB/rocketParcel.svg",
+      "path": "space/sceneB/rocketParcel.png",
       "theme": "space",
       "category": "sceneB",
       "size": [
@@ -1141,13 +1141,13 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T11:40:00.000Z",
+        "status": "generated"
       }
     },
     "space/tiles/astroBunny": {
-      "path": "space/tiles/astroBunny.svg",
+      "path": "space/tiles/astroBunny.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1158,7 +1158,7 @@
       "derivedFrom": "space/decorations/astroBunny"
     },
     "space/tiles/astronautFigure": {
-      "path": "space/tiles/astronautFigure.svg",
+      "path": "space/tiles/astronautFigure.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1202,7 +1202,7 @@
       "derivedFrom": "space/decorations/galaxyPoster"
     },
     "space/tiles/moonBed": {
-      "path": "space/tiles/moonBed.svg",
+      "path": "space/tiles/moonBed.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1213,7 +1213,7 @@
       "derivedFrom": "space/decorations/moonBed"
     },
     "space/tiles/paperStars": {
-      "path": "space/tiles/paperStars.svg",
+      "path": "space/tiles/paperStars.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1224,7 +1224,7 @@
       "derivedFrom": "space/decorations/paperStars"
     },
     "space/tiles/plainBed": {
-      "path": "space/tiles/plainBed.svg",
+      "path": "space/tiles/plainBed.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1235,7 +1235,7 @@
       "derivedFrom": "space/decorations/plainBed"
     },
     "space/tiles/plainLamp": {
-      "path": "space/tiles/plainLamp.svg",
+      "path": "space/tiles/plainLamp.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1246,7 +1246,7 @@
       "derivedFrom": "space/decorations/plainLamp"
     },
     "space/tiles/plainRug": {
-      "path": "space/tiles/plainRug.svg",
+      "path": "space/tiles/plainRug.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1268,7 +1268,7 @@
       "derivedFrom": "space/decorations/planetMobile"
     },
     "space/tiles/purpleBeanbag": {
-      "path": "space/tiles/purpleBeanbag.svg",
+      "path": "space/tiles/purpleBeanbag.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1301,7 +1301,7 @@
       "derivedFrom": "shared/heroine/extra/rocketBackpack"
     },
     "space/tiles/rocketPoster": {
-      "path": "space/tiles/rocketPoster.svg",
+      "path": "space/tiles/rocketPoster.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1345,7 +1345,7 @@
       "derivedFrom": "shared/heroine/extra/starClip"
     },
     "space/tiles/starLamp": {
-      "path": "space/tiles/starLamp.svg",
+      "path": "space/tiles/starLamp.png",
       "theme": "space",
       "category": "tile",
       "size": [

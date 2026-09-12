@@ -4,6 +4,7 @@ import {
   checkInvariants,
   collectedCount,
   grantItem,
+  isNewItem,
   inventoryReducer,
   nextPair,
   placeItem,
@@ -86,6 +87,26 @@ describe('grant, place and wear (SPEC §10.3, §4.1, §4.4)', () => {
     expect(s.themes.sweet.lampOn).toBe(true);
     expect(s.themes.space.lampOn).toBe(false);
     expect(inventoryReducer(s, { type: 'inventory/lamp', theme: 'sweet', on: true })).toBe(s);
+  });
+});
+
+describe('"New" badge (SPEC §4.2, §10.1)', () => {
+  it('marks granted items new until they are placed or worn', () => {
+    let s = grantItem(createFreshSave(), 'space', 'space.moonBed');
+    s = grantItem(s, 'space', 'space.cloudPyjamas');
+    expect(isNewItem(s, 'space.moonBed')).toBe(true);
+    expect(isNewItem(s, 'space.cloudPyjamas')).toBe(true);
+    expect(isNewItem(s, 'space.plainBed')).toBe(false);
+    s = inventoryReducer(s, { type: 'inventory/place', theme: 'space', item: 'space.moonBed' });
+    expect(isNewItem(s, 'space.moonBed')).toBe(false);
+    expect(isNewItem(s, 'space.cloudPyjamas')).toBe(true);
+    s = inventoryReducer(s, { type: 'inventory/wear', item: 'space.cloudPyjamas' });
+    expect(s.newItems).toEqual([]);
+    // Granting again never re-flags, and swapping the starter back changes nothing.
+    expect(grantItem(s, 'space', 'space.moonBed')).toBe(s);
+    s = inventoryReducer(s, { type: 'inventory/place', theme: 'space', item: 'space.plainBed' });
+    expect(s.newItems).toEqual([]);
+    expect(checkInvariants(s)).toEqual([]);
   });
 });
 

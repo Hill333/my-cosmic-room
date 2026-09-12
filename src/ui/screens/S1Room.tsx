@@ -1,13 +1,19 @@
-import { useEffect } from 'preact/hooks';
-import type { ItemId, Theme } from '../../core/types.ts';
+import type { FunctionComponent } from 'preact';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import type { ItemId, SlotType, Theme } from '../../core/types.ts';
 import { assetUrl } from '../../assets.ts';
 import { collectedCount } from '../../core/inventory.ts';
-import { earnableTotal } from '../../catalog/index.ts';
-import { save } from '../../state/store.ts';
+import { earnableTotal, requireItem } from '../../catalog/index.ts';
+import { ENTRY_GEOMETRY } from '../../catalog/slots.ts';
+import { devTick, dispatch, save, soundOn } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
+import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { useFocusOnMount } from '../hooks.ts';
-import { RoomScene } from '../components/RoomScene.tsx';
+import { DecoratePanel } from '../components/DecoratePanel.tsx';
+import { DressUpPanel } from '../components/DressUpPanel.tsx';
+import { IconButton } from '../components/IconButton.tsx';
+import { RoomScene, type RoomMode, type RoomReaction } from '../components/RoomScene.tsx';
 
 interface Props {
   theme: Theme;
@@ -15,32 +21,178 @@ interface Props {
   sparkle?: ItemId | null;
 }
 
-const ENTRY_ART: Record<Theme, string> = {
-  space: 'space/entry/toyRocket',
-  sweet: 'sweet/entry/toyLetterbox',
+const ENTRY_ART: Record<Theme, { idle: string; react: string }> = {
+  space: { idle: 'space/entry/toyRocket', react: 'space/entry/toyRocketReaction' },
+  sweet: { idle: 'sweet/entry/toyLetterbox', react: 'sweet/entry/toyLetterboxFlag' },
 };
 
+/** Safety net: a reaction ends on `animationend`, or after this long if it never fires. */
+const REACTION_TIMEOUT_MS = 2500;
+const ENTRY_TIMEOUT_MS = 900;
+
 /**
- * S1 Room (SPEC §3.4). M0/M2 state: the room scene, the fixed chrome, the way back to S0 and
- * the mission entry (button, entry object and the M key). Decorate and Dress-up panels come in M3.
+ * S1 Room (SPEC §3.4): the room scene with its slots, the fixed chrome, Decorate and Dress-up
+ * panels (§4.2, §4.4), free-play reactions (§4.3) and the way to S2. UI-only state (open panel,
+ * armed tile, ghost, running reaction) lives here; every save change goes through `dispatch`.
  */
 export function S1Room({ theme, sparkle = null }: Props) {
   const heading = useFocusOnMount<HTMLHeadingElement>();
-  const state = save.value.themes[theme];
-  const openBoard = () => go({ id: 'S2', theme });
+  void devTick.value; // the slot debug overlay nudges geometry in place (dev only)
+  const state = save.value;
+  const themeState = state.themes[theme];
+  const [mode, setMode] = useState<RoomMode>('free');
+  const [armed, setArmed] = useState<ItemId | null>(null);
+  const [ghost, setGhost] = useState<ItemId | null>(null);
+  const [pop, setPop] = useState<SlotType | null>(null);
+  const [reaction, setReaction] = useState<RoomReaction | null>(null);
+  const [entryReacting, setEntryReacting] = useState(false);
+  const [announce, setAnnounce] = useState('');
+  const entryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const decorateButton = useRef<HTMLButtonElement>(null);
+  const dressupButton = useRef<HTMLButtonElement>(null);
 
-  // Keyboard shortcuts (SPEC §13.1): M opens the mission board.
+  const openBoard = useCallback(() => {
+    if (entryTimer.current !== null) clearTimeout(entryTimer.current);
+    entryTimer.current = null;
+    go({ id: 'S2', theme });
+  }, [theme]);
+
+  // The toy rocket / letterbox reacts first (SPEC §4.3), then opens the board.
+  const pokeEntry = () => {
+    if (entryReacting) return;
+    setEntryReacting(true);
+    entryTimer.current = setTimeout(openBoard, ENTRY_TIMEOUT_MS);
+  };
+  useEffect(
+    () => () => {
+      if (entryTimer.current !== null) clearTimeout(entryTimer.current);
+    },
+    [],
+  );
+
+  const closePanel = useCallback(() => {
+    setMode('free');
+    setArmed(null);
+    setGhost(null);
+  }, []);
+  const toggle = useCallback((next: RoomMode) => {
+    setMode((current) => (current === next ? 'free' : next));
+    setArmed(null);
+    setGhost(null);
+  }, []);
+
+  // Keyboard shortcuts (SPEC §13.1): D decorate, W dress up, M mission board, Escape closes
+  // the open panel. Registered once; state is read through setters and a ref so a key that
+  // arrives between a render and its effects never sees a stale closure.
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'm' && !e.ctrlKey && !e.metaKey && !e.altKey) openBoard();
+      if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+      const key = e.key.toLowerCase();
+      if (key === 'escape' && modeRef.current !== 'free') closePanel();
+      else if (key === 'm') openBoard();
+      else if (key === 'd') toggle('decorate');
+      else if (key === 'w') toggle('dressup');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [theme]);
+  }, [closePanel, openBoard, toggle]);
+
+  const place = (item: ItemId) => {
+    const slot = requireItem(item).slot!;
+    dispatch({ type: 'inventory/place', theme, item });
+    setArmed(null);
+    setGhost(null);
+    setPop(slot);
+    setAnnounce(t('ui.placed', { item: t(requireItem(item).nameKey as StringKey) }));
+  };
+
+  // Reactions (SPEC §4.3): visual only; LAMP is the one that persists (lighting per theme).
+  const react = (target: RoomReaction['target']) => {
+    if (mode === 'decorate') return;
+    if (target !== 'heroine' && target !== 'companion') {
+      const item = requireItem(themeState.slots[target]);
+      if (item.reaction === 'lamp') {
+        dispatch({ type: 'inventory/lamp', theme, on: !themeState.lampOn });
+      }
+    }
+    setReaction({ target, key: Date.now() });
+  };
+  useEffect(() => {
+    if (!reaction) return;
+    const timer = setTimeout(() => setReaction(null), REACTION_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [reaction]);
+  const endReaction = useCallback(() => {
+    setReaction(null);
+    setPop(null);
+  }, []);
+
+  const onSlotClick = (slot: SlotType) => {
+    if (mode !== 'decorate') {
+      react(slot);
+      return;
+    }
+    if (armed && requireItem(armed).slot === slot) place(armed);
+  };
+
+  // Clicking anywhere except a tile or a target slot cancels the armed tile (SPEC §4.2).
+  const onMainClick = (e: MouseEvent) => {
+    if (!armed) return;
+    const el = e.target as HTMLElement | null;
+    if (el?.closest('.tile, .slot-target')) return;
+    setArmed(null);
+  };
+
+  const panelOpen = mode !== 'free';
 
   return (
-    <main class={`screen s1 s1-${theme}`} aria-labelledby="s1-title">
-      <RoomScene theme={theme} slots={state.slots} heroine={save.value.heroine} sparkle={sparkle} />
+    <main
+      class={`screen s1 s1-${theme}${panelOpen ? ' s1-panel-open' : ''}`}
+      aria-labelledby="s1-title"
+      data-mode={mode}
+      onClick={onMainClick}
+    >
+      <div class={`room-wrap${panelOpen ? ' room-wrap-scaled' : ''}`}>
+        <RoomScene
+          theme={theme}
+          slots={themeState.slots}
+          heroine={state.heroine}
+          sparkle={sparkle}
+          lampOn={themeState.lampOn}
+          interaction={{
+            mode,
+            armed,
+            ghost,
+            pop,
+            reaction,
+            onSlotClick,
+            onHeroineClick: () => react('heroine'),
+            onCompanionClick: () => react('companion'),
+            onReactionEnd: endReaction,
+          }}
+        />
+        <button
+          type="button"
+          class={`entry-object${entryReacting ? ' entry-react' : ''}`}
+          style={entryStyle(theme)}
+          aria-label={t('s1.mission')}
+          data-testid="entry-object"
+          onClick={pokeEntry}
+          onAnimationEnd={() => {
+            if (entryReacting) openBoard();
+          }}
+        >
+          <img
+            src={assetUrl(entryReacting ? ENTRY_ART[theme].react : ENTRY_ART[theme].idle)}
+            alt=""
+            draggable={false}
+          />
+          <span class="entry-smoke" aria-hidden="true" />
+        </button>
+        {import.meta.env.DEV && <SlotDebugLoader theme={theme} />}
+      </div>
       <header class="s1-topleft">
         <h1 id="s1-title" class="room-badge" tabIndex={-1} ref={heading}>
           {t(`room.${theme}`)}
@@ -56,29 +208,46 @@ export function S1Room({ theme, sparkle = null }: Props) {
       </header>
       <div class="s1-topright">
         <span class="counter" data-testid="collected">
-          ★{' '}
-          {t('s1.collected', { n: collectedCount(save.value, theme), total: earnableTotal(theme) })}
+          ★ {t('s1.collected', { n: collectedCount(state, theme), total: earnableTotal(theme) })}
         </span>
+        <IconButton
+          label={soundOn.value ? t('ui.soundOn') : t('ui.soundOff')}
+          pressed={soundOn.value}
+          testId="sound-toggle"
+          onClick={() => dispatch({ type: 'settings/sound', sound: !soundOn.value })}
+        >
+          <span aria-hidden="true">{soundOn.value ? '🔊' : '🔇'}</span>
+        </IconButton>
       </div>
-      <button
-        type="button"
-        class="entry-object"
-        aria-label={t('s1.mission')}
-        data-testid="entry-object"
-        onClick={openBoard}
-      >
-        <img src={assetUrl(ENTRY_ART[theme])} alt="" draggable={false} />
-      </button>
       <div class="s1-bottom">
-        <button type="button" class="btn btn-lg" disabled title="M3">
+        <button
+          type="button"
+          class="btn btn-lg"
+          aria-pressed={mode === 'decorate'}
+          aria-keyshortcuts="D"
+          data-testid="decorate-button"
+          ref={decorateButton}
+          onClick={() => toggle('decorate')}
+        >
+          <span aria-hidden="true">🛋️ </span>
           {t('s1.decorate')}
         </button>
-        <button type="button" class="btn btn-lg" disabled title="M3">
+        <button
+          type="button"
+          class="btn btn-lg"
+          aria-pressed={mode === 'dressup'}
+          aria-keyshortcuts="W"
+          data-testid="dressup-button"
+          ref={dressupButton}
+          onClick={() => toggle('dressup')}
+        >
+          <span aria-hidden="true">👗 </span>
           {t('s1.dressup')}
         </button>
         <button
           type="button"
           class="btn btn-lg btn-primary"
+          aria-keyshortcuts="M"
           data-testid="mission-button"
           onClick={openBoard}
         >
@@ -86,6 +255,59 @@ export function S1Room({ theme, sparkle = null }: Props) {
           {t('s1.mission')}
         </button>
       </div>
+      <p class="visually-hidden" aria-live="polite" data-testid="room-announce">
+        {announce}
+      </p>
+      {mode === 'decorate' && (
+        <DecoratePanel
+          theme={theme}
+          armed={armed}
+          onArm={setArmed}
+          onPlace={place}
+          onGhost={setGhost}
+          onClose={closePanel}
+          opener={decorateButton}
+        />
+      )}
+      {mode === 'dressup' && (
+        <DressUpPanel
+          theme={theme}
+          onClose={closePanel}
+          opener={dressupButton}
+          onWear={(id) =>
+            setAnnounce(
+              id
+                ? t('ui.worn', { item: t(requireItem(id).nameKey as StringKey) })
+                : t('panel.nothing'),
+            )
+          }
+        />
+      )}
     </main>
   );
+}
+
+function entryStyle(theme: Theme) {
+  const g = ENTRY_GEOMETRY[theme];
+  const width = (g.height * 320) / 400;
+  return {
+    left: `${g.x - width / 2}px`,
+    top: `${g.y - g.height}px`,
+    width: `${width}px`,
+    height: `${g.height}px`,
+  };
+}
+
+/** `?debug=slots` (SPEC §16.4): loads the slot overlay on demand, dev builds only. */
+function SlotDebugLoader({ theme }: { theme: Theme }) {
+  const [Overlay, setOverlay] = useState<FunctionComponent<{ theme: Theme }> | null>(null);
+  const wanted =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('debug') === 'slots';
+  useEffect(() => {
+    if (wanted && !Overlay) {
+      void import('../components/SlotDebug.tsx').then((m) => setOverlay(() => m.SlotDebug));
+    }
+  }, [wanted, Overlay]);
+  return wanted && Overlay ? <Overlay theme={theme} /> : null;
 }

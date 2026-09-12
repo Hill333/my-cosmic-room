@@ -101,6 +101,7 @@ export function createFreshSave(now: Date = new Date()): Save {
     themes: { space: freshThemeState('space'), sweet: freshThemeState('sweet') },
     progress: freshProgress(),
     mission: null,
+    newItems: [],
   };
 }
 
@@ -314,6 +315,9 @@ export function validateSave(value: unknown): ValidationResult {
   if (typeof progress === 'string') return fail(progress);
   const mission = validateMission(migrated['mission']);
   if (typeof mission === 'string') return fail(mission);
+  // Additive M3 field: absent in saves written before it existed.
+  const newItems = migrated['newItems'] === undefined ? [] : migrated['newItems'];
+  if (!isStringArray(newItems)) return fail('newItems');
 
   const save: Save = {
     version: SAVE_VERSION,
@@ -330,6 +334,7 @@ export function validateSave(value: unknown): ValidationResult {
     themes: { space, sweet },
     progress,
     mission,
+    newItems: [...newItems],
   };
   const problems = checkInvariants(save);
   if (problems.length > 0) return fail(`invariants: ${problems.join('; ')}`);

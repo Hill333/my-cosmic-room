@@ -33,23 +33,26 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
     preset: 'astra-light',
   },
   'space.plainRug': {
-    prompt: 'a plain round lavender rug seen from slightly above',
+    prompt: 'a plain round lavender rug lying flat on the floor, seen from slightly above',
     preset: 'sol-med',
   },
   'space.plainLamp': {
-    prompt: 'a small plain bedside lamp with a mint shade and a wooden base',
+    prompt: 'a small plain bedside lamp with a mint shade and a wooden base, seen straight on',
     preset: 'sol-med',
   },
   'space.rocketPoster': {
-    prompt: 'a framed poster of a friendly cartoon rocket on a lavender background',
+    prompt:
+      'a framed poster of a friendly cartoon rocket on a lavender background, hanging flat on a wall and seen straight on',
     preset: 'sol-med',
   },
   'space.astronautFigure': {
-    prompt: 'a small toy astronaut figure standing, white suit with a round helmet',
+    prompt:
+      'a small toy astronaut figure standing upright, white suit with a round helmet, seen straight on',
     preset: 'sol-med',
   },
   'space.paperStars': {
-    prompt: 'a string of hanging yellow paper stars on a thin thread',
+    prompt:
+      'a vertical string of yellow paper stars hanging down from a single point at the top on a thin thread',
     preset: 'sol-med',
   },
   'space.purpleBeanbag': { prompt: 'a soft round purple beanbag on the floor', preset: 'sol-med' },
@@ -60,7 +63,7 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
     preset: 'astra-light',
   },
   'space.starLamp': {
-    prompt: 'a bedside lamp shaped like a glowing yellow star on a short stand',
+    prompt: 'a bedside lamp shaped like a glowing yellow star on a short stand, seen straight on',
     preset: 'sol-med',
   },
   'space.astroBunny': {
@@ -69,16 +72,18 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
   },
   // Rainbow Explorer
   'space.rainbowRug': {
-    prompt: 'a semicircular rainbow rug with soft pastel stripes seen from slightly above',
+    prompt:
+      'a semicircular rainbow rug with soft pastel stripes lying flat on the floor, seen from slightly above',
     preset: 'sol-med',
   },
   'space.planetMobile': {
     prompt:
-      'a hanging mobile with four small pastel planets and a moon on threads under a wooden bar',
+      'a hanging mobile with four small pastel planets and a moon on threads under a wooden bar, hanging from a single point at the top',
     preset: 'astra-light',
   },
   'space.galaxyPoster': {
-    prompt: 'a framed poster of a swirling pastel galaxy with tiny stars',
+    prompt:
+      'a framed poster of a swirling pastel galaxy with tiny stars, hanging flat on a wall and seen straight on',
     preset: 'sol-med',
   },
   // Sweet starters
