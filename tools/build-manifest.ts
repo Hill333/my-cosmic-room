@@ -102,6 +102,7 @@ for (const item of allItems) {
       gen: newGen(spec.preset, spec.prompt, [HEROINE_SHEET]),
     };
     if (spec.offset) entry.offset = spec.offset;
+    if (spec.clipAtAnkle) entry.clipAtAnkle = true;
     desired.set(item.art.heroineLayer, entry);
     desired.set(item.art.tile, {
       path: placeholderPath(item.art.tile),
@@ -179,9 +180,10 @@ for (const [id, entry] of desired) {
       merged.size = old.size;
       if (old.pivot) merged.pivot = old.pivot;
     }
-    // Hand-tuned figure anchors and overlay offsets / scales survive a rebuild.
+    // Hand-tuned figure anchors (with the ankle cut) and overlay offsets / scales survive a
+    // rebuild, on any overlay (a face's offset has no counterpart in manifest-data).
     if (old.anchors && entry.anchors) merged.anchors = old.anchors;
-    if (old.offset && entry.offset) merged.offset = old.offset;
+    if (old.offset && entry.anchor) merged.offset = old.offset;
     if (old.scale !== undefined && entry.anchor) merged.scale = old.scale;
     if (old.duration !== undefined) merged.duration = old.duration;
     if (old.gen && entry.gen) {

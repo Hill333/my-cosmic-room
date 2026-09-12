@@ -258,6 +258,7 @@ Slots: Hair, Outfit, Shoes, Extra.
 - The heroine is a raster **figure** plus **overlays**. A figure is one full-body PNG per outfit × hairstyle (7 × 3 = 21), generated from the reference sheet with a neutral face, plain white socks and no shoes, cut out and normalised onto a 600×900 canvas at 2× (feet on the bottom edge, centred). The figure id is `shared/heroine/figure/<outfit>-<hair>`; outfits and hair styles name their figure part in the catalogue (`art.figure`).
 - Overlays are small generated cut-outs snapped to the figure: shoes at the **feet** anchor (they always cover the socks), an extra at the **head** anchor (clips, headband) or the **back** anchor (the rocket backpack, drawn behind the figure), and a face overlay at the **face** anchor for the happy, thinking and cheering expressions; neutral is the figure's own face.
 - Because generated figures are not pixel-identical, every figure entry in `manifest.json` carries `anchors: { face, feet, head, back }`, each `{ x, y, scale }` in figure px: the overlay's `pivot` (bottom centre for shoes, centre otherwise) plus its own `offset` lands on the anchor and the overlay is sized by `scale`. Post-processing writes a proportional guess; the `?debug=heroine` overlay (§16.4) nudges and copies the tuned values. This replaces the earlier "no per-item offsets" rule.
+- The shoes never rely on covering the figure's socks: post-processing erases the figure below the **ankle cut** (`anchors.feet.cutY`, guessed from the sock silhouette, tuned like the other anchors) and extrudes the leg a little way down behind the shoe; a shoe overlay drawn with socks, legs or a shaft above the shoe is marked `clipAtAnkle` and is clipped just above the cut, so it never paints over the shin or a trouser hem.
 - Wardrobe tiles are cropped views of the composited figure: the torso of `<outfit>-buns` for outfits (and for the backpack), the head of `planetTee-<hair>` for hair styles and clips, the feet for shoes.
 - The same heroine component is used on S1, S3, S4, S5 and the S0 cards, at different scales; only the current outfit × hairstyle figure is loaded. Missions show the happy/thinking/cheering faces according to the puzzle state; the room shows the neutral figure and lights up the happy face during the heroine's tap reaction.
 
@@ -968,7 +969,7 @@ codex exec -m <preset> \
 
 **Prompt structure.** A fixed style block from §15.1 (cosy dollhouse cartoon, rounded dark-plum outlines, flat fills with soft shading, palette hex values, "single object, centred, plain white background, no text, no shadow, no watermark") followed by the asset's one-sentence prompt from the manifest (for example "a child's bed shaped like a crescent moon with star-patterned purple bedding") and the output size. Backgrounds replace the single-object clause with "empty room, no bed, rug, lamp, poster, shelf toy, mobile or cushion; keep the floor centre clear for a standing character". Companion prompts always attach the approved idle pose as a second reference.
 
-**Post-processing (scripted).** Background removal, crop to the silhouette with 8 px padding, resize to the manifest size, PNG compression, tile copy for the panel. Room layers keep their pivot in the manifest. Heroine figures are normalised onto the 600×900 canvas (feet on the bottom edge, centred) and get default `anchors` the first time; overlays are fitted to their manifest size (faces get a soft elliptical edge); heroine tiles are cropped views of the composited figure (§4.5).
+**Post-processing (scripted).** Background removal, crop to the silhouette with 8 px padding, resize to the manifest size, PNG compression, tile copy for the panel. Room layers keep their pivot in the manifest. Heroine figures are normalised onto the 600×900 canvas (feet on the bottom edge, centred), get default `anchors` the first time and are erased below the ankle cut (§4.5); overlays are fitted to their manifest size (faces get a soft elliptical edge); heroine tiles are cropped views of the composited figure (§4.5).
 
 **QA checklist (human, in the slot debug overlay).** Outline weight and palette match neighbouring assets; the silhouette reads at tile size; no text or artefacts; the item fits its slot without covering the heroine's standing area; companions and the reference sheet match across poses.
 
@@ -981,7 +982,8 @@ gen: {
   status: 'placeholder' | 'generated' | 'approved',
   fallback?: string            // set when the image tool fallback was used
 }
-// Heroine figures additionally: anchors: { face, feet, head, back: { x, y, scale } } (figure px)
+// Heroine figures additionally: anchors: { face, feet, head, back: { x, y, scale } } (figure px); feet also cutY
+// Shoe overlays drawn with socks or a shaft: clipAtAnkle: true
 // Heroine overlays additionally: anchor: 'face' | 'feet' | 'head' | 'back', offset?: [x, y]
 // Heroine tiles additionally: tileCrop: 'torso' | 'head' | 'feet'
 ```

@@ -247,29 +247,42 @@ export interface OverlaySpec {
   /** Point of the overlay that lands on the anchor; bottom centre for feet, centre otherwise. */
   pivot: [number, number];
   offset?: [number, number];
+  /** Shoes whose art continues above the shoe (socks, legs, a boot shaft): see AssetEntry. */
+  clipAtAnkle?: boolean;
   tileCrop: TileCrop;
 }
 
-const shoes = (prompt: string): OverlaySpec => ({
+const shoes = (prompt: string, clipAtAnkle = false): OverlaySpec => ({
   prompt: `a pair of ${prompt}, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer`,
   preset: 'sol-med',
   anchor: 'feet',
   size: [300, 200],
   pivot: [150, 200],
+  clipAtAnkle,
   tileCrop: 'feet',
 });
 
-/** Shoe and extra overlays by item name (SPEC §4.5): generated cut-outs snapped to the figure. */
+/**
+ * Shoe and extra overlays by item name (SPEC §4.5): generated cut-outs snapped to the figure.
+ * Shoes drawn with socks, legs or a shaft above the shoe are clipped at the figure's ankle cut
+ * (the slippers, whose ears rise above the ankle, are not); their `scale` in the manifest is
+ * tuned so the overlay's ankles line up with the figure's legs.
+ */
 export const OVERLAY_GEN: Record<string, OverlaySpec> = {
   sneakers: shoes(
     'white low sneakers with white laces, worn with yellow crew socks with two thin white stripes',
+    true,
   ),
-  maryJanes: shoes('pink mary-jane shoes with a strap and a tiny bow, worn with short white socks'),
+  maryJanes: shoes(
+    'pink mary-jane shoes with a strap and a tiny bow, worn with short white socks',
+    true,
+  ),
   bunnySlippers: shoes('fluffy white bunny slippers with pink inner ears and little faces'),
-  spaceBoots: shoes('chunky white space boots with lavender soles and small yellow stars'),
+  spaceBoots: shoes('chunky white space boots with lavender soles and small yellow stars', true),
   catSlippers: shoes('soft grey cat slippers with pointed ears, whiskers and pink noses'),
   rainbowSandals: shoes(
     'rainbow-striped sandals with a toe strap and an ankle strap, worn over short white socks',
+    true,
   ),
   starClip: {
     prompt: 'a small yellow star hair clip with a short clip bar, seen from the front',

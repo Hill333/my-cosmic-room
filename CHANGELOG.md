@@ -58,6 +58,29 @@ native-speaker wording review of Turkish and Dutch, and the deployment itself.
   with anchors, overlays with anchor and pivot, tiles with crops) and the overlay maths.
   e2e unchanged in count (27); the AT-24/25/26 assertions on `data-outfit` / `data-shoes`
   still hold on the raster heroine, so no spec needed changing.
+- Fix: the figure's own white socks and feet showed around the narrower shoe overlays (pink
+  mary-janes on every outfit, a white sock seam above the sneakers' yellow socks on the
+  pyjamas). The shoe overlays are drawn at a different leg spacing than the figures, so no
+  placement alone could cover the socks. Now `tools/post-assets.ts` erases each figure below
+  an **ankle cut** (`anchors.feet.cutY`, guessed from the sock silhouette the first time, then
+  kept like the other anchors; a hem outline right on the sock moves the guess up) and
+  extrudes the leg (or the pyjama cuff) 50 px down behind the shoe, fading out, so a shoe
+  only ever meets the leg. Shoes drawn with socks, legs or a shaft above the shoe
+  (`clipAtAnkle` in `OVERLAY_GEN`: sneakers, mary-janes, rainbow sandals, space boots) are
+  clipped 12 px above the cut (`ANKLE_CLIP_OVERLAP`, a `clip-path: inset()` on the overlay
+  in `components/Heroine.tsx`, the same in the tools) so they never paint over the shin or a
+  trouser hem; the slippers, whose ears rise above the ankle, are not clipped. Their
+  `scale` is retuned so the overlay's ankles line up with the figure's legs (sneakers 1.18,
+  mary-janes 1.11, boots 1.3, sandals 1.45 on the feet anchor's 0.78). Bare-leg figures cut
+  about 25 px above the socks so a little of the overlay's own sock shows; trouser figures
+  cut just under the hem. `?debug=heroine` draws the cut line and moves it with `,` and `.`
+  (the overlay clip follows live; the figure itself is re-cut by
+  `npm run assets:post -- --only <figure> --force`). `tools/heroine-matrix.ts` composites
+  every outfit × shoe (plus a ponytail and a loose row) into
+  `docs/screenshots/heroine-shoes-matrix.png` for review (`--zoom` adds 1:1 leg crops).
+  `tools/build-manifest.ts` keeps a hand-tuned `offset` on any overlay (the thinking face's
+  was dropped on a rebuild before). Tests: 140 unit (2 new on the clip maths and the
+  manifest), 27 e2e.
 
 ## M5 Polish and release
 

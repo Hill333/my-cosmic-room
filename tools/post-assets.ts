@@ -12,7 +12,10 @@
  *
  * Heroine art (SPEC §4.5): a figure is cut out and normalised onto the 600 × 900 canvas, feet
  * on the bottom edge, centred; its anchors get a proportional guess the first time (or with
- * --reset-anchors) and are otherwise kept, since they are tuned by hand. Shoes, extras and
+ * --reset-anchors) and are otherwise kept, since they are tuned by hand. The figure's own
+ * white socks and feet are erased below the ankle cut (`anchors.feet.cutY`, guessed from the
+ * sock silhouette the first time) and its legs extruded a little way down behind the shoes,
+ * so a narrow shoe overlay never has socks or feet peeking out around it. Shoes, extras and
  * faces are cut out and fitted to their manifest size (faces get a soft elliptical edge).
  * Wardrobe tiles are cropped views of the figure: torso for outfits and the backpack, head for
  * hair and clips, feet for shoes, with the overlay composited at its anchor. --tiles re-derives
@@ -28,8 +31,8 @@ import type {
   FigureAnchors,
   TileCrop,
 } from '../src/assetTypes.ts';
-import { overlayBox } from '../src/catalog/heroine.ts';
 import { defaultHeroine, figureId, requireItem } from '../src/catalog/index.ts';
+import { overlayCanvas, overlayPlacement } from './lib/heroine.ts';
 import { ASSETS_DIR, assetFile, readManifest, writeManifest } from './lib/manifest.ts';
 import { DEFAULT_ANCHORS, FACE_SIZE, HEROINE_CANVAS } from './manifest-data.ts';
 
@@ -44,6 +47,21 @@ const TILE_MARGIN = 20;
 const FACE_BAND: [number, number] = [0.05, 0.97];
 /** Normalised radius where the face patch starts fading out. */
 const FACE_FEATHER_FROM = 0.9;
+/** Channels at or above this value count as the white of the figure's socks. */
+const SOCK_WHITE = 225;
+/** A row with at least this many sock-white pixels is part of the socks. */
+const SOCK_ROW = 6;
+/** The ankle cut sits this far above the first skin row over the socks (clears the sock outline). */
+const CUT_ABOVE_SOCKS = 2;
+/** Channels all below this value are an outline, not skin or cloth. */
+const OUTLINE_DARK = 120;
+/** Margin the cut keeps above a hem outline it had to move over. */
+const CUT_ABOVE_OUTLINE = 4;
+/** Rows just above the cut that are averaged into the extruded leg. */
+const LEG_SAMPLE_ROWS = 3;
+/** How far the legs are extruded below the cut, behind the shoe overlay, and the fade at the end. */
+const LEG_EXTRUDE = 50;
+const LEG_EXTRUDE_FADE = 8;
 
 interface Args {
   only: string[];
@@ -132,17 +150,6 @@ function featherEllipse(data: Buffer, width: number, height: number, from = 0.72
   }
 }
 
-/** Where an overlay lands on the figure canvas, in whole px (the renderer's overlayBox). */
-function overlayPlacement(anchor: Anchor, overlay: AssetEntry): Placement {
-  const box = overlayBox(anchor, overlay);
-  return {
-    left: Math.round(box.left),
-    top: Math.round(box.top),
-    width: Math.max(1, Math.round(box.width)),
-    height: Math.max(1, Math.round(box.height)),
-  };
-}
-
 function pngOptions() {
   return { palette: true, quality: 92, compressionLevel: 9, effort: 8 } as const;
 }
@@ -169,38 +176,6 @@ async function tileFromBuffer(input: Buffer, tileOut: string): Promise<void> {
     ])
     .png(pngOptions())
     .toFile(tileOut);
-}
-
-type Placement = { left: number; top: number; width: number; height: number };
-
-/** A transparent 600 × 900 canvas with the overlay placed on it (clipped to the canvas). */
-async function overlayCanvas(overlayFile: string, place: Placement): Promise<Buffer> {
-  const [w, h] = HEROINE_CANVAS;
-  const resized = await sharp(overlayFile)
-    .resize(place.width, place.height, { fit: 'fill' })
-    .png()
-    .toBuffer();
-  const left = Math.max(0, place.left);
-  const top = Math.max(0, place.top);
-  const right = Math.min(w, place.left + place.width);
-  const bottom = Math.min(h, place.top + place.height);
-  const empty = sharp({
-    create: { width: w, height: h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
-  });
-  if (right <= left || bottom <= top) return empty.png().toBuffer();
-  const visible = await sharp(resized)
-    .extract({
-      left: left - place.left,
-      top: top - place.top,
-      width: right - left,
-      height: bottom - top,
-    })
-    .png()
-    .toBuffer();
-  return empty
-    .composite([{ input: visible, left, top }])
-    .png()
-    .toBuffer();
 }
 
 /**
@@ -358,6 +333,110 @@ function cutOut(data: Buffer, width: number, height: number): Cutout {
   };
 }
 
+/**
+ * Guesses the ankle cut of a normalised figure from its silhouette: scanning up from the
+ * soles, the socks are the rows with plain white in them and the first run of rows without
+ * any is the skin (or a trouser hem) above them. The cut goes just above the sock's outline,
+ * and moves further up when the rows the leg is extruded from still hold an outline (a pyjama
+ * hem sitting right on the sock), so the extrusion continues the leg or the cuff, never a line.
+ */
+function guessAnkleCut(data: Buffer, width: number, height: number): number {
+  const opaque = (i: number) => data[i * 4 + 3]! > 128;
+  const whiteInRow = (y: number) => {
+    let n = 0;
+    for (let x = 0; x < width; x++) {
+      const i = y * width + x;
+      if (
+        opaque(i) &&
+        data[i * 4]! >= SOCK_WHITE &&
+        data[i * 4 + 1]! >= SOCK_WHITE &&
+        data[i * 4 + 2]! >= SOCK_WHITE
+      )
+        n++;
+    }
+    return n;
+  };
+  /** Whether the row has an outline-dark pixel away from the silhouette's edges. */
+  const darkInside = (y: number) => {
+    let start = -1;
+    for (let x = 0; x <= width; x++) {
+      const on = x < width && opaque(y * width + x);
+      if (on && start < 0) start = x;
+      if (!on && start >= 0) {
+        const margin = Math.round((x - start) * 0.25);
+        for (let xx = start + margin; xx < x - margin; xx++) {
+          const i = (y * width + xx) * 4;
+          if (Math.max(data[i]!, data[i + 1]!, data[i + 2]!) < OUTLINE_DARK) return true;
+        }
+        start = -1;
+      }
+    }
+    return false;
+  };
+  let seenSocks = false;
+  let bare = 0;
+  let cut = height - 1;
+  for (let y = height - 1; y >= 0; y--) {
+    if (whiteInRow(y) >= SOCK_ROW) {
+      seenSocks = true;
+      bare = 0;
+      continue;
+    }
+    if (!seenSocks) continue;
+    bare++;
+    if (bare === 3) {
+      cut = y + 2 - CUT_ABOVE_SOCKS;
+      break;
+    }
+  }
+  const sampleHasOutline = (c: number) => {
+    for (let y = Math.max(0, c - LEG_SAMPLE_ROWS); y < c; y++) if (darkInside(y)) return true;
+    return false;
+  };
+  let clean = cut;
+  while (clean > LEG_SAMPLE_ROWS && sampleHasOutline(clean)) clean--;
+  return clean === cut ? cut : clean - CUT_ABOVE_OUTLINE;
+}
+
+/**
+ * Erases the figure below the ankle cut and extrudes the legs down behind the shoes: every
+ * row from the cut down is the average of the rows just above it, fading out at the end.
+ * Whatever shoe overlay is worn then only ever meets the leg, never the figure's own socks.
+ */
+function cutAnkles(data: Buffer, width: number, height: number, cutY: number): void {
+  const sample = new Float32Array(width * 4);
+  const from = Math.max(0, cutY - LEG_SAMPLE_ROWS);
+  const rows = cutY - from;
+  for (let y = from; y < cutY; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const a = data[i + 3]! / 255;
+      // Premultiplied average so transparent neighbours do not darken the edge.
+      sample[x * 4] = sample[x * 4]! + data[i]! * a;
+      sample[x * 4 + 1] = sample[x * 4 + 1]! + data[i + 1]! * a;
+      sample[x * 4 + 2] = sample[x * 4 + 2]! + data[i + 2]! * a;
+      sample[x * 4 + 3] = sample[x * 4 + 3]! + a;
+    }
+  }
+  for (let y = cutY; y < height; y++) {
+    const t = y - cutY;
+    const fade = t >= LEG_EXTRUDE ? 0 : Math.min(1, (LEG_EXTRUDE - t) / LEG_EXTRUDE_FADE);
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const a = rows ? sample[x * 4 + 3]! / rows : 0;
+      if (a <= 0 || fade <= 0) {
+        data[i] = data[i + 1] = data[i + 2] = data[i + 3] = 0;
+        continue;
+      }
+      const sum = sample[x * 4 + 3]!;
+      data[i] = Math.round(sample[x * 4]! / sum);
+      data[i + 1] = Math.round(sample[x * 4 + 1]! / sum);
+      data[i + 2] = Math.round(sample[x * 4 + 2]! / sum);
+      data[i + 3] = Math.round(a * fade * 255);
+    }
+  }
+}
+
 async function processEntry(
   id: string,
   entry: AssetEntry,
@@ -390,18 +469,24 @@ async function processEntry(
       .toBuffer({ resolveWithObject: true });
     const left = Math.round((w - fitted.info.width) / 2);
     const top = h - fitted.info.height;
-    await sharp({
+    const canvas = await sharp({
       create: { width: w, height: h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
     })
       .composite([{ input: fitted.data, left, top }])
-      .png(pngOptions())
-      .toFile(out);
+      .raw()
+      .toBuffer();
     const firstTime = !entry.path.endsWith('.png');
     if (firstTime || args.resetAnchors || !entry.anchors) {
       // The cut-out keeps PADDING px under the soles; the feet anchor sits on the soles.
       const bottomPad = PADDING * (fitted.info.height / cut.box.height);
       entry.anchors = guessAnchors(top, fitted.info.height, bottomPad);
     }
+    // The ankle cut is guessed from the socks once and then kept (tuned in ?debug=heroine).
+    entry.anchors.feet.cutY ??= guessAnkleCut(canvas, w, h);
+    cutAnkles(canvas, w, h, entry.anchors.feet.cutY);
+    await sharp(canvas, { raw: { width: w, height: h, channels: 4 } })
+      .png(pngOptions())
+      .toFile(out);
     entry.path = outRel;
     entry.size = [w, h];
     const notes: string[] = [];
@@ -409,7 +494,7 @@ async function processEntry(
       const note = await deriveHeroineTile(tid, manifest);
       if (note) notes.push(note);
     }
-    return `${outRel} ${w}×${h} (figure ${fitted.info.width}×${fitted.info.height}) ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tiles → ' + notes.join(', ') : ''}`;
+    return `${outRel} ${w}×${h} (figure ${fitted.info.width}×${fitted.info.height}, ankle cut ${entry.anchors.feet.cutY}) ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tiles → ' + notes.join(', ') : ''}`;
   }
 
   if (isFullFrame(entry)) {

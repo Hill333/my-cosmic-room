@@ -14,6 +14,12 @@ export const FALLBACK_ANCHORS: FigureAnchors = {
   back: { x: 300, y: 420, scale: 0.9 },
 };
 
+/**
+ * How far above the ankle cut a `clipAtAnkle` shoe overlay still shows, in figure px: enough
+ * to cover the cut edge without reaching a trouser hem (the hems sit at least this far up).
+ */
+export const ANKLE_CLIP_OVERLAP = 12;
+
 export interface OverlayBox {
   left: number;
   top: number;
@@ -42,19 +48,48 @@ export function overlayBox(
   };
 }
 
+/**
+ * Figure-px line above which a `clipAtAnkle` overlay is hidden (the figure's ankle cut minus
+ * the overlap), or null when the overlay is not clipped or the anchor has no cut.
+ */
+export function overlayClipTop(
+  anchor: Anchor,
+  overlay: Pick<AssetEntry, 'clipAtAnkle'>,
+): number | null {
+  if (!overlay.clipAtAnkle || anchor.cutY === undefined) return null;
+  return anchor.cutY - ANKLE_CLIP_OVERLAP;
+}
+
+/** A type alias (not an interface) so it is assignable to preact's CSSProperties. */
+export type OverlayStyle = {
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+  /** Present for a `clipAtAnkle` overlay: hides the part above the figure's ankle cut. */
+  clipPath?: string;
+};
+
 /** The same box as CSS percentages of the figure canvas, so it scales with the display size. */
 export function overlayStyle(
   figureSize: readonly [number, number],
   anchor: Anchor,
-  overlay: Pick<AssetEntry, 'size' | 'pivot' | 'offset' | 'scale'>,
-): { left: string; top: string; width: string; height: string } {
+  overlay: Pick<AssetEntry, 'size' | 'pivot' | 'offset' | 'scale' | 'clipAtAnkle'>,
+): OverlayStyle {
   const box = overlayBox(anchor, overlay);
   const [fw, fh] = figureSize;
   const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
-  return {
+  const style: OverlayStyle = {
     left: pct(box.left, fw),
     top: pct(box.top, fh),
     width: pct(box.width, fw),
     height: pct(box.height, fh),
   };
+  const clipTop = overlayClipTop(anchor, overlay);
+  if (clipTop !== null && clipTop > box.top) {
+    // The inset is a percentage of the overlay's own box, so it scales with it.
+    const inset = Math.min(100, ((clipTop - box.top) / box.height) * 100);
+    style.clipPath = `inset(${inset.toFixed(3)}% 0 0 0)`;
+  }
+  return style;
 }

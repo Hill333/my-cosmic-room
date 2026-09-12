@@ -27,6 +27,12 @@ export interface Anchor {
   x: number;
   y: number;
   scale: number;
+  /**
+   * Feet only: the ankle cut line in figure px. Post-processing erases the figure's own socks
+   * and feet below it (extruding the legs a little way down behind the shoes), and shoe
+   * overlays marked `clipAtAnkle` are clipped just above it.
+   */
+  cutY?: number;
 }
 
 export type FigureAnchors = Record<AnchorKind, Anchor>;
@@ -63,6 +69,11 @@ export interface AssetEntry {
   offset?: [number, number];
   /** Overlays: own size multiplier on top of the anchor's (faces differ in how they fill their box). */
   scale?: number;
+  /**
+   * Shoes that draw socks or legs above the shoe: the overlay is clipped just above the
+   * figure's ankle cut (`anchors.feet.cutY`) so those never paint over the shin or a trouser hem.
+   */
+  clipAtAnkle?: boolean;
   /** Figures: where the overlays snap, in figure px; tuned with `?debug=heroine`. */
   anchors?: FigureAnchors;
   /** Wardrobe tiles derived from a figure or overlay: which region of the figure to show. */

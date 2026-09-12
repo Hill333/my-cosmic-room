@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import manifestJson from '../../assets/manifest.json';
-import type { AssetManifest } from '../assetTypes.ts';
-import { FALLBACK_ANCHORS, overlayBox, overlayStyle } from './heroine.ts';
+import type { AssetEntry, AssetManifest } from '../assetTypes.ts';
+import {
+  ANKLE_CLIP_OVERLAP,
+  FALLBACK_ANCHORS,
+  overlayBox,
+  overlayClipTop,
+  overlayStyle,
+} from './heroine.ts';
 import { allItems, defaultHeroine, figureId, heroineFigure, requireItem } from './index.ts';
 
 const manifest = manifestJson as unknown as AssetManifest;
@@ -109,5 +115,42 @@ describe('heroine figures and overlays (SPEC §4.5)', () => {
       pivot: [150, 200],
     });
     expect(style).toEqual({ left: '30.500%', top: '82.111%', width: '39.000%', height: '17.333%' });
+  });
+
+  it('clips a clipAtAnkle shoe just above the figure ankle cut, as a percentage of its box', () => {
+    const shoes: Pick<AssetEntry, 'size' | 'pivot' | 'clipAtAnkle'> = {
+      size: [300, 200],
+      pivot: [150, 200],
+    };
+    const feet = { x: 300, y: 900, scale: 1, cutY: 800 };
+    // Not clipped without the flag or without a cut on the figure.
+    expect(overlayClipTop(feet, shoes)).toBeNull();
+    expect(
+      overlayClipTop({ x: 300, y: 900, scale: 1 }, { ...shoes, clipAtAnkle: true }),
+    ).toBeNull();
+    expect(overlayStyle([600, 900], feet, shoes).clipPath).toBeUndefined();
+    // Clipped: the box spans 700..900, the clip line is 800 - overlap → 44% of the box.
+    const clipped = { ...shoes, clipAtAnkle: true };
+    expect(overlayClipTop(feet, clipped)).toBe(800 - ANKLE_CLIP_OVERLAP);
+    expect(overlayStyle([600, 900], feet, clipped).clipPath).toBe('inset(44.000% 0 0 0)');
+    // A cut above the box needs no clip.
+    expect(overlayStyle([600, 900], { ...feet, cutY: 600 }, clipped).clipPath).toBeUndefined();
+  });
+
+  it('every generated figure carries an ankle cut above the soles; socks and boots are clipped', () => {
+    for (const [id, entry] of Object.entries(manifest.assets)) {
+      if (entry.layer !== 'figure' || !entry.path.endsWith('.png')) continue;
+      const feet = entry.anchors!.feet;
+      expect(feet.cutY, id).toBeDefined();
+      expect(feet.cutY!, id).toBeLessThan(feet.y);
+      expect(feet.cutY!, id).toBeGreaterThan(feet.y - 200);
+    }
+    const clipped = (name: string) => manifest.assets[`shared/heroine/shoes/${name}`]!.clipAtAnkle;
+    expect(clipped('sneakers')).toBe(true);
+    expect(clipped('maryJanes')).toBe(true);
+    expect(clipped('rainbowSandals')).toBe(true);
+    expect(clipped('spaceBoots')).toBe(true);
+    expect(clipped('bunnySlippers')).toBeUndefined();
+    expect(clipped('catSlippers')).toBeUndefined();
   });
 });

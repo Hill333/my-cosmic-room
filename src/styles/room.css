@@ -820,6 +820,13 @@ button.room-companion {
   outline-color: var(--coral);
   background: rgba(232, 115, 95, 0.15);
 }
+.heroine-debug-cut {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed rgba(255, 80, 80, 0.9);
+  pointer-events: none;
+}
 .heroine-debug-anchor {
   pointer-events: auto;
   cursor: pointer;

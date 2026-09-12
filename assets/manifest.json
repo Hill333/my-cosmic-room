@@ -192,11 +192,11 @@
         "generatedAt": "2026-09-12T18:52:01.265Z",
         "status": "generated"
       },
-      "scale": 0.75,
       "offset": [
         0,
         -6
-      ]
+      ],
+      "scale": 0.75
     },
     "shared/heroine/figure/cloudPyjamas-buns": {
       "path": "shared/heroine/figure/cloudPyjamas-buns.png",
@@ -221,7 +221,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 807
         },
         "back": {
           "x": 300,
@@ -264,7 +265,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 813
         },
         "back": {
           "x": 300,
@@ -307,7 +309,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 812
         },
         "back": {
           "x": 300,
@@ -350,7 +353,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 813
         },
         "back": {
           "x": 300,
@@ -393,7 +397,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 814
         },
         "back": {
           "x": 300,
@@ -436,7 +441,8 @@
         "feet": {
           "x": 306,
           "y": 895,
-          "scale": 0.84
+          "scale": 0.84,
+          "cutY": 800
         },
         "back": {
           "x": 300,
@@ -479,7 +485,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 770
         },
         "back": {
           "x": 300,
@@ -522,7 +529,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 762
         },
         "back": {
           "x": 300,
@@ -565,7 +573,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 773
         },
         "back": {
           "x": 300,
@@ -608,7 +617,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 775
         },
         "back": {
           "x": 300,
@@ -694,7 +704,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 776
         },
         "back": {
           "x": 300,
@@ -737,7 +748,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 792
         },
         "back": {
           "x": 300,
@@ -823,7 +835,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 790
         },
         "back": {
           "x": 300,
@@ -866,7 +879,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 810
         },
         "back": {
           "x": 300,
@@ -952,7 +966,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 809
         },
         "back": {
           "x": 300,
@@ -995,7 +1010,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 762
         },
         "back": {
           "x": 300,
@@ -1081,7 +1097,8 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 768
         },
         "back": {
           "x": 300,
@@ -1197,7 +1214,9 @@
         "attempts": 1,
         "generatedAt": "2026-09-12T18:42:44.081Z",
         "status": "generated"
-      }
+      },
+      "clipAtAnkle": true,
+      "scale": 1.11
     },
     "shared/heroine/shoes/rainbowSandals": {
       "path": "shared/heroine/shoes/rainbowSandals.png",
@@ -1223,7 +1242,9 @@
         "attempts": 1,
         "generatedAt": "2026-09-12T18:43:37.142Z",
         "status": "generated"
-      }
+      },
+      "clipAtAnkle": true,
+      "scale": 1.45
     },
     "shared/heroine/shoes/sneakers": {
       "path": "shared/heroine/shoes/sneakers.png",
@@ -1249,7 +1270,9 @@
         "attempts": 1,
         "generatedAt": "2026-09-12T18:44:26.866Z",
         "status": "generated"
-      }
+      },
+      "clipAtAnkle": true,
+      "scale": 1.18
     },
     "shared/heroine/shoes/spaceBoots": {
       "path": "shared/heroine/shoes/spaceBoots.png",
@@ -1275,7 +1298,9 @@
         "attempts": 1,
         "generatedAt": "2026-09-12T18:45:13.952Z",
         "status": "generated"
-      }
+      },
+      "clipAtAnkle": true,
+      "scale": 1.3
     },
     "shared/sceneB/parcel": {
       "path": "shared/sceneB/parcel.png",

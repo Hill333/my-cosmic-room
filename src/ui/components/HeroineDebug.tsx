@@ -14,9 +14,11 @@ const FACES: Face[] = ['neutral', 'happy', 'thinking', 'cheering'];
 /**
  * Heroine anchor overlay (`?debug=heroine`, SPEC §16.4), dev builds only: draws the current
  * figure's four anchors over the room heroine and nudges them in place. 1–4 or click select an
- * anchor; arrows move it in figure px (Shift = 10); [ and ] change its scale; F cycles the
- * face overlay; C copies `{ "<figure id>": { anchors } }` for assets/manifest.json to the
- * clipboard and logs it. Nothing is persisted: paste the JSON into the manifest.
+ * anchor; arrows move it in figure px (Shift = 10); [ and ] change its scale; , and . move the
+ * ankle cut line (`feet.cutY`, drawn dashed: shoes marked `clipAtAnkle` are clipped just above
+ * it live, the figure itself is only re-cut by `post-assets --force`); F cycles the face
+ * overlay; C copies `{ "<figure id>": { anchors } }` for assets/manifest.json to the clipboard
+ * and logs it. Nothing is persisted: paste the JSON into the manifest.
  */
 export function HeroineDebug({ theme }: { theme: Theme }) {
   const [selected, setSelected] = useState<AnchorKind>('face');
@@ -50,6 +52,12 @@ export function HeroineDebug({ theme }: { theme: Theme }) {
           break;
         case ']':
           a.scale = Math.round((a.scale + 0.02) * 100) / 100;
+          break;
+        case ',':
+          anchors.feet.cutY = (anchors.feet.cutY ?? anchors.feet.y) - step;
+          break;
+        case '.':
+          anchors.feet.cutY = (anchors.feet.cutY ?? anchors.feet.y) + step;
           break;
         case '1':
         case '2':
@@ -113,6 +121,13 @@ export function HeroineDebug({ theme }: { theme: Theme }) {
             style={overlayStyle(figure.size, anchors[kind], manifest.assets[id]!)}
           />
         ))}
+        {anchors.feet.cutY !== undefined && (
+          <div
+            class="heroine-debug-cut"
+            style={{ top: pct(anchors.feet.cutY, figure.size[1]) }}
+            title="ankle cut"
+          />
+        )}
         {KINDS.map((kind) => {
           const a = anchors[kind];
           return (
@@ -137,11 +152,13 @@ export function HeroineDebug({ theme }: { theme: Theme }) {
             return (
               <li key={kind} class={selected === kind ? 'heroine-debug-current' : ''}>
                 {i + 1} {kind}: {a.x},{a.y} ×{a.scale}
+                {kind === 'feet' && a.cutY !== undefined ? ` cut ${a.cutY}` : ''}
               </li>
             );
           })}
         </ul>
-        1–4 select, arrows move (Shift ×10), [ ] scale, F face ({devFace.value}), C copies JSON
+        1–4 select, arrows move (Shift ×10), [ ] scale, , . ankle cut, F face ({devFace.value}), C
+        copies JSON
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 Milestones M0 to M5 and the follow-up M3b (heroine as raster figures, room backdrops matching
 the concepts) are implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build
 passes `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(138 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(140 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 is yours to do; this file is the
 checklist, followed by the known limitations and the open spec questions.
 
@@ -27,8 +27,9 @@ checklist, followed by the known limitations and the open spec questions.
    the dress-up panel, taken from the app). Then in the app: open Dress up and try every
    outfit, hairstyle, pair of shoes and extra; open `?screen=S1&debug=heroine` and check the
    overlays sit right on every figure (press 1–4 to select an anchor, arrows to nudge, `[` `]`
-   to scale, F to cycle the face, C to copy the JSON into the figure's `anchors` in
-   `assets/manifest.json`). Check S3 / S4 for the happy, thinking and cheering faces and S5
+   to scale, `,` `.` to move the ankle cut line, F to cycle the face, C to copy the JSON into
+   the figure's `anchors` in `assets/manifest.json`). `docs/screenshots/heroine-shoes-matrix.png`
+   (from `node tools/heroine-matrix.ts`) shows every outfit × shoe at once. Check S3 / S4 for the happy, thinking and cheering faces and S5
    for the happy face. Figures or overlays that are still placeholders are listed under
    "Known limitations" below; generate them with `npm run assets:gen` (it pauses by itself
    when the Codex five-hour window is full) and `npm run assets:post`, then tune their anchors.
@@ -86,12 +87,30 @@ from `planetTee-loose` only once that figure exists (the tile is a placeholder n
 full), then `npm run assets:post` (normalises them, writes the default anchors and the hair
 tile), then check them with `?screen=S1&debug=heroine` wearing each outfit with loose hair;
 the three existing loose figures use `face` y 200 × 0.9, `head` y 92, `back` y 430, so copy
-those into the new entries' `anchors` if the defaults look off.
+those into the new entries' `anchors` if the defaults look off. Post-processing also guesses
+the ankle cut (`feet.cutY`) from the socks; the buns and ponytail figures of the same outfits
+use 775 (planet tee), 770 (sweater), 762 (dress) and 809 (hoodie), so set the new figures'
+cut near those (a bare leg gets the cut ~25 px above the socks so the overlay's own sock
+shows), re-run `npm run assets:post -- --only <figure> --force` and check the matrix sheet.
+
+**Optional regeneration (not needed for the fix).** The shoe overlays were generated with
+narrower, closer-together legs than the figures, which is why the socks used to peek out; the
+fix cuts the figure at the ankle and extrudes the leg, so it no longer matters. If a Codex
+window is free and you want the overlays themselves to match, add "the two shoes as far apart
+as the girl's feet in the reference sheet, nothing drawn above the ankle" to the `shoes()`
+prompt in `tools/manifest-data.ts` and regenerate them (`npm run assets:gen -- --regen
+shared/heroine/shoes/<name>`, `npm run assets:post -- --only shared/heroine/shoes/<name>
+--force`), then retune their `scale`; the space boots would gain their cuff back (it is
+clipped now) if generated as low boots.
 
 ## Known limitations
 
 - Four loose-hair figures are still placeholders (see "Codex usage state" above); the
   generator resumes them with `npm run assets:gen`.
+- Shoes are clipped at the figure's ankle (`clipAtAnkle`), so the sneakers' yellow crew socks
+  show as ankle socks and the space boots as low boots (their cuff strap is above the clip);
+  the slippers' ears stand in front of the shin. The extruded leg under the cut is a flat
+  colour for 50 px; it is only ever visible where a shoe overlay is narrower than the leg.
 - Generated figures keep small white hair highlights at the top of the buns and the ponytail
   (they were invisible on the white generation background); regenerate a figure if they
   bother you, or paint them out in the raw PNG and re-run `npm run assets:post -- --only

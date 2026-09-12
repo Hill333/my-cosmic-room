@@ -27,7 +27,7 @@ npm run preview      # serve dist/ locally (a file:// open does not work with mo
 
 Full verification before a release: `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`.
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet` for the Sweet room), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
+Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet` for the Sweet room), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, `,` `.` move the ankle cut line, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
 
 Asset pipeline (SPEC §15):
 
@@ -46,6 +46,7 @@ npm run assets:sounds          # synthesize the sound effects (needs ffmpeg on P
 npm run assets:thumbs          # derive the S0 card thumbnails from the room backgrounds
 npm run measure                # first-load timings of dist/ under network throttling
 node tools/screenshots.ts      # review screenshots of both rooms and the dress-up panel into docs/screenshots/
+node tools/heroine-matrix.ts   # contact sheet of every outfit × shoe into docs/screenshots/heroine-shoes-matrix.png
 ```
 
 ### Heroine (SPEC §4.5)
@@ -54,7 +55,10 @@ The heroine is one generated full-body figure per outfit × hairstyle
 (`assets/shared/heroine/figure/<outfit>-<hair>.png`, 21 in all) plus generated overlays: shoes at
 the feet, an extra at the head or behind the back, and a face for the mission expressions.
 Each figure's `anchors` in `assets/manifest.json` say where the overlays snap; post-processing
-writes a first guess and `?debug=heroine` tunes it (press C, paste into the manifest). Wardrobe
+writes a first guess and `?debug=heroine` tunes it (press C, paste into the manifest). The
+figure's own socks and feet are erased below the ankle cut (`anchors.feet.cutY`) and shoes
+drawn with socks or a shaft (`clipAtAnkle`) are clipped just above it, so no sock peeks out
+around a narrow shoe; `node tools/heroine-matrix.ts` renders every outfit × shoe for a check. Wardrobe
 tiles are cropped from the figures by `npm run assets:post` (`--tiles` redoes them all). To redo
 one figure: `npm run assets:gen -- --regen shared/heroine/figure/planetTee-buns` then
 `npm run assets:post -- --only shared/heroine/figure/planetTee-buns --force` (add
