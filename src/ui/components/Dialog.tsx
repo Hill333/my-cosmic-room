@@ -24,7 +24,12 @@ export function Dialog({ titleId, onClose, testId, children }: Props) {
     const first = box.current?.querySelector<HTMLElement>(FOCUSABLE);
     (first ?? box.current)?.focus({ preventScroll: true });
     return () => {
-      if (opener.current instanceof HTMLElement) opener.current.focus({ preventScroll: true });
+      // Nothing focused when the dialog opened (a screen that just mounted): leave focus
+      // where the caller put it instead of sending it to the body.
+      const target = opener.current;
+      if (target instanceof HTMLElement && target !== document.body) {
+        target.focus({ preventScroll: true });
+      }
     };
   }, []);
 

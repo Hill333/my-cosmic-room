@@ -6,6 +6,7 @@ import {
   HEROINE_GEOMETRY,
   HEROINE_Z,
   SLOT_GEOMETRY,
+  STAR_CHART_GEOMETRY,
   slotBox,
   type StageBox,
 } from '../../catalog/slots.ts';
@@ -15,6 +16,7 @@ import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { Companion, type CompanionPose } from './Companion.tsx';
 import { HeroinePreview } from './Heroine.tsx';
+import { StarChart } from './StarChart.tsx';
 
 export type RoomMode = 'free' | 'decorate' | 'dressup';
 
@@ -49,6 +51,8 @@ interface Props {
   face?: 'neutral' | 'happy' | 'thinking' | 'cheering';
   /** Evening lighting from the LAMP reaction (SPEC §4.3), saved per theme. */
   lampOn?: boolean;
+  /** Filled stars on the theme's poster (SPEC §10.5). */
+  stars?: number;
   /** Present on S1 only: slots, heroine and companion become buttons. */
   interaction?: RoomInteraction;
 }
@@ -61,6 +65,11 @@ function boxStyle(box: StageBox) {
     height: `${box.height}px`,
     zIndex: box.z,
   };
+}
+
+function starChartStyle(theme: Theme) {
+  const g = STAR_CHART_GEOMETRY[theme];
+  return { left: `${g.x}px`, top: `${g.y}px`, width: `${g.width}px` };
 }
 
 /** Stage box of a room layer in its slot (SPEC §4.1); shared with the debug overlay. */
@@ -81,6 +90,7 @@ export function RoomScene({
   sparkle = null,
   face = 'happy',
   lampOn = false,
+  stars = 0,
   interaction,
 }: Props) {
   const sparkleOnHeroine =
@@ -112,12 +122,26 @@ export function RoomScene({
     '--jump-dx': `${bedBox.left + bedBox.width * 0.55 - (companionBox.left + companionBox.width / 2)}px`,
     '--jump-dy': `${bedBox.top + bedBox.height * 0.45 - (companionBox.top + companionBox.height)}px`,
   };
+  // Companion reactions differ per theme (SPEC §4.3, §5.4): Pip jumps onto the bed and spins;
+  // Mimi curls up on the bed and stretches with a purr.
+  // The evening glow sits on the lamp, wherever the theme's LAMP slot is (SPEC §4.3).
+  const lampBox = roomLayerBox(theme, 'LAMP', requireItem(slots.LAMP).art.room!);
+  const lampGlow = {
+    '--lamp-x': `${lampBox.left + lampBox.width / 2}px`,
+    '--lamp-y': `${lampBox.top + lampBox.height * 0.35}px`,
+  };
   const companionPose: CompanionPose =
-    reaction?.target === 'companion' ? 'special' : reaction?.target === 'BED' ? 'cheer' : 'idle';
+    reaction?.target === 'companion'
+      ? 'special'
+      : reaction?.target === 'BED'
+        ? theme === 'space'
+          ? 'cheer'
+          : 'idle'
+        : 'idle';
   const companionClass = [
     'room-companion',
-    reaction?.target === 'companion' && 'react-spin',
-    reaction?.target === 'BED' && 'react-jump',
+    reaction?.target === 'companion' && (theme === 'space' ? 'react-spin' : 'react-stretch'),
+    reaction?.target === 'BED' && (theme === 'space' ? 'react-jump' : 'react-curl'),
   ]
     .filter(Boolean)
     .join(' ');
@@ -199,7 +223,21 @@ export function RoomScene({
           );
         })}
       </div>
-      {lampOn && <div class="room-lighting" data-testid="room-lighting" aria-hidden="true" />}
+      <StarChart
+        theme={theme}
+        stars={stars}
+        class="room-star-chart"
+        testId="room-star-chart"
+        style={starChartStyle(theme)}
+      />
+      {lampOn && (
+        <div
+          class="room-lighting"
+          style={lampGlow}
+          data-testid="room-lighting"
+          aria-hidden="true"
+        />
+      )}
       {interaction ? (
         <>
           <button

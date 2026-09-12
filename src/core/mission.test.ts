@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { earnableItems } from '../catalog/index.ts';
 import { REQUIRED_E3_PAIR } from './generate.ts';
 import { checkInvariants, collectedCount, nextPair } from './inventory.ts';
-import { isCorrectAnswer, missionReducer, type MissionEvent } from './mission.ts';
+import { isCorrectAnswer, missionReducer, suggestedLevel, type MissionEvent } from './mission.ts';
 import { createFreshSave, validateSave } from './save.ts';
 import { settingsReducer } from './settings.ts';
 import { makeTime } from './time.ts';
@@ -342,6 +342,78 @@ describe('AT-17 first E3 mission (reducer part)', () => {
     }
     s = startMission(s, 'sweet', 'B', 50);
     expect(isExample(s)).toBe(true);
+  });
+});
+
+describe('progression suggestion (SPEC §7.1)', () => {
+  /** Plays a mission; `wrong` wrong picks on puzzle 1 and optionally a hint on puzzle 2. */
+  function play(save: Save, seed: number, wrong = 0, hint = false): Save {
+    let s = startMission(save, 'space', 'A', seed);
+    for (let i = 0; i < 4; i++) {
+      const p = s.mission!.puzzles[i]!;
+      if (i === 0) {
+        for (let w = 0; w < wrong; w++) {
+          s = missionReducer(s, { type: 'mission/answer', choice: wrongValue(p), seconds: 3 });
+        }
+      }
+      if (i === 1 && hint) s = missionReducer(s, { type: 'mission/hint' });
+      s = missionReducer(s, { type: 'mission/answer', choice: correctValue(p), seconds: 5 });
+      s = missionReducer(s, { type: 'mission/next' });
+    }
+    if (s.mission!.state === 'COMPLETED') {
+      s = missionReducer(s, { type: 'mission/choose', item: s.mission!.prizePair[0]! });
+    }
+    return missionReducer(s, { type: 'mission/keep', now: LATER });
+  }
+
+  it('suggests the next level after two clean missions, once, and again after two more', () => {
+    let s = createFreshSave();
+    s = play(s, 1);
+    expect(suggestedLevel(s, 'A')).toBeNull();
+    s = play(s, 2, 1);
+    expect(s.progress.suggestion.A.streak).toBe(2);
+    expect(suggestedLevel(s, 'A')).toBe(3);
+    expect(suggestedLevel(s, 'B')).toBeNull();
+    s = missionReducer(s, { type: 'mission/suggestionDeclined', activity: 'A' });
+    expect(suggestedLevel(s, 'A')).toBeNull();
+    s = play(s, 3);
+    expect(suggestedLevel(s, 'A')).toBeNull();
+    s = play(s, 4);
+    expect(suggestedLevel(s, 'A')).toBe(3);
+    s = missionReducer(s, { type: 'mission/suggestionAccepted', activity: 'A' });
+    expect(s.settings.readingLevel).toBe(3);
+    expect(s.progress.suggestion.A).toEqual({ streak: 0, declinedAt: null });
+    expect(suggestedLevel(s, 'A')).toBeNull();
+  });
+
+  it('a hint, two wrong answers in total or a level change break the streak', () => {
+    let s = play(createFreshSave(), 1);
+    s = play(s, 2, 0, true);
+    expect(s.progress.suggestion.A.streak).toBe(0);
+    s = play(s, 3, 1);
+    s = play(s, 4, 1);
+    expect(s.progress.suggestion.A.streak).toBe(2);
+    expect(suggestedLevel(s, 'A')).toBeNull(); // two wrong in total
+    s = play(s, 5);
+    expect(suggestedLevel(s, 'A')).toBe(3);
+    s = settingsReducer(s, { type: 'settings/readingLevel', level: 1 });
+    expect(suggestedLevel(s, 'A')).toBeNull();
+    s = play(s, 6);
+    expect(s.progress.suggestion.A.streak).toBe(1);
+  });
+
+  it('never suggests when locked or at the top level', () => {
+    let s = play(play(createFreshSave(), 1), 2);
+    expect(suggestedLevel(s, 'A')).toBe(3);
+    const locked = settingsReducer(s, { type: 'settings/levelsLocked', locked: true });
+    expect(suggestedLevel(locked, 'A')).toBeNull();
+    expect(missionReducer(locked, { type: 'mission/suggestionAccepted', activity: 'A' })).toBe(
+      locked,
+    );
+    s = settingsReducer(createFreshSave(), { type: 'settings/readingLevel', level: 4 });
+    s = play(play(s, 1), 2);
+    expect(s.progress.suggestion.A.streak).toBe(2);
+    expect(suggestedLevel(s, 'A')).toBeNull();
   });
 });
 

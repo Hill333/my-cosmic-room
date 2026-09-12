@@ -7,6 +7,8 @@ import { t } from '../i18n.ts';
 import { LanguageChoice } from '../components/LanguageChoice.tsx';
 import { RoomCard } from '../components/RoomCard.tsx';
 import { IconButton } from '../components/IconButton.tsx';
+import { HoldButton } from '../components/HoldButton.tsx';
+import { GEAR_HOLD_MS } from './S6Parent.tsx';
 
 /** S0 Title and room choice (SPEC §3.3). */
 export function S0Title() {
@@ -78,9 +80,14 @@ export function S0Title() {
           >
             <span aria-hidden="true">{soundOn.value ? '🔊' : '🔇'}</span>
           </IconButton>
-          <IconButton label={t('ui.parentCorner')} testId="parent-gear">
+          <HoldButton
+            label={t('ui.parentCorner')}
+            holdMs={GEAR_HOLD_MS}
+            testId="parent-gear"
+            onHold={() => go({ id: 'S6', returnTo: { id: 'S0' } })}
+          >
             <span aria-hidden="true">⚙️</span>
-          </IconButton>
+          </HoldButton>
         </div>
       </div>
     </main>

@@ -9,6 +9,7 @@ import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { groupKeyHandler, useFocusOnMount } from '../hooks.ts';
 import { RoomScene } from '../components/RoomScene.tsx';
+import { StarChart } from '../components/StarChart.tsx';
 
 interface Props {
   mission: Mission;
@@ -38,7 +39,7 @@ export function S5Complete({ mission }: Props) {
       dispatch({ type: 'mission/choose', item: selected });
     }
     dispatch({ type: how === 'apply' ? 'mission/apply' : 'mission/keep', now: now() });
-    go({ id: 'S1', theme, sparkle: how === 'apply' ? selected : null });
+    go({ id: 'S1', theme, sparkle: how === 'apply' ? selected : null, suggest: true });
   };
 
   // Preview: the room with the selected decoration in its slot, or the heroine wearing the
@@ -49,9 +50,15 @@ export function S5Complete({ mission }: Props) {
   return (
     <main class={`screen s5 s5-${theme}`} aria-labelledby="s5-title" data-testid="s5">
       <div class="s5-room">
-        <RoomScene theme={theme} slots={state.themes[theme].slots} heroine={state.heroine} />
+        <RoomScene
+          theme={theme}
+          slots={state.themes[theme].slots}
+          heroine={state.heroine}
+          stars={state.themes[theme].stars}
+        />
       </div>
       <div class="s5-dim" aria-hidden="true" />
+      <Celebration theme={theme} />
       {!star && (
         <div class="confetti" aria-hidden="true">
           {CONFETTI.map((i) => (
@@ -65,7 +72,7 @@ export function S5Complete({ mission }: Props) {
         </h1>
         <p class="s5-sub">{t('s5.sub')}</p>
         {star ? (
-          <StarCard stars={state.themes[theme].stars} onBack={() => finish('keep')} />
+          <StarCard theme={theme} stars={state.themes[theme].stars} onBack={() => finish('keep')} />
         ) : (
           <>
             <h2 class="s5-choose">{t('s5.choose')}</h2>
@@ -128,6 +135,7 @@ export function S5Complete({ mission }: Props) {
               slots={preview.slots}
               heroine={preview.heroine}
               sparkle={selected}
+              stars={state.themes[theme].stars}
             />
           </div>
         </div>
@@ -152,23 +160,53 @@ function previewState(
   return { slots, heroine };
 }
 
+const TEA_STEPS = ['cups', 'cake', 'teapot', 'guests'] as const;
+
+/**
+ * Story reaction after the fourth puzzle (SPEC §3.6, §5.4): the rocket launches past the card
+ * in Space; in Sweet the tea table arrives and the cups, cake, teapot and guests pop in. Pure
+ * CSS, decorative, ends on its own (instantly under reduced motion).
+ */
+function Celebration({ theme }: { theme: Mission['theme'] }) {
+  if (theme === 'space') {
+    return (
+      <div class="celebration celebration-space" aria-hidden="true" data-testid="celebration">
+        <img src={assetUrl('space/sceneA/launchFlame')} alt="" class="celebration-flame" />
+        <img src={assetUrl('space/sceneA/rocket')} alt="" class="celebration-rocket" />
+      </div>
+    );
+  }
+  return (
+    <div class="celebration celebration-sweet" aria-hidden="true" data-testid="celebration">
+      <img src={assetUrl('sweet/sceneA/teaTable')} alt="" class="celebration-table" />
+      {TEA_STEPS.map((step, i) => (
+        <img
+          key={step}
+          src={assetUrl(`sweet/sceneA/step/${step}`)}
+          alt=""
+          class="celebration-step"
+          style={{ '--i': i }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /** Star card (SPEC §3.8, §10.5): shown when the pool is empty and a star was added. */
-function StarCard({ stars, onBack }: { stars: number; onBack: () => void }) {
+function StarCard({
+  theme,
+  stars,
+  onBack,
+}: {
+  theme: Mission['theme'];
+  stars: number;
+  onBack: () => void;
+}) {
   const full = stars >= MAX_STARS;
   return (
     <div class="star-card" data-testid="star-card">
       <p class="s5-choose">{full ? t('s5.starFull') : t('s5.star')}</p>
-      <div
-        class="star-chart"
-        role="img"
-        aria-label={t('s5.starCount', { n: stars, total: MAX_STARS })}
-      >
-        {Array.from({ length: MAX_STARS }, (_, i) => (
-          <span key={i} class={`star${i < stars ? ' star-filled' : ''}`} aria-hidden="true">
-            ★
-          </span>
-        ))}
-      </div>
+      <StarChart theme={theme} stars={stars} class="s5-star-chart" testId="s5-star-chart" />
       <p class="star-count">{t('s5.starCount', { n: stars, total: MAX_STARS })}</p>
       <button type="button" class="btn btn-lg btn-primary" data-testid="back-room" onClick={onBack}>
         {t('s5.backRoom')}

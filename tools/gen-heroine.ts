@@ -7,8 +7,8 @@
  *
  *   node tools/gen-heroine.ts
  *
- * Writes assets/shared/heroine/** and the garment tiles named in the manifest. Sweet garments
- * are left to M4 (their placeholders stay until drawn).
+ * Writes assets/shared/heroine/** and the garment tiles named in the manifest, including the
+ * six Sweet garments (SPEC §11.2).
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
@@ -40,6 +40,11 @@ const CORAL = '#E8735F';
 const BLUE = '#4C7DE0';
 const SKY = '#BFE3F5';
 const WHITE = '#FFFFFF';
+const BLUSH = '#FCE4EC';
+const STRAWBERRY = '#EA5A6C';
+const STRAWBERRY_DARK = '#C9424F';
+const GREY = '#D9D6E3';
+const GREY_DARK = '#B9B5C8';
 
 const outline = `stroke="${PLUM}" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"`;
 
@@ -254,6 +259,15 @@ function longSleeves(fill: string): string {
 const cloud = (x: number, y: number, s = 1) =>
   `<path transform="translate(${x} ${y}) scale(${s})" d="M-24 8 a 12 12 0 0 1 12 -14 a 14 14 0 0 1 26 -4 a 12 12 0 0 1 14 18 z" fill="${WHITE}" stroke="${PLUM}" stroke-width="3" stroke-linejoin="round"/>`;
 
+const flower = (x: number, y: number, r: number, petal: string, centre: string) =>
+  [0, 1, 2, 3, 4]
+    .map((i) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+      return `<circle cx="${(x + r * Math.cos(a)).toFixed(1)}" cy="${(y + r * Math.sin(a)).toFixed(1)}" r="${r * 0.8}" fill="${petal}" stroke="${PLUM}" stroke-width="3"/>`;
+    })
+    .join('') +
+  `<circle cx="${x}" cy="${y}" r="${r * 0.7}" fill="${centre}" stroke="${PLUM}" stroke-width="3"/>`;
+
 const OUTFITS: Record<string, string> = {
   planetTee:
     tee(LILAC) +
@@ -305,6 +319,36 @@ const OUTFITS: Record<string, string> = {
     rect(TORSO.x + 20, TORSO.y + 95, TORSO.w - 40, 30, STAR, 12) +
     rect(TORSO.x + 20, TORSO.y + 130, TORSO.w - 40, 30, MINT, 12) +
     circle(HEAD.cx, TORSO.y + 60, 14, BLUE),
+  // Sweet Sleepover: pale pink pyjamas sprinkled with small flowers.
+  floralPyjamas:
+    longSleeves(BLUSH) +
+    tee(BLUSH) +
+    trousers(BLUSH, PINK) +
+    flower(HEAD.cx - 44, TORSO.y + 60, 7, PINK, STAR) +
+    flower(HEAD.cx + 40, TORSO.y + 96, 6, PINK, STAR) +
+    flower(HEAD.cx - 2, TORSO.y + 128, 5, PINK, STAR) +
+    flower(HEAD.cx - 44, TORSO.y + 226, 6, PINK, STAR) +
+    flower(HEAD.cx + 46, TORSO.y + 252, 6, PINK, STAR),
+  // Sunny Garden: a strawberry-red dress with seeds and a leafy collar.
+  strawberryDress:
+    tee(STRAWBERRY) +
+    skirt(STRAWBERRY, STRAWBERRY_DARK) +
+    path(
+      `M${HEAD.cx - 70} ${TORSO.y + 6} q 22 40 40 6 q 30 40 60 0 q 18 34 40 -6 q -24 28 -70 30 q -46 -2 -70 -30 z`,
+      MINT_DARK,
+    ) +
+    [
+      [HEAD.cx - 40, TORSO.y + 70],
+      [HEAD.cx + 30, TORSO.y + 62],
+      [HEAD.cx - 4, TORSO.y + 100],
+      [HEAD.cx - 60, TORSO.y + 160],
+      [HEAD.cx + 44, TORSO.y + 170],
+      [HEAD.cx - 10, TORSO.y + 200],
+      [HEAD.cx + 70, TORSO.y + 220],
+      [HEAD.cx - 70, TORSO.y + 226],
+    ]
+      .map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="5" ry="8" fill="${STAR}"/>`)
+      .join(''),
 };
 
 // --- Shoes ---------------------------------------------------------------------------------
@@ -370,6 +414,34 @@ const SHOES: Record<string, string> = {
     shoe(LEG.l, WHITE, star(LEG.l - 6, FOOT.y + 34, 12, LILAC)) +
     shoe(LEG.r, WHITE, star(LEG.r + 6, FOOT.y + 34, 12, LILAC)) +
     `<rect x="${LEG.l - 30}" y="748" width="60" height="10" rx="5" fill="${LILAC}"/><rect x="${LEG.r - 30}" y="748" width="60" height="10" rx="5" fill="${LILAC}"/>`,
+  // Sweet Sleepover: grey cat slippers with ears, eyes and whiskers.
+  catSlippers: [LEG.l, LEG.r]
+    .map((x) =>
+      shoe(
+        x,
+        GREY,
+        path(`M${x - 34} ${FOOT.y + 4} l 10 -26 l 18 20 z`, GREY) +
+          path(`M${x + 34} ${FOOT.y + 4} l -10 -26 l -18 20 z`, GREY) +
+          `<circle cx="${x - 14}" cy="${FOOT.y + 32}" r="4" fill="${PLUM}"/><circle cx="${x + 14}" cy="${FOOT.y + 32}" r="4" fill="${PLUM}"/>` +
+          `<path d="M${x - 4} ${FOOT.y + 42} l 4 4 l 4 -4" ${lineStroke(3)}/>` +
+          `<path d="M${x - 36} ${FOOT.y + 38} h 16 M${x - 36} ${FOOT.y + 46} h 16 M${x + 20} ${FOOT.y + 38} h 16 M${x + 20} ${FOOT.y + 46} h 16" stroke="${GREY_DARK}" stroke-width="3" stroke-linecap="round"/>`,
+      ),
+    )
+    .join(''),
+  // Sunny Garden: sandals with rainbow straps over bare feet.
+  rainbowSandals: [LEG.l, LEG.r]
+    .map(
+      (x) =>
+        rect(x - FOOT.w / 2, FOOT.y + 44, FOOT.w, 26, STAR, 12) +
+        [CORAL, STAR, MINT_DARK, BLUE, LILAC]
+          .map(
+            (c, i) =>
+              `<path d="M${x - 40} ${FOOT.y + 46} q 40 ${-52 + i * 6} 80 0" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round"/>`,
+          )
+          .join('') +
+        `<path d="M${x - 40} ${FOOT.y + 46} q 40 -52 80 0" fill="none" stroke="${PLUM}" stroke-width="4" stroke-linecap="round" opacity="0.5"/>`,
+    )
+    .join(''),
 };
 
 // --- Extras --------------------------------------------------------------------------------
@@ -385,6 +457,29 @@ const EXTRAS: Record<string, string> = {
     path('M0 -20 q 30 -30 60 0 q -30 -14 -60 0 z', LILAC) +
     circle(30, 30, 12, BLUE) +
     '</g>',
+  // Sweet Sleepover: a pink flower clip where the star clip sits.
+  flowerClip: flower(HEAD.cx + 84, HEAD.cy - 96, 16, PINK, STAR),
+  // Sunny Garden: a lilac band over the hair with a bow at the side.
+  bowHeadband:
+    `<path d="M${HEAD.cx - HEAD.rx - 6} ${HEAD.cy - 34} q ${HEAD.rx + 6} -110 ${2 * HEAD.rx + 12} 0" fill="none" stroke="${PLUM}" stroke-width="26" stroke-linecap="round"/>` +
+    `<path d="M${HEAD.cx - HEAD.rx - 6} ${HEAD.cy - 34} q ${HEAD.rx + 6} -110 ${2 * HEAD.rx + 12} 0" fill="none" stroke="${LILAC}" stroke-width="16" stroke-linecap="round"/>` +
+    ellipse(
+      HEAD.cx - 116,
+      HEAD.cy - 86,
+      30,
+      20,
+      PINK,
+      `transform="rotate(-40 ${HEAD.cx - 116} ${HEAD.cy - 86})"`,
+    ) +
+    ellipse(
+      HEAD.cx - 82,
+      HEAD.cy - 118,
+      30,
+      20,
+      PINK,
+      `transform="rotate(40 ${HEAD.cx - 82} ${HEAD.cy - 118})"`,
+    ) +
+    circle(HEAD.cx - 100, HEAD.cy - 102, 11, STAR),
 };
 
 // --- Tiles: cropped views of the same drawings (SPEC §4.4 "on a neutral background") ------

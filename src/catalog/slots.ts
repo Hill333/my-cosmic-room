@@ -35,7 +35,13 @@ export const COMPANION_GEOMETRY: Record<Theme, { x: number; y: number; height: n
 /** Mission entry object (toy rocket / letterbox): bottom centre and stage height. */
 export const ENTRY_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
   space: { x: 1420, y: 880, height: 240 },
-  sweet: { x: 1420, y: 880, height: 210 },
+  sweet: { x: 1462, y: 900, height: 200 },
+};
+
+/** Star chart poster (SPEC §10.5): a small fixed poster, top-left corner and stage width (3:2). */
+export const STAR_CHART_GEOMETRY: Record<Theme, { x: number; y: number; width: number }> = {
+  space: { x: 24, y: 138, width: 172 },
+  sweet: { x: 52, y: 168, width: 148 },
 };
 
 export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
@@ -48,14 +54,16 @@ export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
     HANGING: { x: 880, y: 92, scale: 1.1, z: 22 },
     NOOK: { x: 215, y: 885, scale: 1.25, z: 52 },
   },
+  // Sweet: the lamp stands on the painted nightstand, the shelf toy sits on the tall
+  // cabinet's middle shelf and the bed stands in front of the cabinet (SPEC §15.2 item 4).
   sweet: {
-    BED: { x: 1200, y: 840, scale: 1.35, z: 50 },
+    BED: { x: 1290, y: 872, scale: 1.15, z: 50 },
     RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
-    LAMP: { x: 1138, y: 508, scale: 0.85, z: 20 },
-    WALL: { x: 1080, y: 168, scale: 0.9, z: 12 },
-    SHELF: { x: 1100, y: 292, scale: 0.8, z: 21 },
-    HANGING: { x: 880, y: 92, scale: 1.1, z: 22 },
-    NOOK: { x: 215, y: 885, scale: 1.25, z: 52 },
+    LAMP: { x: 1050, y: 456, scale: 0.85, z: 20 },
+    WALL: { x: 1050, y: 296, scale: 0.9, z: 12 },
+    SHELF: { x: 1265, y: 365, scale: 0.75, z: 21 },
+    HANGING: { x: 880, y: 44, scale: 1, z: 22 },
+    NOOK: { x: 240, y: 890, scale: 1.25, z: 52 },
   },
 };
 

@@ -2,6 +2,81 @@
 
 All notable changes to My Cosmic Room. Milestones follow docs/SPEC.md §18.
 
+## Unreleased — M4 Sweet room and full catalogue
+
+- S6 Parent corner (`ui/screens/S6Parent.tsx`, `styles/parent.css`, SPEC §3.9) behind a
+  press-and-hold gear (`components/HoldButton.tsx`: 1.5 s with the pointer or a held Enter or
+  Space, a ring fills, releasing early cancels, key repeats ignored) on S0 and now also on S1
+  top right. Sections: language chips; reading and elapsed levels as radio rows with the
+  child-facing name plus an adult description and the "Lock levels" switch (changes go through
+  the settings reducer with `byParent`); "24-hour digital clocks" switch; sound switch and
+  motion radio (Follow system / Reduced / Full); save file: export (downloads
+  `my-cosmic-room-save.json`), import (file picker → `importSave` → summary dialog → confirm;
+  the previous save becomes the backup on the next write; broken and newer-version files are
+  refused with a status line), reset (hold 2 s → `resetSave`, fresh save, first-launch flow);
+  recent missions table from `progress.history` (newest first, ten rows); the damaged-save
+  notice with a dismiss button; version (`__APP_VERSION__` from package.json), credits and
+  privacy line. "Done" and Escape return to the opening screen. Dev aid `?screen=S6`.
+- Progression suggestion (SPEC §7.1): `end()` in the mission reducer keeps
+  `progress.suggestion[activity]` as a streak of consecutive missions at the same level with no
+  hint and at most one wrong answer; `suggestedLevel(save, activity)` returns the next level
+  when the last two such missions have at most one wrong answer in total, the next level
+  exists, levels are unlocked and "Not yet" has not suppressed it (`declinedAt`, two more
+  qualifying missions). S1 shows "Ready for a bigger challenge?" once on arrival from S5 with
+  "Try {level}" (`mission/suggestionAccepted`) and "Not yet" (`mission/suggestionDeclined`).
+- Star chart poster (SPEC §10.5): `components/StarChart.tsx`, an inline hand-drawn SVG (24
+  outlined stars in 6 × 4, theme-tinted by CSS, golden frame at 24) hung as a small fixed
+  poster per theme (`STAR_CHART_GEOMETRY` in `catalog/slots.ts`) and used large on the S5 star
+  card; `assets/shared/ui/starChart.svg` is the static empty poster.
+- Sweet reactions (SPEC §4.3): Mimi walks over and curls up on the bed (`react-curl`, idle
+  pose), purrs and stretches with a note (`react-stretch`, special pose); the toy letterbox
+  wobbles, its flag art swaps in and a small CSS envelope pops out (`entry-envelope`; the smoke
+  puff is Space only). The evening glow now follows the theme's LAMP slot through CSS variables
+  set from the slot box.
+- Story reaction after puzzle 4 (SPEC §3.6, §5.4): S5 plays a CSS celebration beside the card,
+  the rocket launching with its flame in Space and the tea table arriving with cups, cake,
+  teapot and guests popping in for Sweet (instant under reduced motion). S3 now sits inside the
+  cockpit frame / kitchen frame (generated in M3 but unused until now); S4 keeps the room.
+- Sweet slot geometry tuned against the generated background: lamp on the painted nightstand,
+  bunny on the cabinet's middle shelf, bed in front of the cabinet, letterbox at the right,
+  bunting from the ceiling hook (its manifest size is now 720 × 220 through `SIZE_OVERRIDES`
+  in `tools/manifest-data.ts`).
+- Art: all 33 remaining placeholders generated through the Codex pipeline on the first
+  attempt, two chains in parallel (`mimi/idle` and `toyLetterbox` first so the other poses and
+  the flag state could attach them as references): 13 astra-light in 12 minutes (title logo,
+  Planet mobile, Mimi ×4, Butterfly mobile, Daisy bed, Sweet plain bed, Sweet room background,
+  kitchen frame, tea table, balloon parcel with cat courier) and 20 sol-med in 20 minutes
+  (Galaxy poster, Rainbow rug, ten Sweet starters and Sleepover / Sunny Garden decorations, toy
+  letterbox and its flag state, four step overlays, toy shop, window). Post-processed with
+  `npm run assets:post`; every generated entry is `generated`, none `approved` (human QA in the
+  slot overlay, SPEC §15.6). Full-frame art stays at 1536 × 1024 (Sweet room 408 KB, kitchen
+  443 KB). No placeholder is left in the manifest; the stale placeholder SVGs were removed.
+  The generated title logo is not yet wired into S0 (D9 pending; the text lockup stays).
+- Heroine: the six Sweet garments drawn in `tools/gen-heroine.ts` (Floral pyjamas,
+  Strawberry dress, Cat slippers, Rainbow sandals, Flower hair clip, Bow headband) with their
+  tiles; 45 SVG files rewritten.
+- `tools/build-manifest.ts` keeps the measured size and pivot of processed PNGs instead of
+  resetting them to the slot defaults (running it after `assets:post` used to shrink every
+  generated room layer).
+- Layout (AT-37): the wardrobe tabs are a 2 × 2 grid in every language; the S1 counter shrinks
+  while a panel is open so the top row fits in Dutch and Turkish with the new gear button.
+  Checked at 1024 × 640 in Dutch (S6, S1 with both panels, S2, S3, S5) and Turkish (S2, S3).
+  `Dialog` no longer sends focus to the body when nothing was focused at open.
+- Strings added in EN/TR/NL: S6 sections, level descriptions, import/export status and
+  dialog, table headers, `ui.on` / `ui.off`, `ui.starChart` (35 keys).
+- First-load measurement on the production build: opening the Space room from a first launch
+  transfers 1.51 MB in 15 requests (both room backgrounds, since S0 shows both cards), nothing
+  Sweet-only; budget 4 MB (SPEC §16.3).
+- Tests: 133 unit (up from 130: suggestion streak, decline / accept, lock and top level);
+  15 e2e (up from 10): `e2e/flow2-sweet-delivery.spec.ts` (smoke flow 2, AT-17 end to end),
+  `e2e/at26-theme-switch.spec.ts` (AT-26 / flow 4 with the Sweet reactions and the star chart,
+  plus the golden frame), `e2e/flow5-parent-corner.spec.ts` (flow 5, AT-27, AT-29, AT-32 end
+  to end, keyboard hold, reset), `e2e/prog-suggestion.spec.ts` (SPEC §7.1). `e2e/helpers.ts`
+  gained `grantSweet`, `roomAndInventory`, `holdGear`.
+- Not done in M4: sounds (M5); the Rocket backpack is still drawn in front of the torso; the
+  title logo decision (D9); native-speaker review of the Turkish and Dutch wording (the
+  automated checks and layouts pass, the wording review is a person's job).
+
 ## Unreleased — M3 Space room
 
 - Slot geometry is catalogue data (`catalog/slots.ts`): anchor, scale and z-order per slot and

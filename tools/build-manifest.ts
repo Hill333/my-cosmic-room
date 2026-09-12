@@ -12,6 +12,7 @@ import {
   EXTRA_ASSETS,
   GARMENT_LABELS,
   HEROINE_CANVAS,
+  SIZE_OVERRIDES,
   SLOT_SIZES,
   SPACE_REF,
   SWEET_REF,
@@ -42,7 +43,7 @@ for (const item of allItems) {
         .toLowerCase(),
   );
   if (item.kind === 'decoration' && item.slot && item.art.room) {
-    const geo = SLOT_SIZES[item.slot];
+    const geo = SIZE_OVERRIDES[item.id] ?? SLOT_SIZES[item.slot];
     const g = DECORATION_GEN[item.id];
     if (!g) throw new Error(`No generation prompt for ${item.id} in tools/manifest-data.ts`);
     const ref = item.theme === 'sweet' ? SWEET_REF : SPACE_REF;
@@ -100,8 +101,13 @@ let kept = 0;
 for (const [id, entry] of desired) {
   const old = existing.assets[id];
   if (old) {
-    // Keep the current file and generation history; refresh static metadata.
+    // Keep the current file and generation history; refresh static metadata. Processed art
+    // (a PNG written by tools/post-assets.ts) keeps its measured size and pivot.
     const merged: AssetEntry = { ...entry, path: old.path };
+    if (old.path.endsWith('.png')) {
+      merged.size = old.size;
+      if (old.pivot) merged.pivot = old.pivot;
+    }
     if (old.gen && entry.gen) {
       merged.gen = {
         ...entry.gen,

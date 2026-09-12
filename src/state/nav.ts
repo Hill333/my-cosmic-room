@@ -8,7 +8,7 @@ import { save } from './store.ts';
 
 export type Screen =
   | { id: 'S0' }
-  | { id: 'S1'; theme: Theme; sparkle?: ItemId | null }
+  | { id: 'S1'; theme: Theme; sparkle?: ItemId | null; suggest?: boolean }
   | { id: 'S2'; theme: Theme }
   | { id: 'S3' }
   | { id: 'S4' }
@@ -29,6 +29,7 @@ function initialScreen(): Screen {
     const id = new URLSearchParams(window.location.search).get('screen');
     if (id === 'S1') return { id: 'S1', theme: 'space' };
     if (id === 'S2') return { id: 'S2', theme: save.value.settings.lastTheme };
+    if (id === 'S6') return { id: 'S6', returnTo: { id: 'S0' } };
     if (id === 'harness') return { id: 'harness' };
   }
   return missionScreen(save.value.mission) ?? { id: 'S0' };

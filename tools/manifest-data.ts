@@ -21,6 +21,11 @@ export const SLOT_SIZES: Record<SlotType, { size: [number, number]; pivot: [numb
   NOOK: { size: [340, 260], pivot: [170, 260] },
 };
 
+/** Items whose silhouette does not fit the slot's default box (a wide string on the HANGING slot). */
+export const SIZE_OVERRIDES: Record<string, { size: [number, number]; pivot: [number, number] }> = {
+  'sweet.bunting': { size: [720, 220], pivot: [360, 0] },
+};
+
 export const TILE_SIZE: [number, number] = [360, 360];
 export const HEROINE_CANVAS: [number, number] = [600, 900];
 

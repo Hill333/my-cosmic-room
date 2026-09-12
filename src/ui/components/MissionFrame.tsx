@@ -57,7 +57,12 @@ export function MissionFrame({
       aria-labelledby="mission-title"
       data-testid={`s${mission.activity === 'A' ? 3 : 4}`}
     >
-      <img src={assetUrl(`${theme}/room/background`)} alt="" class="room-bg" draggable={false} />
+      <img
+        src={assetUrl(SCENE[theme][mission.activity])}
+        alt=""
+        class="room-bg"
+        draggable={false}
+      />
       <div class="mission-topleft">
         <button
           type="button"
@@ -130,6 +135,12 @@ export function MissionFrame({
     </main>
   );
 }
+
+/** The scene behind the panel (SPEC §3.6): the cockpit or kitchen for Activity A, the room for B. */
+const SCENE: Record<Mission['theme'], Record<Mission['activity'], string>> = {
+  space: { A: 'space/sceneA/cockpitFrame', B: 'space/room/background' },
+  sweet: { A: 'sweet/sceneA/kitchenFrame', B: 'sweet/room/background' },
+};
 
 const STEP_ICONS = {
   space: ['fuel', 'hatch', 'lights', 'countdown'],

@@ -430,7 +430,7 @@
       "derivedFrom": "shared/heroine/shoes/sneakers"
     },
     "shared/ui/logo": {
-      "path": "shared/ui/logo.svg",
+      "path": "shared/ui/logo.png",
       "theme": "shared",
       "category": "logo",
       "size": [
@@ -444,9 +444,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:35:22.228Z",
+        "status": "generated"
       }
     },
     "shared/ui/starChart": {
@@ -595,16 +595,16 @@
       }
     },
     "space/decorations/galaxyPoster": {
-      "path": "space/decorations/galaxyPoster.svg",
+      "path": "space/decorations/galaxyPoster.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         320,
-        260
+        223
       ],
       "pivot": [
         160,
-        130
+        112
       ],
       "slot": "WALL",
       "label": "Galaxy poster",
@@ -614,9 +614,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:35:06.993Z",
+        "status": "generated"
       }
     },
     "space/decorations/moonBed": {
@@ -745,12 +745,12 @@
       }
     },
     "space/decorations/planetMobile": {
-      "path": "space/decorations/planetMobile.svg",
+      "path": "space/decorations/planetMobile.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         300,
-        380
+        332
       ],
       "pivot": [
         150,
@@ -764,9 +764,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:36:14.032Z",
+        "status": "generated"
       }
     },
     "space/decorations/purpleBeanbag": {
@@ -795,16 +795,16 @@
       }
     },
     "space/decorations/rainbowRug": {
-      "path": "space/decorations/rainbowRug.svg",
+      "path": "space/decorations/rainbowRug.png",
       "theme": "space",
       "category": "decoration",
       "size": [
         620,
-        300
+        261
       ],
       "pivot": [
         310,
-        150
+        131
       ],
       "slot": "RUG",
       "label": "Rainbow rug",
@@ -814,9 +814,9 @@
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:35:55.138Z",
+        "status": "generated"
       }
     },
     "space/decorations/rocketPoster": {
@@ -1191,7 +1191,7 @@
       "derivedFrom": "shared/heroine/outfit/cloudPyjamas"
     },
     "space/tiles/galaxyPoster": {
-      "path": "space/tiles/galaxyPoster.svg",
+      "path": "space/tiles/galaxyPoster.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1257,7 +1257,7 @@
       "derivedFrom": "space/decorations/plainRug"
     },
     "space/tiles/planetMobile": {
-      "path": "space/tiles/planetMobile.svg",
+      "path": "space/tiles/planetMobile.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1279,7 +1279,7 @@
       "derivedFrom": "space/decorations/purpleBeanbag"
     },
     "space/tiles/rainbowRug": {
-      "path": "space/tiles/rainbowRug.svg",
+      "path": "space/tiles/rainbowRug.png",
       "theme": "space",
       "category": "tile",
       "size": [
@@ -1356,11 +1356,11 @@
       "derivedFrom": "space/decorations/starLamp"
     },
     "sweet/companion/mimi/cheer": {
-      "path": "sweet/companion/mimi/cheer.svg",
+      "path": "sweet/companion/mimi/cheer.png",
       "theme": "sweet",
       "category": "companion",
       "size": [
-        400,
+        348,
         480
       ],
       "label": "Mimi cheer",
@@ -1371,17 +1371,17 @@
           "docs/concepts/early-playroom.png",
           "sweet/companion/mimi/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:37:15.105Z",
+        "status": "generated"
       }
     },
     "sweet/companion/mimi/hmm": {
-      "path": "sweet/companion/mimi/hmm.svg",
+      "path": "sweet/companion/mimi/hmm.png",
       "theme": "sweet",
       "category": "companion",
       "size": [
-        400,
+        334,
         480
       ],
       "label": "Mimi hmm",
@@ -1392,17 +1392,17 @@
           "docs/concepts/early-playroom.png",
           "sweet/companion/mimi/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:38:09.601Z",
+        "status": "generated"
       }
     },
     "sweet/companion/mimi/idle": {
-      "path": "sweet/companion/mimi/idle.svg",
+      "path": "sweet/companion/mimi/idle.png",
       "theme": "sweet",
       "category": "companion",
       "size": [
-        400,
+        348,
         480
       ],
       "label": "Mimi idle",
@@ -1413,17 +1413,17 @@
           "docs/concepts/early-playroom.png",
           "sweet/companion/mimi/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:34:24.311Z",
+        "status": "generated"
       }
     },
     "sweet/companion/mimi/special": {
-      "path": "sweet/companion/mimi/special.svg",
+      "path": "sweet/companion/mimi/special.png",
       "theme": "sweet",
       "category": "companion",
       "size": [
-        400,
+        389,
         480
       ],
       "label": "Mimi special",
@@ -1434,21 +1434,21 @@
           "docs/concepts/early-playroom.png",
           "sweet/companion/mimi/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:39:08.778Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/bunnyPlush": {
-      "path": "sweet/decorations/bunnyPlush.svg",
+      "path": "sweet/decorations/bunnyPlush.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        200,
+        188,
         200
       ],
       "pivot": [
-        100,
+        94,
         200
       ],
       "slot": "SHELF",
@@ -1459,21 +1459,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:36:47.003Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/bunting": {
-      "path": "sweet/decorations/bunting.svg",
+      "path": "sweet/decorations/bunting.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        300,
-        380
+        720,
+        219
       ],
       "pivot": [
-        150,
+        360,
         0
       ],
       "slot": "HANGING",
@@ -1484,21 +1484,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:37:39.423Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/butterflyMobile": {
-      "path": "sweet/decorations/butterflyMobile.svg",
+      "path": "sweet/decorations/butterflyMobile.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        300,
+        280,
         380
       ],
       "pivot": [
-        150,
+        140,
         0
       ],
       "slot": "HANGING",
@@ -1509,21 +1509,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:40:03.481Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/daisyBed": {
-      "path": "sweet/decorations/daisyBed.svg",
+      "path": "sweet/decorations/daisyBed.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        640,
+        538,
         420
       ],
       "pivot": [
-        320,
+        269,
         420
       ],
       "slot": "BED",
@@ -1534,22 +1534,22 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:40:58.608Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/flowerCushion": {
-      "path": "sweet/decorations/flowerCushion.svg",
+      "path": "sweet/decorations/flowerCushion.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
         340,
-        260
+        246
       ],
       "pivot": [
         170,
-        260
+        246
       ],
       "slot": "NOOK",
       "label": "Flower cushion",
@@ -1559,22 +1559,22 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:38:35.970Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/heartLamp": {
-      "path": "sweet/decorations/heartLamp.svg",
+      "path": "sweet/decorations/heartLamp.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
         200,
-        280
+        249
       ],
       "pivot": [
         100,
-        280
+        249
       ],
       "slot": "LAMP",
       "label": "Heart lamp",
@@ -1584,21 +1584,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:39:27.873Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/pastelRug": {
-      "path": "sweet/decorations/pastelRug.svg",
+      "path": "sweet/decorations/pastelRug.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        620,
+        587,
         300
       ],
       "pivot": [
-        310,
+        294,
         150
       ],
       "slot": "RUG",
@@ -1609,21 +1609,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:40:20.027Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/plainBed": {
-      "path": "sweet/decorations/plainBed.svg",
+      "path": "sweet/decorations/plainBed.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        640,
+        567,
         420
       ],
       "pivot": [
-        320,
+        284,
         420
       ],
       "slot": "BED",
@@ -1634,17 +1634,17 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:41:50.761Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/plainLamp": {
-      "path": "sweet/decorations/plainLamp.svg",
+      "path": "sweet/decorations/plainLamp.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        200,
+        199,
         280
       ],
       "pivot": [
@@ -1659,21 +1659,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:41:43.918Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/plainRug": {
-      "path": "sweet/decorations/plainRug.svg",
+      "path": "sweet/decorations/plainRug.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        620,
+        598,
         300
       ],
       "pivot": [
-        310,
+        299,
         150
       ],
       "slot": "RUG",
@@ -1684,22 +1684,22 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:42:33.750Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/sunPoster": {
-      "path": "sweet/decorations/sunPoster.svg",
+      "path": "sweet/decorations/sunPoster.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
         320,
-        260
+        238
       ],
       "pivot": [
         160,
-        130
+        119
       ],
       "slot": "WALL",
       "label": "Sun poster",
@@ -1709,21 +1709,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:44:15.571Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/tulipPicture": {
-      "path": "sweet/decorations/tulipPicture.svg",
+      "path": "sweet/decorations/tulipPicture.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        320,
+        283,
         260
       ],
       "pivot": [
-        160,
+        142,
         130
       ],
       "slot": "WALL",
@@ -1734,21 +1734,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:45:09.243Z",
+        "status": "generated"
       }
     },
     "sweet/decorations/yellowCushion": {
-      "path": "sweet/decorations/yellowCushion.svg",
+      "path": "sweet/decorations/yellowCushion.png",
       "theme": "sweet",
       "category": "decoration",
       "size": [
-        340,
+        286,
         260
       ],
       "pivot": [
-        170,
+        143,
         260
       ],
       "slot": "NOOK",
@@ -1759,21 +1759,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:46:01.239Z",
+        "status": "generated"
       }
     },
     "sweet/entry/toyLetterbox": {
-      "path": "sweet/entry/toyLetterbox.svg",
+      "path": "sweet/entry/toyLetterbox.png",
       "theme": "sweet",
       "category": "entry",
       "size": [
-        240,
+        211,
         300
       ],
       "pivot": [
-        120,
+        106,
         300
       ],
       "label": "Toy letterbox",
@@ -1783,21 +1783,21 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:34:09.295Z",
+        "status": "generated"
       }
     },
     "sweet/entry/toyLetterboxFlag": {
-      "path": "sweet/entry/toyLetterboxFlag.svg",
+      "path": "sweet/entry/toyLetterboxFlag.png",
       "theme": "sweet",
       "category": "entry",
       "size": [
-        240,
+        209,
         300
       ],
       "pivot": [
-        120,
+        105,
         300
       ],
       "label": "Toy letterbox flag up",
@@ -1808,18 +1808,18 @@
           "docs/concepts/early-playroom.png",
           "sweet/entry/toyLetterbox"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:47:02.395Z",
+        "status": "generated"
       }
     },
     "sweet/room/background": {
-      "path": "sweet/room/background.svg",
+      "path": "sweet/room/background.png",
       "theme": "sweet",
       "category": "room",
       "size": [
-        3072,
-        2048
+        1536,
+        1024
       ],
       "label": "Sweet room background",
       "gen": {
@@ -1828,18 +1828,18 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:42:46.000Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/kitchenFrame": {
-      "path": "sweet/sceneA/kitchenFrame.svg",
+      "path": "sweet/sceneA/kitchenFrame.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
-        3072,
-        2048
+        1536,
+        1024
       ],
       "label": "Kitchen frame",
       "gen": {
@@ -1848,18 +1848,18 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:43:46.763Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/step/cake": {
-      "path": "sweet/sceneA/step/cake.svg",
+      "path": "sweet/sceneA/step/cake.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
         300,
-        300
+        258
       ],
       "label": "Step cake",
       "gen": {
@@ -1868,18 +1868,18 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:47:58.395Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/step/cups": {
-      "path": "sweet/sceneA/step/cups.svg",
+      "path": "sweet/sceneA/step/cups.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
         300,
-        300
+        202
       ],
       "label": "Step cups",
       "gen": {
@@ -1888,18 +1888,18 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:48:58.253Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/step/guests": {
-      "path": "sweet/sceneA/step/guests.svg",
+      "path": "sweet/sceneA/step/guests.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
         300,
-        300
+        244
       ],
       "label": "Step guests",
       "gen": {
@@ -1908,18 +1908,18 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:49:56.473Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/step/teapot": {
-      "path": "sweet/sceneA/step/teapot.svg",
+      "path": "sweet/sceneA/step/teapot.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
         300,
-        300
+        238
       ],
       "label": "Step teapot",
       "gen": {
@@ -1928,22 +1928,22 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:50:54.491Z",
+        "status": "generated"
       }
     },
     "sweet/sceneA/teaTable": {
-      "path": "sweet/sceneA/teaTable.svg",
+      "path": "sweet/sceneA/teaTable.png",
       "theme": "sweet",
       "category": "sceneA",
       "size": [
         1200,
-        700
+        649
       ],
       "pivot": [
         600,
-        700
+        649
       ],
       "label": "Tea table",
       "gen": {
@@ -1952,17 +1952,17 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:44:41.647Z",
+        "status": "generated"
       }
     },
     "sweet/sceneB/balloonParcel": {
-      "path": "sweet/sceneB/balloonParcel.svg",
+      "path": "sweet/sceneB/balloonParcel.png",
       "theme": "sweet",
       "category": "sceneB",
       "size": [
-        600,
+        447,
         700
       ],
       "label": "Balloon parcel with cat courier",
@@ -1973,18 +1973,18 @@
           "docs/concepts/early-playroom.png",
           "sweet/companion/mimi/idle"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:45:34.092Z",
+        "status": "generated"
       }
     },
     "sweet/sceneB/toyShop": {
-      "path": "sweet/sceneB/toyShop.svg",
+      "path": "sweet/sceneB/toyShop.png",
       "theme": "sweet",
       "category": "sceneB",
       "size": [
         600,
-        500
+        468
       ],
       "label": "Toy shop",
       "gen": {
@@ -1993,17 +1993,17 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:52:39.130Z",
+        "status": "generated"
       }
     },
     "sweet/sceneB/window": {
-      "path": "sweet/sceneB/window.svg",
+      "path": "sweet/sceneB/window.png",
       "theme": "sweet",
       "category": "sceneB",
       "size": [
-        600,
+        431,
         500
       ],
       "label": "Playroom window",
@@ -2013,9 +2013,9 @@
         "references": [
           "docs/concepts/early-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-12T13:53:33.253Z",
+        "status": "generated"
       }
     },
     "sweet/tiles/bowHeadband": {
@@ -2030,7 +2030,7 @@
       "derivedFrom": "shared/heroine/extra/bowHeadband"
     },
     "sweet/tiles/bunnyPlush": {
-      "path": "sweet/tiles/bunnyPlush.svg",
+      "path": "sweet/tiles/bunnyPlush.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2041,7 +2041,7 @@
       "derivedFrom": "sweet/decorations/bunnyPlush"
     },
     "sweet/tiles/bunting": {
-      "path": "sweet/tiles/bunting.svg",
+      "path": "sweet/tiles/bunting.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2052,7 +2052,7 @@
       "derivedFrom": "sweet/decorations/bunting"
     },
     "sweet/tiles/butterflyMobile": {
-      "path": "sweet/tiles/butterflyMobile.svg",
+      "path": "sweet/tiles/butterflyMobile.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2074,7 +2074,7 @@
       "derivedFrom": "shared/heroine/shoes/catSlippers"
     },
     "sweet/tiles/daisyBed": {
-      "path": "sweet/tiles/daisyBed.svg",
+      "path": "sweet/tiles/daisyBed.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2107,7 +2107,7 @@
       "derivedFrom": "shared/heroine/extra/flowerClip"
     },
     "sweet/tiles/flowerCushion": {
-      "path": "sweet/tiles/flowerCushion.svg",
+      "path": "sweet/tiles/flowerCushion.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2118,7 +2118,7 @@
       "derivedFrom": "sweet/decorations/flowerCushion"
     },
     "sweet/tiles/heartLamp": {
-      "path": "sweet/tiles/heartLamp.svg",
+      "path": "sweet/tiles/heartLamp.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2129,7 +2129,7 @@
       "derivedFrom": "sweet/decorations/heartLamp"
     },
     "sweet/tiles/pastelRug": {
-      "path": "sweet/tiles/pastelRug.svg",
+      "path": "sweet/tiles/pastelRug.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2140,7 +2140,7 @@
       "derivedFrom": "sweet/decorations/pastelRug"
     },
     "sweet/tiles/plainBed": {
-      "path": "sweet/tiles/plainBed.svg",
+      "path": "sweet/tiles/plainBed.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2151,7 +2151,7 @@
       "derivedFrom": "sweet/decorations/plainBed"
     },
     "sweet/tiles/plainLamp": {
-      "path": "sweet/tiles/plainLamp.svg",
+      "path": "sweet/tiles/plainLamp.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2162,7 +2162,7 @@
       "derivedFrom": "sweet/decorations/plainLamp"
     },
     "sweet/tiles/plainRug": {
-      "path": "sweet/tiles/plainRug.svg",
+      "path": "sweet/tiles/plainRug.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2195,7 +2195,7 @@
       "derivedFrom": "shared/heroine/outfit/strawberryDress"
     },
     "sweet/tiles/sunPoster": {
-      "path": "sweet/tiles/sunPoster.svg",
+      "path": "sweet/tiles/sunPoster.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2206,7 +2206,7 @@
       "derivedFrom": "sweet/decorations/sunPoster"
     },
     "sweet/tiles/tulipPicture": {
-      "path": "sweet/tiles/tulipPicture.svg",
+      "path": "sweet/tiles/tulipPicture.png",
       "theme": "sweet",
       "category": "tile",
       "size": [
@@ -2217,7 +2217,7 @@
       "derivedFrom": "sweet/decorations/tulipPicture"
     },
     "sweet/tiles/yellowCushion": {
-      "path": "sweet/tiles/yellowCushion.svg",
+      "path": "sweet/tiles/yellowCushion.png",
       "theme": "sweet",
       "category": "tile",
       "size": [

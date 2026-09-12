@@ -29,7 +29,10 @@ export type MissionEvent =
   | { type: 'mission/choose'; item: ItemId }
   | { type: 'mission/apply'; now: string }
   | { type: 'mission/keep'; now: string }
-  | { type: 'mission/leave' };
+  | { type: 'mission/leave' }
+  /** Progression suggestion answers (SPEC §7.1): "Try {level}" or "Not yet". */
+  | { type: 'mission/suggestionAccepted'; activity: Activity }
+  | { type: 'mission/suggestionDeclined'; activity: Activity };
 
 export const PUZZLES_PER_MISSION = 4;
 const RECENT_TARGETS = 8;
@@ -67,7 +70,69 @@ export function missionReducer(save: Save, event: MissionEvent): Save {
       return keep(save, event.now);
     case 'mission/leave':
       return leave(save);
+    case 'mission/suggestionAccepted':
+      return acceptSuggestion(save, event.activity);
+    case 'mission/suggestionDeclined':
+      return declineSuggestion(save, event.activity);
   }
+}
+
+export const MAX_LEVEL: Record<Activity, number> = { A: 4, B: 3 };
+
+/** A mission counts toward the suggestion streak with no hints and at most one wrong answer. */
+function qualifies(summary: MissionSummary): boolean {
+  return summary.hints === 0 && summary.wrong <= 1;
+}
+
+/**
+ * The level to suggest after a mission (SPEC §7.1), or null: the last two missions of the
+ * activity at the current level were completed with zero hints and at most one wrong answer
+ * in total, the next level exists, levels are not locked, and "Not yet" has not suppressed
+ * the card within the last two qualifying missions.
+ */
+export function suggestedLevel(save: Save, activity: Activity): number | null {
+  if (save.settings.levelsLocked) return null;
+  const s = save.progress.suggestion[activity];
+  if (s.streak < 2) return null;
+  if (s.declinedAt !== null && s.streak - s.declinedAt < 2) return null;
+  const current = activity === 'A' ? save.settings.readingLevel : save.settings.elapsedLevel;
+  if (current >= MAX_LEVEL[activity]) return null;
+  const last = save.progress.history.filter((h) => h.activity === activity).slice(-2);
+  if (last.length < 2) return null;
+  if (last.some((h) => h.level !== current || !qualifies(h))) return null;
+  if (last[0]!.wrong + last[1]!.wrong > 1) return null;
+  return current + 1;
+}
+
+function withSuggestion(
+  save: Save,
+  activity: Activity,
+  state: Save['progress']['suggestion']['A'],
+): Save {
+  return {
+    ...save,
+    progress: {
+      ...save.progress,
+      suggestion: { ...save.progress.suggestion, [activity]: state },
+    },
+  };
+}
+
+/** "Try {level}": the level changes (never when locked) and the streak starts over. */
+function acceptSuggestion(save: Save, activity: Activity): Save {
+  const next = suggestedLevel(save, activity);
+  if (next === null) return save;
+  const settings =
+    activity === 'A'
+      ? { ...save.settings, readingLevel: next as ReadingLevel }
+      : { ...save.settings, elapsedLevel: next as ElapsedLevel };
+  return withSuggestion({ ...save, settings }, activity, { streak: 0, declinedAt: null });
+}
+
+/** "Not yet": suppressed until two more qualifying missions. */
+function declineSuggestion(save: Save, activity: Activity): Save {
+  const s = save.progress.suggestion[activity];
+  return withSuggestion(save, activity, { ...s, declinedAt: s.streak });
 }
 
 // ---------------------------------------------------------------------------
@@ -237,11 +302,23 @@ function end(save: Save, now: string): Save {
     endedAt: now,
     claimed: m.claimed ?? null,
   };
+  // Suggestion streak (SPEC §7.1): consecutive qualifying missions of this activity at the
+  // same level; a miss or a level change starts over and clears an earlier "Not yet".
+  const previous = [...save.progress.history].reverse().find((h) => h.activity === m.activity);
+  const sameLevel = previous !== undefined && previous.level === m.level;
+  const before = save.progress.suggestion[m.activity];
+  const suggestion = qualifies(summary)
+    ? {
+        streak: sameLevel ? before.streak + 1 : 1,
+        declinedAt: sameLevel ? before.declinedAt : null,
+      }
+    : { streak: 0, declinedAt: null };
   return {
     ...save,
     progress: {
       ...save.progress,
       history: [...save.progress.history, summary].slice(-HISTORY_LENGTH),
+      suggestion: { ...save.progress.suggestion, [m.activity]: suggestion },
     },
     mission: null,
   };

@@ -3,22 +3,27 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import type { ItemId, SlotType, Theme } from '../../core/types.ts';
 import { assetUrl } from '../../assets.ts';
 import { collectedCount } from '../../core/inventory.ts';
+import { suggestedLevel } from '../../core/mission.ts';
 import { earnableTotal, requireItem } from '../../catalog/index.ts';
 import { ENTRY_GEOMETRY } from '../../catalog/slots.ts';
 import { devTick, dispatch, save, soundOn } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
-import { useFocusOnMount } from '../hooks.ts';
 import { DecoratePanel } from '../components/DecoratePanel.tsx';
+import { Dialog } from '../components/Dialog.tsx';
 import { DressUpPanel } from '../components/DressUpPanel.tsx';
+import { HoldButton } from '../components/HoldButton.tsx';
 import { IconButton } from '../components/IconButton.tsx';
+import { GEAR_HOLD_MS } from './S6Parent.tsx';
 import { RoomScene, type RoomMode, type RoomReaction } from '../components/RoomScene.tsx';
 
 interface Props {
   theme: Theme;
   /** Item just applied from S5: shown in place with a sparkle (SPEC §3.4). */
   sparkle?: ItemId | null;
+  /** Arriving from S5: the progression suggestion may show once (SPEC §7.1). */
+  suggest?: boolean;
 }
 
 const ENTRY_ART: Record<Theme, { idle: string; react: string }> = {
@@ -35,8 +40,8 @@ const ENTRY_TIMEOUT_MS = 900;
  * panels (§4.2, §4.4), free-play reactions (§4.3) and the way to S2. UI-only state (open panel,
  * armed tile, ghost, running reaction) lives here; every save change goes through `dispatch`.
  */
-export function S1Room({ theme, sparkle = null }: Props) {
-  const heading = useFocusOnMount<HTMLHeadingElement>();
+export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
+  const heading = useRef<HTMLHeadingElement>(null);
   void devTick.value; // the slot debug overlay nudges geometry in place (dev only)
   const state = save.value;
   const themeState = state.themes[theme];
@@ -50,6 +55,27 @@ export function S1Room({ theme, sparkle = null }: Props) {
   const entryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const decorateButton = useRef<HTMLButtonElement>(null);
   const dressupButton = useRef<HTMLButtonElement>(null);
+
+  // Progression suggestion (SPEC §7.1): "Ready for a bigger challenge?" once after a mission.
+  const [suggestOpen, setSuggestOpen] = useState(suggest);
+  const lastActivity = state.progress.history[state.progress.history.length - 1]?.activity;
+  const suggestion = suggestOpen && lastActivity ? suggestedLevel(state, lastActivity) : null;
+  const answerSuggestion = (accept: boolean) => {
+    if (lastActivity) {
+      dispatch({
+        type: accept ? 'mission/suggestionAccepted' : 'mission/suggestionDeclined',
+        activity: lastActivity,
+      });
+    }
+    setSuggestOpen(false);
+    heading.current?.focus({ preventScroll: true });
+  };
+  // Focus moves to the heading on arrival (SPEC §13.1) unless the suggestion card is up; the
+  // card takes focus itself and hands it to the heading when answered.
+  const suggestionAtMount = useRef(suggestion !== null);
+  useEffect(() => {
+    if (!suggestionAtMount.current) heading.current?.focus({ preventScroll: true });
+  }, []);
 
   const openBoard = useCallback(() => {
     if (entryTimer.current !== null) clearTimeout(entryTimer.current);
@@ -161,6 +187,7 @@ export function S1Room({ theme, sparkle = null }: Props) {
           heroine={state.heroine}
           sparkle={sparkle}
           lampOn={themeState.lampOn}
+          stars={themeState.stars}
           interaction={{
             mode,
             armed,
@@ -189,7 +216,11 @@ export function S1Room({ theme, sparkle = null }: Props) {
             alt=""
             draggable={false}
           />
-          <span class="entry-smoke" aria-hidden="true" />
+          {theme === 'space' ? (
+            <span class="entry-smoke" aria-hidden="true" />
+          ) : (
+            <span class="entry-envelope" aria-hidden="true" />
+          )}
         </button>
         {import.meta.env.DEV && <SlotDebugLoader theme={theme} />}
       </div>
@@ -218,6 +249,14 @@ export function S1Room({ theme, sparkle = null }: Props) {
         >
           <span aria-hidden="true">{soundOn.value ? '🔊' : '🔇'}</span>
         </IconButton>
+        <HoldButton
+          label={t('ui.parentCorner')}
+          holdMs={GEAR_HOLD_MS}
+          testId="parent-gear"
+          onHold={() => go({ id: 'S6', returnTo: { id: 'S1', theme } })}
+        >
+          <span aria-hidden="true">⚙️</span>
+        </HoldButton>
       </div>
       <div class="s1-bottom">
         <button
@@ -258,6 +297,37 @@ export function S1Room({ theme, sparkle = null }: Props) {
       <p class="visually-hidden" aria-live="polite" data-testid="room-announce">
         {announce}
       </p>
+      {suggestion !== null && lastActivity && (
+        <Dialog
+          titleId="suggest-title"
+          onClose={() => answerSuggestion(false)}
+          testId="suggest-dialog"
+        >
+          <h2 id="suggest-title" class="dialog-title">
+            {t('prog.title')}
+          </h2>
+          <div class="dialog-actions">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-testid="suggest-try"
+              onClick={() => answerSuggestion(true)}
+            >
+              {t('prog.try', {
+                level: t(`level.${lastActivity === 'A' ? 'r' : 'e'}${suggestion}` as StringKey),
+              })}
+            </button>
+            <button
+              type="button"
+              class="btn"
+              data-testid="suggest-notyet"
+              onClick={() => answerSuggestion(false)}
+            >
+              {t('prog.notYet')}
+            </button>
+          </div>
+        </Dialog>
+      )}
       {mode === 'decorate' && (
         <DecoratePanel
           theme={theme}

@@ -7,7 +7,7 @@ Browser clock-learning game concept for a seven-year-old: two distinct playrooms
 - [Saved visual concepts](docs/concepts/README.md)
 - [Next-session handoff](docs/NEXT_SESSION.md)
 
-Current state: milestones M0 (skeleton), M1 (clock engine), M2 (missions playable) and M3 (Space room: slots from catalogue geometry, Decorate and Dress-up panels, reward application, reactions, Space art generated through the Codex pipeline, hand-drawn heroine layers, bundled font) implemented; the Space room is playable end to end with real art, Sweet still uses placeholders; see [CHANGELOG.md](CHANGELOG.md). Not deployed.
+Current state: milestones M0 (skeleton), M1 (clock engine), M2 (missions playable), M3 (Space room) and M4 (Sweet room and full catalogue: all art generated through the Codex pipeline, both Sweet collections and Rainbow Explorer, Sweet reactions and missions, theme switching, star chart, Parent corner with export / import / reset, progression suggestion, Turkish and Dutch layouts reviewed) implemented; both rooms are playable end to end with real art, none of it approved by human QA yet; see [CHANGELOG.md](CHANGELOG.md). Next is M5 (sounds, reduced motion and accessibility review, performance, static build). Not deployed.
 
 ## Development
 
@@ -35,4 +35,4 @@ npm run assets:heroine         # redraw the heroine SVG layers and wardrobe tile
 Generated entries stay `gen.status: 'generated'` until a person marks them `approved` in the
 manifest (the QA checklist is shown by `?debug=slots`); approved entries are never regenerated.
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=S2`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`).
+Development aids (dev builds only): `?lang=tr`, `?screen=S1`, `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`).

@@ -1,0 +1,195 @@
+/* S6 Parent corner (SPEC §3.9): adult-facing settings screen in stage px. */
+.s6 {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+}
+.s6-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 48px 20px;
+  background: var(--lavender);
+  border-bottom: 6px solid var(--plum);
+}
+.s6-title {
+  margin: 0;
+  font-size: 44px;
+}
+.s6-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 48px 48px;
+  scrollbar-width: thin;
+}
+.s6-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.s6-section {
+  margin-bottom: 28px;
+  padding: 20px 28px 24px;
+  border: 4px solid var(--plum);
+  border-radius: 28px;
+  background: #fff;
+}
+.s6-section h2 {
+  margin: 0 0 14px;
+  font-size: 32px;
+}
+.s6-section h3 {
+  margin: 18px 0 8px;
+  font-size: 24px;
+}
+.s6-section p {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+.s6-muted {
+  opacity: 0.8;
+}
+.s6-privacy {
+  font-weight: 800;
+}
+.s6-notice {
+  margin: 0 0 24px;
+  padding: 16px 24px;
+  border: 4px solid var(--coral);
+  border-radius: 24px;
+  background: #fff;
+  font-size: 24px;
+}
+.s6-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.s6-status {
+  min-height: 32px;
+  margin: 14px 0 0;
+  font-size: 24px;
+}
+
+/* Level radio rows: the child-facing name plus a short adult description. */
+.radio-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 6px 16px;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+}
+.radio-row[aria-checked='true'] {
+  background: var(--cream);
+  border-width: 5px;
+  padding: 4px 14px;
+}
+.radio-mark {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--plum);
+  border-radius: 50%;
+  background: #fff;
+  font-size: 22px;
+  line-height: 1;
+}
+.radio-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.radio-name {
+  font-size: 24px;
+  font-weight: 800;
+}
+.radio-desc {
+  font-size: 19px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+/* On/off switch with its state written out (SPEC §13.2: never colour alone). */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  margin-top: 14px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  text-align: left;
+  font-size: 24px;
+}
+.switch:hover {
+  background: var(--cream);
+}
+.switch-track {
+  flex: none;
+  position: relative;
+  width: 84px;
+  height: 44px;
+  border: 4px solid var(--plum);
+  border-radius: 999px;
+  background: #fff;
+  transition: background 150ms ease-out;
+}
+.switch-knob {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--plum);
+  transition: transform 150ms ease-out;
+}
+.switch[aria-checked='true'] .switch-track {
+  background: var(--mint);
+}
+.switch[aria-checked='true'] .switch-knob {
+  transform: translateX(40px);
+}
+.switch-label {
+  flex: 1;
+  line-height: 1.15;
+}
+.switch-state {
+  flex: none;
+  min-width: 64px;
+  text-align: right;
+  font-weight: 800;
+}
+
+/* Recent missions */
+.s6-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 19px;
+}
+.s6-table th,
+.s6-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 2px solid var(--lavender);
+  vertical-align: top;
+}
+.s6-table th {
+  font-weight: 800;
+}

@@ -830,21 +830,134 @@
   align-items: center;
   gap: 16px;
 }
+/* Star chart poster (SPEC §10.5): inline SVG, theme-tinted, golden frame when full. */
 .star-chart {
-  display: grid;
-  grid-template-columns: repeat(6, 56px);
-  gap: 6px;
-  font-size: 44px;
-  color: #c9bde0;
+  display: block;
+  --chart-bg: var(--lavender);
 }
-.star-filled {
-  color: var(--star);
-  text-shadow: 0 2px 0 var(--plum);
+.star-chart-sweet {
+  --chart-bg: var(--pink);
+}
+.star-chart-frame {
+  fill: var(--chart-bg);
+  stroke: var(--plum);
+  stroke-width: 10;
+}
+.star-chart-inner {
+  fill: none;
+  stroke: var(--plum);
+  stroke-width: 4;
+}
+.star-chart-full .star-chart-frame {
+  fill: var(--star);
+  stroke: #c98a1e;
+  stroke-width: 16;
+}
+.star-chart-star {
+  fill: var(--cream);
+  stroke: var(--plum);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+.star-chart-filled {
+  fill: var(--star);
+}
+.s5-star-chart {
+  width: 420px;
 }
 .star-count {
   margin: 0;
   font-size: 28px;
   font-weight: 700;
+}
+
+/* Story reaction after puzzle 4 (SPEC §3.6): launch / tea party beside the card. */
+.celebration {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  width: 240px;
+  height: 1024px;
+  pointer-events: none;
+}
+.celebration img {
+  position: absolute;
+  object-fit: contain;
+}
+.celebration-rocket {
+  left: 50%;
+  bottom: 40px;
+  width: 170px;
+  margin-left: -85px;
+  animation: launch 2.6s cubic-bezier(0.5, 0, 0.9, 0.4) 1 forwards;
+}
+.celebration-flame {
+  left: 50%;
+  bottom: -110px;
+  width: 90px;
+  margin-left: -45px;
+  transform-origin: 50% 0;
+  animation:
+    launch 2.6s cubic-bezier(0.5, 0, 0.9, 0.4) 1 forwards,
+    flame-flicker 180ms ease-in-out infinite alternate;
+}
+@keyframes launch {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  12% {
+    transform: translateY(2px) rotate(-2deg);
+  }
+  24% {
+    transform: translateY(-2px) rotate(2deg);
+  }
+  36% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-1400px);
+  }
+}
+@keyframes flame-flicker {
+  from {
+    scale: 1 0.9;
+  }
+  to {
+    scale: 1.08 1.1;
+  }
+}
+.celebration-table {
+  left: 0;
+  bottom: 24px;
+  width: 240px;
+  animation: table-in 600ms ease-out 1 backwards;
+}
+@keyframes table-in {
+  from {
+    opacity: 0;
+    transform: translateY(160px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.celebration-step {
+  left: calc(var(--i) * 52px + 8px);
+  bottom: calc(150px + (var(--i) - 1.5) * (var(--i) - 1.5) * -12px);
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 3px 0 rgba(59, 42, 94, 0.25));
+  animation: step-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1) 1 backwards;
+  animation-delay: calc(700ms + var(--i) * 320ms);
+}
+@keyframes step-pop {
+  from {
+    transform: scale(0) translateY(40px);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Confetti (SPEC §3.8; skipped under reduced motion) */

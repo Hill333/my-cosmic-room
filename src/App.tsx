@@ -9,6 +9,7 @@ import { S2Board } from './ui/screens/S2Board.tsx';
 import { S3ActivityA } from './ui/screens/S3ActivityA.tsx';
 import { S4ActivityB } from './ui/screens/S4ActivityB.tsx';
 import { S5Complete } from './ui/screens/S5Complete.tsx';
+import { S6Parent } from './ui/screens/S6Parent.tsx';
 
 const BACKGROUNDS = {
   space: '#5A3D8A',
@@ -51,7 +52,12 @@ export function App() {
     <Stage background={background} motion={motion.value}>
       {current.id === 'S0' && <S0Title />}
       {current.id === 'S1' && (
-        <S1Room key={current.theme} theme={current.theme} sparkle={current.sparkle ?? null} />
+        <S1Room
+          key={current.theme}
+          theme={current.theme}
+          sparkle={current.sparkle ?? null}
+          suggest={current.suggest ?? false}
+        />
       )}
       {current.id === 'S2' && <S2Board theme={current.theme} />}
       {(current.id === 'S3' || current.id === 'S4') &&
@@ -65,6 +71,7 @@ export function App() {
           <S0Title />
         ))}
       {current.id === 'S5' && (ended ? <S5Complete mission={ended} /> : <S0Title />)}
+      {current.id === 'S6' && <S6Parent returnTo={current.returnTo} />}
       {current.id === 'harness' && Harness && <Harness />}
     </Stage>
   );

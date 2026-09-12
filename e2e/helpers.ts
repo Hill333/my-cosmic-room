@@ -31,14 +31,23 @@ export interface StoredMission {
 }
 
 export interface StoredSave {
+  version: number;
   mission: StoredMission | null;
   themes: Record<
     'space' | 'sweet',
-    { owned: string[]; slots: Record<string, string>; lampOn: boolean }
+    { owned: string[]; slots: Record<string, string>; lampOn: boolean; stars: number }
   >;
   heroine: { outfit: string; shoes: string; extra: string | null };
   wardrobe: string[];
-  settings: { readingLevel: number; elapsedLevel: number };
+  settings: {
+    language: string | null;
+    readingLevel: number;
+    elapsedLevel: number;
+    levelsLocked: boolean;
+    hour24Reading: boolean;
+    sound: boolean;
+  };
+  progress: { history: { activity: string; level: number }[] };
   newItems?: string[];
   updatedAt: string | null;
 }
@@ -75,6 +84,29 @@ export function grantSpace(save: Save, decorations: string[], garments: string[]
   save.wardrobe.push(...garments);
   save.newItems.push(...decorations, ...garments);
   return save;
+}
+
+/** Grants earnable Sweet items (SPEC §10.2 pool order: Sweet Sleepover, then Sunny Garden). */
+export function grantSweet(save: Save, decorations: string[], garments: string[]): Save {
+  save.themes.sweet.owned.push(...decorations);
+  save.wardrobe.push(...garments);
+  save.newItems.push(...decorations, ...garments);
+  return save;
+}
+
+/** Everything in the save that a level change must leave alone (AT-27): room, inventory, stars. */
+export function roomAndInventory(save: StoredSave) {
+  return { themes: save.themes, heroine: save.heroine, wardrobe: save.wardrobe };
+}
+
+/**
+ * Opens the parent corner with the mouse: the gear is held for longer than its 1.5 s gate
+ * (SPEC §3.9). A plain click never opens it.
+ */
+export async function holdGear(page: Page): Promise<void> {
+  await page.getByTestId('parent-gear').click({ delay: 1800 });
+  await expect(page.getByTestId('s6')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
 }
 
 export async function readSave(page: Page): Promise<StoredSave> {
