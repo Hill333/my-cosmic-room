@@ -12,12 +12,15 @@ interface Props {
 }
 
 /**
- * Layered heroine (SPEC §4.5): body, hair, outfit, shoes, extra and a face overlay, all on
- * one 600 × 900 canvas so garments need no per-item offsets. Placeholder layers for now.
+ * Layered heroine (SPEC §4.5): an optional behind layer (the rocket backpack's tank), body,
+ * hair, outfit, shoes, extra and a face overlay, all on one 600 × 900 canvas so garments need
+ * no per-item offsets.
  */
 export function HeroinePreview({ face = 'neutral', heroine }: Props) {
   const h = heroine ?? save.value.heroine;
+  const back = h.extra ? requireItem(h.extra).art.heroineBack : undefined;
   const layers = [
+    back ? assetUrl(back) : null,
     assetUrl('shared/heroine/body'),
     assetUrl(requireItem(h.hair).art.heroineLayer!),
     assetUrl(requireItem(h.outfit).art.heroineLayer!),

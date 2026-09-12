@@ -16,8 +16,11 @@ export interface Item {
   starter: boolean;
   /** String-table key for the item's name. */
   nameKey: string;
-  /** Asset ids in assets/manifest.json (SPEC §15.5). */
-  art: { room?: string; tile: string; heroineLayer?: string };
+  /**
+   * Asset ids in assets/manifest.json (SPEC §15.5). `heroineBack` is the part of a garment
+   * drawn behind the body (the rocket backpack's tank), if it has one.
+   */
+  art: { room?: string; tile: string; heroineLayer?: string; heroineBack?: string };
   reaction?: ItemReaction;
 }
 

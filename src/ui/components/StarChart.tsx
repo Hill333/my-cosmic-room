@@ -21,6 +21,8 @@ const STAR_POINTS =
  * Star chart poster (SPEC §10.5): 24 outlined stars in a 6 × 4 grid on a 600 × 400 poster,
  * theme-tinted by CSS, one star filled per completed mission after the pool is empty, and a
  * golden frame once all 24 are filled. Hand-drawn SVG, drawn inline so the fill is state.
+ * A filled star also carries a solid inner star, so earned and empty never differ by colour
+ * alone (SPEC §13.2, AT-35).
  */
 export function StarChart({ theme, stars, class: className, style, testId }: Props) {
   const filled = Math.max(0, Math.min(MAX_STARS, stars));
@@ -40,13 +42,17 @@ export function StarChart({ theme, stars, class: className, style, testId }: Pro
       {Array.from({ length: ROWS * COLUMNS }, (_, i) => {
         const cx = 75 + (i % COLUMNS) * 90;
         const cy = 68 + Math.floor(i / COLUMNS) * 88;
+        const earned = i < filled;
         return (
-          <polygon
-            key={i}
-            class={`star-chart-star${i < filled ? ' star-chart-filled' : ''}`}
-            points={STAR_POINTS}
-            transform={`translate(${cx} ${cy})`}
-          />
+          <g key={i} transform={`translate(${cx} ${cy})`}>
+            <polygon
+              class={`star-chart-star${earned ? ' star-chart-filled' : ''}`}
+              points={STAR_POINTS}
+            />
+            {earned && (
+              <polygon class="star-chart-core" points={STAR_POINTS} transform="scale(0.42)" />
+            )}
+          </g>
         );
       })}
     </svg>

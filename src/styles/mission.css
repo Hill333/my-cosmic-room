@@ -326,7 +326,7 @@
   text-align: center;
 }
 .feedback-wrong {
-  color: var(--coral);
+  color: var(--coral-text);
 }
 .feedback-correct {
   color: #1f7a4d;
@@ -401,19 +401,24 @@
   padding: 6px 18px;
   border: 3px solid var(--plum);
   border-radius: 999px;
+  border-color: var(--lavender);
   background: #fff;
   font-size: 22px;
   font-weight: 700;
-  opacity: 0.55;
 }
+/* Unlit steps dim their icon only, so the label keeps its 4.5:1 contrast (AT-34). */
 .tracker-step img {
   width: 44px;
   height: 44px;
   object-fit: contain;
+  opacity: 0.45;
 }
 .tracker-lit {
-  opacity: 1;
+  border-color: var(--plum);
   background: var(--star);
+}
+.tracker-lit img {
+  opacity: 1;
 }
 
 /* Answer choices (SPEC §9.1) */
@@ -476,7 +481,7 @@
   font-weight: 800;
 }
 .choice-mark-wrong {
-  color: var(--coral);
+  color: var(--coral-text);
 }
 .choice-mark-correct {
   position: absolute;
@@ -742,6 +747,14 @@
   font-size: 64px;
   color: var(--purple);
 }
+/* Sparkle icon on the card under reduced motion (SPEC §13.3); see base.css. */
+.s5-sparkle {
+  display: none;
+  margin-bottom: -20px;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--coral-text);
+}
 .s5-sub {
   margin: 0;
   font-size: 28px;
@@ -861,6 +874,10 @@
 }
 .star-chart-filled {
   fill: var(--star);
+}
+.star-chart-core {
+  fill: var(--plum);
+  stroke: none;
 }
 .s5-star-chart {
   width: 420px;

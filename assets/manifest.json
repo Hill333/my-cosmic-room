@@ -61,6 +61,18 @@
       "label": "Star hair clip",
       "source": "hand-drawn"
     },
+    "shared/heroine/extraBack/rocketBackpack": {
+      "path": "shared/heroine/extraBack/rocketBackpack.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "extraBack",
+      "label": "Rocket backpack (behind)",
+      "source": "hand-drawn"
+    },
     "shared/heroine/face/cheering": {
       "path": "shared/heroine/face/cheering.svg",
       "theme": "shared",
@@ -340,6 +352,114 @@
         "generatedAt": "2026-09-12T11:29:39.137Z",
         "status": "generated"
       }
+    },
+    "shared/sound/correct": {
+      "path": "shared/sound/correct.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Correct answer",
+      "source": "synthesized",
+      "duration": 0.72
+    },
+    "shared/sound/fanfare": {
+      "path": "shared/sound/fanfare.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Mission complete fanfare",
+      "source": "synthesized",
+      "duration": 1.78
+    },
+    "shared/sound/hint": {
+      "path": "shared/sound/hint.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Hint",
+      "source": "synthesized",
+      "duration": 0.55
+    },
+    "shared/sound/next": {
+      "path": "shared/sound/next.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Next puzzle",
+      "source": "synthesized",
+      "duration": 0.34
+    },
+    "shared/sound/place": {
+      "path": "shared/sound/place.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Place a decoration",
+      "source": "synthesized",
+      "duration": 0.16
+    },
+    "shared/sound/star": {
+      "path": "shared/sound/star.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Star earned",
+      "source": "synthesized",
+      "duration": 0.84
+    },
+    "shared/sound/tap": {
+      "path": "shared/sound/tap.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Tap",
+      "source": "synthesized",
+      "duration": 0.09
+    },
+    "shared/sound/wear": {
+      "path": "shared/sound/wear.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Wear a garment",
+      "source": "synthesized",
+      "duration": 0.44
+    },
+    "shared/sound/wrong": {
+      "path": "shared/sound/wrong.mp3",
+      "theme": "shared",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Wrong answer (soft)",
+      "source": "synthesized",
+      "duration": 0.47
     },
     "shared/tiles/hairBuns": {
       "path": "shared/tiles/hairBuns.svg",
@@ -938,6 +1058,17 @@
         "status": "generated"
       }
     },
+    "space/room/thumb": {
+      "path": "space/room/thumb.webp",
+      "theme": "space",
+      "category": "room",
+      "size": [
+        960,
+        640
+      ],
+      "label": "Space room card thumbnail",
+      "derivedFrom": "space/room/background"
+    },
     "space/sceneA/cockpitFrame": {
       "path": "space/sceneA/cockpitFrame.png",
       "theme": "space",
@@ -1145,6 +1276,18 @@
         "generatedAt": "2026-09-12T11:40:00.000Z",
         "status": "generated"
       }
+    },
+    "space/sound/jingle": {
+      "path": "space/sound/jingle.mp3",
+      "theme": "space",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Launch jingle",
+      "source": "synthesized",
+      "duration": 1.67
     },
     "space/tiles/astroBunny": {
       "path": "space/tiles/astroBunny.png",
@@ -1833,6 +1976,17 @@
         "status": "generated"
       }
     },
+    "sweet/room/thumb": {
+      "path": "sweet/room/thumb.webp",
+      "theme": "sweet",
+      "category": "room",
+      "size": [
+        960,
+        640
+      ],
+      "label": "Sweet room card thumbnail",
+      "derivedFrom": "sweet/room/background"
+    },
     "sweet/sceneA/kitchenFrame": {
       "path": "sweet/sceneA/kitchenFrame.png",
       "theme": "sweet",
@@ -2017,6 +2171,18 @@
         "generatedAt": "2026-09-12T13:53:33.253Z",
         "status": "generated"
       }
+    },
+    "sweet/sound/jingle": {
+      "path": "sweet/sound/jingle.mp3",
+      "theme": "sweet",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Tea-party jingle",
+      "source": "synthesized",
+      "duration": 1.8
     },
     "sweet/tiles/bowHeadband": {
       "path": "sweet/tiles/bowHeadband.svg",

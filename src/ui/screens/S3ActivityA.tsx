@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { isCorrectAnswer } from '../../core/mission.ts';
+import { isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
 import { formatTime, hour12Of, minutesOf, periodOf } from '../../core/time.ts';
 import type { DigitalMode, Mission, Puzzle, ReadingLevel, TimeValue } from '../../core/types.ts';
 import { dispatch, save } from '../../state/store.ts';
@@ -7,6 +7,7 @@ import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { useElapsedSeconds } from '../hooks.ts';
+import { play } from '../sound.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
 import { ChoiceGroup, type ChoiceOption } from '../components/ChoiceGroup.tsx';
 import type { CompanionPose } from '../components/Companion.tsx';
@@ -28,6 +29,7 @@ export function S3ActivityA({ mission }: Props) {
   const variant = solved ? mission.results.length % 4 : mission.current.wrongAttempts % 2;
 
   const next = () => {
+    play('next');
     dispatch({ type: 'mission/next' });
     const m = save.value.mission;
     if (m && m.state !== 'IN_PROGRESS') go({ id: 'S5' });
@@ -81,7 +83,10 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
     if (correct) {
       setFeedback(`fb.correct.${(mission.results.length % 3) + 1}` as StringKey);
       setSetStatus('correct');
+      // The fourth right answer completes the mission (SPEC §15.4: fanfare).
+      play(mission.results.length + 1 >= PUZZLES_PER_MISSION ? 'fanfare' : 'correct');
     } else {
+      play('wrong');
       setWrong((w) => [...w, choice]);
       const key =
         puzzle.kind === 'SET' && mission.current.wrongAttempts === 0
@@ -93,7 +98,10 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
     dispatch({ type: 'mission/answer', choice, seconds: elapsed() });
   };
 
-  const hint = () => dispatch({ type: 'mission/hint' });
+  const hint = () => {
+    play('hint');
+    dispatch({ type: 'mission/hint' });
+  };
 
   const questionText =
     puzzle.kind === 'READ'

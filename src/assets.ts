@@ -7,7 +7,7 @@ import type { AssetEntry, AssetManifest } from './assetTypes.ts';
 
 export const manifest = manifestJson as unknown as AssetManifest;
 
-const files = import.meta.glob('/assets/**/*.{svg,png,webp}', {
+const files = import.meta.glob('/assets/**/*.{svg,png,webp,mp3}', {
   eager: true,
   query: '?url',
   import: 'default',

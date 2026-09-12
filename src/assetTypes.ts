@@ -14,7 +14,8 @@ export type AssetCategory =
   | 'sceneA'
   | 'sceneB'
   | 'ui'
-  | 'logo';
+  | 'logo'
+  | 'sound';
 
 export type GenPreset = 'sol-med' | 'astra-light';
 export type GenStatus = 'placeholder' | 'generated' | 'approved';
@@ -34,19 +35,33 @@ export interface AssetEntry {
   path: string;
   theme: ItemTheme;
   category: AssetCategory;
-  /** Target pixel size at 2× (SPEC §15.2). */
+  /** Target pixel size at 2× (SPEC §15.2); `[0, 0]` for sounds. */
   size: [number, number];
   /** Anchor point inside the image for room layers, in the same pixel space. */
   pivot?: [number, number];
   slot?: SlotType;
   /** Heroine layer name for garments (SPEC §4.5). */
-  layer?: 'body' | 'face' | 'hairBack' | 'hairFront' | 'hair' | 'outfit' | 'shoes' | 'extra';
+  layer?:
+    | 'body'
+    | 'face'
+    | 'hairBack'
+    | 'hairFront'
+    | 'hair'
+    | 'outfit'
+    | 'shoes'
+    | 'extra'
+    | 'extraBack';
   /** English label used on placeholders and in the debug overlay. */
   label: string;
   /** Tiles and other copies derived from another asset by post-processing. */
   derivedFrom?: string;
-  /** Hand-drawn SVG assets are never generated (SPEC §15.2 items 2 and 5). */
-  source?: 'hand-drawn';
+  /**
+   * Hand-drawn SVG assets are never generated (SPEC §15.2 items 2 and 5); synthesized sounds
+   * come from tools/gen-sounds.ts (SPEC §15.4).
+   */
+  source?: 'hand-drawn' | 'synthesized';
+  /** Sounds: duration in seconds, written by tools/gen-sounds.ts. */
+  duration?: number;
   gen?: GenRecord;
 }
 

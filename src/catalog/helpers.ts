@@ -12,6 +12,8 @@ interface GarmentOptions {
   order: number;
   starter?: boolean;
   collection?: string;
+  /** The garment also has a layer drawn behind the body (SPEC §4.5). */
+  back?: boolean;
 }
 
 /** Builds a decoration item whose asset ids follow SPEC §15.5 naming. */
@@ -43,5 +45,6 @@ export function garment(theme: Theme, name: string, kind: WardrobeKind, o: Garme
     art: { tile: `${theme}/tiles/${name}`, heroineLayer: `shared/heroine/${kind}/${name}` },
   };
   if (o.collection) item.collection = o.collection;
+  if (o.back) item.art.heroineBack = `shared/heroine/${kind}Back/${name}`;
   return item;
 }

@@ -11,6 +11,9 @@
   --lilac: #c9b6f0;
   --cream: #fff7ee;
   --coral: #e8735f;
+  /* Coral is a fill colour; text and thin icons in coral use this darker shade (5.2:1 on the
+     panel, AT-34). */
+  --coral-text: #b8432c;
   --blue: #4c7de0;
   --panel: #fffaf4;
   --text: var(--plum);
@@ -196,7 +199,7 @@ button:disabled {
 }
 .hold-ring-fill {
   fill: none;
-  stroke: var(--coral);
+  stroke: var(--coral-text);
   stroke-width: 8;
   stroke-linecap: round;
   stroke-dasharray: 276.5;
@@ -240,7 +243,8 @@ button:disabled {
 
 /* S0 */
 .s0 {
-  background: radial-gradient(circle at 20% 15%, #7a5cb3 0, var(--purple) 40%, var(--plum) 100%);
+  /* The highlight stays dark enough for the star-yellow title (4.9:1 at its brightest, AT-34). */
+  background: radial-gradient(circle at 20% 15%, #6a4c9e 0, var(--purple) 40%, var(--plum) 100%);
   color: #fff;
 }
 .s0-header {
@@ -254,6 +258,13 @@ button:disabled {
   letter-spacing: 1px;
   color: var(--star);
   text-shadow: 0 6px 0 var(--plum);
+}
+/* The generated title logo (D9), shown inside the h1 when S0Title enables it. */
+.title-logo {
+  display: block;
+  margin: 0 auto;
+  height: 160px;
+  width: auto;
 }
 .s0-sub {
   margin: 8px 0 0;
@@ -649,9 +660,12 @@ button:disabled {
 }
 
 /*
- * Motion (SPEC §13.3): the S6 setting on the stage's data-motion wins; "system" follows
- * prefers-reduced-motion. Reduced motion means no confetti, no sweep, no reveal delays and
- * every state change still visible (animations end in their final frame immediately).
+ * Motion (SPEC §13.3, AT-36): the S6 setting on the stage's data-motion wins; "system" follows
+ * prefers-reduced-motion. Reduced motion means no confetti, no sweep, no reveal delays, no
+ * looping animation, and every state change still visible (animations end in their final
+ * frame immediately). Celebrations become a static scene with a sparkle icon on the card:
+ * the rocket stays on its pad without a flame, the tea table is fully set. The hold ring is
+ * exempt: it is progress feedback for the 1.5 s gate, not decoration.
  */
 .stage[data-motion='reduced'] *,
 .stage[data-motion='reduced'] *::before,
@@ -659,9 +673,20 @@ button:disabled {
   transition-duration: 0.01ms !important;
   animation-duration: 0.01ms !important;
   animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
 }
-.stage[data-motion='reduced'] .confetti {
+.stage[data-motion='reduced'] .confetti,
+.stage[data-motion='reduced'] .celebration-flame {
   display: none;
+}
+.stage[data-motion='reduced'] .celebration-rocket {
+  animation-name: none !important;
+}
+.stage[data-motion='reduced'] .s5-sparkle {
+  display: block;
+}
+.stage[data-motion='reduced'] .hold-btn.holding .hold-ring-fill {
+  animation-duration: var(--hold-ms, 1500ms) !important;
 }
 @media (prefers-reduced-motion: reduce) {
   .stage[data-motion='system'] *,
@@ -670,8 +695,19 @@ button:disabled {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
   }
-  .stage[data-motion='system'] .confetti {
+  .stage[data-motion='system'] .confetti,
+  .stage[data-motion='system'] .celebration-flame {
     display: none;
+  }
+  .stage[data-motion='system'] .celebration-rocket {
+    animation-name: none !important;
+  }
+  .stage[data-motion='system'] .s5-sparkle {
+    display: block;
+  }
+  .stage[data-motion='system'] .hold-btn.holding .hold-ring-fill {
+    animation-duration: var(--hold-ms, 1500ms) !important;
   }
 }

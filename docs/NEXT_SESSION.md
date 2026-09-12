@@ -1,73 +1,100 @@
-# Next-session handoff
+# Release handoff: 0.1.0 release candidate
 
-## Suggested opening prompt
+Milestones M0 to M5 are implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The
+build passes `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
+(133 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+before the release is "done" in the sense of SPEC §18 is yours to do; this file is the
+checklist, followed by the known limitations and the open spec questions.
 
-> Read README.md, CHANGELOG.md, docs/SPEC.md and docs/NEXT_SESSION.md in this project. Milestones M0 to M4 are committed. Continue with milestone M5 (Polish and release) from SPEC §18: sounds (§15.4), reduced motion, accessibility review, performance budget, build for a static host. Done when AT-34 to AT-38 pass. The §17.9 parent-and-child play session and the deployment approval are mine; do not deploy or publish anything unless I ask; commit only when I ask.
+## Your checklist
 
-## What exists now
+1. **Parent-and-child play session (SPEC §17.9).** Run `npm run dev` (or `npm run preview`
+   after `npm run build`) and play for at least twenty minutes with the child. Note: whether
+   the instructions were understood without you reading them out; whether Reading level R2
+   (half hours) and Elapsed level E1 (whole-hour gaps) felt right; whether decorating between
+   missions held interest; and any wrong-answer moment that felt discouraging. Feed the
+   findings into the level defaults (`createFreshSave()` in `src/core/save.ts`) and the wording
+   (`src/strings/*.ts`). No analytics exist, so the notes are the only record.
+2. **Art QA and approval (SPEC §15.6).** Nothing in `assets/manifest.json` is `approved` yet.
+   Follow "Art QA and approval" in [README.md](../README.md): open the slot overlay
+   (`?screen=S1&debug=slots` for Space; the Sweet card from `?debug=slots`), go through the
+   checklist per entry, set `gen.status` to `"approved"` for the ones that pass, and
+   regenerate the ones that do not. Known candidates: the countdown step overlay was generated
+   with segment digits ("digits are UI" rule); the Sweet bed stands in front of the cabinet;
+   the toy letterbox overlaps the bed's foot; the Rocket backpack now has its tank behind the
+   body (fixed in M5; check it reads as a backpack on the heroine and in the wardrobe tile).
+3. **Title decision (D9).** The game is called "My Cosmic Room" (working title). If you keep
+   it, set `TITLE_LOGO = true` in `src/ui/screens/S0Title.tsx` to show the generated logo
+   (`assets/shared/ui/logo.png`) in place of the text lockup; the heading keeps the title text
+   for assistive technology and the tests. If you change the name, update `app.title` in all
+   three string files and regenerate the logo (`npm run assets:gen -- --regen shared/ui/logo`
+   after editing its prompt in `tools/manifest-data.ts`), or leave the text lockup.
+4. **Native-speaker wording review (SPEC §13.4, AT-37).** Have a Turkish and a Dutch speaker
+   read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
+   is not. Start with the longest sentences: the S2 mission descriptions
+   (`mission.*.desc`), the S6 level descriptions (`level.*.desc`) and import summary
+   (`s6.importSummary`), and the hint captions (`hint.*`). `npm test` enforces sentence case
+   and that every key exists in all three languages, so edits are safe to make directly.
+5. **Deploy (SPEC §16.5).** When you are happy: commit, then either push a tag
+   (`git tag v0.1.0 && git push origin main v0.1.0`) or run the "Deploy to GitHub Pages"
+   workflow by hand from the Actions tab. Pages must be set to "GitHub Actions" as the source
+   once, in the repository settings. For Cloudflare Pages: build command `npm run build`,
+   output `dist`. The build uses relative paths and was verified under a sub-path.
 
-- [docs/PRD.md](PRD.md) and [docs/SPEC.md](SPEC.md): unchanged product requirements and specification.
-- M0–M3 (see [CHANGELOG.md](../CHANGELOG.md)): Vite + Preact + TypeScript scaffold; `src/core` (time, elapsed, generate, rng, mission reducer, inventory, save, settings); `src/catalog` (items, collections, `slots.ts` geometry); `src/strings` (EN/TR/NL); `src/state` (single-signal store with debounced autosave, `nav.ts`); screens S0–S5; `RoomScene`, `SidePanel`, `DecoratePanel`, `DressUpPanel`, `MissionFrame`, `ChoiceGroup`, `Dialog`, `JumpTimeline`, `Companion`, `AnalogClock`, `DigitalDisplay`, `SetClock`; `tools/` (manifest builder, placeholders, `gen-assets.ts` Codex driver, `post-assets.ts`, `gen-heroine.ts`, asset check as build gate); bundled Nunito.
-- M4, all under `src/ui` unless noted:
-  - `screens/S6Parent.tsx` + `styles/parent.css`: the parent corner (SPEC §3.9) with every control wired to the settings reducer (`byParent: true` on level changes), export / import / reset through `core/save.ts` and the store's `storage`, `flushSave()` after an import so the previous save becomes the backup at once, recent missions from `progress.history`, the `notice` signal with a dismiss button, `__APP_VERSION__` (defined in `vite.config.ts` from package.json, declared in `src/vite-env.d.ts`). Test ids: `s6`, `s6-done`, `s6-lang-<code>`, `s6-level-r1..4` / `e1..3` (role radio, `aria-checked`), `s6-lock`, `s6-hour24`, `s6-sound` (role switch, `aria-checked`, the state written out as On / Off), `s6-motion-<system|reduced|full>`, `s6-export`, `s6-import` (button) + `s6-import-file` (hidden input, `setInputFiles`), `import-dialog` / `import-cancel` / `import-confirm`, `s6-reset` (hold 2 s), `s6-status`, `s6-history`, `s6-notice`, `s6-version`.
-  - `components/HoldButton.tsx`: press-and-hold with a CSS ring (`--hold-ms`), `variant` `icon` (the gear, `data-testid="parent-gear"` on S0 and S1) or `wide` (reset). Playwright: `click({ delay: 1800 })` or `keyboard.down('Enter')` → `waitForTimeout(1800)` → `keyboard.up`; a plain click or tap never opens it.
-  - `components/StarChart.tsx`: inline SVG poster; `data-stars`, class `star-chart-full` at 24, `aria-label` "Star chart: n of 24 stars". Placed by `STAR_CHART_GEOMETRY[theme]` in `catalog/slots.ts` (`room-star-chart`, on the door's top panel in both rooms) and on the S5 star card (`s5-star-chart`).
-  - Progression suggestion: `suggestedLevel(save, activity)` and the events `mission/suggestionAccepted` / `mission/suggestionDeclined` in `core/mission.ts`; the streak is updated in `end()`. S1 gets `suggest: true` from S5 and shows `suggest-dialog` with `suggest-try` / `suggest-notyet`; while the card is up S1 skips its heading focus and focuses the heading when the card closes.
-  - Sweet reactions in `RoomScene` / `room.css`: `react-curl` (BED, Mimi idle pose) and `react-stretch` (companion, special pose) keyed on theme; `entry-envelope` in `S1Room` for the letterbox. The lamp glow reads `--lamp-x` / `--lamp-y` from the LAMP slot box.
-  - S5 `Celebration` (`data-testid="celebration"`, aria-hidden): rocket launch / tea party in CSS; S3 uses `space/sceneA/cockpitFrame` / `sweet/sceneA/kitchenFrame` behind the panel (`SCENE` in `MissionFrame.tsx`), S4 the room background.
-  - Art status (`gen.status`): 62 `generated` (27 astra-light, 35 sol-med), 26 hand-drawn SVG entries (heroine layers and garment tiles, now including the six Sweet garments), 46 derived tiles, the hand-drawn star chart. No `placeholder` entries remain and nothing is `approved`: the user runs the §15.6 QA checklist in the slot overlay (`?screen=S1&debug=slots` for Space; open Sweet from S0 with `?debug=slots`) and marks entries `approved` by hand. The generated title logo (`shared/ui/logo.png`) exists but S0 still shows the text lockup (D9 pending).
-  - `tools/build-manifest.ts` keeps the size and pivot of processed PNGs; `SIZE_OVERRIDES` in `tools/manifest-data.ts` (bunting 720 × 220).
-- Tests: 133 unit (Vitest), 15 e2e (Playwright on the installed Google Chrome, project `chrome`) in 11 spec files: `s0-title` (2), `flow1-first-mission` (smoke flow 1), `flow2-sweet-delivery` (flow 2), `flow3-keyboard` (flow 3 / AT-28 A and B, leave dialog), `at26-theme-switch` (AT-26 / flow 4, star chart), `flow5-parent-corner` (flow 5, AT-27, AT-29, AT-32 end to end), `prog-suggestion`, `at30-resume`, `at23-apply-decoration`, `at24-apply-clothing`, `at25-swap-revert`. `e2e/helpers.ts`: `seedSave`, `seededSave`, `grantSpace`, `grantSweet`, `roomAndInventory`, `holdGear`, `readSave`, `waitForMission`, `solveWithMouse`.
-- CI workflow runs lint, typecheck, unit, build and e2e. No deployment.
+## What M5 delivered (for orientation)
 
-## Decisions
+- Sounds: eleven synthesized clips (`npm run assets:sounds`, needs ffmpeg), `src/ui/sound.ts`,
+  silent before the first gesture and when the toggle is off.
+- AT-34, AT-36, AT-38 as Playwright specs; AT-35 and AT-37 as a manual review, both written up
+  with the fixes they forced in [docs/ACCESSIBILITY_REVIEW.md](ACCESSIBILITY_REVIEW.md).
+- Performance: S0 interactive in 0.24 s on a 10 Mbps connection, 0.41 s on 4 Mbps, 1.89 s on
+  the Fast 3G preset; 1.14 MB for the Space room from a first launch (budget 4 MB).
+  Re-measure with `npm run measure` after `npm run build`.
+- Release: version 0.1.0, `.github/workflows/deploy.yml` (manual dispatch or `v*` tag only).
+- The Rocket backpack behind layer; the logo wired behind `TITLE_LOGO`.
 
-The §19.4 confirmations (D1, D3, D4, D5, D11, D9, D16) were presented on 12 September 2026 and not overridden, so the proposals stand. D9 (title) is still open: a generated logo is available but unused.
+## Known limitations
 
-M1 recorded one deviation in `generate.ts`: §7.2's literal rule yields about 80 % new minutes, contradicting AT-09's 50–70 % window; `pickTarget` draws the remainder from the level's other allowed minutes.
+- No native-speaker review of Turkish and Dutch yet (item 4).
+- No art is approved yet (item 2); the countdown overlay's digits, the Sweet bed / cabinet
+  overlap and the letterbox / bed overlap are known.
+- Sounds are synthesized chimes, not recorded effects; they are pleasant and small but plain.
+  Replacing a clip: drop a new MP3 (under 50 KB, 96 kbps) at the manifest path and update the
+  `duration` field, or edit its recipe in `tools/gen-sounds.ts` and re-run.
+- Room backgrounds are 400–500 KB PNGs (the generated art is PNG throughout). On the Fast 3G
+  preset the Space room takes about 3.7 s after the click to paint fully; the screen is
+  interactive before that. WebP backgrounds would cut roughly 800 KB if that ever matters.
+- Touch is untested and not a goal (SPEC §16.6); the stage scales on tablets.
+- The in-app Browser pane cannot activate buttons with synthetic keys; keyboard behaviour is
+  verified by Playwright, not by hand in the pane.
+- The suggestion card, the S5 celebration and the sounds after a reload are gated by a user
+  gesture, so a reload onto S5 is silent by design (browser autoplay rules).
 
-M2: the prize grant happens on the S5 button press; the Hint button is never disabled; `ChoiceGroup` uses plain Tab order plus arrow keys; the MATCH hint shows "long hand → 12" for whole hours.
+## Open spec discrepancies that need your decision
 
-M3: focus after closing a panel returns to that panel's own button; reactions never run in decorate mode; keyboard placement uses `event.detail === 0`; full-frame art stays at its native 1536 × 1024; `SidePanel` is not modal; the "New" badge lives in the save (`newItems`).
+- **§7.2 vs AT-09.** §7.2's literal rule ("the non-new minutes come from the full allowed
+  set") yields about 80 % new minutes; AT-09 requires 50–70 %. `pickTarget` in
+  `src/core/generate.ts` draws the remainder from the level's other allowed minutes (about
+  60 %) and says so in a comment. Either amend §7.2 or relax AT-09.
+- **§13.3 "celebrations become a static card with a sparkle icon".** Implemented as: the S5
+  card gets a "✦" icon and the celebration scene is static (rocket on its pad, tea table set)
+  rather than removed. If you prefer the scene hidden entirely under reduced motion, hide
+  `.celebration` in `src/styles/base.css`.
+- **Hint button after solving.** The M2 note says the Hint button is "never disabled"; the
+  code disables it once the puzzle is solved (it stays focusable and pressed while unsolved
+  after use). Harmless, but the note and the code disagree.
 
-M4 decisions worth knowing:
+## Context worth keeping
 
-- The progression suggestion follows §7.1 literally: both of the last two missions of the activity at the current level with zero hints and at most one wrong answer in total (so 1 + 0 qualifies, 1 + 1 does not); a level change from S2 or S6 or a non-qualifying mission starts the streak over and clears an earlier "Not yet". The card is a modal `Dialog` on S1 so it is always answered; Escape counts as "Not yet".
-- S6 is a scrolling two-column screen with 24 px body text (adult-facing, SPEC §14 allows added text); switches and radio rows are buttons with `role="switch"` / `role="radio"` so the existing focus ring and `groupKeyHandler` apply; the switch state is written out (On / Off) so it is never colour alone.
-- Reset removes main, backup and notice, replaces the signal with `createFreshSave()` and goes to S0, where the language overlay appears because `language` is null; the autosave then writes the fresh save with no backup.
-- Import keeps the file's language, so the app may switch language on confirm; that is the imported save's setting, not a bug.
-- The wardrobe tab strip is a 2 × 2 grid in every language rather than a wrapping row, so Dutch and Turkish never wrap unevenly.
-- The star chart hangs on the door's top panel (the one clear wall surface in both backgrounds at the top left); it is not a slot and has no reaction.
-- S3's background is the cockpit / kitchen frame (SPEC §3.6 "inside the theme's scene"); the panel covers most of the frame's centre, which is what the frames were generated for.
-- Bunting is a wide strip, so its manifest size is overridden (`SIZE_OVERRIDES`) instead of forcing it into the portrait HANGING box.
-
-## M5 scope (SPEC §18)
-
-Deliverable: sounds, reduced motion, accessibility review, performance budget, build to a static host on request. Done when AT-34 to AT-38 pass; the §17.9 session is held and the user approves deployment (both are the user's to do, see the end of this section).
-
-1. **Sounds** (§15.4, §13.3): ten short effects (tap, place, wear, correct, wrong soft, hint, next, mission-complete fanfare, launch / tea-party jingle per theme, star earned) as MP3 at 96 kbps under 50 KB each, royalty-free or self-recorded, in `assets/shared/sound/` with manifest entries (add a `sound` category to `assetTypes.ts` and `build-manifest.ts`). A small `ui/sound.ts` module: one `AudioContext` or `HTMLAudioElement` pool created after the first user gesture, `play(name)` that checks `soundOn` and is a no-op before the gesture. Hook points already exist: `place()` in `S1Room`, `wear()` in `DressUpPanel`, `answer()` in S3/S4, `hint`, `next`, S5 mount, `addStar` (S5 star card mount), the `Celebration` component. Keep `core/` free of audio; the sound toggle (`settings/sound`) is on S0, S1, S3/S4 and S6.
-2. **Reduced motion (AT-36)**: `data-motion` on the stage already zeroes durations and hides confetti (`base.css`); review every animation added since: the hold ring (fine, the timer gates), `react-curl` / `react-stretch` / `entry-envelope`, the S5 `Celebration` (ends instantly, so the rocket is simply gone and the tea party fully set), the suggestion dialog, `SidePanel` slide-in. Add an e2e spec that runs with `page.emulateMedia({ reducedMotion: 'reduce' })` and with the S6 setting "Reduced": no confetti, no sweep, every state change still visible (feedback, tracker, panels). The READ hint sweep (`AnalogClock` `sweep`) and the JumpTimeline reveal must appear immediately.
-3. **Contrast and targets (AT-34)**: an automated check. Suggested: a Playwright spec that visits S0, S1 (both panels), S2, S3 (READ / MATCH / SET), S4 (with jumps), S5, S6, collects every focusable element's bounding box in stage px (divide by the stage scale from `data-scale`) and asserts ≥ 64 × 64, and samples text / background colours of buttons, chips, tiles, digital displays and captions for ≥ 4.5:1 (a small WCAG luminance helper in `e2e/`). Known candidates to fix: `.digital-caption` lilac on plum (check), `.radio-desc` at 80 % opacity, `.s6-muted`, `.tile-badge` text, `.slot-debug-*` (dev only, ignore). Tiles and chips are already ≥ 64 px; `.btn-small` is 64 px tall.
-4. **Not colour alone (AT-35)**: manual review of every screen; correct / wrong carry ✓ / ✕ and words, selected tiles carry a check mark and thick outline, switches carry On / Off, the star chart's filled stars differ by fill only (add a small ✓ or a solid inner star if the reviewer objects), the S1 counter's ★, the lamp's lit state (the whole room dims, so fine).
-5. **Turkish and Dutch (AT-37)** are checked at 1024 × 640 for layout; the remaining item is a native-speaker wording review of `src/strings/tr.ts` and `src/strings/nl.ts` (sentence case is enforced by `strings.test.ts`). Watch the S2 mission card descriptions and the S6 import summary, the longest sentences.
-6. **Focus (AT-38)**: an e2e spec that walks every screen: focus visible on every control (`:focus-visible` ring; assert `outline-style` is not `none` on a focused control), Escape closes panels and dialogs (`SidePanel`, leave `Dialog`, `import-dialog`, `suggest-dialog`, S6 itself) and focus returns to the opener. Known behaviour to keep: the panel returns focus to its own button; the suggestion dialog hands focus to the S1 heading; `Dialog` skips the body as an opener.
-7. **Performance budget (§3.3, §16.3)**: interactive within 2 s on a normal connection; the Space room first load measured 1.51 MB / 15 requests on the production build (both room backgrounds, because S0 shows both cards). Options if the 2 s target is missed on a throttled profile: serve the S0 card thumbnails as small derived copies (a 384 × 256 copy of each background), lazy-load the other theme's background, and stop inlining small SVGs into the JS bundle (`build.assetsInlineLimit: 0`; `index.js` is 297 KB mostly because of inlined heroine SVGs). Measure with Playwright's `page.route` throttling or Chrome DevTools "Fast 3G".
-8. **Static build and release checklist (§16.5)**: `npm run build` already produces a relative-path `dist/`; add a `CHANGELOG.md` "0.1.0" section and bump `package.json` `version` (it shows in S6). For GitHub Pages: a workflow that uploads `dist/` on a tag; for Cloudflare Pages: build command `npm run build`, output `dist`. Do not deploy; prepare the workflow and let the user trigger it.
-9. **Art QA support**: the user will mark entries `approved` in `assets/manifest.json` after the §15.6 checklist. Things a reviewer may flag that have known fixes: the Rocket backpack is drawn in front of the torso (add a `hairBack`-style behind layer in `gen-heroine.ts` and `HeroinePreview`); the countdown step overlay has segment digits (regenerate with "no digits" if it bothers); the Sweet bed stands in front of the cabinet (move `SLOT_GEOMETRY.sweet.BED` or regenerate the background with the cabinet elsewhere); the toy letterbox overlaps the bed's foot. Never regenerate `approved` entries; never mark entries `approved` yourself.
-10. **Title logo (D9)**: `shared/ui/logo.png` is generated (reads "My Cosmic Room"); if the user confirms the title, show it on S0 in place of the text lockup with `alt="My Cosmic Room"` (keep the `h1` text for the e2e `toHaveText` checks or update them), otherwise regenerate with the chosen name.
-
-What the user must do (not the agent): hold the §17.9 parent-and-child play session (twenty minutes, notes on instructions understood without adult reading, whether R2 / E1 felt right, whether decorating between missions held interest, discouraging wrong-answer moments) and feed the findings into level defaults and wording; run the §15.6 art QA and mark entries `approved`; decide D9; approve the deployment target and trigger it.
-
-## Context to retain
-
-- The child is seven and already reads whole hours. Defaults: Reading R2 (half hours), Elapsed E1 (whole-hour gaps).
-- 14:30 → 19:15 = 4 hours 45 minutes, distractors 4 h 15 min and 5 h, jumps +4 h → 18:30, +30 min → 19:00, +15 min → 19:15; guaranteed as puzzle 4 of each theme's first completed E3 mission (`progress.firstE3Done` is set on completion, not on start); `e2e/flow2-sweet-delivery.spec.ts` checks it end to end.
-- Hour hand moves continuously (3:30 → 105°). No timers, lives, penalties, purchases, ads, analytics or accounts.
-- `core/` must stay free of DOM and Preact imports (enforced by ESLint). Every state change goes through `dispatch`; UI-only state (wrong picks, open panels, armed tile, ghost, running reaction, the open suggestion card, S6 import pending / status) lives in component state. Reactions dispatch nothing except `inventory/lamp`. `save/replace` is the only non-reducer event (import and reset).
-- All animations are CSS and read `data-motion` on the stage; the only JavaScript-driven animation is the SET clock drag; the hold gate is a timer, not an animation. Reactions end on `animationend` (with a 2.5 s fallback timeout), which also fires immediately under reduced motion.
-- Playwright runs against the production build (`npm run build && vite preview`), so dev aids (`?seed`, `?screen`, `?lang`, `?debug`, harness) are unavailable in e2e; tests seed or read the save in localStorage (`mcr.save.v1`, backup `mcr.save.backup`). `tsc -b` type-checks `e2e/` with the Node lib only (no DOM types): pass browser code to `page.evaluate` as a string or keep it in helpers. Keep window key listeners registered once and read state through refs (see `S1Room`); in tests wait for the focus the UI sets itself (`toBeFocused`) instead of forcing it. Autosave is debounced 250 ms, so reading localStorage right after a click needs `expect.poll` on the field that changed (polling on a field that already has the expected value returns immediately and reads stale data). Preact runs child effects before parent effects, so a child that focuses itself on mount loses to a parent `useFocusOnMount` unless the parent skips it (see the suggestion card in `S1Room`).
-- The in-app Browser pane sends synthetic key events that do not activate buttons and does not fire focus events while its window is unfocused; verify keyboard behaviour with Playwright, use the pane for visual checks (its screenshots can lag a second behind the DOM, take two; after editing a component the page may hold a stale module, reload). The pane's `zoom` action is not supported; crop the source image with sharp instead.
-- Stage layout is 1536 × 1024; the mission panel is 1000 × 860 at (268, 80); the S5 card is 1040 px wide from y 60; the side panel is 440 px on the right and the room scales by 0.7135 from its left-centre while a panel is open. Assets are at 2×: stage size = asset px ÷ 2 × slot scale. Sweet geometry: LAMP (1050, 456) on the nightstand, SHELF (1265, 365) on the cabinet's middle shelf, BED (1290, 872, 1.15), entry letterbox (1462, 900), HANGING (880, 44).
-- Codex CLI (`/Users/emret/.local/bin/codex`, 0.153.4) generates through `tools/gen-assets.ts`; presets astra-light = `gpt-6-astra` low, sol-med = `gpt-5.6-sol` medium; about one minute per asset, two chains run side by side without conflicts (each run merges only its finished entry into a fresh read of the manifest). Raw PNGs in `assets/.gen/` are committed (69 MB), `.log` / `.last.md` are not. Detach long runs with `nohup … &` and poll the log; a background Bash call may be capped at 10 minutes. `post-assets.ts` flood-fills the white background from the borders (threshold 236); `--force` reprocesses deterministically. `build-manifest.ts` now keeps processed sizes. After post-processing, delete placeholder SVGs no manifest entry references (the eager Vite glob bundles every file under `assets/`).
-- Not yet implemented and left for M5: sounds; the AT-34 / AT-36 / AT-38 automated specs; the release workflow; the Rocket backpack behind layer; the logo on S0.
-- SPEC §7.2 vs AT-09 discrepancy (see Decisions) is worth raising with the user when convenient; the code comment in `pickTarget` explains the choice.
+- The child is seven and reads whole hours; defaults R2 / E1. The §17.9 session may move them.
+- `core/` stays free of DOM, Preact and audio (ESLint enforces the imports); every state
+  change goes through `dispatch`; all animation is CSS under `data-motion`; window key
+  listeners are registered once and read state through refs (S1, S6).
+- Playwright runs against the production build; specs seed the save in localStorage
+  (`e2e/helpers.ts`: `seedSave`, `startMission`, `completeMission`, `seedForFirstKind`) and
+  pass browser code as strings or plain JS files under `e2e/browser/` (the e2e project has no
+  DOM types). Preact effects are deferred, so wait for the focus the UI sets itself
+  (`toBeFocused`) before pressing shortcut keys.
+- Assets: `tools/build-manifest.ts` keeps processed sizes, sound durations and the derived
+  thumbnails; `npm run check:assets` gates the build; regenerating the heroine is
+  deterministic (only edited layers change).

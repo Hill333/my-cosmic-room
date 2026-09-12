@@ -15,6 +15,11 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    // Browser-side scripts the e2e specs pass to page.evaluate as strings.
+    files: ['e2e/browser/*.js'],
+    languageOptions: { globals: globals.browser },
+  },
+  {
     // SPEC §16.2: core/ imports nothing from the DOM or Preact.
     files: ['src/core/**/*.ts', 'src/catalog/**/*.ts', 'src/strings/**/*.ts'],
     rules: {

@@ -9,6 +9,7 @@ import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { useElapsedSeconds } from '../hooks.ts';
+import { play } from '../sound.ts';
 import { ChoiceGroup, type ChoiceOption } from '../components/ChoiceGroup.tsx';
 import type { CompanionPose } from '../components/Companion.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
@@ -27,6 +28,7 @@ export function S4ActivityB({ mission }: Props) {
   const variant = solved ? mission.results.length % 4 : mission.current.wrongAttempts % 2;
 
   const next = () => {
+    play('next');
     dispatch({ type: 'mission/next' });
     const m = save.value.mission;
     if (m && m.state !== 'IN_PROGRESS') go({ id: 'S5' });
@@ -109,7 +111,9 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
       mission.results.reduce((n, r) => n + r.wrongAttempts, 0) + mission.current.wrongAttempts;
     if (isCorrectAnswer(puzzle, choice)) {
       setFeedback(`fb.correct.${(mission.results.length % 3) + 1}` as StringKey);
+      play(mission.results.length + 1 >= PUZZLES_PER_MISSION ? 'fanfare' : 'correct');
     } else {
+      play('wrong');
       setWrong((w) => [...w, choice]);
       setFeedback(`fb.wrong.${(totalWrong % 3) + 1}` as StringKey);
     }
@@ -118,6 +122,7 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
 
   /** "Show the jumps" and the footer's Hint both open the timeline and record the hint (§8.5). */
   const showJumps = () => {
+    play('hint');
     setJumpsOpen(true);
     dispatch({ type: 'mission/hint' });
   };
@@ -167,6 +172,7 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
             type="button"
             class="btn btn-small"
             data-testid="show-jumps"
+            data-sound={jumpsOpen ? undefined : 'none'}
             aria-expanded={jumpsOpen}
             onClick={toggleJumps}
           >

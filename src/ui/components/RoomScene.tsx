@@ -79,6 +79,36 @@ export function roomLayerBox(theme: Theme, slot: SlotType, artId: string): Stage
 }
 
 /**
+ * Minimum hit area of a slot button in room px: 64 stage px (SPEC §13.1) even while a panel
+ * is open and the room is scaled by 0.7135. Small art (a shelf toy, a hanging string) gets
+ * an invisible margin around it; the image keeps its own box inside.
+ */
+const MIN_HIT = 90;
+
+function hitBox(box: StageBox): StageBox {
+  const width = Math.max(box.width, MIN_HIT);
+  const height = Math.max(box.height, MIN_HIT);
+  return {
+    left: box.left - (width - box.width) / 2,
+    top: box.top - (height - box.height) / 2,
+    width,
+    height,
+    z: box.z,
+  };
+}
+
+/** Places the art at its own box inside the (possibly larger) hit box. */
+function imageStyle(box: StageBox, hit: StageBox) {
+  return {
+    position: 'absolute',
+    left: `${box.left - hit.left}px`,
+    top: `${box.top - hit.top}px`,
+    width: `${box.width}px`,
+    height: `${box.height}px`,
+  } as const;
+}
+
+/**
  * The painted room, its seven slot contents, the heroine and the companion (SPEC §3.4), laid
  * out from the catalogue's slot geometry. Purely visual when `interaction` is absent (S5 and
  * its preview); on S1 the slots react, accept placements and show the decorate previews.
@@ -172,7 +202,15 @@ export function RoomScene({
           ]
             .filter(Boolean)
             .join(' ');
-          const img = <img src={assetUrl(item.art.room!)} alt="" draggable={false} />;
+          const hit = interaction ? hitBox(box) : box;
+          const img = (
+            <img
+              src={assetUrl(item.art.room!)}
+              alt=""
+              draggable={false}
+              style={imageStyle(box, hit)}
+            />
+          );
           const ghost =
             ghostItem && ghostItem.slot === slot && ghostItem.id !== item.id ? (
               <img
@@ -207,7 +245,7 @@ export function RoomScene({
               <button
                 type="button"
                 class={classes}
-                style={boxStyle(box)}
+                style={boxStyle(hit)}
                 data-testid={`slot-${slot}`}
                 data-item={item.id}
                 data-slot={slot}

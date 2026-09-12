@@ -171,6 +171,21 @@ export const GARMENT_LABELS: Record<string, string> = {
   'sweet.bowHeadband': 'bow headband',
 };
 
+/** Sound effects (SPEC §15.4), synthesized by tools/gen-sounds.ts into assets/<theme>/sound/. */
+export const SOUNDS: { id: string; theme: AssetEntry['theme']; label: string }[] = [
+  { id: 'shared/sound/tap', theme: 'shared', label: 'Tap' },
+  { id: 'shared/sound/place', theme: 'shared', label: 'Place a decoration' },
+  { id: 'shared/sound/wear', theme: 'shared', label: 'Wear a garment' },
+  { id: 'shared/sound/correct', theme: 'shared', label: 'Correct answer' },
+  { id: 'shared/sound/wrong', theme: 'shared', label: 'Wrong answer (soft)' },
+  { id: 'shared/sound/hint', theme: 'shared', label: 'Hint' },
+  { id: 'shared/sound/next', theme: 'shared', label: 'Next puzzle' },
+  { id: 'shared/sound/fanfare', theme: 'shared', label: 'Mission complete fanfare' },
+  { id: 'space/sound/jingle', theme: 'space', label: 'Launch jingle' },
+  { id: 'sweet/sound/jingle', theme: 'sweet', label: 'Tea-party jingle' },
+  { id: 'shared/sound/star', theme: 'shared', label: 'Star earned' },
+];
+
 type Extra = Omit<AssetEntry, 'path'> & {
   id: string;
   prompt?: string;

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
+import { assetUrl } from '../../assets.ts';
 import { LANGUAGES, languageNames } from '../../strings/index.ts';
 import type { Language, Theme } from '../../core/types.ts';
 import { dispatch, language, languageChosen, lastTheme, soundOn } from '../../state/store.ts';
@@ -9,6 +10,13 @@ import { RoomCard } from '../components/RoomCard.tsx';
 import { IconButton } from '../components/IconButton.tsx';
 import { HoldButton } from '../components/HoldButton.tsx';
 import { GEAR_HOLD_MS } from './S6Parent.tsx';
+
+/**
+ * D9 (title): the generated logo `shared/ui/logo` (reads "My Cosmic Room") is wired up but
+ * off until the user confirms the title; the text lockup stays. Flip to true to show it (the
+ * heading keeps the title text for assistive technology and the e2e checks).
+ */
+const TITLE_LOGO = false;
 
 /** S0 Title and room choice (SPEC §3.3). */
 export function S0Title() {
@@ -21,6 +29,14 @@ export function S0Title() {
   useEffect(() => {
     if (chosen) lastCard.current?.focus({ preventScroll: true });
   }, [chosen]);
+
+  // The title is interactive now; the last-used room's background streams in behind it so
+  // the room paints at once when its card is opened (SPEC §3.3, §16.3). The cards themselves
+  // use small derived thumbnails.
+  useEffect(() => {
+    const warm = new Image();
+    warm.src = assetUrl(`${lastTheme.value}/room/background`);
+  }, []);
 
   const openRoom = (theme: Theme) => {
     dispatch({ type: 'settings/lastTheme', theme });
@@ -40,7 +56,14 @@ export function S0Title() {
       {!languageChosen.value && <LanguageChoice onChoose={chooseLanguage} />}
       <header class="s0-header">
         <h1 id="s0-title" class="title-lockup" tabIndex={-1}>
-          {t('app.title')}
+          {TITLE_LOGO ? (
+            <>
+              <img src={assetUrl('shared/ui/logo')} alt="" class="title-logo" draggable={false} />
+              <span class="visually-hidden">{t('app.title')}</span>
+            </>
+          ) : (
+            t('app.title')
+          )}
         </h1>
         <p class="s0-sub">{t('s0.choose')}</p>
       </header>

@@ -2,6 +2,82 @@
 
 All notable changes to My Cosmic Room. Milestones follow docs/SPEC.md §18.
 
+## 0.1.0 — release candidate (M0 to M5)
+
+The first complete build: two playrooms (Space and Sweet) with generated art, the clock
+engine (reading at four levels, elapsed time at three), four-puzzle missions with hints and
+feedback, prizes into the room or the wardrobe, a star chart when the pool is empty, a parent
+corner with levels, lock, 24-hour clocks, sound, motion, export / import / reset, three
+languages (English, Turkish, Dutch), ten synthesized sound effects, reduced-motion support,
+an accessibility review (AT-34 to AT-38) and a static build for GitHub Pages or any static
+host. 133 unit tests, 27 Playwright end-to-end tests. Not yet done, all the user's: the §17.9
+parent-and-child session, the §15.6 art approval (no manifest entry is `approved`), the D9
+title decision (the text lockup is shown; the generated logo is wired but off), the
+native-speaker wording review of Turkish and Dutch, and the deployment itself.
+
+## M5 Polish and release
+
+- Sounds (SPEC §13.3, §15.4): eleven short clips synthesized by `tools/gen-sounds.ts` (PCM
+  chimes and plops rendered in Node, encoded to MP3 at 96 kbps with ffmpeg, 1.5–22 KB each,
+  deterministic, nothing downloaded): tap, place, wear, correct, wrong (soft), hint, next,
+  mission-complete fanfare, launch jingle (Space), tea-party jingle (Sweet), star earned.
+  Manifest category `sound` with a `duration` field (`tools/build-manifest.ts`, `SOUNDS` in
+  `tools/manifest-data.ts`). `ui/sound.ts`: `HTMLAudioElement` clips created on first use,
+  `play(name)` is a no-op before the first pointer or key gesture and while `settings.sound`
+  is off; a delegated click listener taps for `.btn`, `.chip`, `.icon-btn`, `.room-card`,
+  `.tab`, `.radio-row`, `.switch`, `.panel-close` and the entry object unless the control
+  carries `data-sound="none"` (Hint, Next, Check, the S5 action button, "Show the jumps").
+  Hook points: `place()` and reactions in S1, `wear()` in the dress-up panel, `answer()` in
+  S3 / S4 (the fourth right answer plays the fanfare), the hints, `next()`, the S5 celebration
+  (theme jingle), the star card, and "Put it in my room" / "Wear it" (place / wear).
+  `core/` stays audio-free. `e2e/sound.spec.ts` (2 tests) stubs `Audio` and checks the gate,
+  the toggle and every hook point.
+- Reduced motion (AT-36): `data-motion` also forces `animation-iteration-count: 1`; the S5
+  celebration becomes a static scene (rocket on its pad, flame off, tea table fully set) with
+  a "✦" sparkle icon on the card; the hold ring keeps its real duration (progress feedback for
+  the gate). `e2e/at36-reduced-motion.spec.ts` (3 tests) runs with the OS preference and with
+  the S6 setting and asserts no confetti, the sweep and counter ending at once, the hour
+  caption and the jump timeline visible within a frame, and every state change still shown.
+- Contrast and targets (AT-34): `e2e/at34-contrast-targets.spec.ts` (4 tests) with the
+  in-page audit `e2e/browser/audit.js` over 25 screen states. Fixes it forced: `--coral-text`
+  (#b8432c) for coral text and the hold ring (was 2.9:1); tracker labels no longer dimmed
+  (3.4:1); slot buttons get an invisible ≥ 90 room px hit box (the astronaut figure was
+  51 × 80); wardrobe tabs 64 px tall; the "Nothing" mark in purple; the S0 gradient highlight
+  darkened so the title stays ≥ 4.9:1.
+- Focus (AT-38): `e2e/at38-focus.spec.ts` (3 tests) with `e2e/browser/focus.js` walks every
+  screen and dialog with Tab and checks the ring, Escape and where focus returns. Fixes: the
+  focus ring wins over the decorate-mode dashed outline; the first-launch language card traps
+  Tab (`trapTab`, shared with `Dialog`); S6's Escape listener is registered once and reads
+  state through refs (the first Escape after the import dialog used to be lost).
+- Not colour alone (AT-35) and Turkish / Dutch (AT-37), manual, written up in
+  [docs/ACCESSIBILITY_REVIEW.md](docs/ACCESSIBILITY_REVIEW.md): selected wardrobe tabs carry
+  "✓"; earned stars on the star chart carry a solid inner star; Dutch two-line tile names no
+  longer collide with the "In room" badge (tile art 96 px, badge lower). Layouts checked at
+  1024 × 640 in Dutch and Turkish on every screen.
+- Performance (SPEC §3.3, §16.3): `tools/measure-load.ts` serves `dist/`, throttles through
+  CDP and reports S0 interactive / painted and the Space room after the click. Optimisations:
+  `build.assetsInlineLimit: 0` (no SVG or MP3 inlined into the JS bundle, 272 → 190 KB);
+  derived 960 × 640 WebP card thumbnails (`tools/gen-thumbs.ts`, `<theme>/room/thumb`, 37 and
+  43 KB) so S0 no longer loads both full backgrounds; S0 warms the last-used room's
+  background after it is interactive. Measured on the production build with a cold cache:
+  S0 interactive 0.24 s (10 Mbps / 40 ms), 0.41 s (4 Mbps / 100 ms), 1.89 s (Fast 3G preset,
+  1.6 Mbps / 562.5 ms); S0 painted 0.33 / 0.84 / 3.05 s (was 0.95 / 2.31 / 6.67 s); the Space
+  room fully painted +0.60 / +1.49 / +3.73 s after the click; 1.14 MB in 27 requests for the
+  Space room from a first launch (was 1.47 MB; budget 4 MB).
+- Release (SPEC §16.5): version 0.1.0 (shown in S6); `.github/workflows/deploy.yml` deploys
+  `dist/` to GitHub Pages only on manual dispatch or a `v*` tag, never on a push; the
+  relative-base build verified under a sub-path (`/my-cosmic-room/`). Not deployed.
+- Art QA support: the Rocket backpack's tank is a new `extraBack` heroine layer drawn behind
+  the body (`art.heroineBack`, `garment(..., { back: true })`, `HeroinePreview`), wider than the
+  torso so it shows beside the shoulders; the straps stay in front; the wardrobe tile shows the
+  whole backpack. Regenerating the heroine changed only the backpack files.
+- Title logo (D9): `shared/ui/logo` is wired in S0 behind `TITLE_LOGO = false`; the text
+  lockup stays until the title is confirmed.
+- e2e helpers: `startMission`, `completeMission` and `seedForFirstKind` build mission records
+  through the real reducer in Node, so specs open straight on S3 / S4 / S5 with known puzzles.
+- Tests: 133 unit (unchanged); 27 e2e (up from 15): AT-34 (4), AT-36 (3), AT-38 (3),
+  sounds (2).
+
 ## Unreleased — M4 Sweet room and full catalogue
 
 - S6 Parent corner (`ui/screens/S6Parent.tsx`, `styles/parent.css`, SPEC §3.9) behind a

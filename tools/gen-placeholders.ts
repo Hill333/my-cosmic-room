@@ -47,6 +47,7 @@ function fillFor(entry: AssetEntry): string {
       return theme === 'sweet' ? PALETTE.sunny : PALETTE.lilac;
     case 'ui':
     case 'logo':
+    case 'sound':
       return PALETTE.star;
   }
 }

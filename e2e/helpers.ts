@@ -1,6 +1,7 @@
 import { expect, type Page } from '@playwright/test';
+import { isCorrectAnswer, missionReducer, PUZZLES_PER_MISSION } from '../src/core/mission.ts';
 import { createFreshSave } from '../src/core/save.ts';
-import type { Save } from '../src/core/types.ts';
+import type { Activity, Save, Theme } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -76,6 +77,43 @@ export function seededSave(language: 'en' | 'tr' | 'nl' = 'en'): Save {
   const save = createFreshSave();
   save.settings.language = language;
   return save;
+}
+
+/**
+ * Starts a mission in the save through the real reducer (Node side), so a test can open the
+ * app straight on S3 / S4 (AT-30 routing) with puzzles it already knows. The seed fixes them.
+ */
+export function startMission(save: Save, theme: Theme, activity: Activity, seed: number): Save {
+  return missionReducer(save, {
+    type: 'mission/start',
+    theme,
+    activity,
+    seed,
+    now: '2026-09-12T10:00:00.000Z',
+  });
+}
+
+/** Answers every puzzle of the started mission correctly, so the app opens on S5 (COMPLETED). */
+export function completeMission(save: Save): Save {
+  let next = save;
+  for (let i = 0; i < PUZZLES_PER_MISSION; i++) {
+    const m = next.mission!;
+    const p = m.puzzles[m.index]!;
+    const choice = p.kind === 'ELAPSED' ? p.end - p.start : p.target;
+    if (!isCorrectAnswer(p, choice)) throw new Error('completeMission: wrong answer');
+    next = missionReducer(next, { type: 'mission/answer', choice, seconds: 5 });
+    next = missionReducer(next, { type: 'mission/next' });
+  }
+  return next;
+}
+
+/** Seed whose Activity A mission starts with the wanted puzzle kind (READ or MATCH). */
+export function seedForFirstKind(save: Save, theme: Theme, kind: 'READ' | 'MATCH'): number {
+  for (let seed = 1; seed < 500; seed++) {
+    const m = startMission(save, theme, 'A', seed).mission!;
+    if (m.puzzles[0]!.kind === kind) return seed;
+  }
+  throw new Error(`No seed found for ${kind}`);
 }
 
 /** Grants earnable Space items so the next pair is the one a test needs (SPEC §10.2). */

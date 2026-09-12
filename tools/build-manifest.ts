@@ -14,6 +14,7 @@ import {
   HEROINE_CANVAS,
   SIZE_OVERRIDES,
   SLOT_SIZES,
+  SOUNDS,
   SPACE_REF,
   SWEET_REF,
   TILE_SIZE,
@@ -84,6 +85,17 @@ for (const item of allItems) {
       label,
       derivedFrom: item.art.heroineLayer,
     });
+    if (item.art.heroineBack) {
+      desired.set(item.art.heroineBack, {
+        path: placeholderPath(item.art.heroineBack),
+        theme: 'shared',
+        category: 'garment',
+        size: HEROINE_CANVAS,
+        layer: `${layer}Back` as AssetEntry['layer'],
+        label: `${label} (behind)`,
+        source: 'hand-drawn',
+      });
+    }
   }
 }
 
@@ -92,6 +104,30 @@ for (const extra of EXTRA_ASSETS) {
   const entry: AssetEntry = { path: placeholderPath(id), ...rest };
   if (prompt && preset) entry.gen = newGen(preset, prompt, references ?? []);
   desired.set(id, entry);
+}
+
+// Sounds (SPEC §15.4) have no placeholder: tools/gen-sounds.ts writes the files and their duration.
+for (const sound of SOUNDS) {
+  desired.set(sound.id, {
+    path: `${sound.id}.mp3`,
+    theme: sound.theme,
+    category: 'sound',
+    size: [0, 0],
+    label: sound.label,
+    source: 'synthesized',
+  });
+}
+
+// S0 card thumbnails (SPEC §16.3), derived from the backgrounds by tools/gen-thumbs.ts.
+for (const theme of ['space', 'sweet'] as const) {
+  desired.set(`${theme}/room/thumb`, {
+    path: `${theme}/room/thumb.webp`,
+    theme,
+    category: 'room',
+    size: [960, 640],
+    label: `${theme === 'space' ? 'Space' : 'Sweet'} room card thumbnail`,
+    derivedFrom: `${theme}/room/background`,
+  });
 }
 
 const existing = readManifest();
@@ -108,6 +144,7 @@ for (const [id, entry] of desired) {
       merged.size = old.size;
       if (old.pivot) merged.pivot = old.pivot;
     }
+    if (old.duration !== undefined) merged.duration = old.duration;
     if (old.gen && entry.gen) {
       merged.gen = {
         ...entry.gen,

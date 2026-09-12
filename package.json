@@ -1,6 +1,6 @@
 {
   "name": "my-cosmic-room",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Browser clock-learning game with two playrooms (Space and Sweet). Working title.",
@@ -19,7 +19,10 @@
     "assets:placeholders": "node tools/gen-placeholders.ts",
     "assets:gen": "node tools/gen-assets.ts",
     "assets:post": "node tools/post-assets.ts",
-    "assets:heroine": "node tools/gen-heroine.ts"
+    "assets:heroine": "node tools/gen-heroine.ts",
+    "assets:sounds": "node tools/gen-sounds.ts",
+    "assets:thumbs": "node tools/gen-thumbs.ts",
+    "measure": "node tools/measure-load.ts"
   },
   "dependencies": {
     "@preact/signals": "^2.11.2",

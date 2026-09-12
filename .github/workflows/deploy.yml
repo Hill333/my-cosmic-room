@@ -1,0 +1,47 @@
+# Deploys dist/ to GitHub Pages (SPEC §16.5). Never runs on a push to main: only when a
+# maintainer starts it by hand (Actions → "Deploy to GitHub Pages" → Run workflow) or pushes a
+# release tag such as v0.1.0. Pages must be set to "GitHub Actions" as the source once, in the
+# repository settings. The build uses a relative base, so it works under /<repo>/.
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

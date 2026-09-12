@@ -53,14 +53,20 @@ export function S6Parent({ returnTo }: Props) {
 
   const done = () => go(returnTo);
 
-  // Escape works like "Done" (SPEC §13.1: Escape closes the open panel or dialog).
+  // Escape works like "Done" (SPEC §13.1: Escape closes the open panel or dialog) unless the
+  // import dialog is up (it handles its own Escape). Registered once and read through refs, so
+  // the key that closes the dialog and the next one never race the effect re-registration.
+  const pendingRef = useRef(pending);
+  pendingRef.current = pending;
+  const returnRef = useRef(returnTo);
+  returnRef.current = returnTo;
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !pending) done();
+      if (e.key === 'Escape' && !pendingRef.current) go(returnRef.current);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [pending, returnTo]);
+  }, []);
 
   const exportFile = () => {
     flushSave();

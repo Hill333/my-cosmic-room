@@ -68,6 +68,12 @@
   outline-offset: 8px;
   background: rgba(255, 216, 107, 0.25);
 }
+/* The focus ring wins over the dashed cues (AT-38); a focused target keeps its marker and tint. */
+.s1[data-mode='decorate'] .room-slots .slot:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 7px #fff;
+}
 .slot-marker {
   position: absolute;
   left: 50%;
@@ -583,9 +589,10 @@ button.room-companion {
   background: #fff;
   box-shadow: 0 5px 0 rgba(59, 42, 94, 0.2);
 }
+/* 96 px art leaves room for a two-line Dutch name above the badge (AT-37). */
 .tile img {
-  width: 104px;
-  height: 104px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   pointer-events: none;
 }
@@ -635,7 +642,7 @@ button.room-companion {
 .tile-badge {
   position: absolute;
   left: 50%;
-  bottom: -14px;
+  bottom: -18px;
   transform: translateX(-50%);
   padding: 2px 12px;
   border-radius: 999px;
@@ -654,12 +661,12 @@ button.room-companion {
   opacity: 0.6;
 }
 .tile-nothing-mark {
-  width: 104px;
-  height: 104px;
+  width: 96px;
+  height: 96px;
   display: grid;
   place-items: center;
   font-size: 64px;
-  color: var(--lavender);
+  color: var(--purple);
 }
 
 /* Wardrobe tabs (SPEC §4.4) */
@@ -670,14 +677,19 @@ button.room-companion {
   gap: 8px 10px;
   margin: 0 0 16px;
 }
+/* Tabs are pointer targets, so they keep the 64 px minimum (SPEC §13.1). */
 .tab {
-  min-height: 56px;
+  min-height: 64px;
   padding: 6px 14px;
   font-size: 22px;
 }
 .tab[aria-selected='true'] {
   background: var(--plum);
   color: #fff;
+}
+/* The selected tab is never colour alone (SPEC §13.2): a check mark like the chips. */
+.tab[aria-selected='true']::before {
+  content: '✓ ';
 }
 .next-prizes {
   margin-top: 28px;

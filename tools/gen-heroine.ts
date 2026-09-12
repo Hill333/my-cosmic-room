@@ -445,18 +445,27 @@ const SHOES: Record<string, string> = {
 };
 
 // --- Extras --------------------------------------------------------------------------------
+/** The rocket tank of the backpack sits behind the body (a `extraBack` layer, SPEC §4.5). */
+const ROCKET_TANK =
+  // Wider than the torso, so the tank shows beside the shoulders and its fins at the hips.
+  `<g transform="translate(${TORSO.x - 30} ${TORSO.y - 74})">` +
+  path('M0 110 q 0 -110 125 -140 q 125 30 125 140 v 170 q -125 26 -250 0 z', WHITE) +
+  path('M-36 280 l 36 -80 v 80 z', CORAL) +
+  path('M286 280 l -36 -80 v 80 z', CORAL) +
+  path('M28 10 q 97 -62 194 0 q -97 -26 -194 0 z', LILAC) +
+  circle(125, 92, 24, BLUE) +
+  '</g>';
+
+const EXTRAS_BEHIND: Record<string, string> = {
+  rocketBackpack: ROCKET_TANK,
+};
+
 const EXTRAS: Record<string, string> = {
   starClip: star(HEAD.cx + 84, HEAD.cy - 96, 26, STAR),
+  // The straps stay in front of the outfit; the tank is drawn behind the body.
   rocketBackpack:
     rect(TORSO.x + 40, TORSO.y - 6, 22, 120, CORAL, 11) +
-    rect(TORSO.x + TORSO.w - 62, TORSO.y - 6, 22, 120, CORAL, 11) +
-    `<g transform="translate(${TORSO.x - 40} ${TORSO.y + 40})">` +
-    path('M0 60 q 0 -60 30 -80 q 30 20 30 80 v 60 h -60 z', WHITE) +
-    path('M-14 130 l 14 -30 v 30 z', CORAL) +
-    path('M74 130 l -14 -30 v 30 z', CORAL) +
-    path('M0 -20 q 30 -30 60 0 q -30 -14 -60 0 z', LILAC) +
-    circle(30, 30, 12, BLUE) +
-    '</g>',
+    rect(TORSO.x + TORSO.w - 62, TORSO.y - 6, 22, 120, CORAL, 11),
   // Sweet Sleepover: a pink flower clip where the star clip sits.
   flowerClip: flower(HEAD.cx + 84, HEAD.cy - 96, 16, PINK, STAR),
   // Sunny Garden: a lilac band over the hair with a bow at the side.
@@ -504,6 +513,14 @@ function tileFor(kind: keyof typeof TILE_VIEW, drawing: string, label: string): 
   return svg(bg + context + drawing, `${x} ${y} ${w} ${h}`, label);
 }
 
+/** The backpack tile shows the whole backpack: tank, a torso to hang it on, straps. */
+function backpackTile(label: string): string {
+  const view = '90 230 420 420';
+  const bg = `<rect x="90" y="230" width="420" height="420" fill="${WHITE}"/>`;
+  const torso = rect(TORSO.x, TORSO.y, TORSO.w, TORSO.h, SKIN, 60);
+  return svg(bg + ROCKET_TANK + torso + EXTRAS['rocketBackpack']!, view, label);
+}
+
 // --- Write ---------------------------------------------------------------------------------
 function write(rel: string, content: string): void {
   const file = assetFile(rel);
@@ -532,7 +549,13 @@ for (const [kind, table] of layers) {
     const label = manifest.assets[id]?.label ?? name;
     write(`${id}.svg`, svg(drawing, undefined, label));
     const tile = tileOf(id);
-    if (tile) write(`${tile}.svg`, tileFor(kind, drawing, label));
+    if (!tile) continue;
+    if (name === 'rocketBackpack') write(`${tile}.svg`, backpackTile(label));
+    else write(`${tile}.svg`, tileFor(kind, drawing, label));
   }
+}
+for (const [name, drawing] of Object.entries(EXTRAS_BEHIND)) {
+  const id = `shared/heroine/extraBack/${name}`;
+  write(`${id}.svg`, svg(drawing, undefined, manifest.assets[id]?.label ?? name));
 }
 console.log(`heroine: ${written.length} SVG files written`);

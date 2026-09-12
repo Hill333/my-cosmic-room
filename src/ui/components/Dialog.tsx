@@ -11,6 +11,24 @@ interface Props {
 
 const FOCUSABLE = 'button:not([disabled]), [href], input, select, textarea, [tabindex="0"]';
 
+/** Keeps Tab and Shift+Tab inside `box` (SPEC §13.1: dialogs trap focus). */
+export function trapTab(e: KeyboardEvent, box: HTMLElement | null): void {
+  if (e.key !== 'Tab' || !box) return;
+  const items = [...box.querySelectorAll<HTMLElement>(FOCUSABLE)];
+  if (items.length === 0) return;
+  const first = items[0]!;
+  const last = items[items.length - 1]!;
+  const active = document.activeElement;
+  const inside = active instanceof HTMLElement && items.includes(active);
+  if (e.shiftKey && (active === first || !inside)) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && (active === last || !inside)) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
 /**
  * Modal dialog (SPEC §13.1): traps Tab inside, closes on Escape and returns focus to the
  * element that was focused when it opened. Focus lands on the first button so Enter acts.
@@ -40,18 +58,7 @@ export function Dialog({ titleId, onClose, testId, children }: Props) {
       onClose();
       return;
     }
-    if (e.key !== 'Tab' || !box.current) return;
-    const items = [...box.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
-    if (items.length === 0) return;
-    const first = items[0]!;
-    const last = items[items.length - 1]!;
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
+    trapTab(e, box.current);
   };
 
   return (

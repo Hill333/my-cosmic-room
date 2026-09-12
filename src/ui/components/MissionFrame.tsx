@@ -195,6 +195,7 @@ export function PuzzleFooter({ mission, hintUsed, onHint, onNext }: FooterProps)
         type="button"
         class={`btn btn-hint${mission.current.wrongAttempts > 0 && !solved ? ' btn-pulse' : ''}`}
         data-testid="hint-button"
+        data-sound="none"
         // Stays focusable after use so the keyboard never loses its place (SPEC §13.1).
         aria-pressed={hintUsed}
         disabled={solved}
@@ -220,6 +221,7 @@ export function PuzzleFooter({ mission, hintUsed, onHint, onNext }: FooterProps)
             type="button"
             class="btn btn-primary"
             data-testid="next-button"
+            data-sound="none"
             ref={nextButton}
             onClick={onNext}
           >

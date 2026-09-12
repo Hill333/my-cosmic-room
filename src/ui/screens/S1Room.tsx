@@ -10,6 +10,7 @@ import { devTick, dispatch, save, soundOn } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
+import { play } from '../sound.ts';
 import { DecoratePanel } from '../components/DecoratePanel.tsx';
 import { Dialog } from '../components/Dialog.tsx';
 import { DressUpPanel } from '../components/DressUpPanel.tsx';
@@ -128,6 +129,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
   const place = (item: ItemId) => {
     const slot = requireItem(item).slot!;
     dispatch({ type: 'inventory/place', theme, item });
+    play('place');
     setArmed(null);
     setGhost(null);
     setPop(slot);
@@ -144,6 +146,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
       }
     }
     setReaction({ target, key: Date.now() });
+    play('tap');
   };
   useEffect(() => {
     if (!reaction) return;

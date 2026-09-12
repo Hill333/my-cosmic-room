@@ -236,6 +236,7 @@ export function SetClock({
           class="btn btn-primary"
           disabled={disabled}
           data-testid="set-check"
+          data-sound="none"
           onClick={() => onCheck(timeRef.current)}
         >
           {t('a.set.check')}

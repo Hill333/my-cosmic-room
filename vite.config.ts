@@ -22,6 +22,9 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: true,
+    // Nothing is inlined into the JS bundle: heroine SVG layers and sound clips are fetched
+    // when a screen needs them, which keeps the first load small (SPEC §16.3).
+    assetsInlineLimit: 0,
   },
   server: {
     port: 5173,

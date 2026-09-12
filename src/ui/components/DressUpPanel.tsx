@@ -8,6 +8,7 @@ import { dispatch, save } from '../../state/store.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { groupKeyHandler } from '../hooks.ts';
 import { t } from '../i18n.ts';
+import { play } from '../sound.ts';
 import { SidePanel } from './SidePanel.tsx';
 
 interface Props {
@@ -46,6 +47,7 @@ export function DressUpPanel({ theme, onClose, onWear, opener }: Props) {
   const wear = (id: ItemId | null) => {
     if (id === null) dispatch({ type: 'inventory/removeExtra' });
     else dispatch({ type: 'inventory/wear', item: id });
+    play('wear');
     onWear?.(id);
   };
 
