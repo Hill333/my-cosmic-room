@@ -14,7 +14,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "playwright test",
+    "e2e": "playwright test --project=chrome",
     "check:assets": "node tools/check-assets.ts",
     "assets:placeholders": "node tools/gen-placeholders.ts",
     "assets:gen": "node tools/gen-assets.ts"

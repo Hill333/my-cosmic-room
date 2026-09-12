@@ -1,16 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import {
   addMinutes,
+  dragHourHand,
+  dragMinuteHand,
   formatTime,
   hour12Of,
   hourAngle,
+  initialSetTime,
   isTimeValue,
   makeTime,
   minuteAngle,
   normalizeTime,
   periodOf,
+  pointerAngle,
   sameFace,
   snap,
+  stepSetTime,
 } from './time.ts';
 
 describe('AT-01 hand angles (SPEC §6.1 table)', () => {
@@ -120,5 +125,52 @@ describe('AT-10 day-period badge boundaries', () => {
     expect(periodOf(makeTime(18, 0))).toBe('evening');
     expect(periodOf(makeTime(21, 59))).toBe('evening');
     expect(periodOf(makeTime(22, 0))).toBe('night');
+  });
+});
+
+describe('SET interaction maths (SPEC §6.4)', () => {
+  it('maps pointer positions to angles clockwise from 12', () => {
+    expect(pointerAngle(100, 10, 100, 100)).toBe(0);
+    expect(pointerAngle(190, 100, 100, 100)).toBe(90);
+    expect(pointerAngle(100, 190, 100, 100)).toBe(180);
+    expect(pointerAngle(10, 100, 100, 100)).toBe(270);
+    expect(pointerAngle(100, 100.0001, 100, 100)).toBeCloseTo(180, 3);
+  });
+  it('snaps the minute hand to the level step and couples the hour across 12', () => {
+    expect(dragMinuteHand(makeTime(3, 0), 180, 170, 30)).toBe(makeTime(3, 30));
+    expect(dragMinuteHand(makeTime(3, 0), 100, 90, 15)).toBe(makeTime(3, 15));
+    expect(dragMinuteHand(makeTime(3, 0), 100, 90, 5)).toBe(makeTime(3, 15));
+    expect(dragMinuteHand(makeTime(3, 0), 33, 30, 5)).toBe(makeTime(3, 5));
+    // Clockwise past 12: 3:45 → 4:00.
+    expect(dragMinuteHand(makeTime(3, 45), 5, 355, 15)).toBe(makeTime(4, 0));
+    // Anticlockwise past 12: 4:00 → 3:45.
+    expect(dragMinuteHand(makeTime(4, 0), 272, 5, 15)).toBe(makeTime(3, 45));
+    // Wraps at the day's end.
+    expect(dragMinuteHand(makeTime(23, 45), 5, 355, 15)).toBe(makeTime(0, 0));
+    expect(dragMinuteHand(makeTime(0, 0), 275, 5, 15)).toBe(makeTime(23, 45));
+  });
+  it('snaps the hour hand to the hour plus the current minute offset', () => {
+    expect(dragHourHand(makeTime(12, 0), 90)).toBe(makeTime(3, 0));
+    expect(dragHourHand(makeTime(12, 30), 105)).toBe(makeTime(3, 30));
+    expect(dragHourHand(makeTime(12, 30), 100)).toBe(makeTime(3, 30));
+    expect(dragHourHand(makeTime(12, 30), 121)).toBe(makeTime(4, 30));
+    expect(dragHourHand(makeTime(5, 15), 2)).toBe(makeTime(0, 15));
+    expect(dragHourHand(makeTime(5, 15), 355)).toBe(makeTime(0, 15));
+  });
+  it('steps by buttons and keys', () => {
+    expect(stepSetTime(makeTime(12, 0), 60)).toBe(makeTime(13, 0));
+    expect(stepSetTime(makeTime(12, 0), -15)).toBe(makeTime(11, 45));
+    expect(stepSetTime(makeTime(23, 30), 30)).toBe(makeTime(0, 0));
+  });
+  it('starts at 12:00, or at 6:00 when the target is within an hour of 12', () => {
+    expect(initialSetTime(makeTime(4, 30))).toBe(makeTime(12, 0));
+    expect(initialSetTime(makeTime(12, 0))).toBe(makeTime(6, 0));
+    expect(initialSetTime(makeTime(12, 30))).toBe(makeTime(6, 0));
+    expect(initialSetTime(makeTime(1, 0))).toBe(makeTime(6, 0));
+    expect(initialSetTime(makeTime(11, 0))).toBe(makeTime(6, 0));
+    expect(initialSetTime(makeTime(23, 15))).toBe(makeTime(6, 0));
+    expect(initialSetTime(makeTime(1, 15))).toBe(makeTime(12, 0));
+    expect(initialSetTime(makeTime(10, 45))).toBe(makeTime(12, 0));
+    expect(initialSetTime(makeTime(6, 0))).toBe(makeTime(12, 0));
   });
 });

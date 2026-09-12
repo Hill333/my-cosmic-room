@@ -78,6 +78,8 @@ export const nl: Record<StringKey, string> = {
   'a.set.minusStep': '− {m} min',
   'a.set.plusStep': '+ {m} min',
   'a.match.label': 'Klok {letter}',
+  'a.set.clockLabel': 'Klok die je kunt instellen',
+  'clock.analog': 'Analoge klok',
   'a.steps.space.1': 'Brandstof',
   'a.steps.space.2': 'Luik',
   'a.steps.space.3': 'Lichten',

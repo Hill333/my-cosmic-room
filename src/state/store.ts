@@ -3,13 +3,16 @@
  * goes through a reducer, and one subscriber autosaves (250 ms debounce, sync on pagehide).
  */
 import { computed, effect, signal } from '@preact/signals';
+import { inventoryReducer, type InventoryEvent } from '../core/inventory.ts';
+import { missionReducer, type MissionEvent } from '../core/mission.ts';
 import type { KeyValueStore, SaveNotice } from '../core/save.ts';
 import { loadSave, storeSave } from '../core/save.ts';
 import { settingsReducer, type SettingsEvent } from '../core/settings.ts';
 import type { Language, Save, Theme } from '../core/types.ts';
 import { isLanguage } from '../strings/index.ts';
 
-export type AppEvent = SettingsEvent | { type: 'save/replace'; save: Save };
+export type AppEvent =
+  SettingsEvent | MissionEvent | InventoryEvent | { type: 'save/replace'; save: Save };
 
 const AUTOSAVE_DELAY_MS = 250;
 
@@ -41,10 +44,22 @@ export const language = computed<Language>(() => save.value.settings.language ??
 export const languageChosen = computed(() => save.value.settings.language !== null);
 export const lastTheme = computed<Theme>(() => save.value.settings.lastTheme);
 export const soundOn = computed(() => save.value.settings.sound);
+export const mission = computed(() => save.value.mission);
+
+/** Seed for a new mission: `?seed=<n>` in dev builds (SPEC §16.4), otherwise random. */
+export function newSeed(): number {
+  if (import.meta.env.DEV && typeof window !== 'undefined') {
+    const fixed = Number(new URLSearchParams(window.location.search).get('seed'));
+    if (Number.isInteger(fixed) && fixed > 0) return fixed;
+  }
+  return Math.floor(Math.random() * 0x7fffffff) + 1;
+}
 
 function rootReducer(state: Save, event: AppEvent): Save {
   if (event.type === 'save/replace') return event.save;
-  return settingsReducer(state, event);
+  if (event.type.startsWith('mission/')) return missionReducer(state, event as MissionEvent);
+  if (event.type.startsWith('inventory/')) return inventoryReducer(state, event as InventoryEvent);
+  return settingsReducer(state, event as SettingsEvent);
 }
 
 export function dispatch(event: AppEvent): void {

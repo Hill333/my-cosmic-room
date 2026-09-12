@@ -12,12 +12,15 @@ export type Screen =
   | { id: 'S3' }
   | { id: 'S4' }
   | { id: 'S5' }
-  | { id: 'S6'; returnTo: Screen };
+  | { id: 'S6'; returnTo: Screen }
+  /** Development harness (SPEC §16.4), dev builds only. */
+  | { id: 'harness' };
 
 function initialScreen(): Screen {
   if (import.meta.env.DEV && typeof window !== 'undefined') {
     const id = new URLSearchParams(window.location.search).get('screen');
     if (id === 'S1') return { id: 'S1', theme: 'space' };
+    if (id === 'harness') return { id: 'harness' };
   }
   return { id: 'S0' };
 }

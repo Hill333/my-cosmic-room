@@ -77,6 +77,8 @@ export const tr: Record<StringKey, string> = {
   'a.set.minusStep': '− {m} dk',
   'a.set.plusStep': '+ {m} dk',
   'a.match.label': 'Saat {letter}',
+  'a.set.clockLabel': 'Ayarlayabileceğin saat',
+  'clock.analog': 'Analog saat',
   'a.steps.space.1': 'Yakıt',
   'a.steps.space.2': 'Kapak',
   'a.steps.space.3': 'Işıklar',

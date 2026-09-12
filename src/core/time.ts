@@ -93,3 +93,51 @@ export function periodOf(t: TimeValue): DayPeriod {
 export function addMinutes(t: TimeValue, minutes: number): TimeValue {
   return normalizeTime(t + minutes);
 }
+
+// ---------------------------------------------------------------------------
+// SET puzzles (SPEC §6.4): pure maths behind dragging, buttons and keyboard.
+
+/** Pointer angle in degrees clockwise from 12 around the centre, normalised to [0, 360). */
+export function pointerAngle(x: number, y: number, cx: number, cy: number): number {
+  const deg = (Math.atan2(x - cx, cy - y) * 180) / Math.PI;
+  return ((deg % 360) + 360) % 360;
+}
+
+/**
+ * Minute-hand drag: `m = round((θ / 6) / step) * step mod 60`. Crossing 12 clockwise
+ * (previous θ > 270, new θ < 90) adds an hour; crossing anticlockwise subtracts one.
+ */
+export function dragMinuteHand(
+  time: TimeValue,
+  theta: number,
+  previousTheta: number,
+  step: number,
+): TimeValue {
+  const m = (Math.round(theta / 6 / step) * step) % 60;
+  let h = hoursOf(time);
+  if (previousTheta > 270 && theta < 90) h += 1;
+  else if (previousTheta < 90 && theta > 270) h -= 1;
+  return makeTime(((h % 24) + 24) % 24, m);
+}
+
+/** Hour-hand drag: `h = round((θ − m × 0.5) / 30) mod 12`, minutes unchanged. */
+export function dragHourHand(time: TimeValue, theta: number): TimeValue {
+  const m = minutesOf(time);
+  const h = ((Math.round((theta - m * 0.5) / 30) % 12) + 12) % 12;
+  return makeTime(h, m);
+}
+
+/** Applies one button or key step (± 60 or ± the level step) with the same coupling rules. */
+export function stepSetTime(time: TimeValue, deltaMinutes: number): TimeValue {
+  return addMinutes(time, deltaMinutes);
+}
+
+/**
+ * Start position of the SET clock: 12:00, or 6:00 when the target is within one hour of
+ * 12:00 on the face, so it never starts on or next to the target.
+ */
+export function initialSetTime(target: TimeValue): TimeValue {
+  const face = (hoursOf(target) % 12) * 60 + minutesOf(target);
+  const distance = Math.min(face, 720 - face);
+  return distance <= 60 ? makeTime(6, 0) : makeTime(12, 0);
+}

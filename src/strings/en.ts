@@ -75,6 +75,8 @@ export const en = {
   'a.set.minusStep': '− {m} min',
   'a.set.plusStep': '+ {m} min',
   'a.match.label': 'Clock {letter}',
+  'a.set.clockLabel': 'Clock you can set',
+  'clock.analog': 'Analog clock',
   'a.steps.space.1': 'Fuel',
   'a.steps.space.2': 'Hatch',
   'a.steps.space.3': 'Lights',

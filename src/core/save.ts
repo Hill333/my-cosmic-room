@@ -243,6 +243,15 @@ function validateMission(v: unknown): Mission | null | string {
   if (!(state === 'IN_PROGRESS' || state === 'COMPLETED' || state === 'CLAIMED'))
     return 'mission.state';
   if (!isIso(v['startedAt'])) return 'mission.startedAt';
+  const current = v['current'];
+  if (
+    !isRecord(current) ||
+    !isIntIn(current['wrongAttempts'], 0, 1e6) ||
+    !isBool(current['hintUsed']) ||
+    !isBool(current['solved'])
+  ) {
+    return 'mission.current';
+  }
   const mission: Mission = {
     id: v['id'],
     theme: v['theme'],
@@ -255,6 +264,11 @@ function validateMission(v: unknown): Mission | null | string {
     prizePair: [...v['prizePair']],
     state,
     startedAt: v['startedAt'],
+    current: {
+      wrongAttempts: current['wrongAttempts'],
+      hintUsed: current['hintUsed'],
+      solved: current['solved'],
+    },
   };
   const claimed = v['claimed'];
   if (typeof claimed === 'string') mission.claimed = claimed;

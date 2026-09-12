@@ -67,6 +67,14 @@ export interface PuzzleResult {
 
 export type MissionState = 'IN_PROGRESS' | 'COMPLETED' | 'CLAIMED';
 
+/** Attempt record of the puzzle at `index` while it is on screen (SPEC §9.1–§9.3). */
+export interface CurrentPuzzle {
+  wrongAttempts: number;
+  hintUsed: boolean;
+  /** True once answered correctly; "Next" then advances `index`. */
+  solved: boolean;
+}
+
 /** Mission record (SPEC §10.1). */
 export interface Mission {
   id: string;
@@ -82,6 +90,7 @@ export interface Mission {
   state: MissionState;
   claimed?: ItemId | 'star';
   startedAt: string;
+  current: CurrentPuzzle;
 }
 
 export interface MissionSummary {

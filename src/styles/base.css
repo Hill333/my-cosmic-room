@@ -401,6 +401,226 @@ button:disabled {
   height: 390px;
 }
 
+/* Analog clock (SPEC §6.1). Geometry lives in the SVG; colours and cursors live here. */
+.clock {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.clock-svg {
+  display: block;
+  aspect-ratio: 1;
+  overflow: visible;
+}
+.clock-face {
+  fill: var(--cream);
+  stroke: var(--lavender);
+}
+.clock-sweet .clock-face {
+  stroke: var(--sunny);
+}
+.clock-ticks line {
+  stroke: var(--plum);
+  stroke-linecap: round;
+}
+.clock-numerals text {
+  fill: var(--plum);
+  font-family: var(--font);
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.clock-hand,
+.clock-ghost line {
+  stroke-linecap: round;
+}
+.clock-hand-hour {
+  stroke: var(--coral);
+}
+.clock-hand-minute {
+  stroke: var(--blue);
+}
+.clock-cap {
+  fill: var(--plum);
+}
+.clock-ghost line {
+  stroke: var(--plum);
+  opacity: 0.2;
+}
+.clock-interactive .clock-hand {
+  cursor: grab;
+}
+.clock-interactive .clock-hand-locked {
+  cursor: not-allowed;
+}
+.clock[data-dragging] .clock-hand,
+.clock[data-dragging] {
+  cursor: grabbing;
+}
+.clock-period {
+  padding: 6px 20px;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid var(--plum);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* SET clock (SPEC §6.4) */
+.set-clock {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.set-clock-face {
+  border-radius: 50%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.set-clock-face:focus-visible {
+  outline-width: 6px;
+  outline-offset: 6px;
+}
+.set-clock-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.set-clock-note {
+  margin: 0;
+  font-size: 24px;
+}
+.set-clock-correct .clock-hand {
+  filter: drop-shadow(0 0 6px var(--star));
+}
+.set-clock-wrong .clock-svg {
+  animation: clock-shake 300ms ease-in-out 1;
+}
+@keyframes clock-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+/* Digital display (SPEC §6.2) */
+.digital {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 36px;
+  border-radius: 24px;
+  background: var(--plum);
+  color: #fff;
+  font-family: var(--font);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.digital-big .digital-digits {
+  font-size: 72px;
+}
+.digital-button {
+  padding: 4px 20px;
+  border-radius: 18px;
+}
+.digital-button .digital-digits {
+  font-size: 44px;
+}
+.digital-caption {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lilac);
+}
+
+/* Answer buttons (SPEC §9.1): at least 280 × 96 stage px. */
+.answer {
+  min-width: 280px;
+  min-height: 96px;
+  font-size: 44px;
+}
+
+/* Development harness (SPEC §16.4), dev builds only. */
+.harness {
+  overflow: auto;
+  padding: 24px 40px 80px;
+  background: var(--cream);
+  font-size: 20px;
+}
+.harness-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.harness h1,
+.harness h2 {
+  margin: 0 0 12px;
+}
+.harness h2 {
+  font-size: 28px;
+}
+.harness-section {
+  margin: 24px 0;
+  padding: 20px;
+  border: 3px dashed var(--lavender);
+  border-radius: 24px;
+  background: #fff;
+}
+.harness-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 24px;
+}
+.harness-row figure {
+  margin: 0;
+  text-align: center;
+}
+.harness-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.harness-controls .chip {
+  min-height: 48px;
+  font-size: 20px;
+}
+.harness-controls .btn {
+  min-height: 48px;
+  font-size: 20px;
+  padding: 6px 20px;
+}
+.harness-list {
+  font-family: ui-monospace, monospace;
+  font-size: 16px;
+}
+.harness-status {
+  font-family: ui-monospace, monospace;
+  font-size: 16px;
+}
+.harness-puzzle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.harness-jumps {
+  font-size: 22px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition-duration: 0.01ms !important;
