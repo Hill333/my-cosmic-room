@@ -3,10 +3,12 @@ import manifestJson from '../../assets/manifest.json';
 import type { AssetEntry, AssetManifest } from '../assetTypes.ts';
 import {
   ANKLE_CLIP_OVERLAP,
+  ANKLE_CUFF,
   FALLBACK_ANCHORS,
   overlayBox,
   overlayClipTop,
-  overlayStyle,
+  overlayParts,
+  overlayStyles,
 } from './heroine.ts';
 import { allItems, defaultHeroine, figureId, heroineFigure, requireItem } from './index.ts';
 
@@ -110,14 +112,16 @@ describe('heroine figures and overlays (SPEC §4.5)', () => {
   });
 
   it('expresses the box as percentages of the figure canvas', () => {
-    const style = overlayStyle([600, 900], FALLBACK_ANCHORS.feet, {
+    const parts = overlayStyles([600, 900], FALLBACK_ANCHORS.feet, {
       size: [300, 200],
       pivot: [150, 200],
     });
-    expect(style).toEqual({ left: '30.500%', top: '82.111%', width: '39.000%', height: '17.333%' });
+    expect(parts).toEqual([
+      { style: { left: '30.500%', top: '82.111%', width: '39.000%', height: '17.333%' } },
+    ]);
   });
 
-  it('clips a clipAtAnkle shoe just above the figure ankle cut, as a percentage of its box', () => {
+  it('clips a clipAtAnkle shoe just above the figure ankle cut, with a cuff outline under the line', () => {
     const shoes: Pick<AssetEntry, 'size' | 'pivot' | 'clipAtAnkle'> = {
       size: [300, 200],
       pivot: [150, 200],
@@ -128,13 +132,51 @@ describe('heroine figures and overlays (SPEC §4.5)', () => {
     expect(
       overlayClipTop({ x: 300, y: 900, scale: 1 }, { ...shoes, clipAtAnkle: true }),
     ).toBeNull();
-    expect(overlayStyle([600, 900], feet, shoes).clipPath).toBeUndefined();
-    // Clipped: the box spans 700..900, the clip line is 800 - overlap → 44% of the box.
+    expect(overlayStyles([600, 900], feet, shoes)[0]).toEqual({
+      style: { left: '25.000%', top: '77.778%', width: '50.000%', height: '22.222%' },
+    });
+    // Clipped: the box spans 700..900, the clip line is 800 - overlap → 44% of the box; the
+    // cuff band is the next ANKLE_CUFF px (1.5% of the 200 px box).
     const clipped = { ...shoes, clipAtAnkle: true };
     expect(overlayClipTop(feet, clipped)).toBe(800 - ANKLE_CLIP_OVERLAP);
-    expect(overlayStyle([600, 900], feet, clipped).clipPath).toBe('inset(44.000% 0 0 0)');
-    // A cut above the box needs no clip.
-    expect(overlayStyle([600, 900], { ...feet, cutY: 600 }, clipped).clipPath).toBeUndefined();
+    const [part] = overlayStyles([600, 900], feet, clipped);
+    expect(part!.style.clipPath).toBe('inset(44.000% 0.000% 0.000% 0.000%)');
+    expect(part!.cuff!.clipPath).toBe(
+      `inset(44.000% 0.000% ${(56 - ANKLE_CUFF / 2).toFixed(3)}% 0.000%)`,
+    );
+    expect(part!.cuff!.left).toBe(part!.style.left);
+    // A cut above the box needs no clip and no cuff.
+    const above = overlayStyles([600, 900], { ...feet, cutY: 600 }, clipped)[0]!;
+    expect(above.style.clipPath).toBeUndefined();
+    expect(above.cuff).toBeUndefined();
+  });
+
+  it('draws a shoe with footX as two halves, each moved onto its leg (legX)', () => {
+    const shoes: Pick<AssetEntry, 'size' | 'pivot' | 'clipAtAnkle' | 'footX'> = {
+      size: [300, 200],
+      pivot: [150, 200],
+      footX: [75, 225],
+    };
+    // Without legX on the figure the pair stays whole.
+    expect(overlayParts({ x: 300, y: 900, scale: 1 }, shoes)).toHaveLength(1);
+    // Legs at 220 and 380, feet at 150 + 75 = 225 and 375 → each half moves 5 px outwards.
+    const feet = { x: 300, y: 900, scale: 1, cutY: 800, legX: [220, 380] as [number, number] };
+    const parts = overlayParts(feet, shoes);
+    expect(parts.map((p) => [p.half, p.box.left, p.box.top])).toEqual([
+      ['left', 145, 700],
+      ['right', 155, 700],
+    ]);
+    // Half a box each, split at the pivot column; the ankle clip stacks with it.
+    const styles = overlayStyles([600, 900], feet, { ...shoes, clipAtAnkle: true });
+    expect(styles.map((p) => p.style.clipPath)).toEqual([
+      'inset(44.000% 50.000% 0.000% 0.000%)',
+      'inset(44.000% 0.000% 0.000% 50.000%)',
+    ]);
+    expect(styles.map((p) => p.style.left)).toEqual(['24.167%', '25.833%']);
+    // At half scale the feet move half as far from the box's left edge.
+    expect(overlayParts({ ...feet, scale: 0.5 }, shoes).map((p) => p.box.left)).toEqual([
+      182.5, 267.5,
+    ]);
   });
 
   it('every generated figure carries an ankle cut above the soles; socks and boots are clipped', () => {

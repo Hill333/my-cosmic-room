@@ -5,7 +5,7 @@ import { heroineFigure, requireItem } from '../../catalog/index.ts';
 import { HEROINE_GEOMETRY } from '../../catalog/slots.ts';
 import type { Theme } from '../../core/types.ts';
 import { devFace, devTick, save } from '../../state/store.ts';
-import { FALLBACK_ANCHORS, overlayStyle } from '../../catalog/heroine.ts';
+import { FALLBACK_ANCHORS, overlayStyles } from '../../catalog/heroine.ts';
 import type { Face } from './Heroine.tsx';
 
 const KINDS: AnchorKind[] = ['face', 'feet', 'head', 'back'];
@@ -114,13 +114,15 @@ export function HeroineDebug({ theme }: { theme: Theme }) {
           height: `${box.height}px`,
         }}
       >
-        {worn.map(({ kind, id }) => (
-          <div
-            key={id}
-            class={`heroine-debug-overlay${selected === kind ? ' heroine-debug-selected' : ''}`}
-            style={overlayStyle(figure.size, anchors[kind], manifest.assets[id]!)}
-          />
-        ))}
+        {worn.flatMap(({ kind, id }) =>
+          overlayStyles(figure.size, anchors[kind], manifest.assets[id]!).map(({ style }, i) => (
+            <div
+              key={`${id}-${i}`}
+              class={`heroine-debug-overlay${selected === kind ? ' heroine-debug-selected' : ''}`}
+              style={style}
+            />
+          )),
+        )}
         {anchors.feet.cutY !== undefined && (
           <div
             class="heroine-debug-cut"

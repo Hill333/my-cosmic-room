@@ -33,6 +33,13 @@ export interface Anchor {
    * overlays marked `clipAtAnkle` are clipped just above it.
    */
   cutY?: number;
+  /**
+   * Feet only: the centre x of the left and right leg at the ankle cut, in figure px (measured
+   * by post-processing). A shoe overlay with `footX` is drawn as two halves, each moved so its
+   * foot sits on the matching leg, since the generated pairs stand closer together than the
+   * figure's legs.
+   */
+  legX?: [number, number];
 }
 
 export type FigureAnchors = Record<AnchorKind, Anchor>;
@@ -74,6 +81,8 @@ export interface AssetEntry {
    * figure's ankle cut (`anchors.feet.cutY`) so those never paint over the shin or a trouser hem.
    */
   clipAtAnkle?: boolean;
+  /** Feet overlays: the centre x of each foot in overlay px (measured by post-processing); see `Anchor.legX`. */
+  footX?: [number, number];
   /** Figures: where the overlays snap, in figure px; tuned with `?debug=heroine`. */
   anchors?: FigureAnchors;
   /** Wardrobe tiles derived from a figure or overlay: which region of the figure to show. */

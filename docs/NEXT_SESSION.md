@@ -1,10 +1,11 @@
-# Release handoff: 0.1.0 release candidate (after M3b)
+# Release handoff: 0.1.0 release candidate
 
-Milestones M0 to M5 and the follow-up M3b (heroine as raster figures, room backdrops matching
-the concepts) are implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build
-passes `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(140 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
-before the release is "done" in the sense of SPEC §18 is yours to do; this file is the
+Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, and the
+heroine ankle and hair-gap fixes of 13 September 2026) is implemented and committed (see
+[CHANGELOG.md](../CHANGELOG.md)). The build passes
+`npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
+(141 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
 
 ## Your checklist
@@ -29,23 +30,20 @@ checklist, followed by the known limitations and the open spec questions.
    overlays sit right on every figure (press 1–4 to select an anchor, arrows to nudge, `[` `]`
    to scale, `,` `.` to move the ankle cut line, F to cycle the face, C to copy the JSON into
    the figure's `anchors` in `assets/manifest.json`). `docs/screenshots/heroine-shoes-matrix.png`
-   (from `node tools/heroine-matrix.ts`) shows every outfit × shoe at once. Check S3 / S4 for the happy, thinking and cheering faces and S5
-   for the happy face. Figures or overlays that are still placeholders are listed under
-   "Known limitations" below; generate them with `npm run assets:gen` (it pauses by itself
-   when the Codex five-hour window is full) and `npm run assets:post`, then tune their anchors.
-   A hairstyle whose figure is still a placeholder shows the outfit's two-buns figure instead.
+   (from `node tools/heroine-matrix.ts`) shows every outfit × shoe at once. Check S3 / S4 for
+   the happy, thinking and cheering faces and S5 for the happy face. All 21 figures and every
+   overlay are generated; to redo one, see "Heroine" in the README (`npm run assets:gen --
+   --regen <id>` pauses by itself when the Codex five-hour window is full, then
+   `npm run assets:post -- --only <id> --force` and retune its anchors).
 4. **Backdrop QA.** The runner-up candidates of both rooms are kept as
    `assets/.gen/<theme>/room/background.<a|b>.png`; the chosen one is `background.png`. To swap:
    copy the candidate over `background.png`, run
    `npm run assets:post -- --only <theme>/room/background --force`, `npm run assets:thumbs`,
    and retune `SLOT_GEOMETRY` in `src/catalog/slots.ts` with `?debug=slots`.
-5. **Title (D9): done.** The game is called "Tick-Tock" (decided 13 September 2026): strings,
-   page title, package name, export filename, docs, e2e checks and the regenerated logo
-   (`assets/shared/ui/logo.png`, shown on S0 with `TITLE_LOGO = true` in
-   `src/ui/screens/S0Title.tsx`; the heading keeps the title text for assistive technology and
-   the tests). The `mcr.*` localStorage keys keep the legacy prefix so saves survive. Still
-   named after the working title and yours to rename if you want: the GitHub repository and
-   its Pages URL (`/my-cosmic-room/`), the branch and `.github/workflows`.
+5. **Repository name.** The game is "Tick-Tock" everywhere in the app and docs (D9), but the
+   GitHub repository, its Pages URL (`/my-cosmic-room/`) and `.github/workflows` still carry
+   the working title; rename them if you want (the `mcr.*` localStorage keys keep the legacy
+   prefix on purpose so saves survive).
 6. **Native-speaker wording review (SPEC §13.4, AT-37).** Have a Turkish and a Dutch speaker
    read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
    is not. Start with the longest sentences: the S2 mission descriptions
@@ -58,55 +56,20 @@ checklist, followed by the known limitations and the open spec questions.
    once, in the repository settings. For Cloudflare Pages: build command `npm run build`,
    output `dist`. The build uses relative paths and was verified under a sub-path.
 
-## What M3b delivered (for orientation)
-
-- The heroine is generated art: one full-body figure per outfit × hairstyle
-  (`assets/shared/heroine/figure/<outfit>-<hair>.png`, 600 × 900, neutral face, white socks),
-  with generated shoes, extras and expression faces as overlays snapped to per-figure
-  `anchors` in the manifest (SPEC §4.5, D17). `tools/gen-heroine.ts` and the SVG heroine are
-  gone. Wardrobe tiles are crops of the composited figure (`npm run assets:post -- --tiles`).
-- `tools/codex-limits.ts` reads the Codex usage windows; `tools/gen-assets.ts` pauses on a
-  full five-hour window and logs every check and asset to `assets/.gen/run.log`.
-- Both room backgrounds regenerated from the concepts (two candidates each), geometry retuned,
-  S0 thumbnails re-derived; screenshots in `docs/screenshots/`.
-
-## Codex usage state at the end of M3b
-
-M3b generated 34 images on 12 September 2026 (4 room candidates, 17 figures, 6 shoes,
-4 extras, 3 faces) in one evening: the five-hour window was at 81 % when the run started,
-filled up after the four backgrounds (paused 20:12 to 20:34), reset to 0 % and reached 96 %
-after the third loose-hair figure at 21:03, when the generator paused until 01:35 on
-13 September and was stopped by hand. The weekly window was at 46 %. An astra-light figure
-costs 3–6 % of the five-hour window, a sol-med overlay 1–3 %. `assets/.gen/run.log` (ignored
-by git, so only on this machine) has every check and asset.
-
-**All 21 figures exist** since 13 September 01:39: the four remaining loose-hair figures
-(`planetTee-loose`, `spacesuit-loose`, `starHoodie-loose`, `strawberryDress-loose`) were
-generated after the window reset (53–70 s each, first attempt; five-hour window 34 % and weekly
-51 % afterwards), post-processed, and given the tuned loose anchors (`face` y 200 × 0.9, `head`
-y 92, `back` y 430); their ankle cuts were guessed from the socks (786, 788, 813, 789). Check
-them once in `?screen=S1&debug=heroine` wearing each outfit with loose hair.
-
-**Optional regeneration (not needed for the fix).** The shoe overlays were generated with
-narrower, closer-together legs than the figures, which is why the socks used to peek out; the
-fix cuts the figure at the ankle and extrudes the leg, so it no longer matters. If a Codex
-window is free and you want the overlays themselves to match, add "the two shoes as far apart
-as the girl's feet in the reference sheet, nothing drawn above the ankle" to the `shoes()`
-prompt in `tools/manifest-data.ts` and regenerate them (`npm run assets:gen -- --regen
-shared/heroine/shoes/<name>`, `npm run assets:post -- --only shared/heroine/shoes/<name>
---force`), then retune their `scale`; the space boots would gain their cuff back (it is
-clipped now) if generated as low boots.
-
 ## Known limitations
 
-- Shoes are clipped at the figure's ankle (`clipAtAnkle`), so the sneakers' yellow crew socks
-  show as ankle socks and the space boots as low boots (their cuff strap is above the clip);
-  the slippers' ears stand in front of the shin. The extruded leg under the cut is a flat
-  colour for 50 px; it is only ever visible where a shoe overlay is narrower than the leg.
-- Generated figures keep small white hair highlights at the top of the buns and the ponytail
-  (they were invisible on the white generation background); regenerate a figure if they
-  bother you, or paint them out in the raw PNG and re-run `npm run assets:post -- --only
-  <id> --force`.
+- Shoes are clipped at the figure's ankle (`clipAtAnkle`) with a drawn outline along the clip,
+  so the sneakers' yellow crew socks show as ankle socks and the space boots as low boots
+  (their cuff strap is above the clip); the slippers' ears stand in front of the shin. The
+  extruded leg under the cut is a flat colour for 50 px; each shoe half sits on its own leg
+  (`legX` / `footX`), so it only shows where a sock is narrower than the leg. On the spacesuit
+  a little ankle skin shows between the cuff and the sock, as the figure is drawn.
+- The white gaps between hair strands are punched by a heuristic in `post-assets`
+  (`punchHairGaps`: small white pockets within 24 px of the outside through outline or hair,
+  in the top 60 % of the silhouette, surrounded mostly by hair colour). The thresholds are a
+  knife edge between the last strand gaps and a daisy petal on a sleeve; a regenerated figure
+  with a white print near the hair could trip it, so check the figure after `assets:post`
+  and adjust the `GAP_*` constants if so.
 - The thinking face is a patch over the figure's neutral face; on figures whose mouth sits a
   little lower (the ponytail sweater and dress) a hint of the neutral smile can show under
   it; nudge `face.y` per figure with `?debug=heroine` if it shows.

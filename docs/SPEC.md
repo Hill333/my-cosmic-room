@@ -258,7 +258,7 @@ Slots: Hair, Outfit, Shoes, Extra.
 - The heroine is a raster **figure** plus **overlays**. A figure is one full-body PNG per outfit × hairstyle (7 × 3 = 21), generated from the reference sheet with a neutral face, plain white socks and no shoes, cut out and normalised onto a 600×900 canvas at 2× (feet on the bottom edge, centred). The figure id is `shared/heroine/figure/<outfit>-<hair>`; outfits and hair styles name their figure part in the catalogue (`art.figure`).
 - Overlays are small generated cut-outs snapped to the figure: shoes at the **feet** anchor (they always cover the socks), an extra at the **head** anchor (clips, headband) or the **back** anchor (the rocket backpack, drawn behind the figure), and a face overlay at the **face** anchor for the happy, thinking and cheering expressions; neutral is the figure's own face.
 - Because generated figures are not pixel-identical, every figure entry in `manifest.json` carries `anchors: { face, feet, head, back }`, each `{ x, y, scale }` in figure px: the overlay's `pivot` (bottom centre for shoes, centre otherwise) plus its own `offset` lands on the anchor and the overlay is sized by `scale`. Post-processing writes a proportional guess; the `?debug=heroine` overlay (§16.4) nudges and copies the tuned values. This replaces the earlier "no per-item offsets" rule.
-- The shoes never rely on covering the figure's socks: post-processing erases the figure below the **ankle cut** (`anchors.feet.cutY`, guessed from the sock silhouette, tuned like the other anchors) and extrudes the leg a little way down behind the shoe; a shoe overlay drawn with socks, legs or a shaft above the shoe is marked `clipAtAnkle` and is clipped just above the cut, so it never paints over the shin or a trouser hem.
+- The shoes never rely on covering the figure's socks: post-processing erases the figure below the **ankle cut** (`anchors.feet.cutY`, guessed from the sock silhouette, tuned like the other anchors) and extrudes the leg a little way down behind the shoe; a shoe overlay drawn with socks, legs or a shaft above the shoe is marked `clipAtAnkle` and is clipped just above the cut, with an outline drawn along the clip so it reads as a cuff, so it never paints over the shin or a trouser hem. Generated shoe pairs stand closer together than the figure's legs, so post-processing measures the centre of each leg at the cut (`anchors.feet.legX`) and of each foot in a feet overlay (`footX`), and the renderer draws the overlay as two halves split at its pivot column, each moved onto its leg. White gaps between hair strands (background walled off by the strands' outlines) are made transparent by post-processing.
 - Wardrobe tiles are cropped views of the composited figure: the torso of `<outfit>-buns` for outfits (and for the backpack), the head of `planetTee-<hair>` for hair styles and clips, the feet for shoes.
 - The same heroine component is used on S1, S3, S4, S5 and the S0 cards, at different scales; only the current outfit × hairstyle figure is loaded. Missions show the happy/thinking/cheering faces according to the puzzle state; the room shows the neutral figure and lights up the happy face during the heroine's tap reaction.
 
@@ -982,8 +982,8 @@ gen: {
   status: 'placeholder' | 'generated' | 'approved',
   fallback?: string            // set when the image tool fallback was used
 }
-// Heroine figures additionally: anchors: { face, feet, head, back: { x, y, scale } } (figure px); feet also cutY
-// Shoe overlays drawn with socks or a shaft: clipAtAnkle: true
+// Heroine figures additionally: anchors: { face, feet, head, back: { x, y, scale } } (figure px); feet also cutY, legX: [l, r]
+// Shoe overlays drawn with socks or a shaft: clipAtAnkle: true; feet overlays: footX: [l, r] (overlay px)
 // Heroine overlays additionally: anchor: 'face' | 'feet' | 'head' | 'back', offset?: [x, y]
 // Heroine tiles additionally: tileCrop: 'torso' | 'head' | 'feet'
 ```
@@ -1140,6 +1140,8 @@ Each milestone ends with its tests green and a short demo. Durations are not est
 | M3 Space room | S1 with slots, Decorate and Dress-up panels, reward application, reactions; Space art for starters, Moon Sleepover, heroine starters and mission scenes generated through the §15.6 pipeline | AT-23 to AT-25 pass; Space playable end to end with real art |
 | M4 Sweet room and full catalogue | Sweet theme art and missions, Rainbow Explorer and both Sweet collections, theme switching, star chart, Parent corner complete, Turkish and Dutch reviewed | AT-26, AT-27, AT-29, AT-37 pass; all five smoke flows pass |
 | M5 Polish and release | Sounds, reduced motion, accessibility review, performance budget, build to static host on request | AT-34 to AT-38 pass; §17.9 session held; user approves deployment |
+
+All six milestones and the M3b follow-up (heroine as raster figures, regenerated backdrops) are delivered as release candidate 0.1.0 (see `CHANGELOG.md`); what remains before deployment is the human checklist in `docs/NEXT_SESSION.md`: the §17.9 play session, art approval, the wording review and the deploy itself.
 
 ## 19. Appendix
 

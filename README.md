@@ -57,8 +57,11 @@ the feet, an extra at the head or behind the back, and a face for the mission ex
 Each figure's `anchors` in `assets/manifest.json` say where the overlays snap; post-processing
 writes a first guess and `?debug=heroine` tunes it (press C, paste into the manifest). The
 figure's own socks and feet are erased below the ankle cut (`anchors.feet.cutY`) and shoes
-drawn with socks or a shaft (`clipAtAnkle`) are clipped just above it, so no sock peeks out
-around a narrow shoe; `node tools/heroine-matrix.ts` renders every outfit × shoe for a check. Wardrobe
+drawn with socks or a shaft (`clipAtAnkle`) are clipped just above it with an outline along the
+clip, so no sock peeks out around a narrow shoe; a shoe is drawn as two halves, each on the leg
+post-processing measured (`anchors.feet.legX`, the overlay's `footX`), since the generated pairs
+stand closer together than the figure's legs. White gaps between hair strands are made
+transparent. `node tools/heroine-matrix.ts` renders every outfit × shoe for a check. Wardrobe
 tiles are cropped from the figures by `npm run assets:post` (`--tiles` redoes them all). To redo
 one figure: `npm run assets:gen -- --regen shared/heroine/figure/planetTee-buns` then
 `npm run assets:post -- --only shared/heroine/figure/planetTee-buns --force` (add
