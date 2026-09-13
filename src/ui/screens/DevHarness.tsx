@@ -25,6 +25,7 @@ import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
+import { DigitalBuilder } from '../components/DigitalBuilder.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { ScheduleBar } from '../components/ScheduleBar.tsx';
 import { SetClock, type SetStatus } from '../components/SetClock.tsx';
@@ -255,12 +256,15 @@ function GeneratorPanel() {
 
 function describePuzzle(p: Puzzle, mode: DigitalMode): string {
   const lang = language.value;
-  if (p.kind === 'ELAPSED') {
+  if (p.kind === 'ELAPSED' || p.kind === 'ARRIVE') {
     const jumps = decomposeJumps(p.start, p.end)
       .map((j) => `${formatJump(j.minutes, lang)} → ${formatTime(j.to, '24h')}`)
       .join(', ');
-    const choices = p.choices.map((c) => formatDuration(c, lang)).join(' | ');
-    return `ELAPSED ${formatTime(p.start, '24h')} → ${formatTime(p.end, '24h')} = ${formatDuration(p.end - p.start, lang)}; choices: ${choices}; jumps: ${jumps}`;
+    const choices =
+      p.kind === 'ELAPSED'
+        ? p.choices.map((c) => formatDuration(c, lang)).join(' | ')
+        : p.choices.map((c) => formatTime(c, '24h')).join(' | ');
+    return `${p.kind} ${formatTime(p.start, '24h')} → ${formatTime(p.end, '24h')} = ${formatDuration(p.end - p.start, lang)}; choices: ${choices}; jumps: ${jumps}`;
   }
   if (p.kind === 'SCHEDULE') {
     const segments = p.segments
@@ -274,8 +278,9 @@ function describePuzzle(p: Puzzle, mode: DigitalMode): string {
   if (p.kind === 'SHIFT') {
     return `SHIFT ${formatTime(p.start, mode)} ${p.delta > 0 ? '+' : '−'}${Math.abs(p.delta)} min = ${target}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
   }
+  if (p.kind === 'DIGITS') return `DIGITS ${target}`;
   const words = p.words ? ` (words: ${formatTimeWords(p.target, lang)})` : '';
-  if (p.kind === 'SET') return `SET ${target}${words}`;
+  if (!('choices' in p)) return `SET ${target}${words}`;
   return `${p.kind} ${target}${words}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
 }
 
@@ -516,7 +521,55 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
       </div>
     );
   }
+  if (p.kind === 'ARRIVE') {
+    const jumps = decomposeJumps(p.start, p.end);
+    return (
+      <div class="harness-puzzle">
+        <p>{t(`b.arrive.q.${theme}`, { dur: formatDuration(p.end - p.start, lang) })}</p>
+        <DigitalDisplay
+          time={p.start}
+          mode="24h"
+          caption={t('b.leaves')}
+          label={formatTime(p.start, '24h')}
+        />
+        <div class="harness-row">
+          {p.choices.map((c) => (
+            <button
+              key={c}
+              type="button"
+              class="btn answer"
+              disabled={solved}
+              onClick={() => onAnswer(c)}
+            >
+              <DigitalDisplay time={c} mode="24h" size="button" />
+            </button>
+          ))}
+        </div>
+        <p class="harness-jumps">
+          {t('b.showJumps')}: {jumps.map((j) => formatJump(j.minutes, lang)).join('  ')}
+        </p>
+      </div>
+    );
+  }
   const period = mode === '24h' && p.kind !== 'ELAPSED' ? periodOf(p.target) : null;
+  if (p.kind === 'DIGITS') {
+    return (
+      <div class="harness-puzzle">
+        <p>{t('a.digits.q')}</p>
+        <div class="harness-row">
+          <AnalogClock time={p.target} level={rLevel} theme={theme} period={period} />
+          <DigitalBuilder
+            target={p.target}
+            level={rLevel}
+            mode={mode}
+            status={status}
+            disabled={solved}
+            onCheck={onAnswer}
+          />
+        </div>
+      </div>
+    );
+  }
   if (p.kind === 'READ') {
     return (
       <div class="harness-puzzle">

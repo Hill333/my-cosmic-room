@@ -2,10 +2,11 @@
  * Level tables and mission generators (SPEC §7). Pure and deterministic: every random
  * decision goes through the injected RNG, so a mission replays identically from its seed.
  */
-import { durationChoices } from './elapsed.ts';
+import { arrivalChoices, durationChoices } from './elapsed.ts';
 import { chance, pick, randomInt, shuffle, type Rng } from './rng.ts';
 import { hour12Of, hoursOf, makeTime, minutesOf, sameFace } from './time.ts';
 import type {
+  ArrivePuzzle,
   DigitalMode,
   ElapsedLevel,
   ElapsedPuzzle,
@@ -75,6 +76,8 @@ export const E3_OFFSET_START_PROBABILITY = 0.5;
 
 /** Probability that the second READ of an Activity A mission becomes a SHIFT at R2+ (SPEC §7.3). */
 export const SHIFT_PROBABILITY = 0.5;
+/** Probability that the MATCH of an Activity A mission becomes a DIGITS (SPEC §7.3, D20). */
+export const DIGITS_PROBABILITY = 0.5;
 /** Probability that a READ, MATCH or SET puzzle uses words when the setting is on (SPEC §7.7). */
 export const WORDS_PROBABILITY = 0.5;
 /** Probability that puzzle 2 or 3 of an Activity B mission becomes a SCHEDULE (SPEC §7.5). */
@@ -296,8 +299,10 @@ export function makeShiftChoices(
 /**
  * Activity A mission: two READ, one MATCH, one SET; SET never first (SPEC §7.3). At R2 and
  * above the later of the two READs becomes a SHIFT with probability 0.5 (so a mission never
- * opens with one), and with the words option each READ, MATCH and SET puzzle reads in words
- * with probability 0.5 (SPEC §7.7).
+ * opens with one); the MATCH becomes a DIGITS with probability 0.5 (D20; an input puzzle is
+ * never first, so a MATCH in the first slot trades places with a READ before it turns); and
+ * with the words option each READ, MATCH and SET puzzle reads in words with probability 0.5
+ * (SPEC §7.7).
  */
 export function makeActivityAMission(
   level: ReadingLevel,
@@ -307,10 +312,19 @@ export function makeActivityAMission(
   options: ActivityAOptions = { words: false },
 ): GeneratedMission {
   const base: ('READ' | 'MATCH' | 'SET')[] = ['READ', 'READ', 'MATCH', 'SET'];
-  let kinds: ('READ' | 'MATCH' | 'SET' | 'SHIFT')[] = shuffle(base, rng);
+  let kinds: ('READ' | 'MATCH' | 'SET' | 'DIGITS' | 'SHIFT')[] = shuffle(base, rng);
   while (kinds[0] === 'SET') kinds = shuffle(base, rng);
   if (SHIFT_DELTAS[level].length > 0 && chance(rng, SHIFT_PROBABILITY)) {
     kinds[kinds.lastIndexOf('READ')] = 'SHIFT';
+  }
+  if (chance(rng, DIGITS_PROBABILITY)) {
+    let at = kinds.indexOf('MATCH');
+    if (at === 0) {
+      const read = kinds.indexOf('READ');
+      [kinds[0], kinds[read]] = ['READ', 'MATCH'];
+      at = read;
+    }
+    kinds[at] = 'DIGITS';
   }
 
   const targets: TimeValue[] = [];
@@ -336,6 +350,11 @@ export function makeActivityAMission(
       if (fresh(target, tries)) break;
     }
     targets.push(target);
+    if (kind === 'DIGITS') {
+      // Digits are the answer, so the word form never applies.
+      puzzles.push({ kind, target });
+      continue;
+    }
     const words = options.words && chance(rng, WORDS_PROBABILITY);
     const puzzle: ReadingPuzzle | SetPuzzle =
       kind === 'SET'
@@ -420,7 +439,8 @@ export function makeSchedulePuzzle(level: ElapsedLevel, rng: Rng): SchedulePuzzl
 /**
  * Activity B mission: four ELAPSED puzzles with distinct pairs, none of the recent pairs, and
  * at most two sharing a duration (SPEC §7.5). The first E3 mission of a theme ends with
- * 14:30 → 19:15. With probability 0.5 puzzle 2 or 3 is a SCHEDULE instead (SPEC §8.6).
+ * 14:30 → 19:15. With probability 0.5 puzzle 2 or 3 is a SCHEDULE instead (SPEC §8.6), and
+ * one of the remaining ELAPSED puzzles (never the reserved 14:30 → 19:15) is an ARRIVE (D20).
  */
 export function makeActivityBMission(
   level: ElapsedLevel,
@@ -463,5 +483,16 @@ export function makeActivityBMission(
   if (chance(rng, SCHEDULE_PROBABILITY)) {
     puzzles[randomInt(rng, 1, 2)] = makeSchedulePuzzle(level, rng);
   }
+  const elapsedSlots = puzzles.flatMap((p, i) =>
+    p.kind === 'ELAPSED' && !(reserved && i === 3) ? [i] : [],
+  );
+  const at = pick(rng, elapsedSlots);
+  const [start, end] = pairs[at]!;
+  puzzles[at] = {
+    kind: 'ARRIVE',
+    start,
+    end,
+    choices: arrivalChoices(start, end, level, rng),
+  } satisfies ArrivePuzzle;
   return { activity: 'B', level, puzzles };
 }

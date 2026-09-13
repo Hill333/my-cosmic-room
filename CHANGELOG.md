@@ -2,7 +2,19 @@
 
 All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
-## Unreleased — workbook question types (D19)
+## Unreleased — workbook question types (D19) and two more kinds (D20)
+
+- **DIGITS** (D20, Activity A): "Write this time in digits." Read the clock and build the
+  digital time on a display with ▲/▼ buttons or the SET clock's keys
+  (`components/DigitalBuilder.tsx`); starts at 12:00 / 6:00 like SET; the READ hint sits
+  beside it. Replaces the MATCH in about half of the missions, never first.
+- **ARRIVE** (D20, Activity B): "The flight takes 2 hours 15 minutes. When does the parcel
+  land?" with a "Takes" pill and an "Arrives ?:??" display; pick the arrival time among three
+  24-hour digits. One per mission (never the reserved 14:30 → 19:15); the jump hint hides
+  its reached times until solved (`JumpTimeline hideTimes`). Distractors apply the §8.3
+  duration mistakes to the start (`core/elapsed.ts` `arrivalChoices`). Strings in all three
+  languages; `e2e/new-kinds.spec.ts`; the AT-34 audit covers both kinds. The AT-36
+  reduced-motion counter assertion now polls (a race that `:00` targets used to hide).
 
 Three question types from the child's Dutch workbook ("Blok 4", quarter hours; see
 [docs/NEW_QUESTION_TYPES.md](docs/NEW_QUESTION_TYPES.md)), mixed into the existing missions:

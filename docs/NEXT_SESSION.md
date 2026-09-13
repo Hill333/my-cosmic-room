@@ -4,7 +4,7 @@ Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock ti
 heroine ankle and hair-gap fixes, and the walking heroine of 13 September 2026, D18) is
 implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build passes
 `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(150 unit tests, 29 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(175 unit tests, 36 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
 

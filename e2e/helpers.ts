@@ -6,7 +6,7 @@ import {
   PUZZLES_PER_MISSION,
 } from '../src/core/mission.ts';
 import { createFreshSave } from '../src/core/save.ts';
-import type { Activity, Puzzle, Save, Theme } from '../src/core/types.ts';
+import type { Activity, Puzzle, PuzzleKind, Save, Theme } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -17,7 +17,7 @@ import type { Activity, Puzzle, Save, Theme } from '../src/core/types.ts';
 export const SAVE_KEY = 'mcr.save.v1';
 
 export interface StoredPuzzle {
-  kind: 'READ' | 'MATCH' | 'SET' | 'ELAPSED' | 'SHIFT' | 'SCHEDULE';
+  kind: PuzzleKind;
   target?: number;
   choices?: number[];
   start?: number;
@@ -229,6 +229,7 @@ export function setClockKeys(target: number, level: number): { hours: number; st
 /** Correct answer value of a puzzle as the option's `data-value`. */
 export function correctValue(p: StoredPuzzle): number {
   if (p.kind === 'ELAPSED') return p.end! - p.start!;
+  if (p.kind === 'ARRIVE') return p.end!;
   if (p.kind === 'SCHEDULE') {
     const seg = p.segments![p.ask!]!;
     return seg.end - seg.start;
@@ -236,7 +237,26 @@ export function correctValue(p: StoredPuzzle): number {
   return p.target!;
 }
 
-/** A wrong option's `data-value` (never for SET, which has no options). */
+/**
+ * Button presses that build the target on the DIGITS display from its start position:
+ * hours cycle 1–12 (12-hour) or 06–21 (24-hour), minutes cycle the level's steps.
+ */
+export function digitsClicks(
+  target: number,
+  level: number,
+  mode: '12h' | '24h' = '12h',
+): { hours: number; minutes: number } {
+  const from = initialSetTime(target);
+  const hourOf = (t: number) => Math.floor(t / 60);
+  const span = mode === '24h' ? 16 : 12;
+  const base = mode === '24h' ? 6 : 0;
+  const norm = (h: number) => (((h - base) % span) + span) % span;
+  const hours = (norm(hourOf(target)) - norm(hourOf(from)) + span) % span;
+  const minutes = (target % 60) / stepOf(level);
+  return { hours, minutes };
+}
+
+/** A wrong option's `data-value` (never for SET or DIGITS, which have no options). */
 export function wrongValue(p: StoredPuzzle): number {
   const correct = correctValue(p);
   return p.choices!.find((c) => c !== correct)!;
@@ -260,6 +280,11 @@ export async function solveWithMouse(page: Page, m: StoredMission): Promise<stri
     for (let i = 0; i < hours; i++) await page.getByTestId('set-plus-hour').click();
     for (let i = 0; i < steps; i++) await page.getByTestId('set-plus-step').click();
     await page.getByTestId('set-check').click();
+  } else if (p.kind === 'DIGITS') {
+    const { hours, minutes } = digitsClicks(p.target!, m.level);
+    for (let i = 0; i < hours; i++) await page.getByTestId('digits-hour-up').click();
+    for (let i = 0; i < minutes; i++) await page.getByTestId('digits-minute-up').click();
+    await page.getByTestId('digits-check').click();
   } else {
     await page.locator(`[data-testid="answer"][data-value="${correctValue(p)}"]`).click();
   }

@@ -146,7 +146,16 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
     expect(p.target!).toBeLessThan(22 * 60);
   }
   expect(m.puzzles.some((p) => p.target! % 15 !== 0)).toBe(true);
-  await expect(page.getByTestId('s3')).toContainText(/(0[6-9]|1\d|2[01]):[0-5]\d/);
+  // 24-hour mode (D11): digits with a leading zero wherever digits are shown (a word-form
+  // puzzle, SPEC §7.7, shows none) and the day-period badge under every analog face (MATCH
+  // shows only the prompt).
+  const first = m.puzzles[0]!;
+  if (!first.words) {
+    await expect(page.getByTestId('s3')).toContainText(/(0[6-9]|1\d|2[01]):[0-5]\d/);
+  }
+  if (first.kind !== 'MATCH') {
+    await expect(page.getByTestId('s3')).toContainText(/morning|afternoon|evening|night/);
+  }
   await page.getByTestId('leave-button').click();
   await page.getByTestId('leave-confirm').click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Space Playroom');

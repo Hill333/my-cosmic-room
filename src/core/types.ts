@@ -1,6 +1,6 @@
 /**
  * Shared types for the pure game core (SPEC §6–§11).
- * This module has no runtime code and no DOM or framework imports.
+ * This module has no DOM or framework imports; its only runtime code is the kind predicate.
  */
 
 /** Minutes since midnight, integer 0–1439 (SPEC §0). */
@@ -34,7 +34,8 @@ export type ReadingLevel = 1 | 2 | 3 | 4;
 export type ElapsedLevel = 1 | 2 | 3;
 
 export type Activity = 'A' | 'B';
-export type PuzzleKind = 'READ' | 'MATCH' | 'SET' | 'ELAPSED' | 'SHIFT' | 'SCHEDULE';
+export type PuzzleKind =
+  'READ' | 'MATCH' | 'SET' | 'DIGITS' | 'SHIFT' | 'ELAPSED' | 'ARRIVE' | 'SCHEDULE';
 
 export interface ReadingPuzzle {
   kind: 'READ' | 'MATCH';
@@ -44,10 +45,11 @@ export interface ReadingPuzzle {
   words?: true;
 }
 
+/** A time to set on the analog clock (SET) or to build on a digital display (DIGITS, D20). */
 export interface SetPuzzle {
-  kind: 'SET';
+  kind: 'SET' | 'DIGITS';
   target: TimeValue;
-  /** Word-form prompt (SPEC §7.7): "Set the clock to quarter to 1." */
+  /** Word-form prompt (SPEC §7.7): "Set the clock to quarter to 1." SET only. */
   words?: true;
 }
 
@@ -89,7 +91,22 @@ export interface SchedulePuzzle {
   choices: number[];
 }
 
-export type Puzzle = ReadingPuzzle | SetPuzzle | ElapsedPuzzle | ShiftPuzzle | SchedulePuzzle;
+/** "Leaves at {start}, takes {end − start}: when does it arrive?" (SPEC §7.5, D20). */
+export interface ArrivePuzzle {
+  kind: 'ARRIVE';
+  start: TimeValue;
+  end: TimeValue;
+  /** Arrival times; exactly one equals `end`. */
+  choices: TimeValue[];
+}
+
+export type Puzzle =
+  ReadingPuzzle | SetPuzzle | ElapsedPuzzle | ShiftPuzzle | ArrivePuzzle | SchedulePuzzle;
+
+/** The kinds that need a hand, a button strip or a keyboard rather than a pick (SPEC §9.2). */
+export function isInputKind(kind: PuzzleKind): kind is 'SET' | 'DIGITS' {
+  return kind === 'SET' || kind === 'DIGITS';
+}
 
 export interface PuzzleResult {
   kind: PuzzleKind;

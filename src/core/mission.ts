@@ -48,16 +48,19 @@ export function askedSegment(puzzle: SchedulePuzzle): ScheduleSegment {
 }
 
 /**
- * The value that answers a puzzle: a time for READ, MATCH, SET and SHIFT, a duration in
- * minutes for ELAPSED and SCHEDULE.
+ * The value that answers a puzzle: a time for READ, MATCH, SET, DIGITS and SHIFT, the
+ * arrival time for ARRIVE, a duration in minutes for ELAPSED and SCHEDULE.
  */
 export function correctValue(puzzle: Puzzle): number {
   switch (puzzle.kind) {
     case 'READ':
     case 'MATCH':
     case 'SET':
+    case 'DIGITS':
     case 'SHIFT':
       return puzzle.target;
+    case 'ARRIVE':
+      return puzzle.end;
     case 'ELAPSED':
       return puzzle.end - puzzle.start;
     case 'SCHEDULE': {
@@ -69,12 +72,15 @@ export function correctValue(puzzle: Puzzle): number {
 
 /** The reading target a puzzle adds to `recentReadingTargets` (SPEC §7.3), or null. */
 export function readingTargetOf(puzzle: Puzzle): TimeValue | null {
-  return puzzle.kind === 'ELAPSED' || puzzle.kind === 'SCHEDULE' ? null : puzzle.target;
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'ARRIVE' || puzzle.kind === 'SCHEDULE') {
+    return null;
+  }
+  return puzzle.target;
 }
 
 /** The interval a puzzle adds to `recentElapsedPairs` (SPEC §7.5), or null. */
 export function elapsedPairOf(puzzle: Puzzle): [TimeValue, TimeValue] | null {
-  if (puzzle.kind === 'ELAPSED') return [puzzle.start, puzzle.end];
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'ARRIVE') return [puzzle.start, puzzle.end];
   if (puzzle.kind === 'SCHEDULE') {
     const seg = askedSegment(puzzle);
     return [seg.start, seg.end];
@@ -82,7 +88,11 @@ export function elapsedPairOf(puzzle: Puzzle): [TimeValue, TimeValue] | null {
   return null;
 }
 
-/** True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours. */
+/**
+ * True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours (a
+ * face cannot express more); DIGITS compares the digits themselves, so in 24-hour mode the
+ * child builds the badge's half of the day too.
+ */
 export function isCorrectAnswer(puzzle: Puzzle, choice: number): boolean {
   if (puzzle.kind === 'SET') return sameFace(choice, puzzle.target);
   return choice === correctValue(puzzle);

@@ -18,7 +18,7 @@ const NOW = '2026-09-12T10:00:00.000Z';
 const LATER = '2026-09-12T10:05:00.000Z';
 
 function wrongValue(p: Puzzle): number {
-  if (p.kind === 'SET') return p.target + 60;
+  if (!('choices' in p)) return p.target + 60;
   return p.choices.find((c) => c !== correctValue(p))!;
 }
 
@@ -87,8 +87,7 @@ describe('mission start (SPEC §10.1, §7.6)', () => {
     s = startMission(s, 'space', 'A');
     expect(s.mission!.level).toBe(4);
     for (const p of s.mission!.puzzles) {
-      expect(p.kind).not.toBe('ELAPSED');
-      expect(p.kind).not.toBe('SCHEDULE');
+      expect(['ELAPSED', 'ARRIVE', 'SCHEDULE']).not.toContain(p.kind);
       expect(correctValue(p)).toBeGreaterThanOrEqual(makeTime(6, 0));
     }
     s = settingsReducer(createFreshSave(), { type: 'settings/elapsedLevel', level: 2 });
@@ -134,6 +133,39 @@ describe('answers', () => {
     };
     expect(isCorrectAnswer(schedule, 30)).toBe(true);
     expect(isCorrectAnswer(schedule, 75)).toBe(false);
+    // DIGITS compares the digits: 15:30 is not 3:30 when the child builds a 24-hour time.
+    expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(15, 30))).toBe(
+      true,
+    );
+    expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(3, 30))).toBe(
+      false,
+    );
+    const arrive: Puzzle = { kind: 'ARRIVE', start: 870, end: 1155, choices: [] };
+    expect(isCorrectAnswer(arrive, 1155)).toBe(true);
+    expect(isCorrectAnswer(arrive, 285)).toBe(false);
+  });
+  it('records every kind in the results and the ARRIVE pair in the recent pairs (D20)', () => {
+    const kinds = new Set<string>();
+    for (let seed = 1; kinds.size < 8 && seed < 300; seed++) {
+      for (const activity of ['A', 'B'] as const) {
+        const started = startMission(createFreshSave(), 'space', activity, seed);
+        const arrive = started.mission!.puzzles.find((p) => p.kind === 'ARRIVE');
+        if (arrive && arrive.kind === 'ARRIVE') {
+          expect(started.progress.recentElapsedPairs).toContainEqual([arrive.start, arrive.end]);
+        }
+        for (const r of solve(started).mission!.results) kinds.add(r.kind);
+      }
+    }
+    expect([...kinds].sort()).toEqual([
+      'ARRIVE',
+      'DIGITS',
+      'ELAPSED',
+      'MATCH',
+      'READ',
+      'SCHEDULE',
+      'SET',
+      'SHIFT',
+    ]);
   });
   it('adds the asked schedule segment to the recent elapsed pairs (SPEC §7.5)', () => {
     for (let seed = 1; seed < 200; seed++) {

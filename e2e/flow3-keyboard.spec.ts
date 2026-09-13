@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
   correctValue,
+  digitsClicks,
   readSave,
   setClockKeys,
   waitForCompletedMission,
@@ -50,6 +51,13 @@ async function solveByKeyboard(page: Page, m: StoredMission): Promise<void> {
     for (let i = 0; i < hours; i++) await page.keyboard.press('ArrowUp');
     for (let i = 0; i < steps; i++) await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
+  } else if (p.kind === 'DIGITS') {
+    // The digital builder takes the same keys as the SET clock (SPEC §6.4, D20).
+    await tabTo(page, 'digits-panel');
+    const { hours, minutes } = digitsClicks(p.target!, m.level);
+    for (let i = 0; i < hours; i++) await page.keyboard.press('ArrowUp');
+    for (let i = 0; i < minutes; i++) await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
   } else {
     await chooseByKeyboard(page, correctValue(p));
   }
@@ -89,7 +97,7 @@ test('flow 3 / AT-28 A: keyboard-only Rocket launch with a wrong pick, a hint, S
   for (let i = 0; i < 4; i++) {
     const m = await waitForMission(page, i);
     const p = m.puzzles[i]!;
-    if (!wrongTested && p.kind !== 'SET') {
+    if (!wrongTested && p.kind !== 'SET' && p.kind !== 'DIGITS') {
       // A wrong pick: the option is disabled with "Try again", focus moves on, nothing is lost.
       const wrong = p.choices!.find((c) => c !== p.target)!;
       await chooseByKeyboard(page, wrong);

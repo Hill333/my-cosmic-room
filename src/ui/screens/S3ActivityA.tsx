@@ -2,7 +2,14 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { formatDuration } from '../../core/elapsed.ts';
 import { isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
 import { formatTime, hour12Of, minutesOf, periodOf } from '../../core/time.ts';
-import type { DigitalMode, Mission, Puzzle, ReadingLevel, TimeValue } from '../../core/types.ts';
+import {
+  isInputKind,
+  type DigitalMode,
+  type Mission,
+  type Puzzle,
+  type ReadingLevel,
+  type TimeValue,
+} from '../../core/types.ts';
 import { formatTimeWords } from '../../core/words.ts';
 import { dispatch, language, save } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
@@ -13,6 +20,7 @@ import { play } from '../sound.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
 import { ChoiceGroup, type ChoiceOption } from '../components/ChoiceGroup.tsx';
 import type { CompanionPose } from '../components/Companion.tsx';
+import { DigitalBuilder } from '../components/DigitalBuilder.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { MissionFrame, PuzzleFooter } from '../components/MissionFrame.tsx';
 import { SetClock, type SetStatus } from '../components/SetClock.tsx';
@@ -23,7 +31,7 @@ interface Props {
   mission: Mission;
 }
 
-/** S3 Activity A (SPEC §3.6): READ, MATCH and SET puzzles inside the mission frame. */
+/** S3 Activity A (SPEC §3.6): READ, MATCH, SET, SHIFT and DIGITS puzzles inside the mission frame. */
 export function S3ActivityA({ mission }: Props) {
   const theme = mission.theme;
   const solved = mission.current.solved;
@@ -77,7 +85,7 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
   const theme = mission.theme;
   const lang = language.value;
   const mode: DigitalMode = save.value.settings.hour24Reading ? '24h' : '12h';
-  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'SCHEDULE') {
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'ARRIVE' || puzzle.kind === 'SCHEDULE') {
     throw new Error('Activity A expects reading puzzles');
   }
   const target = puzzle.target;
@@ -115,7 +123,7 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
       play('wrong');
       setWrong((w) => [...w, choice]);
       const key =
-        puzzle.kind === 'SET' && mission.current.wrongAttempts === 0
+        isInputKind(puzzle.kind) && mission.current.wrongAttempts === 0
           ? 'fb.setWrong'
           : `fb.wrong.${(totalWrong % 3) + 1}`;
       setFeedback(key as StringKey);
@@ -138,7 +146,9 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
         ? t('a.read.q')
         : puzzle.kind === 'MATCH'
           ? t('a.match.q', { time: shownTime })
-          : t('a.set.q', { time: shownTime });
+          : puzzle.kind === 'DIGITS'
+            ? t('a.digits.q')
+            : t('a.set.q', { time: shownTime });
 
   return (
     <div
@@ -203,6 +213,33 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
             onChange={() => setSetStatus('idle')}
             onCheck={answer}
           />
+        )}
+        {puzzle.kind === 'DIGITS' && (
+          // DIGITS (D20): the clock to read on the left, the display to build on the right;
+          // the hint is the READ hint beside the display.
+          <div class="read-clock">
+            <AnalogClock
+              time={target}
+              level={level}
+              theme={theme}
+              size={CLOCK_SIZE.puzzle}
+              period={period}
+              sweep={hintUsed}
+            />
+            <div class="digits-side">
+              <DigitalBuilder
+                target={target}
+                level={level}
+                mode={mode}
+                status={setStatus}
+                attempt={mission.current.wrongAttempts}
+                disabled={solved}
+                onChange={() => setSetStatus('idle')}
+                onCheck={answer}
+              />
+              {hintUsed && <ReadHint target={target} />}
+            </div>
+          </div>
         )}
       </div>
       <p

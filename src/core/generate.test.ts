@@ -17,11 +17,14 @@ import {
   sameReading,
   shiftTarget,
 } from './generate.ts';
+import { arrivalChoices } from './elapsed.ts';
 import { createRng } from './rng.ts';
 import { hoursOf, makeTime, minutesOf, periodOf } from './time.ts';
 import type {
+  ArrivePuzzle,
   DigitalMode,
   ElapsedLevel,
+  ElapsedPuzzle,
   Puzzle,
   ReadingLevel,
   ReadingPuzzle,
@@ -42,11 +45,14 @@ const distinct = (times: number[], mode: DigitalMode) =>
   new Set<string | number>(mode === '12h' ? sortedFaces(times) : times).size;
 /** Reading target of an Activity A puzzle (a SHIFT's target is its answer). */
 const targetOf = (p: Puzzle): number => {
-  if (p.kind === 'ELAPSED' || p.kind === 'SCHEDULE') throw new Error('not a reading puzzle');
+  if (!isReading(p)) throw new Error('not a reading puzzle');
   return p.target;
 };
 const isReading = (p: Puzzle): p is ReadingPuzzle | SetPuzzle | ShiftPuzzle =>
-  p.kind !== 'ELAPSED' && p.kind !== 'SCHEDULE';
+  p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE' && p.kind !== 'SCHEDULE';
+/** The interval of an Activity B time puzzle (ELAPSED or ARRIVE). */
+const isInterval = (p: Puzzle): p is ElapsedPuzzle | ArrivePuzzle =>
+  p.kind === 'ELAPSED' || p.kind === 'ARRIVE';
 
 describe('AT-05 precision per level (5,000 seeded missions per level)', () => {
   for (const level of READING) {
@@ -57,7 +63,7 @@ describe('AT-05 precision per level (5,000 seeded missions per level)', () => {
           const m = makeActivityAMission(level, mode, [], createRng(seed));
           for (const p of m.puzzles) {
             expect(allowed.has(minutesOf(targetOf(p)))).toBe(true);
-            if (p.kind !== 'SET' && p.kind !== 'ELAPSED') {
+            if (isReading(p) && 'choices' in p) {
               for (const c of p.choices) expect(allowed.has(minutesOf(c))).toBe(true);
             }
           }
@@ -74,7 +80,7 @@ describe('AT-06 choices', () => {
         for (let seed = 0; seed < MISSIONS; seed++) {
           const m = makeActivityAMission(level, mode, [], createRng(seed));
           for (const p of m.puzzles) {
-            if (!isReading(p) || p.kind === 'SET') continue;
+            if (!isReading(p) || !('choices' in p)) continue;
             expect(p.choices).toHaveLength(3);
             expect(new Set(sortedFaces(p.choices)).size).toBe(3);
             expect(p.choices.filter((c) => c === p.target)).toHaveLength(1);
@@ -126,7 +132,7 @@ describe('AT-07 concept examples', () => {
 
 describe('AT-08 mission shape', () => {
   for (const level of READING) {
-    it(`R${level}: READ, READ or SHIFT, MATCH, SET; SET never first, distinct targets, no recent`, () => {
+    it(`R${level}: READ, READ or SHIFT, MATCH or DIGITS, SET; no input puzzle first, distinct targets, no recent`, () => {
       for (const mode of MODES) {
         for (let seed = 0; seed < MISSIONS; seed++) {
           const rng = createRng(seed);
@@ -139,9 +145,10 @@ describe('AT-08 mission shape', () => {
           const shifts = kinds.filter((k) => k === 'SHIFT').length;
           expect(shifts).toBeLessThanOrEqual(level === 1 ? 0 : 1);
           expect(kinds.filter((k) => k === 'READ')).toHaveLength(2 - shifts);
-          expect(kinds.filter((k) => k === 'MATCH')).toHaveLength(1);
+          expect(kinds.filter((k) => k === 'MATCH' || k === 'DIGITS')).toHaveLength(1);
           expect(kinds.filter((k) => k === 'SET')).toHaveLength(1);
           expect(kinds[0]).not.toBe('SET');
+          expect(kinds[0]).not.toBe('DIGITS');
           expect(kinds[0]).not.toBe('SHIFT');
           const targets = m.puzzles.map(targetOf);
           expect(distinct(targets, mode)).toBe(4);
@@ -227,7 +234,7 @@ describe('AT-15 level windows (5,000 seeded missions per level)', () => {
         expect(m.activity).toBe('B');
         expect(m.puzzles).toHaveLength(4);
         for (const p of m.puzzles) {
-          if (p.kind !== 'ELAPSED') continue;
+          if (!isInterval(p)) continue;
           const gap = p.end - p.start;
           expect(p.start).toBeGreaterThanOrEqual(ELAPSED_WINDOW_START);
           expect(p.end).toBeLessThanOrEqual(ELAPSED_WINDOW_END);
@@ -238,14 +245,17 @@ describe('AT-15 level windows (5,000 seeded missions per level)', () => {
           expect(p.start % spec.step).toBe(0);
           expect(p.choices).toHaveLength(3);
           expect(new Set(p.choices).size).toBe(3);
-          expect(p.choices.filter((c) => c === gap)).toHaveLength(1);
+          expect(p.choices.filter((c) => c === (p.kind === 'ARRIVE' ? p.end : gap))).toHaveLength(
+            1,
+          );
         }
         // Distinct pairs; at most two share a duration. A SCHEDULE (SPEC §8.6) may replace
-        // puzzle 2 or 3; the ELAPSED rules hold among the rest.
-        const elapsed = m.puzzles.filter((p) => p.kind === 'ELAPSED');
+        // puzzle 2 or 3 and one interval is an ARRIVE (D20); the pair rules hold among the rest.
+        const elapsed = m.puzzles.filter(isInterval);
         expect(elapsed.length).toBeGreaterThanOrEqual(3);
-        expect(m.puzzles[0]!.kind).toBe('ELAPSED');
-        expect(m.puzzles[3]!.kind).toBe('ELAPSED');
+        expect(m.puzzles.filter((p) => p.kind === 'ARRIVE')).toHaveLength(1);
+        expect(m.puzzles[0]!.kind).not.toBe('SCHEDULE');
+        expect(m.puzzles[3]!.kind).not.toBe('SCHEDULE');
         const keys = elapsed.map((p) => `${p.start}-${p.end}`);
         expect(new Set(keys).size).toBe(elapsed.length);
         const gaps = elapsed.map((p) => p.end - p.start);
@@ -299,7 +309,7 @@ describe('AT-17 first E3 mission (generator part)', () => {
       if (last.kind !== 'ELAPSED') continue;
       expect([last.start, last.end]).toEqual([...REQUIRED_E3_PAIR]);
       expect([...last.choices].sort((a, b) => a - b)).toEqual([255, 285, 300]);
-      const elapsed = m.puzzles.filter((p) => p.kind === 'ELAPSED');
+      const elapsed = m.puzzles.filter(isInterval);
       const keys = elapsed.map((p) => `${p.start}-${p.end}`);
       expect(new Set(keys).size).toBe(elapsed.length);
       const gaps = elapsed.map((p) => p.end - p.start);
@@ -370,7 +380,8 @@ describe('AT-41 words (SPEC §7.7)', () => {
     for (let seed = 0; seed < MISSIONS; seed++) {
       const on = makeActivityAMission(3, '12h', [], createRng(seed), { words: true });
       for (const p of on.puzzles) {
-        if (p.kind === 'SHIFT') continue;
+        // SHIFT tells its own story and DIGITS answers in digits (D20): neither takes words.
+        if (p.kind === 'SHIFT' || p.kind === 'DIGITS') continue;
         total++;
         if (isReading(p) && p.words) marked++;
       }
@@ -429,6 +440,62 @@ describe('AT-42 SCHEDULE puzzles (SPEC §8.6, 5,000 seeded missions per level)',
   });
 });
 
+describe('D20 DIGITS puzzles (SPEC §7.3, 5,000 seeded missions per level)', () => {
+  for (const level of READING) {
+    it(`R${level}: about half of the missions swap the MATCH for a DIGITS, never first`, () => {
+      let digits = 0;
+      for (let seed = 0; seed < MISSIONS; seed++) {
+        const m = makeActivityAMission(level, '12h', [], createRng(seed), { words: true });
+        m.puzzles.forEach((p, i) => {
+          if (p.kind !== 'DIGITS') return;
+          digits++;
+          expect(i).toBeGreaterThan(0);
+          expect('words' in p).toBe(false);
+          expect(READING_LEVELS[level].allowedMinutes).toContain(minutesOf(p.target));
+        });
+      }
+      expect(digits / MISSIONS).toBeGreaterThan(0.45);
+      expect(digits / MISSIONS).toBeLessThan(0.55);
+    });
+  }
+});
+
+describe('D20 ARRIVE choices (SPEC §8.3 applied to the start)', () => {
+  it('14:30 → 19:15 at E3 offers 18:45 and 19:30 (the 255 and 300 minute mistakes)', () => {
+    const choices = arrivalChoices(T(14, 30), T(19, 15), 3, createRng(1));
+    expect([...choices].sort((a, b) => a - b)).toEqual([T(18, 45), T(19, 15), T(19, 30)]);
+  });
+  it('never offers a time before the start or past midnight, at every level and window corner', () => {
+    for (const level of ELAPSED) {
+      for (let seed = 0; seed < 2000; seed++) {
+        const [s, e] = pickInterval(level, createRng(seed));
+        const choices = arrivalChoices(s, e, level, createRng(seed));
+        expect(choices).toHaveLength(3);
+        expect(new Set(choices).size).toBe(3);
+        expect(choices.filter((c) => c === e)).toHaveLength(1);
+        for (const c of choices) {
+          expect(c).toBeGreaterThan(s);
+          expect(c).toBeLessThan(24 * 60);
+          expect(c % 15).toBe(0);
+        }
+      }
+    }
+    // The tightest corner: a one-hour journey ending at 22:00 at E1.
+    const late = arrivalChoices(T(21, 0), T(22, 0), 1, createRng(1));
+    expect(late).toContain(T(22, 0));
+    expect(late).toContain(T(23, 0));
+    expect(late).toContain(T(22, 30));
+  });
+  it('keeps the ARRIVE off the reserved 14:30 → 19:15 slot and never on a SCHEDULE', () => {
+    for (let seed = 0; seed < 1000; seed++) {
+      const m = makeActivityBMission(3, [], createRng(seed), true);
+      expect(m.puzzles[3]!.kind).toBe('ELAPSED');
+      expect(m.puzzles.filter((p) => p.kind === 'ARRIVE')).toHaveLength(1);
+      expect(m.puzzles.filter((p) => p.kind === 'ELAPSED').length).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
 describe('determinism (SPEC §7.6)', () => {
   it('replays identically from the same seed', () => {
     for (const level of READING) {
@@ -449,12 +516,8 @@ describe('determinism (SPEC §7.6)', () => {
   });
   it('matches the SPEC §19.1 shape for Space, Activity A, R2', () => {
     const m = makeActivityAMission(2, '12h', [], createRng(7));
-    expect(m.puzzles.map((p) => (p.kind === 'SHIFT' ? 'READ' : p.kind)).sort()).toEqual([
-      'MATCH',
-      'READ',
-      'READ',
-      'SET',
-    ]);
+    const asBase = (k: string) => (k === 'SHIFT' ? 'READ' : k === 'DIGITS' ? 'MATCH' : k);
+    expect(m.puzzles.map((p) => asBase(p.kind)).sort()).toEqual(['MATCH', 'READ', 'READ', 'SET']);
     const read = m.puzzles.find((p) => p.kind === 'READ') as ReadingPuzzle;
     expect(read.choices).toContain(read.target);
   });

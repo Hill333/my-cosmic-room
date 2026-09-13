@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
   completeMission,
+  digitsClicks,
   grantSpace,
   seedForFirstKind,
   seedSave,
@@ -81,7 +82,7 @@ test('sounds wait for a gesture, follow the toggle and match the hook points', a
     const m = await waitForMission(page, i);
     const p = m.puzzles[i]!;
     await page.evaluate('window.__plays.length = 0');
-    if (i === 0 && p.kind !== 'SET') {
+    if (i === 0 && p.kind !== 'SET' && p.kind !== 'DIGITS') {
       const wrong = p.choices!.find((c) => c !== p.target)!;
       await page.locator(`[data-testid="answer"][data-value="${wrong}"]`).click();
       await page.getByTestId('hint-button').click();
@@ -94,6 +95,12 @@ test('sounds wait for a gesture, follow the toggle and match the hook points', a
       for (let s = 0; s < steps; s++) await page.getByTestId('set-plus-step').click();
       await page.evaluate('window.__plays.length = 0');
       await page.getByTestId('set-check').click();
+    } else if (p.kind === 'DIGITS') {
+      const { hours, minutes } = digitsClicks(p.target!, m.level);
+      for (let h = 0; h < hours; h++) await page.getByTestId('digits-hour-up').click();
+      for (let s = 0; s < minutes; s++) await page.getByTestId('digits-minute-up').click();
+      await page.evaluate('window.__plays.length = 0');
+      await page.getByTestId('digits-check').click();
     } else {
       await page.locator(`[data-testid="answer"][data-value="${p.target}"]`).click();
     }

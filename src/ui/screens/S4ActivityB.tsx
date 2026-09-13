@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { assetUrl } from '../../assets.ts';
 import { formatDuration } from '../../core/elapsed.ts';
-import { askedSegment, isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
+import {
+  askedSegment,
+  correctValue,
+  isCorrectAnswer,
+  PUZZLES_PER_MISSION,
+} from '../../core/mission.ts';
 import { formatTime } from '../../core/time.ts';
 import type { Mission, Theme } from '../../core/types.ts';
 import { dispatch, language, save } from '../../state/store.ts';
@@ -125,15 +130,18 @@ interface PuzzleProps {
 }
 
 /**
- * One elapsed or schedule puzzle; remounted per `index`, so the jumps panel and wrong picks
- * reset. Both ask for a duration: ELAPSED between two digital displays, SCHEDULE for one
- * segment of the day-plan bar (SPEC §8.6); the jump hint covers that interval either way.
+ * One elapsed, arrival or schedule puzzle; remounted per `index`, so the jumps panel and
+ * wrong picks reset. ELAPSED and SCHEDULE ask for a duration: between two digital displays,
+ * or for one segment of the day-plan bar (SPEC §8.6). ARRIVE (D20) shows the start and the
+ * duration and asks for the arrival time; its jump hint hides the reached times until
+ * solved. The jump hint covers the puzzle's interval either way.
  */
 function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
-  if (puzzle.kind !== 'ELAPSED' && puzzle.kind !== 'SCHEDULE') {
-    throw new Error('Activity B expects ELAPSED or SCHEDULE puzzles');
+  if (puzzle.kind !== 'ELAPSED' && puzzle.kind !== 'ARRIVE' && puzzle.kind !== 'SCHEDULE') {
+    throw new Error('Activity B expects ELAPSED, ARRIVE or SCHEDULE puzzles');
   }
+  const arrive = puzzle.kind === 'ARRIVE';
   const theme = mission.theme;
   const lang = language.value;
   const elapsed = useElapsedSeconds();
@@ -141,14 +149,17 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
   const [wrong, setWrong] = useState<number[]>([]);
   const [jumpsOpen, setJumpsOpen] = useState(false);
   const solved = mission.current.solved;
-  const { start, end } = puzzle.kind === 'ELAPSED' ? puzzle : askedSegment(puzzle);
-  const correct = end - start;
+  const { start, end } = puzzle.kind === 'SCHEDULE' ? askedSegment(puzzle) : puzzle;
+  const correct = correctValue(puzzle);
+  const duration = formatDuration(end - start, lang);
   const questionText =
     puzzle.kind === 'ELAPSED'
       ? t(`b.q.${theme}`)
-      : t('b.sched.q', {
-          activity: t(`sched.${theme}.${askedSegment(puzzle).label}` as StringKey),
-        });
+      : puzzle.kind === 'ARRIVE'
+        ? t(`b.arrive.q.${theme}`, { dur: duration })
+        : t('b.sched.q', {
+            activity: t(`sched.${theme}.${askedSegment(puzzle).label}` as StringKey),
+          });
 
   useEffect(() => {
     question.current?.focus({ preventScroll: true });
@@ -179,7 +190,11 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
 
   const options: ChoiceOption[] = puzzle.choices.map((c) => ({
     value: c,
-    content: formatDuration(c, lang),
+    content: arrive ? (
+      <DigitalDisplay time={c} mode="24h" size="button" />
+    ) : (
+      formatDuration(c, lang)
+    ),
   }));
 
   return (
@@ -188,7 +203,9 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
         {questionText}
       </p>
       <div class="puzzle-body">
-        {puzzle.kind === 'ELAPSED' ? (
+        {puzzle.kind === 'SCHEDULE' ? (
+          <ScheduleBar theme={theme} segments={puzzle.segments} ask={puzzle.ask} />
+        ) : (
           <div class="journey-times">
             <DigitalDisplay
               time={start}
@@ -196,21 +213,39 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
               caption={t('b.leaves')}
               label={`${t('b.leaves')} ${formatTime(start, '24h')}`}
             />
-            <img
-              src={assetUrl(JOURNEY[theme].vehicle)}
-              alt=""
-              class="journey-times-icon"
-              draggable={false}
-            />
-            <DigitalDisplay
-              time={end}
-              mode="24h"
-              caption={t('b.arrives')}
-              label={`${t('b.arrives')} ${formatTime(end, '24h')}`}
-            />
+            <div class="journey-times-middle">
+              <img
+                src={assetUrl(JOURNEY[theme].vehicle)}
+                alt=""
+                class="journey-times-icon"
+                draggable={false}
+              />
+              {arrive && (
+                <span class="journey-takes" data-testid="journey-takes">
+                  <span class="journey-takes-caption">{t('b.takes')}</span>
+                  {duration}
+                </span>
+              )}
+            </div>
+            {arrive ? (
+              <span
+                class="digital digital-big digital-unknown"
+                role="img"
+                aria-label={t('b.arrivesUnknown')}
+                data-testid="arrives-unknown"
+              >
+                <span class="digital-caption">{t('b.arrives')}</span>
+                <span class="digital-digits">?:??</span>
+              </span>
+            ) : (
+              <DigitalDisplay
+                time={end}
+                mode="24h"
+                caption={t('b.arrives')}
+                label={`${t('b.arrives')} ${formatTime(end, '24h')}`}
+              />
+            )}
           </div>
-        ) : (
-          <ScheduleBar theme={theme} segments={puzzle.segments} ask={puzzle.ask} />
         )}
         <ChoiceGroup
           label={t('ui.answers')}
@@ -218,7 +253,7 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
           wrong={wrong}
           correct={solved ? correct : null}
           onPick={answer}
-          class="choices-durations"
+          class={arrive ? 'choices-digital' : 'choices-durations'}
         />
         <div class="jumps-box">
           <button
@@ -233,7 +268,7 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
           </button>
           {jumpsOpen && (
             <div class="jumps-panel">
-              <JumpTimeline start={start} end={end} />
+              <JumpTimeline start={start} end={end} hideTimes={arrive && !solved} />
             </div>
           )}
         </div>

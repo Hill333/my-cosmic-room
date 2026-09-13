@@ -51,6 +51,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
 | D18 | Heroine walks in the room (13 September 2026) | Requested by the child after playing: pick the heroine, click somewhere, she walks there; the bed puts her to sleep, the nook seats her, other items react when she arrives, the companion follows. Done with the existing standing figure and CSS only (a bob while walking, a mask above the blanket or the cushion), no new art; positions are UI state, never saved (§4.3). |
 | D19 | Workbook question types (13 September 2026) | Three question types from the child's Dutch workbook ("Blok 4", quarter hours) are mixed into the existing missions rather than given a third card: **times in words** (§7.7: READ answers, MATCH and SET prompts as "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor", about half of the reading puzzles, off via a Parent-corner switch), **SHIFT** (§7.3: "the rocket launches in 30 minutes, what time will it be?", ± quarter steps from R2) and **SCHEDULE** (§8.6: a day-plan bar of themed activities, "how long does refuelling take?"). Chosen with the user over a new activity card because the child's practice is the same four skills at the same levels, and the prize economy stays untouched. |
+| D20 | Digits and arrival puzzles (13 September 2026) | Two more kinds, developed in parallel with D19 and merged behind it: **DIGITS** (Activity A: read the clock and build the digital time with up/down buttons on a digital display; the reverse of MATCH and an input puzzle like SET; it replaces the MATCH in about half of the missions) and **ARRIVE** (Activity B: "Leaves at 14:30, the flight takes 2 h 15 min, when does it land?", pick the arrival time; the inverse of ELAPSED; one per mission). The same parallel work also produced a "time in words" kind and a "what time will it be in …" kind; those were dropped in favour of D19's words option and SHIFT, which cover them. No new art; §3.6, §3.7, §7.3, §7.5, §8.3 and §9.3 carry the rules. |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
@@ -158,6 +159,7 @@ Inside the panel, top to bottom:
    - MATCH: one large digital time display; under it three analog clocks (diameter 240 stage px each) as answer buttons, each with a plain letter label A/B/C above it. With `words` the display is a dark pill with the time in words and the question line repeats it.
    - SET: one large analog clock the child can manipulate, a control strip (§6.4), and a "Check" button. With `words` the question line names the target in words.
    - SHIFT (§7.3): the large clock shows the start; the question is themed and names the shift ("The rocket launches in 30 minutes. What time will it be?" / "The countdown started 15 minutes ago. What time was it?"; Sweet: the guests arrive / the cake went into the oven); under it three digital answer buttons. In 24-hour mode the period badge belongs to the start shown.
+   - DIGITS [D20]: "Write this time in digits." The 440 px analog clock on the left and, on the right, a digital display whose hours and minutes the child steps with ▲/▼ buttons (hours cycle 1–12, or 06–21 in 24-hour mode; minutes cycle the level's steps and stay at 00 at whole hours), plus "Check". The display takes the SET clock's keys while focused (Up/Down ± 1 hour, Left/Right ± one step, Enter = Check) and starts at 12:00 or 6:00 like the SET clock (§6.4). Correct means the digits match the target (in 24-hour mode the child builds the badge's half of the day). The `words` option never applies.
 4. Bottom row: "Hint" button (left), progress "Question k of 4" with four dots (centre), and "Next" (right, appears after a correct answer).
 
 Preparation tracker: four small icons under the panel that light up one per solved puzzle. Space: fuel, hatch, lights, countdown. Sweet: cups, cake, teapot, guests. After the fourth, the story reaction plays (rocket launch animation; tea party begins) before S5.
@@ -170,10 +172,10 @@ Same frame as S3. Inside the panel:
 
 1. Mission name and story line ("Space delivery — Your parcel is on its way!" / "Toy delivery — A parcel is coming to the playroom!").
 2. Journey strip: origin icon, dashed path with the vehicle (rocket carrying a parcel / balloon-carried parcel with the cat courier), destination icon. The vehicle advances one quarter of the path per solved puzzle.
-3. Question line: "How long is the journey?" / "How long does the delivery take?".
-4. Two digital displays labelled "Leaves" and "Arrives" (24-hour, §6.2) with a small vehicle icon between them. For a SCHEDULE puzzle (§8.6) the displays are replaced by the day-plan bar and the question names the asked activity ("How long does refuelling take?").
-5. Three duration answer buttons (§8.3).
-6. Collapsible "Show the jumps" hint (§8.4), collapsed by default, remembers nothing between puzzles.
+3. Question line: "How long is the journey?" / "How long does the delivery take?". ARRIVE [D20]: "The flight takes 2 hours 15 minutes. When does the parcel land?" / "The delivery takes …. When does the parcel arrive?".
+4. Two digital displays labelled "Leaves" and "Arrives" (24-hour, §6.2) with a small vehicle icon between them. For a SCHEDULE puzzle (§8.6) the displays are replaced by the day-plan bar and the question names the asked activity ("How long does refuelling take?"). For an ARRIVE puzzle the duration sits in a "Takes" pill under the vehicle and the "Arrives" display shows "?:??".
+5. Three duration answer buttons (§8.3). ARRIVE: three 24-hour digital time buttons, one of which is the arrival.
+6. Collapsible "Show the jumps" hint (§8.4), collapsed by default, remembers nothing between puzzles. ARRIVE: the same timeline with every reached time shown as "?" until the puzzle is solved, so the jumps scaffold the sum without giving the answer.
 7. Bottom row identical to S3.
 
 ### 3.8 S5 Mission complete and prize choice
@@ -405,6 +407,7 @@ For elapsed puzzles: at E2 and E3 the gap is a non-whole-hour duration with prob
 makeActivityAMission(level, mode, recentTargets, rng, { words }):
   kinds := shuffle([READ, READ, MATCH, SET], rng) until kinds[0] != SET
   if level ≥ R2 and chance(0.5): the later READ becomes SHIFT      // D19; never puzzle 1
+  if chance(0.5): the MATCH becomes DIGITS                          // D20; a MATCH in slot 1 first trades places with a READ
   targets := []
   repeat for i in 0..3:
     if kinds[i] == SHIFT: { start, delta, target } := makeShift(level, mode, rng)   // below
@@ -451,9 +454,11 @@ makeActivityBMission(level, recentPairs, rng, firstEverAtE3):
     pairs.push((S, E))
   if firstEverAtE3: pairs[3] := (14:30, 19:15)
   puzzles := pairs.map(p => { kind: ELAPSED, start: S, end: E, choices: makeDurationChoices(E − S, level, rng) })
+  if chance(0.5): puzzles[1 or 2] := makeSchedule(level, rng)                       // D19, §8.6
+  one remaining ELAPSED (never the reserved pair) becomes ARRIVE with makeArrivalChoices(S, E, level, rng)   // D20
 ```
 
-At most two of the four puzzles may share the same duration. `firstEverAtE3` is true for the first E3 mission played in each theme, so both the space and the sweet presentation show the required example [C].
+`makeArrivalChoices` applies the duration mistakes of §8.3 to the start (S + D′ for each distractor duration D′, then S + D ± 30 and ± 15 as the fallback), keeping every choice after the start and before midnight; for 14:30 → 19:15 the wrong arrivals are 18:45 and 19:30. At most two of the four puzzles may share the same duration. `firstEverAtE3` is true for the first E3 mission played in each theme, so both the space and the sweet presentation show the required example [C].
 
 ### 7.6 Determinism
 
@@ -549,7 +554,7 @@ Rendering (`ScheduleBar`): an 880-unit bar over a quarter-hour tick scale with 2
 
 ## 9. Answer validation and feedback
 
-### 9.1 Choice puzzles (READ, MATCH, ELAPSED)
+### 9.1 Choice puzzles (READ, MATCH, SHIFT, ELAPSED, ARRIVE, SCHEDULE)
 
 - The three options form a group; each is a large button (minimum 280 × 96 stage px, 44 px text) with a visible focus ring.
 - Wrong option: the button shakes once, shows an ✕ icon and the word "Try again" inside it, becomes disabled and dimmed; the companion makes a friendly "hmm" pose; a soft low sound plays; `wrongAttempts` increments. The child chooses again among the remaining options.
@@ -557,7 +562,7 @@ Rendering (`ScheduleBar`): an 880-unit bar over a quarter-hour tick scale with 2
 - Correct option: a ✓ icon, thick outline and a short varied companion cheer; "Next" appears and receives focus; the preparation tracker or journey vehicle advances by one step.
 - Options are never re-shuffled after a wrong pick.
 
-### 9.2 SET puzzles
+### 9.2 SET and DIGITS puzzles
 
 - "Check" validates as in §6.4. Wrong: gentle shake, one of three rotating messages with an icon, the Hint button pulses once, `wrongAttempts` increments. Unlimited attempts. Correct: as above.
 
@@ -571,7 +576,9 @@ One Hint button per puzzle; it can be used once per puzzle and sets `hintUsed`.
 | MATCH | The digital display splits into its hour and minute parts with captions "short hand → 3" and "long hand → 30". |
 | SET | Faint ghost hands show the target position under the real hands until the puzzle is solved. |
 | SHIFT | Faint ghost hands show the answer on the start clock with the caption "The faint hands show the new time." |
+| DIGITS | The READ hint (sweep, minute counter, hour caption) beside the display. |
 | ELAPSED | The jump timeline (§8.4–8.5). |
+| ARRIVE | The jump timeline with every reached time hidden as "?" until solved. |
 | SCHEDULE | The jump timeline for the asked segment. |
 
 ### 9.4 Reactions and text

@@ -4,12 +4,13 @@ import {
   completeMission,
   grantSpace,
   holdGear,
-  seedForFirstKind,
+  seedForMission,
   seedSave,
   seededSave,
   solveWithMouse,
   startMission,
   waitForMission,
+  wrongValue,
 } from './helpers.ts';
 
 /**
@@ -102,11 +103,17 @@ test('AT-34: S0, S1 with both panels, S2, S6', async ({ page }) => {
   await audit(page, 'S2 with locked levels');
 });
 
-test('AT-34: S3 READ, MATCH and SET with hints, wrong picks and the leave dialog', async ({
+test('AT-34: S3 READ, MATCH, SET and DIGITS with hints, wrong picks and the leave dialog', async ({
   page,
 }) => {
   const base = seededSave();
-  const seed = seedForFirstKind(base, 'space', 'READ');
+  // Opens with a READ and contains a DIGITS (D20), so the digital builder is audited too.
+  const seed = seedForMission(
+    base,
+    'space',
+    'A',
+    (ps) => ps[0]!.kind === 'READ' && ps.some((p) => p.kind === 'DIGITS'),
+  );
   await seedSave(page, startMission(base, 'space', 'A', seed));
   await page.goto('/');
   await expect(page.getByTestId('s3')).toBeVisible();
@@ -118,7 +125,7 @@ test('AT-34: S3 READ, MATCH and SET with hints, wrong picks and the leave dialog
     if (!seen.has(p.kind)) {
       seen.add(p.kind);
       await audit(page, `S3 ${p.kind}`);
-      if (p.kind !== 'SET') {
+      if (p.kind !== 'SET' && p.kind !== 'DIGITS') {
         // A wrong pick shows ✕ "Try again" on the option and the feedback line.
         const wrong = p.choices!.find((c) => c !== p.target)!;
         await page.locator(`[data-testid="answer"][data-value="${wrong}"]`).click();
@@ -137,27 +144,42 @@ test('AT-34: S3 READ, MATCH and SET with hints, wrong picks and the leave dialog
     }
     await solveWithMouse(page, m);
   }
-  expect([...seen].filter((k) => k !== 'SHIFT').sort()).toEqual(['MATCH', 'READ', 'SET']);
+  const asBase = (k: string) => (k === 'DIGITS' ? 'MATCH' : k);
+  expect(
+    [...seen]
+      .filter((k) => k !== 'SHIFT')
+      .map(asBase)
+      .sort(),
+  ).toEqual(['MATCH', 'READ', 'SET']);
   await expect(page.getByTestId('s5')).toBeVisible();
   await audit(page, 'S5 after the mission');
 });
 
-test('AT-34: S4 with the jump timeline, S5 seeded', async ({ page }) => {
+test('AT-34: S4 ELAPSED and ARRIVE with the jump timeline, S5 seeded', async ({ page }) => {
   const save = grantSpace(seededSave(), ['space.moonBed'], ['space.cloudPyjamas']);
   save.settings.elapsedLevel = 3;
   await seedSave(page, startMission(save, 'space', 'B', 11));
   await page.goto('/');
   await expect(page.getByTestId('s4')).toBeVisible();
   await audit(page, 'S4');
-  const m = await waitForMission(page, 0);
-  const p = m.puzzles[0]!;
-  const wrong = p.choices!.find((c) => c !== p.end! - p.start!)!;
-  await page.locator(`[data-testid="answer"][data-value="${wrong}"]`).click();
-  await page.getByTestId('show-jumps').click();
-  await expect(page.getByTestId('jump-timeline')).toBeVisible();
-  await audit(page, 'S4 with a wrong pick and the jumps');
-  await solveWithMouse(page, m);
-  await audit(page, 'S4 puzzle 2');
+  // Every B mission has an ARRIVE (D20) among an ELAPSED and maybe a SCHEDULE: audit each
+  // kind once with a wrong pick and the jumps open.
+  const seen = new Set<string>();
+  for (let i = 0; i < 4; i++) {
+    const m = await waitForMission(page, i);
+    const p = m.puzzles[i]!;
+    if (!seen.has(p.kind)) {
+      seen.add(p.kind);
+      await page.locator(`[data-testid="answer"][data-value="${wrongValue(p)}"]`).click();
+      await page.getByTestId('show-jumps').click();
+      await expect(page.getByTestId('jump-timeline')).toBeVisible();
+      await audit(page, `S4 ${p.kind} with a wrong pick and the jumps`);
+    }
+    await solveWithMouse(page, m);
+    if (i === 0) await audit(page, 'S4 puzzle 2');
+  }
+  expect(seen).toContain('ARRIVE');
+  expect(seen).toContain('ELAPSED');
 });
 
 test('AT-34: S5 from a completed mission', async ({ page }) => {
