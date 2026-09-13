@@ -89,6 +89,36 @@ native-speaker wording review of Turkish and Dutch, and the deployment itself.
   `tools/build-manifest.ts` keeps a hand-tuned `offset` on any overlay (the thinking face's
   was dropped on a rebuild before). Tests: 140 unit (2 new on the clip maths and the
   manifest), 27 e2e.
+- Fix: the ankle still looked cut off: the generated shoe pairs stand about 12 px closer
+  together than the figure's legs (the widths match, the spacing does not), so leg skin
+  showed beside each sock, and the ankle clip was a bare straight edge. Now post-processing
+  measures the centre of each leg at the cut (`anchors.feet.legX`) and of each foot of a feet
+  overlay (`footX`, kept by `build-manifest`), and a shoe is drawn as two halves split at its
+  pivot column (the gap between the shoes), each moved so its foot sits on its leg
+  (`overlayParts` / `overlayStyles` in `catalog/heroine.ts`; `clip-path` insets in
+  `components/Heroine.tsx`, the same in `tools/lib/heroine.ts`). A `clipAtAnkle` shoe also
+  gets an outline along the clip line (`ANKLE_CUFF`, 3 px in the art's outline colour: a
+  `heroine-cuff` span filled through the shoe's own alpha with a CSS mask, so it takes the
+  sock's exact width), so the clip reads as a sock cuff or boot top. Sneakers' `scale` 1.22
+  (was 1.18) so their sock is never narrower than a leg; `planetTee-loose` and
+  `strawberryDress-loose` had their cut left at the sock-top guess (the latter below the sock
+  top, so the extruded leg was sock-white) and now sit ~20 px above it like their siblings.
+- Fix: white gaps between the hair strands (the arcs at the top of the buns, loops in the
+  ponytail and loose hair) rendered as opaque white: they are background in the generation,
+  walled off from the border by the strands' outlines, so the flood fill never reached them.
+  `post-assets` now punches them on figures: a small white pocket (8–1800 px² of the raw)
+  that the search reaches from the background across at most 24 px of outline or hair (a
+  strand often lies between a gap and the outside), in the top 60 % of the silhouette,
+  whose surroundings past its rim are mostly hair-coloured (within 60 of the median of the
+  silhouette's top 12 %; the outline's blend with white counts as hair, other colours may
+  not outnumber them 1.4:1, since light strands fall outside the tolerance) becomes
+  transparent and feathered like the outer edge. Eye whites (enclosed by skin), socks and
+  the dress collar (too large) and the white prints on the clothes (a daisy on a sleeve, the
+  clouds on the pyjamas: cloth around them) stay; every threshold was checked against all
+  21 figures by diffing the output.
+  All 21 figures re-processed (`--force` from the raws; `legX` measured, anchors kept), the
+  six shoe overlays too (`footX`), tiles and the matrix sheet re-derived. Tests: 141 unit
+  (the parts / halves maths), 27 e2e.
 
 ## M5 Polish and release
 

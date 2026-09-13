@@ -266,7 +266,8 @@ const shoes = (prompt: string, clipAtAnkle = false): OverlaySpec => ({
  * Shoe and extra overlays by item name (SPEC §4.5): generated cut-outs snapped to the figure.
  * Shoes drawn with socks, legs or a shaft above the shoe are clipped at the figure's ankle cut
  * (the slippers, whose ears rise above the ankle, are not); their `scale` in the manifest is
- * tuned so the overlay's ankles line up with the figure's legs.
+ * tuned so the overlay's socks are as wide as the figure's legs (each half is placed on its
+ * own leg from the measured `footX` / `legX`, so the pair's spacing does not matter).
  */
 export const OVERLAY_GEN: Record<string, OverlaySpec> = {
   sneakers: shoes(

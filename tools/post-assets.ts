@@ -15,8 +15,12 @@
  * --reset-anchors) and are otherwise kept, since they are tuned by hand. The figure's own
  * white socks and feet are erased below the ankle cut (`anchors.feet.cutY`, guessed from the
  * sock silhouette the first time) and its legs extruded a little way down behind the shoes,
- * so a narrow shoe overlay never has socks or feet peeking out around it. Shoes, extras and
- * faces are cut out and fitted to their manifest size (faces get a soft elliptical edge).
+ * so a narrow shoe overlay never has socks or feet peeking out around it; the centre of each
+ * leg at the cut is measured (`anchors.feet.legX`) so the shoes can be drawn one per leg.
+ * White gaps enclosed between hair strands (background in the generation, walled off from
+ * the border by the strands' outlines) are made transparent too. Shoes, extras and faces are
+ * cut out and fitted to their manifest size (faces get a soft elliptical edge); feet overlays
+ * get the centre of each foot measured (`footX`).
  * Wardrobe tiles are cropped views of the figure: torso for outfits and the backpack, head for
  * hair and clips, feet for shoes, with the overlay composited at its anchor. --tiles re-derives
  * every heroine tile from the current files.
@@ -32,7 +36,7 @@ import type {
   TileCrop,
 } from '../src/assetTypes.ts';
 import { defaultHeroine, figureId, requireItem } from '../src/catalog/index.ts';
-import { overlayCanvas, overlayPlacement } from './lib/heroine.ts';
+import { overlayCanvas, overlayPlacements } from './lib/heroine.ts';
 import { ASSETS_DIR, assetFile, readManifest, writeManifest } from './lib/manifest.ts';
 import { DEFAULT_ANCHORS, FACE_SIZE, HEROINE_CANVAS } from './manifest-data.ts';
 
@@ -62,6 +66,26 @@ const LEG_SAMPLE_ROWS = 3;
 /** How far the legs are extruded below the cut, behind the shoe overlay, and the fade at the end. */
 const LEG_EXTRUDE = 50;
 const LEG_EXTRUDE_FADE = 8;
+/** An opaque run at least this wide (px) counts as a leg or a foot when measuring their centres. */
+const LIMB_MIN_WIDTH = 10;
+/** Hair gaps: how many px of outline or hair the search from the background may cross to reach one. */
+const GAP_REACH = 24;
+/** Hair gaps: largest white pocket taken for one, in px² of the generated image (socks are far bigger). */
+const GAP_MAX_AREA = 1800;
+/** Hair gaps: the pocket's non-outline surroundings must be within this of the hair colour, per channel. */
+const GAP_HAIR_TOLERANCE = 60;
+/** Hair gaps: smallest pocket worth punching, in px² of the generated image (specks in the outline stay). */
+const GAP_MIN_AREA = 8;
+/** Hair gaps: the surroundings are sampled this many px out from the pocket, past its anti-aliased rim. */
+const GAP_RIM = 3;
+/** Hair gaps: a sample this unsaturated (max minus min channel) is the rim's blend of outline and white. */
+const GAP_RIM_SATURATION = 30;
+/** Hair gaps: a pocket is kept when other colours outnumber the hair and rim samples by this factor. */
+const GAP_OTHER_RATIO = 1.4;
+/** Hair gaps: fraction of the silhouette's height, from the top, sampled for the hair colour. */
+const HAIR_BAND = 0.12;
+/** Hair gaps: only pockets within this fraction of the silhouette's height from the top are considered (hair ends at the chest). */
+const HAIR_REGION = 0.6;
 
 interface Args {
   only: string[];
@@ -209,7 +233,7 @@ async function deriveHeroineTile(tileId: string, manifest: AssetManifest): Promi
     figure = base;
     const canvas = await overlayCanvas(
       overlayFile,
-      overlayPlacement(base.anchors[source.anchor ?? 'feet'], source),
+      overlayPlacements(base.anchors[source.anchor ?? 'feet'], source),
     );
     const figureBuffer = await sharp(assetFile(base.path)).png().toBuffer();
     layered =
@@ -262,9 +286,10 @@ interface Cutout {
 
 /**
  * Makes the plain white background transparent by flood-filling from the borders (so white
- * areas inside the object stay), feathers the boundary, and returns the silhouette's box.
+ * areas inside the object stay, except a figure's hair gaps), feathers the boundary, and
+ * returns the silhouette's box.
  */
-function cutOut(data: Buffer, width: number, height: number): Cutout {
+function cutOut(data: Buffer, width: number, height: number, hairGaps = false): Cutout {
   const n = width * height;
   const background = new Uint8Array(n);
   const stack: number[] = [];
@@ -284,15 +309,16 @@ function cutOut(data: Buffer, width: number, height: number): Cutout {
     push(y * width);
     push(y * width + width - 1);
   }
-  while (stack.length) {
-    const i = stack.pop()!;
+  const neighbours = (i: number, visit: (j: number) => void) => {
     const x = i % width;
     const y = (i - x) / width;
-    if (x > 0) push(i - 1);
-    if (x < width - 1) push(i + 1);
-    if (y > 0) push(i - width);
-    if (y < height - 1) push(i + width);
-  }
+    if (x > 0) visit(i - 1);
+    if (x < width - 1) visit(i + 1);
+    if (y > 0) visit(i - width);
+    if (y < height - 1) visit(i + width);
+  };
+  while (stack.length) neighbours(stack.pop()!, push);
+  if (hairGaps) punchHairGaps(data, width, height, background, isWhite, neighbours);
   let minX = width;
   let minY = height;
   let maxX = -1;
@@ -331,6 +357,177 @@ function cutOut(data: Buffer, width: number, height: number): Cutout {
     height,
     box: { left, top, width: right - left + 1, height: bottom - top + 1 },
   };
+}
+
+/**
+ * Makes the white pockets enclosed between hair strands transparent. They are background in
+ * the generation (the same white), but the strands' outlines wall them off from the border so
+ * the flood fill never reaches them. A pocket counts when the search from the background
+ * reaches it by crossing at most GAP_REACH px of outline-dark or hair-coloured pixels (a
+ * strand often lies between a gap and the outside), it is small
+ * (GAP_MIN_AREA to GAP_MAX_AREA), it lies in the top HAIR_REGION of the silhouette (hair
+ * reaches the chest at most), and what surrounds it is hair-coloured rather than some
+ * other colour (the hair colour is the median of the top HAIR_BAND of the silhouette, which
+ * is hair on every figure; the surroundings are sampled GAP_RIM px out, past the pocket's
+ * anti-aliased rim, and the outline and its blend with white are not counted). Eye whites
+ * are enclosed by skin, socks are far larger, and white prints on the clothes (a daisy on a
+ * sleeve, a cloud on the pyjamas) sit against cloth, so they all stay.
+ */
+function punchHairGaps(
+  data: Buffer,
+  width: number,
+  height: number,
+  background: Uint8Array,
+  isWhite: (i: number) => boolean,
+  neighbours: (i: number, visit: (j: number) => void) => void,
+): void {
+  const n = width * height;
+  const isDark = (i: number) =>
+    Math.max(data[i * 4]!, data[i * 4 + 1]!, data[i * 4 + 2]!) < OUTLINE_DARK;
+  // The hair colour: the median colour of the top band of the silhouette, outline and white aside.
+  let minY = height;
+  let maxY = -1;
+  for (let i = 0; i < n; i++) {
+    if (background[i]) continue;
+    const y = Math.floor(i / width);
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+  if (maxY < 0) return;
+  const bandEnd = minY + Math.round((maxY - minY) * HAIR_BAND);
+  const hairBottom = minY + Math.round((maxY - minY) * HAIR_REGION);
+  const samples: [number[], number[], number[]] = [[], [], []];
+  for (let i = minY * width; i < Math.min(n, (bandEnd + 1) * width); i++) {
+    if (background[i] || isWhite(i) || isDark(i)) continue;
+    for (let c = 0; c < 3; c++) samples[c]!.push(data[i * 4 + c]!);
+  }
+  if (!samples[0].length) return;
+  const hair = samples.map((s) => s.sort((a, b) => a - b)[s.length >> 1]!);
+  const isHair = (i: number) =>
+    [0, 1, 2].every((c) => Math.abs(data[i * 4 + c]! - hair[c]!) <= GAP_HAIR_TOLERANCE);
+
+  // Breadth-first from the background through outline and hair pixels, at most GAP_REACH deep.
+  const passable = (i: number) => isDark(i) || isHair(i);
+  const seen = new Uint8Array(n);
+  let frontier: number[] = [];
+  for (let i = 0; i < n; i++) {
+    if (!background[i]) continue;
+    neighbours(i, (j) => {
+      if (!background[j] && !seen[j] && passable(j)) {
+        seen[j] = 1;
+        frontier.push(j);
+      }
+    });
+  }
+  const pocket = new Uint8Array(n);
+  for (let depth = 1; depth <= GAP_REACH && frontier.length; depth++) {
+    const next: number[] = [];
+    for (const i of frontier) {
+      neighbours(i, (j) => {
+        if (background[j] || seen[j]) return;
+        if (passable(j)) {
+          seen[j] = 1;
+          next.push(j);
+          return;
+        }
+        if (!isWhite(j) || pocket[j]) return;
+        // A white pocket: flood it, then judge it by its size and its surroundings.
+        const members = [j];
+        pocket[j] = 1;
+        for (let k = 0; k < members.length; k++) {
+          neighbours(members[k]!, (m) => {
+            if (!background[m] && !pocket[m] && isWhite(m)) {
+              pocket[m] = 1;
+              members.push(m);
+            }
+          });
+        }
+        if (members.length > GAP_MAX_AREA || members.length < GAP_MIN_AREA) return;
+        if (members.some((m) => Math.floor(m / width) > hairBottom)) return;
+        // Sample the surroundings past the rim: the outline does not count, its blend with
+        // white counts with the hair, and the pocket is a gap unless a different colour
+        // (cloth, skin) clearly outweighs them (light strands fall outside the hair tolerance).
+        let hairEdge = 0;
+        let rimEdge = 0;
+        let otherEdge = 0;
+        for (const m of members) {
+          const x = m % width;
+          const y = (m - x) / width;
+          for (const [dx, dy] of [
+            [GAP_RIM, 0],
+            [-GAP_RIM, 0],
+            [0, GAP_RIM],
+            [0, -GAP_RIM],
+          ]) {
+            const xx = x + dx!;
+            const yy = y + dy!;
+            if (xx < 0 || xx >= width || yy < 0 || yy >= height) continue;
+            const e = yy * width + xx;
+            if (background[e] || pocket[e] || isDark(e)) continue;
+            const r = data[e * 4]!;
+            const g = data[e * 4 + 1]!;
+            const b = data[e * 4 + 2]!;
+            if (Math.min(r, g, b) > FEATHER_FROM) continue; // the pocket's own rim
+            if (Math.max(r, g, b) - Math.min(r, g, b) < GAP_RIM_SATURATION) rimEdge++;
+            else if (isHair(e)) hairEdge++;
+            else otherEdge++;
+          }
+        }
+        if (otherEdge > GAP_OTHER_RATIO * (hairEdge + rimEdge)) return;
+        for (const m of members) background[m] = 1;
+      });
+    }
+    frontier = next;
+  }
+}
+
+/** Centres of the opaque runs (at least LIMB_MIN_WIDTH wide) across a row: the legs or feet. */
+function limbCentres(data: Buffer, width: number, y: number): number[] {
+  const centres: number[] = [];
+  let start = -1;
+  for (let x = 0; x <= width; x++) {
+    const on = x < width && data[(y * width + x) * 4 + 3]! > 128;
+    if (on && start < 0) start = x;
+    if (!on && start >= 0) {
+      if (x - start >= LIMB_MIN_WIDTH) centres.push((start + x - 1) / 2);
+      start = -1;
+    }
+  }
+  return centres;
+}
+
+/**
+ * The centre x of the left and right leg just above the ankle cut (`anchors.feet.legX`),
+ * or undefined when the rows there do not show exactly two legs.
+ */
+function guessLegs(data: Buffer, width: number, cutY: number): [number, number] | undefined {
+  const rows: number[][] = [];
+  for (let y = Math.max(0, cutY - LEG_SAMPLE_ROWS); y < cutY; y++) {
+    const c = limbCentres(data, width, y);
+    if (c.length === 2) rows.push(c);
+  }
+  if (!rows.length) return undefined;
+  const mean = (i: number) => Math.round(rows.reduce((a, r) => a + r[i]!, 0) / rows.length);
+  return [mean(0), mean(1)];
+}
+
+/**
+ * The centre x of each foot of a processed feet overlay (`footX`): the mean over the rows that
+ * show exactly two opaque runs, so the sock, the shoe and the sole all count.
+ */
+async function measureFeet(file: string): Promise<[number, number] | undefined> {
+  const { data, info } = await sharp(file)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const rows: number[][] = [];
+  for (let y = 0; y < info.height; y++) {
+    const c = limbCentres(data, info.width, y);
+    if (c.length === 2) rows.push(c);
+  }
+  if (rows.length < info.height / 4) return undefined;
+  const mean = (i: number) => Math.round(rows.reduce((a, r) => a + r[i]!, 0) / rows.length);
+  return [mean(0), mean(1)];
 }
 
 /**
@@ -457,7 +654,7 @@ async function processEntry(
       .ensureAlpha()
       .raw()
       .toBuffer({ resolveWithObject: true });
-    const cut = cutOut(data, info.width, info.height);
+    const cut = cutOut(data, info.width, info.height, true);
     const cropped = await sharp(cut.data, {
       raw: { width: cut.width, height: cut.height, channels: 4 },
     })
@@ -483,6 +680,10 @@ async function processEntry(
     }
     // The ankle cut is guessed from the socks once and then kept (tuned in ?debug=heroine).
     entry.anchors.feet.cutY ??= guessAnkleCut(canvas, w, h);
+    // The leg centres are measured from the art every time (nothing to tune by hand).
+    const legX = guessLegs(canvas, w, entry.anchors.feet.cutY);
+    if (legX) entry.anchors.feet.legX = legX;
+    else delete entry.anchors.feet.legX;
     cutAnkles(canvas, w, h, entry.anchors.feet.cutY);
     await sharp(canvas, { raw: { width: w, height: h, channels: 4 } })
       .png(pngOptions())
@@ -494,7 +695,7 @@ async function processEntry(
       const note = await deriveHeroineTile(tid, manifest);
       if (note) notes.push(note);
     }
-    return `${outRel} ${w}×${h} (figure ${fitted.info.width}×${fitted.info.height}, ankle cut ${entry.anchors.feet.cutY}) ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tiles → ' + notes.join(', ') : ''}`;
+    return `${outRel} ${w}×${h} (figure ${fitted.info.width}×${fitted.info.height}, ankle cut ${entry.anchors.feet.cutY}, legs ${legX ? legX.join('/') : 'not found'}) ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tiles → ' + notes.join(', ') : ''}`;
   }
 
   if (isFullFrame(entry)) {
@@ -564,12 +765,17 @@ async function processEntry(
     ];
   }
   if (isOverlay(entry)) {
+    if ((entry.anchor ?? 'feet') === 'feet') {
+      const footX = await measureFeet(out);
+      if (footX) entry.footX = footX;
+      else delete entry.footX;
+    }
     const notes: string[] = [];
     for (const tid of dependentTiles(id, manifest)) {
       const note = await deriveHeroineTile(tid, manifest);
       if (note) notes.push(note);
     }
-    return `${outRel} ${result.width}×${result.height} ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tile → ' + notes.join(', ') : ''}`;
+    return `${outRel} ${result.width}×${result.height}${entry.footX ? ` (feet ${entry.footX.join('/')})` : ''} ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tile → ' + notes.join(', ') : ''}`;
   }
 
   // Tile copy for the panel (SPEC §15.2 item 3): the cut-out fitted into 360 × 360.
@@ -674,6 +880,8 @@ async function main(): Promise<void> {
         target.size = updated.size;
         if (updated.pivot) target.pivot = updated.pivot;
         if (updated.anchors) target.anchors = updated.anchors;
+        if (updated.footX) target.footX = updated.footX;
+        else delete target.footX;
         if (target.gen && updated.gen) target.gen.status = updated.gen.status;
       }
       writeManifest(fresh);

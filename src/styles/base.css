@@ -383,6 +383,18 @@ button:disabled {
   position: absolute;
   object-fit: contain;
 }
+/* Outline along the clipped top of a shoe (components/Heroine.tsx sets --cuff-mask to the shoe
+   image, so the band takes the sock's exact width); the colour is catalog/heroine.ts's. */
+.heroine-cuff {
+  background: #381a3e;
+  -webkit-mask-image: var(--cuff-mask);
+  mask-image: var(--cuff-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
 
 /* S1 room chrome (SPEC §3.4); the scene itself is styled in room.css */
 .s1 {

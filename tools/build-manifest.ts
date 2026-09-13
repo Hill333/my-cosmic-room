@@ -185,6 +185,7 @@ for (const [id, entry] of desired) {
     if (old.anchors && entry.anchors) merged.anchors = old.anchors;
     if (old.offset && entry.anchor) merged.offset = old.offset;
     if (old.scale !== undefined && entry.anchor) merged.scale = old.scale;
+    if (old.footX && entry.anchor) merged.footX = old.footX; // measured by post-assets
     if (old.duration !== undefined) merged.duration = old.duration;
     if (old.gen && entry.gen) {
       merged.gen = {
