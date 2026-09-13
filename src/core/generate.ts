@@ -12,7 +12,10 @@ import type {
   Puzzle,
   ReadingLevel,
   ReadingPuzzle,
+  SchedulePuzzle,
+  ScheduleSegment,
   SetPuzzle,
+  ShiftPuzzle,
   TimeValue,
 } from './types.ts';
 
@@ -70,12 +73,46 @@ export const NON_WHOLE_GAP_PROBABILITY = 0.75;
 /** Probability of a non-zero start minute at E3 (SPEC §7.2). */
 export const E3_OFFSET_START_PROBABILITY = 0.5;
 
+/** Probability that the second READ of an Activity A mission becomes a SHIFT at R2+ (SPEC §7.3). */
+export const SHIFT_PROBABILITY = 0.5;
+/** Probability that a READ, MATCH or SET puzzle uses words when the setting is on (SPEC §7.7). */
+export const WORDS_PROBABILITY = 0.5;
+/** Probability that puzzle 2 or 3 of an Activity B mission becomes a SCHEDULE (SPEC §7.5). */
+export const SCHEDULE_PROBABILITY = 0.5;
+
+/** Signed shifts per reading level (SPEC §7.3); R1 has no SHIFT puzzles. */
+export const SHIFT_DELTAS: Record<ReadingLevel, readonly number[]> = {
+  1: [],
+  2: [-60, -30, 30, 60],
+  3: [-60, -45, -30, -15, 15, 30, 45, 60],
+  4: [-60, -45, -30, -15, 15, 30, 45, 60],
+};
+
+/** Segment lengths of a schedule bar per elapsed level (SPEC §8.6). */
+export const SCHEDULE_DURATIONS: Record<ElapsedLevel, readonly number[]> = {
+  1: [60, 120],
+  2: [15, 30, 45, 60, 75, 90],
+  3: [45, 60, 75, 90, 105, 120, 135, 150, 165, 180],
+};
+export const SCHEDULE_SEGMENTS = 4;
+/** Number of activity names per theme (`sched.<theme>.1` … `.6`). */
+export const SCHEDULE_LABELS = 6;
+/** A schedule bar starts on a whole hour in this range and spans at most six hours. */
+export const SCHEDULE_FIRST_HOUR = 7;
+export const SCHEDULE_LAST_HOUR = 14;
+export const SCHEDULE_MAX_SPAN = 360;
+
 const MAX_TRIES = 50;
 
 export interface GeneratedMission {
   activity: 'A' | 'B';
   level: number;
   puzzles: Puzzle[];
+}
+
+export interface ActivityAOptions {
+  /** Word-form presentation allowed (the parent's "Times in words" switch, SPEC §7.7). */
+  words: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -172,41 +209,141 @@ export function makeReadingChoices(
   return shuffle([target, ...chosen], rng);
 }
 
-/** Activity A mission: two READ, one MATCH, one SET; SET never first (SPEC §7.3). */
+/** True when a full-day value lies in the 24-hour reading window (SPEC §7.1). */
+function inReadingWindow(t: number): boolean {
+  return t >= READING_24H_FIRST_HOUR * 60 && t < (READING_24H_LAST_HOUR + 1) * 60;
+}
+
+/**
+ * A SHIFT puzzle (SPEC §7.3): a start at the level's precision, a signed quarter-step delta,
+ * and the face of start + delta as the target. In 24-hour mode both ends stay within the
+ * reading window; when the draws keep failing, the delta falls back to the hour that fits.
+ */
+export function makeShiftPuzzle(
+  level: ReadingLevel,
+  mode: DigitalMode,
+  rng: Rng,
+  targetOk: (target: TimeValue) => boolean = () => true,
+): ShiftPuzzle {
+  const deltas = SHIFT_DELTAS[level];
+  if (deltas.length === 0) throw new RangeError(`No SHIFT puzzles at R${level}`);
+  let start = pickTarget(level, mode, rng);
+  let delta = pick(rng, deltas);
+  for (let tries = 0; tries < MAX_TRIES; tries++) {
+    start = pickTarget(level, mode, rng);
+    delta = pick(rng, deltas);
+    const raw = start + delta;
+    if (mode === '24h' && !inReadingWindow(raw)) continue;
+    if (targetOk(shiftTarget(start, delta, mode))) break;
+  }
+  if (mode === '24h' && !inReadingWindow(start + delta)) {
+    delta = hoursOf(start) >= READING_24H_LAST_HOUR ? -60 : 60;
+  }
+  const target = shiftTarget(start, delta, mode);
+  return {
+    kind: 'SHIFT',
+    start,
+    delta,
+    target,
+    choices: makeShiftChoices(start, delta, level, mode, rng),
+  };
+}
+
+/** The answer of a shift: the face of start + delta, stored like a reading target (§6.3). */
+export function shiftTarget(start: TimeValue, delta: number, mode: DigitalMode): TimeValue {
+  const raw = start + delta;
+  return faceTime(hoursOf(raw), minutesOf(raw), mode);
+}
+
+/**
+ * Three choices for a SHIFT (SPEC §7.3): the target plus two distractors modelling, in order,
+ * moving the wrong way, not moving, being an hour off, and mirroring the minutes.
+ */
+export function makeShiftChoices(
+  start: TimeValue,
+  delta: number,
+  level: ReadingLevel,
+  mode: DigitalMode,
+  rng: Rng,
+): TimeValue[] {
+  const target = shiftTarget(start, delta, mode);
+  const sign = Math.sign(delta);
+  const candidates = [
+    start - delta, // 1: moved the wrong way
+    start, // 2: did not move
+    start + delta + sign * 60, // 3: an hour too far
+    start + sign * (60 - Math.abs(delta)), // 4: mirror minute (a quarter for three quarters)
+  ];
+  const chosen: TimeValue[] = [];
+  const accept = (raw: number): boolean => {
+    const hour = hoursOf(raw);
+    const minute = minutesOf(raw);
+    if (mode === '24h' && !inReadingWindow(raw)) return false;
+    if (!isAllowedReading(hour, minute, level, mode)) return false;
+    const t = faceTime(hour, minute, mode);
+    if (sameFace(t, target) || chosen.some((c) => sameFace(c, t))) return false;
+    chosen.push(t);
+    return true;
+  };
+  for (const raw of candidates) {
+    if (chosen.length === 2) break;
+    accept(raw);
+  }
+  while (chosen.length < 2) accept(pickTarget(level, mode, rng));
+  return shuffle([target, ...chosen], rng);
+}
+
+/**
+ * Activity A mission: two READ, one MATCH, one SET; SET never first (SPEC §7.3). At R2 and
+ * above the later of the two READs becomes a SHIFT with probability 0.5 (so a mission never
+ * opens with one), and with the words option each READ, MATCH and SET puzzle reads in words
+ * with probability 0.5 (SPEC §7.7).
+ */
 export function makeActivityAMission(
   level: ReadingLevel,
   mode: DigitalMode,
   recentTargets: readonly TimeValue[],
   rng: Rng,
+  options: ActivityAOptions = { words: false },
 ): GeneratedMission {
   const base: ('READ' | 'MATCH' | 'SET')[] = ['READ', 'READ', 'MATCH', 'SET'];
-  let kinds = shuffle(base, rng);
+  let kinds: ('READ' | 'MATCH' | 'SET' | 'SHIFT')[] = shuffle(base, rng);
   while (kinds[0] === 'SET') kinds = shuffle(base, rng);
-
-  const targets: TimeValue[] = [];
-  for (let i = 0; i < 4; i++) {
-    let tries = 0;
-    for (;;) {
-      const t = pickTarget(level, mode, rng);
-      tries++;
-      const inTargets = targets.some((x) => sameReading(x, t, mode));
-      const inRecent = recentTargets.some((x) => sameReading(x, t, mode));
-      if (!inTargets && (!inRecent || tries > MAX_TRIES)) {
-        targets.push(t);
-        break;
-      }
-    }
+  if (SHIFT_DELTAS[level].length > 0 && chance(rng, SHIFT_PROBABILITY)) {
+    kinds[kinds.lastIndexOf('READ')] = 'SHIFT';
   }
 
-  const puzzles: Puzzle[] = kinds.map((kind, i) => {
-    const target = targets[i]!;
-    if (kind === 'SET') return { kind, target } satisfies SetPuzzle;
-    return {
-      kind,
-      target,
-      choices: makeReadingChoices(target, level, mode, rng),
-    } satisfies ReadingPuzzle;
-  });
+  const targets: TimeValue[] = [];
+  const fresh = (t: TimeValue, tries: number): boolean => {
+    const inTargets = targets.some((x) => sameReading(x, t, mode));
+    const inRecent = recentTargets.some((x) => sameReading(x, t, mode));
+    return !inTargets && (!inRecent || tries > MAX_TRIES);
+  };
+  const puzzles: Puzzle[] = [];
+  for (const kind of kinds) {
+    if (kind === 'SHIFT') {
+      let tries = 0;
+      const shift = makeShiftPuzzle(level, mode, rng, (t) => fresh(t, ++tries));
+      // The fallback delta can still land on a used face; that is rarer than the recent-target
+      // fallback of §7.3 and equally harmless.
+      targets.push(shift.target);
+      puzzles.push(shift);
+      continue;
+    }
+    let target: TimeValue;
+    for (let tries = 1; ; tries++) {
+      target = pickTarget(level, mode, rng);
+      if (fresh(target, tries)) break;
+    }
+    targets.push(target);
+    const words = options.words && chance(rng, WORDS_PROBABILITY);
+    const puzzle: ReadingPuzzle | SetPuzzle =
+      kind === 'SET'
+        ? { kind, target }
+        : { kind, target, choices: makeReadingChoices(target, level, mode, rng) };
+    if (words) puzzle.words = true;
+    puzzles.push(puzzle);
+  }
   return { activity: 'A', level, puzzles };
 }
 
@@ -250,9 +387,40 @@ const samePair = (a: readonly [number, number], b: readonly [number, number]) =>
   a[0] === b[0] && a[1] === b[1];
 
 /**
+ * A schedule bar (SPEC §8.6): four contiguous segments from a whole hour between 07:00 and
+ * 14:00, lengths from the level's set, spanning at most six hours, with distinct activity
+ * names and one segment asked about.
+ */
+export function makeSchedulePuzzle(level: ElapsedLevel, rng: Rng): SchedulePuzzle {
+  const lengths = SCHEDULE_DURATIONS[level];
+  let picked: number[];
+  do {
+    picked = Array.from({ length: SCHEDULE_SEGMENTS }, () => pick(rng, lengths));
+  } while (picked.reduce((a, b) => a + b, 0) > SCHEDULE_MAX_SPAN);
+  const labels = shuffle(
+    Array.from({ length: SCHEDULE_LABELS }, (_, i) => i + 1),
+    rng,
+  ).slice(0, SCHEDULE_SEGMENTS);
+  let t = makeTime(randomInt(rng, SCHEDULE_FIRST_HOUR, SCHEDULE_LAST_HOUR), 0);
+  const segments: ScheduleSegment[] = picked.map((len, i) => {
+    const segment = { label: labels[i]!, start: t, end: t + len };
+    t += len;
+    return segment;
+  });
+  const ask = randomInt(rng, 0, SCHEDULE_SEGMENTS - 1);
+  const asked = segments[ask]!;
+  return {
+    kind: 'SCHEDULE',
+    segments,
+    ask,
+    choices: durationChoices(asked.end - asked.start, level, rng),
+  };
+}
+
+/**
  * Activity B mission: four ELAPSED puzzles with distinct pairs, none of the recent pairs, and
  * at most two sharing a duration (SPEC §7.5). The first E3 mission of a theme ends with
- * 14:30 → 19:15.
+ * 14:30 → 19:15. With probability 0.5 puzzle 2 or 3 is a SCHEDULE instead (SPEC §8.6).
  */
 export function makeActivityBMission(
   level: ElapsedLevel,
@@ -292,5 +460,8 @@ export function makeActivityBMission(
         choices: durationChoices(end - start, level, rng),
       }) satisfies ElapsedPuzzle,
   );
+  if (chance(rng, SCHEDULE_PROBABILITY)) {
+    puzzles[randomInt(rng, 1, 2)] = makeSchedulePuzzle(level, rng);
+  }
   return { activity: 'B', level, puzzles };
 }

@@ -137,7 +137,7 @@ test('AT-34: S3 READ, MATCH and SET with hints, wrong picks and the leave dialog
     }
     await solveWithMouse(page, m);
   }
-  expect([...seen].sort()).toEqual(['MATCH', 'READ', 'SET']);
+  expect([...seen].filter((k) => k !== 'SHIFT').sort()).toEqual(['MATCH', 'READ', 'SET']);
   await expect(page.getByTestId('s5')).toBeVisible();
   await audit(page, 'S5 after the mission');
 });

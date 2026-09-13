@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { assetUrl } from '../../assets.ts';
 import { formatDuration } from '../../core/elapsed.ts';
-import { isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
+import { askedSegment, isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
 import { formatTime } from '../../core/time.ts';
 import type { Mission, Theme } from '../../core/types.ts';
 import { dispatch, language, save } from '../../state/store.ts';
@@ -15,6 +15,7 @@ import type { CompanionPose } from '../components/Companion.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { JumpTimeline } from '../components/JumpTimeline.tsx';
 import { MissionFrame, PuzzleFooter } from '../components/MissionFrame.tsx';
+import { ScheduleBar } from '../components/ScheduleBar.tsx';
 
 interface Props {
   mission: Mission;
@@ -87,10 +88,16 @@ interface PuzzleProps {
   onNext: () => void;
 }
 
-/** One elapsed puzzle; remounted per `index`, so the jumps panel and wrong picks reset. */
+/**
+ * One elapsed or schedule puzzle; remounted per `index`, so the jumps panel and wrong picks
+ * reset. Both ask for a duration: ELAPSED between two digital displays, SCHEDULE for one
+ * segment of the day-plan bar (SPEC §8.6); the jump hint covers that interval either way.
+ */
 function PuzzleB({ mission, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
-  if (puzzle.kind !== 'ELAPSED') throw new Error('Activity B expects ELAPSED puzzles');
+  if (puzzle.kind !== 'ELAPSED' && puzzle.kind !== 'SCHEDULE') {
+    throw new Error('Activity B expects ELAPSED or SCHEDULE puzzles');
+  }
   const theme = mission.theme;
   const lang = language.value;
   const elapsed = useElapsedSeconds();
@@ -99,7 +106,14 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
   const [feedback, setFeedback] = useState<StringKey | null>(null);
   const [jumpsOpen, setJumpsOpen] = useState(false);
   const solved = mission.current.solved;
-  const correct = puzzle.end - puzzle.start;
+  const { start, end } = puzzle.kind === 'ELAPSED' ? puzzle : askedSegment(puzzle);
+  const correct = end - start;
+  const questionText =
+    puzzle.kind === 'ELAPSED'
+      ? t(`b.q.${theme}`)
+      : t('b.sched.q', {
+          activity: t(`sched.${theme}.${askedSegment(puzzle).label}` as StringKey),
+        });
 
   useEffect(() => {
     question.current?.focus({ preventScroll: true });
@@ -134,31 +148,35 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
   }));
 
   return (
-    <div class="puzzle" data-testid="puzzle" data-kind="ELAPSED" data-index={mission.index}>
+    <div class="puzzle" data-testid="puzzle" data-kind={puzzle.kind} data-index={mission.index}>
       <p class="question" data-testid="question" tabIndex={-1} ref={question}>
-        {t(`b.q.${theme}`)}
+        {questionText}
       </p>
       <div class="puzzle-body">
-        <div class="journey-times">
-          <DigitalDisplay
-            time={puzzle.start}
-            mode="24h"
-            caption={t('b.leaves')}
-            label={`${t('b.leaves')} ${formatTime(puzzle.start, '24h')}`}
-          />
-          <img
-            src={assetUrl(JOURNEY[theme].vehicle)}
-            alt=""
-            class="journey-times-icon"
-            draggable={false}
-          />
-          <DigitalDisplay
-            time={puzzle.end}
-            mode="24h"
-            caption={t('b.arrives')}
-            label={`${t('b.arrives')} ${formatTime(puzzle.end, '24h')}`}
-          />
-        </div>
+        {puzzle.kind === 'ELAPSED' ? (
+          <div class="journey-times">
+            <DigitalDisplay
+              time={start}
+              mode="24h"
+              caption={t('b.leaves')}
+              label={`${t('b.leaves')} ${formatTime(start, '24h')}`}
+            />
+            <img
+              src={assetUrl(JOURNEY[theme].vehicle)}
+              alt=""
+              class="journey-times-icon"
+              draggable={false}
+            />
+            <DigitalDisplay
+              time={end}
+              mode="24h"
+              caption={t('b.arrives')}
+              label={`${t('b.arrives')} ${formatTime(end, '24h')}`}
+            />
+          </div>
+        ) : (
+          <ScheduleBar theme={theme} segments={puzzle.segments} ask={puzzle.ask} />
+        )}
         <ChoiceGroup
           label={t('ui.answers')}
           options={options}
@@ -180,7 +198,7 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
           </button>
           {jumpsOpen && (
             <div class="jumps-panel">
-              <JumpTimeline start={puzzle.start} end={puzzle.end} />
+              <JumpTimeline start={start} end={end} />
             </div>
           )}
         </div>

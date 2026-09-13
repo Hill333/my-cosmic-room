@@ -1,7 +1,12 @@
 import { expect, type Page } from '@playwright/test';
-import { isCorrectAnswer, missionReducer, PUZZLES_PER_MISSION } from '../src/core/mission.ts';
+import {
+  correctValue as coreCorrectValue,
+  isCorrectAnswer,
+  missionReducer,
+  PUZZLES_PER_MISSION,
+} from '../src/core/mission.ts';
 import { createFreshSave } from '../src/core/save.ts';
-import type { Activity, Save, Theme } from '../src/core/types.ts';
+import type { Activity, Puzzle, Save, Theme } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -12,11 +17,18 @@ import type { Activity, Save, Theme } from '../src/core/types.ts';
 export const SAVE_KEY = 'mcr.save.v1';
 
 export interface StoredPuzzle {
-  kind: 'READ' | 'MATCH' | 'SET' | 'ELAPSED';
+  kind: 'READ' | 'MATCH' | 'SET' | 'ELAPSED' | 'SHIFT' | 'SCHEDULE';
   target?: number;
   choices?: number[];
   start?: number;
   end?: number;
+  /** READ, MATCH and SET in words (SPEC §7.7). */
+  words?: true;
+  /** SHIFT: signed minutes. */
+  delta?: number;
+  /** SCHEDULE: the segments and the one asked about (SPEC §8.6). */
+  segments?: { label: number; start: number; end: number }[];
+  ask?: number;
 }
 
 export interface StoredMission {
@@ -46,6 +58,7 @@ export interface StoredSave {
     elapsedLevel: number;
     levelsLocked: boolean;
     hour24Reading: boolean;
+    timeWords?: boolean;
     sound: boolean;
   };
   progress: { history: { activity: string; level: number }[] };
@@ -99,7 +112,7 @@ export function completeMission(save: Save): Save {
   for (let i = 0; i < PUZZLES_PER_MISSION; i++) {
     const m = next.mission!;
     const p = m.puzzles[m.index]!;
-    const choice = p.kind === 'ELAPSED' ? p.end - p.start : p.target;
+    const choice = coreCorrectValue(p);
     if (!isCorrectAnswer(p, choice)) throw new Error('completeMission: wrong answer');
     next = missionReducer(next, { type: 'mission/answer', choice, seconds: 5 });
     next = missionReducer(next, { type: 'mission/next' });
@@ -114,6 +127,20 @@ export function seedForFirstKind(save: Save, theme: Theme, kind: 'READ' | 'MATCH
     if (m.puzzles[0]!.kind === kind) return seed;
   }
   throw new Error(`No seed found for ${kind}`);
+}
+
+/** Seed whose mission satisfies `wanted` (for the workbook kinds of SPEC §7.3, §7.7, §8.6). */
+export function seedForMission(
+  save: Save,
+  theme: Theme,
+  activity: Activity,
+  wanted: (puzzles: Puzzle[]) => boolean,
+): number {
+  for (let seed = 1; seed < 2000; seed++) {
+    const m = startMission(save, theme, activity, seed).mission!;
+    if (wanted(m.puzzles)) return seed;
+  }
+  throw new Error('No seed found for the wanted mission');
 }
 
 /** Grants earnable Space items so the next pair is the one a test needs (SPEC §10.2). */
@@ -202,7 +229,17 @@ export function setClockKeys(target: number, level: number): { hours: number; st
 /** Correct answer value of a puzzle as the option's `data-value`. */
 export function correctValue(p: StoredPuzzle): number {
   if (p.kind === 'ELAPSED') return p.end! - p.start!;
+  if (p.kind === 'SCHEDULE') {
+    const seg = p.segments![p.ask!]!;
+    return seg.end - seg.start;
+  }
   return p.target!;
+}
+
+/** A wrong option's `data-value` (never for SET, which has no options). */
+export function wrongValue(p: StoredPuzzle): number {
+  const correct = correctValue(p);
+  return p.choices!.find((c) => c !== correct)!;
 }
 
 /** First launch: choose English and open the Space room. */

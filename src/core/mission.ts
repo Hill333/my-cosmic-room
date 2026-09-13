@@ -17,7 +17,10 @@ import type {
   PuzzleResult,
   ReadingLevel,
   Save,
+  SchedulePuzzle,
+  ScheduleSegment,
   Theme,
+  TimeValue,
 } from './types.ts';
 
 export type MissionEvent =
@@ -39,17 +42,50 @@ const RECENT_TARGETS = 8;
 const RECENT_PAIRS = 8;
 const HISTORY_LENGTH = 20;
 
-/** True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours. */
-export function isCorrectAnswer(puzzle: Puzzle, choice: number): boolean {
+/** The asked segment of a schedule puzzle. */
+export function askedSegment(puzzle: SchedulePuzzle): ScheduleSegment {
+  return puzzle.segments[puzzle.ask]!;
+}
+
+/**
+ * The value that answers a puzzle: a time for READ, MATCH, SET and SHIFT, a duration in
+ * minutes for ELAPSED and SCHEDULE.
+ */
+export function correctValue(puzzle: Puzzle): number {
   switch (puzzle.kind) {
     case 'READ':
     case 'MATCH':
-      return choice === puzzle.target;
     case 'SET':
-      return sameFace(choice, puzzle.target);
+    case 'SHIFT':
+      return puzzle.target;
     case 'ELAPSED':
-      return choice === puzzle.end - puzzle.start;
+      return puzzle.end - puzzle.start;
+    case 'SCHEDULE': {
+      const seg = askedSegment(puzzle);
+      return seg.end - seg.start;
+    }
   }
+}
+
+/** The reading target a puzzle adds to `recentReadingTargets` (SPEC §7.3), or null. */
+export function readingTargetOf(puzzle: Puzzle): TimeValue | null {
+  return puzzle.kind === 'ELAPSED' || puzzle.kind === 'SCHEDULE' ? null : puzzle.target;
+}
+
+/** The interval a puzzle adds to `recentElapsedPairs` (SPEC §7.5), or null. */
+export function elapsedPairOf(puzzle: Puzzle): [TimeValue, TimeValue] | null {
+  if (puzzle.kind === 'ELAPSED') return [puzzle.start, puzzle.end];
+  if (puzzle.kind === 'SCHEDULE') {
+    const seg = askedSegment(puzzle);
+    return [seg.start, seg.end];
+  }
+  return null;
+}
+
+/** True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours. */
+export function isCorrectAnswer(puzzle: Puzzle, choice: number): boolean {
+  if (puzzle.kind === 'SET') return sameFace(choice, puzzle.target);
+  return choice === correctValue(puzzle);
 }
 
 export function missionReducer(save: Save, event: MissionEvent): Save {
@@ -157,8 +193,12 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       mode,
       progress.recentReadingTargets,
       rng,
+      { words: save.settings.timeWords },
     ).puzzles;
-    const targets = puzzles.map((p) => (p.kind === 'ELAPSED' ? p.end : p.target));
+    const targets = puzzles.flatMap((p) => {
+      const t = readingTargetOf(p);
+      return t === null ? [] : [t];
+    });
     nextProgress = {
       ...progress,
       recentReadingTargets: [...progress.recentReadingTargets, ...targets].slice(-RECENT_TARGETS),
@@ -172,9 +212,10 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       rng,
       firstEverAtE3,
     ).puzzles;
-    const pairs = puzzles.flatMap((p) =>
-      p.kind === 'ELAPSED' ? [[p.start, p.end] as [number, number]] : [],
-    );
+    const pairs = puzzles.flatMap((p) => {
+      const pair = elapsedPairOf(p);
+      return pair === null ? [] : [pair];
+    });
     nextProgress = {
       ...progress,
       recentElapsedPairs: [...progress.recentElapsedPairs, ...pairs].slice(-RECENT_PAIRS),

@@ -33,7 +33,7 @@ checklist, followed by the known limitations and the open spec questions.
    (from `node tools/heroine-matrix.ts`) shows every outfit × shoe at once. Check S3 / S4 for
    the happy, thinking and cheering faces and S5 for the happy face. All 21 figures and every
    overlay are generated; to redo one, see "Heroine" in the README (`npm run assets:gen --
-   --regen <id>` pauses by itself when the Codex five-hour window is full, then
+--regen <id>` pauses by itself when the Codex five-hour window is full, then
    `npm run assets:post -- --only <id> --force` and retune its anchors).
 4. **Backdrop QA.** The runner-up candidates of both rooms are kept as
    `assets/.gen/<theme>/room/background.<a|b>.png`; the chosen one is `background.png`. To swap:
@@ -48,7 +48,12 @@ checklist, followed by the known limitations and the open spec questions.
    read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
    is not. Start with the longest sentences: the S2 mission descriptions
    (`mission.*.desc`), the S6 level descriptions (`level.*.desc`) and import summary
-   (`s6.importSummary`), and the hint captions (`hint.*`). `npm test` enforces sentence case
+   (`s6.importSummary`), and the hint captions (`hint.*`). Then the workbook additions
+   (D18, [NEW_QUESTION_TYPES.md](NEW_QUESTION_TYPES.md)): the times in words `words.m0` …
+   `words.m55` (Dutch "10 voor half 4", Turkish case endings from `core/words.ts` — check
+   "on ikiyi", "altıya"), the day-plan activity names `sched.*` (they sit inside "Hoe lang
+   duurt {activity}?" / "{activity} ne kadar sürer?", so Turkish ones are capitalised as
+   sentence starts) and the SHIFT questions `a.shift.*`. `npm test` enforces sentence case
    and that every key exists in all three languages, so edits are safe to make directly.
 7. **Deploy (SPEC §16.5).** When you are happy: commit, then either push a tag
    (`git tag v0.1.0 && git push origin main v0.1.0`) or run the "Deploy to GitHub Pages"

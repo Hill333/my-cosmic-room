@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { formatDuration } from '../../core/elapsed.ts';
 import { isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
 import { formatTime, hour12Of, minutesOf, periodOf } from '../../core/time.ts';
 import type { DigitalMode, Mission, Puzzle, ReadingLevel, TimeValue } from '../../core/types.ts';
-import { dispatch, save } from '../../state/store.ts';
+import { formatTimeWords } from '../../core/words.ts';
+import { dispatch, language, save } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
@@ -58,9 +60,19 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
   const level = mission.level as ReadingLevel;
   const theme = mission.theme;
+  const lang = language.value;
   const mode: DigitalMode = save.value.settings.hour24Reading ? '24h' : '12h';
-  const target = puzzle.kind === 'ELAPSED' ? puzzle.end : puzzle.target;
-  const period = mode === '24h' ? periodOf(target) : null;
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'SCHEDULE') {
+    throw new Error('Activity A expects reading puzzles');
+  }
+  const target = puzzle.target;
+  // SHIFT shows the start on its clock; the badge belongs to what is shown (SPEC §6.1).
+  const period = mode === '24h' ? periodOf(puzzle.kind === 'SHIFT' ? puzzle.start : target) : null;
+  /** The prompt time as digits or, for word-form puzzles (SPEC §7.7), in words. */
+  const shownTime =
+    puzzle.kind !== 'SHIFT' && puzzle.words
+      ? formatTimeWords(target, lang)
+      : formatTime(target, mode);
   const elapsed = useElapsedSeconds();
   const question = useRef<HTMLParagraphElement>(null);
   const [wrong, setWrong] = useState<number[]>([]);
@@ -104,14 +116,24 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
   };
 
   const questionText =
-    puzzle.kind === 'READ'
-      ? t('a.read.q')
-      : puzzle.kind === 'MATCH'
-        ? t('a.match.q', { time: formatTime(target, mode) })
-        : t('a.set.q', { time: formatTime(target, mode) });
+    puzzle.kind === 'SHIFT'
+      ? t(`a.shift.${puzzle.delta > 0 ? 'later' : 'ago'}.${theme}`, {
+          delta: formatDuration(Math.abs(puzzle.delta), lang),
+        })
+      : puzzle.kind === 'READ'
+        ? t('a.read.q')
+        : puzzle.kind === 'MATCH'
+          ? t('a.match.q', { time: shownTime })
+          : t('a.set.q', { time: shownTime });
 
   return (
-    <div class="puzzle" data-testid="puzzle" data-kind={puzzle.kind} data-index={mission.index}>
+    <div
+      class="puzzle"
+      data-testid="puzzle"
+      data-kind={puzzle.kind}
+      data-index={mission.index}
+      data-words={puzzle.kind !== 'SHIFT' && puzzle.words ? 'true' : undefined}
+    >
       <p class="question" data-testid="question" tabIndex={-1} ref={question}>
         {questionText}
       </p>
@@ -135,6 +157,19 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
             level={level}
             mode={mode}
             theme={theme}
+            hint={hintUsed}
+            wrong={wrong}
+            solved={solved}
+            onPick={answer}
+          />
+        )}
+        {puzzle.kind === 'SHIFT' && (
+          <ShiftPuzzle
+            puzzle={puzzle}
+            level={level}
+            mode={mode}
+            theme={theme}
+            period={period}
             hint={hintUsed}
             wrong={wrong}
             solved={solved}
@@ -185,7 +220,10 @@ interface ReadProps {
   onPick: (value: number) => void;
 }
 
-/** READ: a 440 px clock over three digital answer buttons; hint = sweep and hour caption (§9.3). */
+/**
+ * READ: a 440 px clock over three answer buttons, digital or in words (SPEC §7.7);
+ * hint = sweep and hour caption (§9.3).
+ */
 function ReadPuzzle({
   puzzle,
   level,
@@ -197,9 +235,14 @@ function ReadPuzzle({
   solved,
   onPick,
 }: ReadProps) {
+  const lang = language.value;
   const options: ChoiceOption[] = puzzle.choices.map((c) => ({
     value: c,
-    content: <DigitalDisplay time={c} mode={mode} size="button" />,
+    content: puzzle.words ? (
+      formatTimeWords(c, lang)
+    ) : (
+      <DigitalDisplay time={c} mode={mode} size="button" />
+    ),
   }));
   return (
     <>
@@ -213,6 +256,59 @@ function ReadPuzzle({
           sweep={hint}
         />
         {hint && <ReadHint target={puzzle.target} />}
+      </div>
+      <ChoiceGroup
+        label={t('ui.answers')}
+        options={options}
+        wrong={wrong}
+        correct={solved ? puzzle.target : null}
+        onPick={onPick}
+        class={puzzle.words ? 'choices-words' : 'choices-digital'}
+      />
+    </>
+  );
+}
+
+interface ShiftProps extends Omit<ReadProps, 'puzzle'> {
+  puzzle: Extract<Puzzle, { kind: 'SHIFT' }>;
+}
+
+/**
+ * SHIFT (SPEC §3.6): the clock shows the start, the question names the shift, three digital
+ * answers; the hint draws the target as faint ghost hands with a caption (§9.3).
+ */
+function ShiftPuzzle({
+  puzzle,
+  level,
+  mode,
+  theme,
+  period,
+  hint,
+  wrong,
+  solved,
+  onPick,
+}: ShiftProps) {
+  const options: ChoiceOption[] = puzzle.choices.map((c) => ({
+    value: c,
+    content: <DigitalDisplay time={c} mode={mode} size="button" />,
+  }));
+  return (
+    <>
+      <div class="read-clock">
+        <AnalogClock
+          time={puzzle.start}
+          level={level}
+          theme={theme}
+          size={CLOCK_SIZE.puzzle}
+          period={period}
+          label={t('a.shift.clockLabel')}
+          ghost={hint && !solved ? puzzle.target : null}
+        />
+        {hint && (
+          <p class="hint-hour" role="status" data-testid="shift-hint">
+            {t('hint.shift')}
+          </p>
+        )}
       </div>
       <ChoiceGroup
         label={t('ui.answers')}
@@ -251,8 +347,12 @@ function ReadHint({ target }: { target: TimeValue }) {
 
 type MatchProps = Omit<ReadProps, 'period'>;
 
-/** MATCH: a big digital prompt over three 240 px clock buttons labelled A/B/C (SPEC §3.6). */
+/**
+ * MATCH: a big digital prompt (or the time in words, SPEC §7.7) over three 240 px clock
+ * buttons labelled A/B/C (SPEC §3.6).
+ */
 function MatchPuzzle({ puzzle, level, mode, theme, hint, wrong, solved, onPick }: MatchProps) {
+  const lang = language.value;
   const options: ChoiceOption[] = puzzle.choices.map((c, i) => ({
     value: c,
     letter: LETTERS[i]!,
@@ -262,10 +362,15 @@ function MatchPuzzle({ puzzle, level, mode, theme, hint, wrong, solved, onPick }
     ),
   }));
   const shown = formatTime(puzzle.target, mode);
+  const words = puzzle.words ? formatTimeWords(puzzle.target, lang) : null;
   return (
     <>
       {hint ? (
-        <MatchHint target={puzzle.target} mode={mode} />
+        <MatchHint target={puzzle.target} mode={mode} words={words} />
+      ) : words ? (
+        <p class="words-big" role="img" aria-label={words} data-testid="words-prompt">
+          {words}
+        </p>
       ) : (
         <DigitalDisplay time={puzzle.target} mode={mode} label={shown} />
       )}
@@ -281,12 +386,24 @@ function MatchPuzzle({ puzzle, level, mode, theme, hint, wrong, solved, onPick }
   );
 }
 
+interface MatchHintProps {
+  target: TimeValue;
+  mode: DigitalMode;
+  /** The word form of a words puzzle, shown with its digits above the split (SPEC §9.3). */
+  words: string | null;
+}
+
 /** The digital display split into its hour and minute parts with hand captions (SPEC §9.3). */
-function MatchHint({ target, mode }: { target: TimeValue; mode: DigitalMode }) {
+function MatchHint({ target, mode, words }: MatchHintProps) {
   const [hours, minutes] = formatTime(target, mode).split(':') as [string, string];
   const m = minutesOf(target);
   return (
     <div class="match-hint" data-testid="match-hint" role="group" aria-label={t('q.hint')}>
+      {words && (
+        <p class="hint-caption match-words" data-testid="words-hint">
+          {t('hint.wordsDigital', { words, time: formatTime(target, mode) })}
+        </p>
+      )}
       <div class="match-part">
         <span class="digital digital-big" aria-hidden="true">
           <span class="digital-digits">{hours}</span>

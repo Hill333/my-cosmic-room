@@ -1016,3 +1016,134 @@
   padding: 6px 22px;
   font-size: 24px;
 }
+
+/* Times in words (SPEC §7.7): word answers and the MATCH word prompt. */
+.choices-words .choice {
+  font-size: 34px;
+  min-width: 290px;
+  text-align: center;
+}
+.words-big {
+  margin: 0;
+  padding: 16px 40px;
+  border-radius: 24px;
+  background: var(--plum);
+  color: #fff;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+}
+.match-hint {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.match-words {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+/* Schedule bar (SPEC §8.6): four coloured segments with ordinal badges over a quarter-hour scale. */
+.sched {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.sched-bar {
+  display: block;
+  font-family: var(--font);
+}
+.sched-segment rect {
+  stroke: #fff;
+  stroke-width: 3;
+}
+.sched-fill-1 rect,
+.sched-fill-1 .sched-swatch {
+  fill: var(--sunny);
+  background: var(--sunny);
+}
+.sched-fill-2 rect,
+.sched-fill-2 .sched-swatch {
+  fill: var(--mint);
+  background: var(--mint);
+}
+.sched-fill-3 rect,
+.sched-fill-3 .sched-swatch {
+  fill: var(--lavender);
+  background: var(--lavender);
+}
+.sched-fill-4 rect,
+.sched-fill-4 .sched-swatch {
+  fill: var(--pink);
+  background: var(--pink);
+}
+.sched-fill-5 rect,
+.sched-fill-5 .sched-swatch {
+  fill: var(--peach);
+  background: var(--peach);
+}
+.sched-fill-6 rect,
+.sched-fill-6 .sched-swatch {
+  fill: #a9d8f0;
+  background: #a9d8f0;
+}
+.sched-segment.sched-asked rect {
+  stroke: var(--plum);
+  stroke-width: 6;
+}
+.sched-badge {
+  fill: #fff;
+  stroke: var(--plum);
+  stroke-width: 3;
+}
+.sched-badge-text {
+  fill: var(--plum);
+  font-weight: 900;
+}
+.sched-tick line {
+  stroke: var(--plum);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.sched-time {
+  fill: var(--plum);
+  font-size: 22px;
+  font-weight: 800;
+}
+.sched-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sched-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 14px 2px 2px;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 800;
+}
+.sched-key.sched-asked {
+  border-color: var(--plum);
+  background: #fff;
+}
+.sched-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--plum);
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--plum);
+}

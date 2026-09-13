@@ -11,6 +11,7 @@ export type SettingsEvent =
   | { type: 'settings/elapsedLevel'; level: ElapsedLevel; byParent?: boolean }
   | { type: 'settings/levelsLocked'; locked: boolean }
   | { type: 'settings/hour24Reading'; enabled: boolean }
+  | { type: 'settings/timeWords'; enabled: boolean }
   | { type: 'settings/lastTheme'; theme: Theme };
 
 export function settingsReducer(save: Save, event: SettingsEvent): Save {
@@ -35,6 +36,8 @@ export function settingsReducer(save: Save, event: SettingsEvent): Save {
       return withSettings(save, { levelsLocked: event.locked });
     case 'settings/hour24Reading':
       return withSettings(save, { hour24Reading: event.enabled });
+    case 'settings/timeWords':
+      return withSettings(save, { timeWords: event.enabled });
     case 'settings/lastTheme':
       return withSettings(save, { lastTheme: event.theme });
   }
