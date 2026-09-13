@@ -19,8 +19,14 @@ export const CLOCK = {
   hitPadding: 24,
 } as const;
 
-/** Stage sizes in px (SPEC §6.1). */
-export const CLOCK_SIZE = { puzzle: 440, option: 240, wall: 120 } as const;
+/** Stage sizes in px (SPEC §6.1); `later` and `optionSmall` fit a LATER puzzle's two rows. */
+export const CLOCK_SIZE = {
+  puzzle: 440,
+  option: 240,
+  later: 300,
+  optionSmall: 200,
+  wall: 120,
+} as const;
 
 export type Hand = 'hour' | 'minute';
 

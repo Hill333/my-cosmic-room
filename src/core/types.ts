@@ -1,6 +1,7 @@
 /**
  * Shared types for the pure game core (SPEC §6–§11).
- * This module has no runtime code and no DOM or framework imports.
+ * This module has no DOM or framework imports; its only runtime code is a few constant
+ * lists and kind predicates.
  */
 
 /** Minutes since midnight, integer 0–1439 (SPEC §0). */
@@ -34,17 +35,40 @@ export type ReadingLevel = 1 | 2 | 3 | 4;
 export type ElapsedLevel = 1 | 2 | 3;
 
 export type Activity = 'A' | 'B';
-export type PuzzleKind = 'READ' | 'MATCH' | 'SET' | 'ELAPSED';
+/**
+ * Puzzle kinds. Activity A: READ, MATCH, SET (SPEC §3.6) plus one of the extra kinds per
+ * mission (D14, revised): WORDS (say the time), LATER (what time will it be in …), DIGITS
+ * (build the digital time). Activity B: ELAPSED (how long) plus ARRIVE (when does it arrive).
+ */
+export type PuzzleKind =
+  'READ' | 'MATCH' | 'WORDS' | 'SET' | 'DIGITS' | 'LATER' | 'ELAPSED' | 'ARRIVE';
 
+/** The kinds that can stand in for one READ in an Activity A mission. */
+export type ExtraKind = 'WORDS' | 'LATER' | 'DIGITS';
+export const EXTRA_KINDS: readonly ExtraKind[] = ['WORDS', 'LATER', 'DIGITS'];
+
+/** A clock to read (READ), a digital time to find on a face (MATCH), or a clock to say (WORDS). */
 export interface ReadingPuzzle {
-  kind: 'READ' | 'MATCH';
+  kind: 'READ' | 'MATCH' | 'WORDS';
   target: TimeValue;
   choices: TimeValue[];
 }
 
+/** A time to set on the analog clock (SET) or to build on a digital display (DIGITS). */
 export interface SetPuzzle {
-  kind: 'SET';
+  kind: 'SET' | 'DIGITS';
   target: TimeValue;
+}
+
+/** "What time will it be in {gap}?": the clock shows `start`; the answer is `end`. */
+export interface LaterPuzzle {
+  kind: 'LATER';
+  start: TimeValue;
+  /** Minutes forward, a multiple of the level step. */
+  gap: number;
+  end: TimeValue;
+  /** Times shown as clock faces; exactly one equals `end`. */
+  choices: TimeValue[];
 }
 
 export interface ElapsedPuzzle {
@@ -55,7 +79,21 @@ export interface ElapsedPuzzle {
   choices: number[];
 }
 
-export type Puzzle = ReadingPuzzle | SetPuzzle | ElapsedPuzzle;
+/** "Leaves at {start}, takes {end − start}: when does it arrive?" */
+export interface ArrivePuzzle {
+  kind: 'ARRIVE';
+  start: TimeValue;
+  end: TimeValue;
+  /** Arrival times; exactly one equals `end`. */
+  choices: TimeValue[];
+}
+
+export type Puzzle = ReadingPuzzle | SetPuzzle | LaterPuzzle | ElapsedPuzzle | ArrivePuzzle;
+
+/** The kinds that need a hand, a button strip or a keyboard rather than a pick (SPEC §9.2). */
+export function isInputKind(kind: PuzzleKind): kind is 'SET' | 'DIGITS' {
+  return kind === 'SET' || kind === 'DIGITS';
+}
 
 export interface PuzzleResult {
   kind: PuzzleKind;

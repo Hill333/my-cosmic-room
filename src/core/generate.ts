@@ -2,18 +2,23 @@
  * Level tables and mission generators (SPEC §7). Pure and deterministic: every random
  * decision goes through the injected RNG, so a mission replays identically from its seed.
  */
-import { durationChoices } from './elapsed.ts';
+import { arrivalChoices, durationChoices } from './elapsed.ts';
 import { chance, pick, randomInt, shuffle, type Rng } from './rng.ts';
 import { hour12Of, hoursOf, makeTime, minutesOf, sameFace } from './time.ts';
-import type {
-  DigitalMode,
-  ElapsedLevel,
-  ElapsedPuzzle,
-  Puzzle,
-  ReadingLevel,
-  ReadingPuzzle,
-  SetPuzzle,
-  TimeValue,
+import {
+  EXTRA_KINDS,
+  isInputKind,
+  type ArrivePuzzle,
+  type DigitalMode,
+  type ElapsedLevel,
+  type ElapsedPuzzle,
+  type ExtraKind,
+  type LaterPuzzle,
+  type Puzzle,
+  type ReadingLevel,
+  type ReadingPuzzle,
+  type SetPuzzle,
+  type TimeValue,
 } from './types.ts';
 
 export { createRng } from './rng.ts';
@@ -40,6 +45,17 @@ export const READING_LEVELS: Record<ReadingLevel, ReadingLevelSpec> = {
   2: { level: 2, step: 30, allowedMinutes: [0, 30], newMinutes: [30] },
   3: { level: 3, step: 15, allowedMinutes: [0, 15, 30, 45], newMinutes: [15, 45] },
   4: { level: 4, step: 5, allowedMinutes: fives, newMinutes: fives.filter((m) => m % 15 !== 0) },
+};
+
+/**
+ * Gaps a LATER puzzle may ask about per reading level ("What time will it be in …?"):
+ * multiples of the level step up to two hours, kept to the counts a child says easily.
+ */
+export const LATER_GAPS: Record<ReadingLevel, readonly number[]> = {
+  1: [60, 120],
+  2: [30, 60, 90, 120],
+  3: [15, 30, 45, 60, 75, 90],
+  4: [5, 10, 15, 20, 25, 30, 45, 60],
 };
 
 /** Elapsed levels E1–E3 (SPEC §7.1). Gaps in minutes. */
@@ -128,8 +144,40 @@ export function pickTarget(level: ReadingLevel, mode: DigitalMode, rng: Rng): Ti
 }
 
 /**
- * Three reading choices for READ and MATCH (SPEC §7.4): the target plus two distractors taken
- * in order from the mistake-modelling candidate list, validated, then shuffled.
+ * Two distractors from an ordered candidate list of (hour, minute) readings, validated for
+ * the level and mode, never the target or each other (by face, so in 24-hour mode a choice
+ * never depends on the badge alone), then random allowed times as the fallback.
+ */
+function pickDistractors(
+  target: TimeValue,
+  candidates: readonly (readonly [number, number])[],
+  level: ReadingLevel,
+  mode: DigitalMode,
+  rng: Rng,
+): TimeValue[] {
+  const chosen: TimeValue[] = [];
+  const accept = (hour: number, minute: number): boolean => {
+    if (!Number.isInteger(hour) || !isAllowedReading(hour, minute, level, mode)) return false;
+    const t = faceTime(hour, minute, mode);
+    if (sameFace(t, target) || chosen.some((c) => sameFace(c, t))) return false;
+    chosen.push(t);
+    return true;
+  };
+  for (const [hour, minute] of candidates) {
+    if (chosen.length === 2) break;
+    accept(hour, minute);
+  }
+  while (chosen.length < 2) {
+    const t = pickTarget(level, mode, rng);
+    accept(hoursOf(t), minutesOf(t));
+  }
+  return chosen;
+}
+
+/**
+ * Three reading choices for READ, MATCH and WORDS (SPEC §7.4): the target plus two
+ * distractors taken in order from the mistake-modelling candidate list, validated, then
+ * shuffled.
  */
 export function makeReadingChoices(
   target: TimeValue,
@@ -150,38 +198,57 @@ export function makeReadingChoices(
     [h, m === 0 ? step : 0], // 4: long hand ignored
     [h - 1, m], // 5: hour hand read as the numeral it passed
   ];
-  const chosen: TimeValue[] = [];
-  const accept = (hour: number, minute: number): boolean => {
-    if (!Number.isInteger(hour) || !isAllowedReading(hour, minute, level, mode)) return false;
-    const t = faceTime(hour, minute, mode);
-    // Never the target or another distractor; in 24-hour mode also never the same face
-    // twelve hours apart, which would make the choice depend on the badge alone.
-    if (sameFace(t, target) || chosen.some((c) => sameFace(c, t))) return false;
-    chosen.push(t);
-    return true;
-  };
-  for (const [hour, minute] of candidates) {
-    if (chosen.length === 2) break;
-    accept(hour, minute);
-  }
-  // 6: random allowed time as the fallback.
-  while (chosen.length < 2) {
-    const t = pickTarget(level, mode, rng);
-    accept(hoursOf(t), minutesOf(t));
-  }
-  return shuffle([target, ...chosen], rng);
+  return shuffle([target, ...pickDistractors(target, candidates, level, mode, rng)], rng);
 }
 
-/** Activity A mission: two READ, one MATCH, one SET; SET never first (SPEC §7.3). */
+/** The reading `gap` minutes after `start`, stored the way the mode stores faces. */
+function laterEnd(start: TimeValue, gap: number, mode: DigitalMode): TimeValue {
+  const t = start + gap;
+  return faceTime(hoursOf(t), minutesOf(t), mode);
+}
+
+/** True when a LATER puzzle from `start` with `gap` stays inside the mode's hour range. */
+function laterFits(start: TimeValue, gap: number, level: ReadingLevel, mode: DigitalMode): boolean {
+  const end = start + gap;
+  return isAllowedReading(hoursOf(end), minutesOf(end), level, mode);
+}
+
+/**
+ * Three clock faces for a LATER puzzle: the true end plus two distractors modelling the
+ * mistakes of moving hands forward: an hour too many, an hour too few, not moving at all,
+ * moving backwards, and moving twice.
+ */
+export function makeLaterChoices(
+  start: TimeValue,
+  gap: number,
+  level: ReadingLevel,
+  mode: DigitalMode,
+  rng: Rng,
+): TimeValue[] {
+  const end = start + gap;
+  const at = (t: number): [number, number] => [hoursOf(t), minutesOf(t)];
+  const candidates = [at(end + 60), at(end - 60), at(start), at(start - gap), at(end + gap)];
+  const target = laterEnd(start, gap, mode);
+  return shuffle([target, ...pickDistractors(target, candidates, level, mode, rng)], rng);
+}
+
+/**
+ * Activity A mission (SPEC §7.3, D14): one READ, one MATCH, one SET and one extra kind
+ * (WORDS, LATER or DIGITS) chosen per mission, shuffled so that an input puzzle (SET or
+ * DIGITS) is never first.
+ */
 export function makeActivityAMission(
   level: ReadingLevel,
   mode: DigitalMode,
   recentTargets: readonly TimeValue[],
   rng: Rng,
 ): GeneratedMission {
-  const base: ('READ' | 'MATCH' | 'SET')[] = ['READ', 'READ', 'MATCH', 'SET'];
+  const extra: ExtraKind = pick(rng, EXTRA_KINDS);
+  const base = ['READ', 'MATCH', 'SET', extra] as const;
   let kinds = shuffle(base, rng);
-  while (kinds[0] === 'SET') kinds = shuffle(base, rng);
+  while (isInputKind(kinds[0]!)) kinds = shuffle(base, rng);
+  // A LATER puzzle's gap is fixed before its start, so the start can be chosen to fit.
+  const gap = extra === 'LATER' ? pick(rng, LATER_GAPS[level]) : 0;
 
   const targets: TimeValue[] = [];
   for (let i = 0; i < 4; i++) {
@@ -191,7 +258,8 @@ export function makeActivityAMission(
       tries++;
       const inTargets = targets.some((x) => sameReading(x, t, mode));
       const inRecent = recentTargets.some((x) => sameReading(x, t, mode));
-      if (!inTargets && (!inRecent || tries > MAX_TRIES)) {
+      const fits = kinds[i] !== 'LATER' || laterFits(t, gap, level, mode);
+      if (!inTargets && fits && (!inRecent || tries > MAX_TRIES)) {
         targets.push(t);
         break;
       }
@@ -200,7 +268,16 @@ export function makeActivityAMission(
 
   const puzzles: Puzzle[] = kinds.map((kind, i) => {
     const target = targets[i]!;
-    if (kind === 'SET') return { kind, target } satisfies SetPuzzle;
+    if (kind === 'SET' || kind === 'DIGITS') return { kind, target } satisfies SetPuzzle;
+    if (kind === 'LATER') {
+      return {
+        kind,
+        start: target,
+        gap,
+        end: laterEnd(target, gap, mode),
+        choices: makeLaterChoices(target, gap, level, mode, rng),
+      } satisfies LaterPuzzle;
+    }
     return {
       kind,
       target,
@@ -250,9 +327,9 @@ const samePair = (a: readonly [number, number], b: readonly [number, number]) =>
   a[0] === b[0] && a[1] === b[1];
 
 /**
- * Activity B mission: four ELAPSED puzzles with distinct pairs, none of the recent pairs, and
- * at most two sharing a duration (SPEC §7.5). The first E3 mission of a theme ends with
- * 14:30 → 19:15.
+ * Activity B mission (SPEC §7.5, D14): three ELAPSED puzzles and one ARRIVE puzzle in a
+ * random order, with distinct pairs, none of the recent pairs, and at most two sharing a
+ * duration. The first E3 mission of a theme ends with 14:30 → 19:15 as an ELAPSED puzzle.
  */
 export function makeActivityBMission(
   level: ElapsedLevel,
@@ -281,16 +358,27 @@ export function makeActivityBMission(
       }
     }
   }
-  if (reserved) pairs.push([reserved[0], reserved[1]]);
+  const kinds = shuffle(['ELAPSED', 'ELAPSED', ...(reserved ? [] : ['ELAPSED']), 'ARRIVE'], rng);
+  if (reserved) {
+    pairs.push([reserved[0], reserved[1]]);
+    kinds.push('ELAPSED');
+  }
 
-  const puzzles: Puzzle[] = pairs.map(
-    ([start, end]) =>
-      ({
-        kind: 'ELAPSED',
+  const puzzles: Puzzle[] = pairs.map(([start, end], i) => {
+    if (kinds[i] === 'ARRIVE') {
+      return {
+        kind: 'ARRIVE',
         start,
         end,
-        choices: durationChoices(end - start, level, rng),
-      }) satisfies ElapsedPuzzle,
-  );
+        choices: arrivalChoices(start, end, level, rng),
+      } satisfies ArrivePuzzle;
+    }
+    return {
+      kind: 'ELAPSED',
+      start,
+      end,
+      choices: durationChoices(end - start, level, rng),
+    } satisfies ElapsedPuzzle;
+  });
   return { activity: 'B', level, puzzles };
 }

@@ -4,6 +4,21 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
 ## 0.1.0 — release candidate (M0 to M5)
 
+- New question types (SPEC D14 revised, D19; 13 September 2026). Every Activity A mission is
+  now READ + MATCH + SET + one extra kind drawn per mission; every Activity B mission is three
+  ELAPSED + one ARRIVE. **WORDS**: read the clock, pick the time in words the school way in
+  each language ("Half past three", "Üçü çeyrek geçiyor", "Kwart over drie"; `core/words.ts`
+  declines the Turkish hour and counts the Dutch half hour). **LATER**: "What time will it be
+  in 1 hour?" over a start clock, three clock faces to pick from, gaps per level
+  (`LATER_GAPS`); the hint names the start in digits. **DIGITS**: build the digital time on a
+  display with ▲/▼ buttons or the SET keys (`components/DigitalBuilder.tsx`); the READ hint
+  beside it. **ARRIVE**: "The flight takes 2 h 15 min, when does the parcel land?", pick the
+  arrival time; the jump timeline hides its reached times until solved (`hideTimes`).
+  Distractors model the new mistakes (an hour too many / too few, not moving, moving twice;
+  duration mistakes applied to the start). `core/mission.ts` gained `correctValue` and
+  `shownTime`; the e2e helpers solve every kind. Strings in all three languages. The
+  AT-36 reduced-motion counter assertion now polls (a race that :00 targets used to hide).
+
 - Heroine walks (SPEC §4.3 "Walk, bed, sit", D18): clicking her picks her (pulsing ring,
   `aria-pressed`); the next click on the floor walks her there, the bed puts her to sleep
   (head on the pillow over the bed, "z z z", the room darkens without saving a lamp

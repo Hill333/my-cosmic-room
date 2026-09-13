@@ -35,14 +35,22 @@ test('flow 2: Toy delivery at Long journeys, 14:30 → 19:15 with a wrong pick a
     'A parcel is coming to the playroom!',
   );
 
-  // Puzzles 1–3 straight through; the vehicle advances a quarter per solved puzzle.
+  // Puzzles 1–3 straight through; the vehicle advances a quarter per solved puzzle. One of
+  // them is the ARRIVE kind (D14): the Sweet wording and the unknown arrival display.
+  let arrived = false;
   for (let i = 0; i < 3; i++) {
     const m = await waitForMission(page, i);
     expect(m.theme).toBe('sweet');
     expect(m.level).toBe(3);
     await expect(page.getByTestId('journey')).toHaveAttribute('data-solved', String(i));
+    if (m.puzzles[i]!.kind === 'ARRIVE') {
+      await expect(page.getByTestId('question')).toContainText('When does the parcel arrive?');
+      await expect(page.getByTestId('arrives-unknown')).toBeVisible();
+      arrived = true;
+    }
     await solveWithMouse(page, m);
   }
+  expect(arrived).toBe(true);
 
   // Puzzle 4 is the required example (SPEC §7.5, AT-17): 14:30 → 19:15.
   const m = await waitForMission(page, 3);

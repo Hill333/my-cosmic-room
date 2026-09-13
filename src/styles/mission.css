@@ -646,6 +646,111 @@
   font-weight: 800;
 }
 
+/* WORDS: the READ layout with the answers in words ("Half past three"), wrapping to two lines. */
+.choices-words .choice {
+  min-width: 280px;
+  max-width: 292px;
+  min-height: 112px;
+  font-size: 28px;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+/* LATER: a 300 px start clock with the gap pill beside it, over three 200 px clock options. */
+.later-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 320px;
+}
+.later-gap {
+  padding: 10px 28px;
+  border: 3px solid var(--plum);
+  border-radius: 999px;
+  background: var(--sunny);
+  font-size: 32px;
+  font-weight: 900;
+  text-align: center;
+}
+.later-side .hint-hour {
+  animation-delay: 0s;
+}
+.choices-clocks-small .choice {
+  min-width: 232px;
+  padding: 10px;
+}
+
+/* DIGITS: the clock on the left, the digital builder (components/DigitalBuilder.tsx) on the right. */
+.digits-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.digits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.digits-panel {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 32px;
+}
+.digits-panel:focus-visible {
+  outline-width: 6px;
+  outline-offset: 4px;
+}
+.digits-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+/* At whole hours the minute column has no buttons; pad it so the digits line up. */
+.digits-col-locked {
+  padding-top: 70px;
+}
+.digits-step {
+  min-width: 96px;
+  min-height: 64px;
+  padding: 4px 16px;
+  font-size: 24px;
+}
+.digits-display {
+  padding: 8px 24px;
+  border: 4px solid transparent;
+}
+.digits-colon {
+  align-self: center;
+  margin-top: 16px;
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.digits-caption {
+  font-size: 22px;
+  font-weight: 800;
+}
+.digits-correct .digits-display {
+  border-color: #1f7a4d;
+  box-shadow: 0 0 0 4px #e8f7ee;
+}
+.digits-wrong .digits-panel {
+  animation: shake 400ms ease-in-out 1;
+}
+.digits-wrong[data-shake='1'] .digits-panel {
+  animation-name: clock-shake-b;
+}
+.digits-panel .burst i {
+  --reach: 260px;
+}
+
 /* S4 journey strip and elapsed puzzle (SPEC §3.7) */
 .journey {
   display: flex;
@@ -813,11 +918,37 @@
   align-items: center;
   gap: 32px;
 }
+.journey-times-middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
 .journey-times-icon {
   width: 72px;
   height: 72px;
   object-fit: contain;
   animation: vehicle-float 2s ease-in-out infinite alternate;
+}
+/* ARRIVE: the duration under the vehicle and an "Arrives ?:??" display in place of the end. */
+.journey-takes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 20px;
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  background: #fff;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.journey-takes-caption {
+  font-size: 18px;
+  font-weight: 700;
+}
+.digital-unknown .digital-digits {
+  color: var(--lilac);
 }
 .jumps-box {
   display: flex;

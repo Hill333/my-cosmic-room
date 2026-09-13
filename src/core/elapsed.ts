@@ -4,6 +4,7 @@
  */
 import { translate } from '../strings/index.ts';
 import { shuffle } from './rng.ts';
+import { MINUTES_PER_DAY } from './time.ts';
 import type { ElapsedLevel, Language, TimeValue } from './types.ts';
 
 export interface Jump {
@@ -15,15 +16,19 @@ export interface Jump {
 
 export interface DurationParts {
   hours: number;
-  minutes: 0 | 15 | 30 | 45;
+  /** A quarter of an hour for elapsed puzzles; any five-minute count for a LATER gap. */
+  minutes: number;
 }
 
-/** Splits a duration in minutes into hours and a quarter-hour remainder (SPEC §8.1). */
+/** Splits a duration in minutes into hours and the remainder (SPEC §8.1). */
 export function durationParts(minutes: number): DurationParts {
-  return { hours: Math.floor(minutes / 60), minutes: (minutes % 60) as DurationParts['minutes'] };
+  return { hours: Math.floor(minutes / 60), minutes: minutes % 60 };
 }
 
-/** Full form for answer buttons: "4 hours 45 minutes", "1 hour", "30 minutes" (SPEC §8.2). */
+/**
+ * Full form for answer buttons and questions: "4 hours 45 minutes", "1 hour", "30 minutes"
+ * (SPEC §8.2). Also names the gap of a LATER puzzle ("in 1 hour 30 minutes").
+ */
 export function formatDuration(minutes: number, lang: Language): string {
   const { hours: h, minutes: m } = durationParts(minutes);
   if (h >= 1 && m > 0) {
@@ -83,4 +88,30 @@ export function decomposeJumps(start: TimeValue, end: TimeValue): Jump[] {
   }
   if (t < end) jumps.push({ minutes: end - t, to: end });
   return jumps;
+}
+
+/**
+ * Three arrival times for an ARRIVE puzzle: the true end plus two wrong ones that model the
+ * same duration mistakes as §8.3, applied to the start ("forgot the minutes", "an hour too
+ * many"). Every choice lies after the start and before midnight. Extra candidates a quarter
+ * or half hour either side cover the corners where the level's own list runs out (a 1-hour
+ * journey ending at 22:00 cannot go two hours later).
+ */
+export function arrivalChoices(
+  start: TimeValue,
+  end: TimeValue,
+  level: ElapsedLevel,
+  rng: () => number,
+): TimeValue[] {
+  const d = end - start;
+  const candidates = [...distractorCandidates(d, level), d + 30, d - 30, d + 15, d - 15];
+  const chosen: TimeValue[] = [];
+  for (const c of candidates) {
+    if (chosen.length === 2) break;
+    const t = start + c;
+    if (c <= 0 || c % 15 !== 0 || t === end || t >= MINUTES_PER_DAY || chosen.includes(t)) continue;
+    chosen.push(t);
+  }
+  if (chosen.length < 2) throw new RangeError(`No arrival distractors for ${start}→${end}`);
+  return shuffle([end, ...chosen], rng);
 }

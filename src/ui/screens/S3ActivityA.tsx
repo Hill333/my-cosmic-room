@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
+import { formatDuration } from '../../core/elapsed.ts';
+import { isCorrectAnswer, PUZZLES_PER_MISSION, shownTime } from '../../core/mission.ts';
 import { formatTime, hour12Of, minutesOf, periodOf } from '../../core/time.ts';
-import type { DigitalMode, Mission, Puzzle, ReadingLevel, TimeValue } from '../../core/types.ts';
-import { dispatch, save } from '../../state/store.ts';
+import {
+  isInputKind,
+  type DigitalMode,
+  type Mission,
+  type Puzzle,
+  type ReadingLevel,
+  type TimeValue,
+} from '../../core/types.ts';
+import { formatTimeWords } from '../../core/words.ts';
+import { dispatch, language, save } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
@@ -11,6 +20,7 @@ import { play } from '../sound.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
 import { ChoiceGroup, type ChoiceOption } from '../components/ChoiceGroup.tsx';
 import type { CompanionPose } from '../components/Companion.tsx';
+import { DigitalBuilder } from '../components/DigitalBuilder.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { MissionFrame, PuzzleFooter } from '../components/MissionFrame.tsx';
 import { SetClock, type SetStatus } from '../components/SetClock.tsx';
@@ -21,7 +31,10 @@ interface Props {
   mission: Mission;
 }
 
-/** S3 Activity A (SPEC §3.6): READ, MATCH and SET puzzles inside the mission frame. */
+/**
+ * S3 Activity A (SPEC §3.6): READ, MATCH and SET puzzles plus the mission's extra kind
+ * (WORDS, LATER or DIGITS; D14) inside the mission frame.
+ */
 export function S3ActivityA({ mission }: Props) {
   const theme = mission.theme;
   const solved = mission.current.solved;
@@ -74,7 +87,9 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
   const level = mission.level as ReadingLevel;
   const theme = mission.theme;
   const mode: DigitalMode = save.value.settings.hour24Reading ? '24h' : '12h';
-  const target = puzzle.kind === 'ELAPSED' ? puzzle.end : puzzle.target;
+  const lang = language.value;
+  // The face on screen: the target, or a LATER puzzle's start. The badge belongs to it.
+  const target = shownTime(puzzle);
   const period = mode === '24h' ? periodOf(target) : null;
   const elapsed = useElapsedSeconds();
   const question = useRef<HTMLParagraphElement>(null);
@@ -103,7 +118,7 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
       play('wrong');
       setWrong((w) => [...w, choice]);
       const key =
-        puzzle.kind === 'SET' && mission.current.wrongAttempts === 0
+        isInputKind(puzzle.kind) && mission.current.wrongAttempts === 0
           ? 'fb.setWrong'
           : `fb.wrong.${(totalWrong % 3) + 1}`;
       setFeedback(key as StringKey);
@@ -117,12 +132,24 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
     dispatch({ type: 'mission/hint' });
   };
 
-  const questionText =
-    puzzle.kind === 'READ'
-      ? t('a.read.q')
-      : puzzle.kind === 'MATCH'
-        ? t('a.match.q', { time: formatTime(target, mode) })
-        : t('a.set.q', { time: formatTime(target, mode) });
+  const questionText = (() => {
+    switch (puzzle.kind) {
+      case 'READ':
+        return t('a.read.q');
+      case 'MATCH':
+        return t('a.match.q', { time: formatTime(target, mode) });
+      case 'SET':
+        return t('a.set.q', { time: formatTime(target, mode) });
+      case 'WORDS':
+        return t('a.words.q');
+      case 'LATER':
+        return t('a.later.q', { gap: formatDuration(puzzle.gap, lang) });
+      case 'DIGITS':
+        return t('a.digits.q');
+      default:
+        throw new Error(`Activity A cannot show a ${puzzle.kind} puzzle`);
+    }
+  })();
 
   return (
     <div class="puzzle" data-testid="puzzle" data-kind={puzzle.kind} data-index={mission.index}>
@@ -130,7 +157,7 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
         {questionText}
       </p>
       <div class="puzzle-body">
-        {puzzle.kind === 'READ' && (
+        {(puzzle.kind === 'READ' || puzzle.kind === 'WORDS') && (
           <ReadPuzzle
             puzzle={puzzle}
             level={level}
@@ -169,6 +196,44 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
             onCheck={answer}
           />
         )}
+        {puzzle.kind === 'LATER' && (
+          <LaterPuzzle
+            puzzle={puzzle}
+            level={level}
+            mode={mode}
+            theme={theme}
+            period={period}
+            hint={hintUsed}
+            wrong={wrong}
+            solved={solved}
+            onPick={answer}
+          />
+        )}
+        {puzzle.kind === 'DIGITS' && (
+          <div class="read-clock">
+            <AnalogClock
+              time={target}
+              level={level}
+              theme={theme}
+              size={CLOCK_SIZE.puzzle}
+              period={period}
+              sweep={hintUsed}
+            />
+            <div class="digits-side">
+              <DigitalBuilder
+                target={target}
+                level={level}
+                mode={mode}
+                status={setStatus}
+                attempt={mission.current.wrongAttempts}
+                disabled={solved}
+                onChange={() => setSetStatus('idle')}
+                onCheck={answer}
+              />
+              {hintUsed && <ReadHint target={target} />}
+            </div>
+          </div>
+        )}
       </div>
       <p
         class={`feedback feedback-${solved ? 'correct' : feedback ? 'wrong' : 'none'}`}
@@ -188,7 +253,7 @@ function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
 }
 
 interface ReadProps {
-  puzzle: Extract<Puzzle, { kind: 'READ' | 'MATCH' }>;
+  puzzle: Extract<Puzzle, { kind: 'READ' | 'MATCH' | 'WORDS' }>;
   level: ReadingLevel;
   mode: DigitalMode;
   theme: Mission['theme'];
@@ -199,7 +264,10 @@ interface ReadProps {
   onPick: (value: number) => void;
 }
 
-/** READ: a 440 px clock over three digital answer buttons; hint = sweep and hour caption (§9.3). */
+/**
+ * READ: a 440 px clock over three digital answer buttons; hint = sweep and hour caption
+ * (§9.3). WORDS is the same puzzle with the answers in words ("Half past three").
+ */
 function ReadPuzzle({
   puzzle,
   level,
@@ -211,9 +279,15 @@ function ReadPuzzle({
   solved,
   onPick,
 }: ReadProps) {
+  const words = puzzle.kind === 'WORDS';
+  const lang = language.value;
   const options: ChoiceOption[] = puzzle.choices.map((c) => ({
     value: c,
-    content: <DigitalDisplay time={c} mode={mode} size="button" />,
+    content: words ? (
+      formatTimeWords(c, lang)
+    ) : (
+      <DigitalDisplay time={c} mode={mode} size="button" />
+    ),
   }));
   return (
     <>
@@ -234,7 +308,71 @@ function ReadPuzzle({
         wrong={wrong}
         correct={solved ? puzzle.target : null}
         onPick={onPick}
-        class="choices-digital"
+        class={words ? 'choices-words' : 'choices-digital'}
+      />
+    </>
+  );
+}
+
+interface LaterProps extends Omit<ReadProps, 'puzzle'> {
+  puzzle: Extract<Puzzle, { kind: 'LATER' }>;
+}
+
+/**
+ * LATER: a 300 px clock showing the start with the gap in a pill beside it, over three
+ * 200 px clock options labelled A/B/C. The hint names the start time in digits and says
+ * which way the hands go; the sum stays with the child (SPEC §9.3 spirit).
+ */
+function LaterPuzzle({
+  puzzle,
+  level,
+  mode,
+  theme,
+  period,
+  hint,
+  wrong,
+  solved,
+  onPick,
+}: LaterProps) {
+  const lang = language.value;
+  const gap = formatDuration(puzzle.gap, lang);
+  const options: ChoiceOption[] = puzzle.choices.map((c, i) => ({
+    value: c,
+    letter: LETTERS[i]!,
+    label: t('a.match.label', { letter: LETTERS[i]! }),
+    content: (
+      <AnalogClock time={c} level={level} theme={theme} size={CLOCK_SIZE.optionSmall} decorative />
+    ),
+  }));
+  return (
+    <>
+      <div class="read-clock later-row">
+        <AnalogClock
+          time={puzzle.start}
+          level={level}
+          theme={theme}
+          size={CLOCK_SIZE.later}
+          period={period}
+        />
+        <div class="later-side">
+          <span class="later-gap" data-testid="later-gap">
+            <span aria-hidden="true">➜ </span>
+            {t('a.later.gap', { gap })}
+          </span>
+          {hint && (
+            <p class="hint-hour" role="status" data-testid="later-hint">
+              {t('hint.later', { time: formatTime(puzzle.start, mode), gap })}
+            </p>
+          )}
+        </div>
+      </div>
+      <ChoiceGroup
+        label={t('ui.answers')}
+        options={options}
+        wrong={wrong}
+        correct={solved ? puzzle.end : null}
+        onPick={onPick}
+        class="choices-clocks choices-clocks-small"
       />
     </>
   );

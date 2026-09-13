@@ -8,8 +8,9 @@ import {
   pickTarget,
   type GeneratedMission,
 } from '../../core/generate.ts';
-import { isCorrectAnswer } from '../../core/mission.ts';
+import { isCorrectAnswer, shownTime } from '../../core/mission.ts';
 import { formatTime, makeTime, periodOf, sameFace } from '../../core/time.ts';
+import { formatTimeWords } from '../../core/words.ts';
 import type {
   Activity,
   DigitalMode,
@@ -24,6 +25,7 @@ import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
+import { DigitalBuilder } from '../components/DigitalBuilder.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { SetClock, type SetStatus } from '../components/SetClock.tsx';
 
@@ -251,16 +253,29 @@ function GeneratorPanel() {
 
 function describePuzzle(p: Puzzle, mode: DigitalMode): string {
   const lang = language.value;
-  if (p.kind === 'ELAPSED') {
-    const jumps = decomposeJumps(p.start, p.end)
-      .map((j) => `${formatJump(j.minutes, lang)} → ${formatTime(j.to, '24h')}`)
-      .join(', ');
-    const choices = p.choices.map((c) => formatDuration(c, lang)).join(' | ');
-    return `ELAPSED ${formatTime(p.start, '24h')} → ${formatTime(p.end, '24h')} = ${formatDuration(p.end - p.start, lang)}; choices: ${choices}; jumps: ${jumps}`;
+  const times = (list: number[], m: DigitalMode) => list.map((c) => formatTime(c, m)).join(' | ');
+  switch (p.kind) {
+    case 'ELAPSED':
+    case 'ARRIVE': {
+      const jumps = decomposeJumps(p.start, p.end)
+        .map((j) => `${formatJump(j.minutes, lang)} → ${formatTime(j.to, '24h')}`)
+        .join(', ');
+      const choices =
+        p.kind === 'ELAPSED'
+          ? p.choices.map((c) => formatDuration(c, lang)).join(' | ')
+          : times(p.choices, '24h');
+      return `${p.kind} ${formatTime(p.start, '24h')} → ${formatTime(p.end, '24h')} = ${formatDuration(p.end - p.start, lang)}; choices: ${choices}; jumps: ${jumps}`;
+    }
+    case 'SET':
+    case 'DIGITS':
+      return `${p.kind} ${formatTime(p.target, mode)}`;
+    case 'LATER':
+      return `LATER ${formatTime(p.start, mode)} + ${formatDuration(p.gap, lang)} = ${formatTime(p.end, mode)}; choices: ${times(p.choices, mode)}`;
+    case 'WORDS':
+      return `WORDS ${formatTime(p.target, mode)}; choices: ${p.choices.map((c) => formatTimeWords(c, lang)).join(' | ')}`;
+    default:
+      return `${p.kind} ${formatTime(p.target, mode)}; choices: ${times(p.choices, mode)}`;
   }
-  const target = formatTime(p.target, mode);
-  if (p.kind === 'SET') return `SET ${target}`;
-  return `${p.kind} ${target}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
 }
 
 /** Drives the mission reducer through the store, rendering the current puzzle with the components. */
@@ -446,11 +461,13 @@ interface PuzzleViewProps {
 function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }: PuzzleViewProps) {
   const lang = language.value;
   const rLevel = level as ReadingLevel;
-  const period = mode === '24h' && p.kind !== 'ELAPSED' ? periodOf(p.target) : null;
-  if (p.kind === 'READ') {
+  const shown = shownTime(p);
+  const period =
+    mode === '24h' && p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE' ? periodOf(shown) : null;
+  if (p.kind === 'READ' || p.kind === 'WORDS') {
     return (
       <div class="harness-puzzle">
-        <p>{t('a.read.q')}</p>
+        <p>{p.kind === 'READ' ? t('a.read.q') : t('a.words.q')}</p>
         <AnalogClock time={p.target} level={rLevel} theme={theme} period={period} />
         <div class="harness-row">
           {p.choices.map((c) => (
@@ -461,9 +478,65 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
               disabled={solved}
               onClick={() => onAnswer(c)}
             >
-              <DigitalDisplay time={c} mode={mode} size="button" />
+              {p.kind === 'WORDS' ? (
+                formatTimeWords(c, lang)
+              ) : (
+                <DigitalDisplay time={c} mode={mode} size="button" />
+              )}
             </button>
           ))}
+        </div>
+      </div>
+    );
+  }
+  if (p.kind === 'LATER') {
+    return (
+      <div class="harness-puzzle">
+        <p>{t('a.later.q', { gap: formatDuration(p.gap, lang) })}</p>
+        <AnalogClock
+          time={p.start}
+          level={rLevel}
+          theme={theme}
+          size={CLOCK_SIZE.later}
+          period={period}
+        />
+        <div class="harness-row">
+          {p.choices.map((c, i) => (
+            <button
+              key={c}
+              type="button"
+              class="btn answer"
+              disabled={solved}
+              aria-label={t('a.match.label', { letter: 'ABC'[i]! })}
+              onClick={() => onAnswer(c)}
+            >
+              <AnalogClock
+                time={c}
+                level={rLevel}
+                theme={theme}
+                size={CLOCK_SIZE.optionSmall}
+                decorative
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (p.kind === 'DIGITS') {
+    return (
+      <div class="harness-puzzle">
+        <p>{t('a.digits.q')}</p>
+        <div class="harness-row">
+          <AnalogClock time={p.target} level={rLevel} theme={theme} period={period} />
+          <DigitalBuilder
+            target={p.target}
+            level={rLevel}
+            mode={mode}
+            status={status}
+            disabled={solved}
+            onCheck={onAnswer}
+          />
         </div>
       </div>
     );
@@ -496,7 +569,7 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
       </div>
     );
   }
-  if (p.kind !== 'ELAPSED') {
+  if (p.kind === 'SET') {
     return (
       <div class="harness-puzzle">
         <p>{t('a.set.q', { time: formatTime(p.target, mode) })}</p>
@@ -513,10 +586,12 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
       </div>
     );
   }
+  if (p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE') throw new Error(`Unexpected ${p.kind}`);
   const jumps = decomposeJumps(p.start, p.end);
+  const duration = formatDuration(p.end - p.start, lang);
   return (
     <div class="harness-puzzle">
-      <p>{t(`b.q.${theme}`)}</p>
+      <p>{p.kind === 'ARRIVE' ? t(`b.arrive.q.${theme}`, { dur: duration }) : t(`b.q.${theme}`)}</p>
       <div class="harness-row">
         <DigitalDisplay
           time={p.start}
@@ -540,7 +615,11 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
             disabled={solved}
             onClick={() => onAnswer(c)}
           >
-            {formatDuration(c, lang)}
+            {p.kind === 'ARRIVE' ? (
+              <DigitalDisplay time={c} mode="24h" size="button" />
+            ) : (
+              formatDuration(c, lang)
+            )}
           </button>
         ))}
       </div>

@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { earnableItems } from '../catalog/index.ts';
 import { REQUIRED_E3_PAIR } from './generate.ts';
 import { checkInvariants, collectedCount, nextPair } from './inventory.ts';
-import { isCorrectAnswer, missionReducer, suggestedLevel, type MissionEvent } from './mission.ts';
+import {
+  correctValue,
+  isCorrectAnswer,
+  missionReducer,
+  suggestedLevel,
+  type MissionEvent,
+} from './mission.ts';
 import { createFreshSave, validateSave } from './save.ts';
 import { settingsReducer } from './settings.ts';
 import { makeTime } from './time.ts';
@@ -11,14 +17,9 @@ import type { Activity, Puzzle, Save, Theme } from './types.ts';
 const NOW = '2026-09-12T10:00:00.000Z';
 const LATER = '2026-09-12T10:05:00.000Z';
 
-function correctValue(p: Puzzle): number {
-  return p.kind === 'ELAPSED' ? p.end - p.start : p.target;
-}
-
 function wrongValue(p: Puzzle): number {
-  if (p.kind === 'ELAPSED') return p.choices.find((c) => c !== p.end - p.start)!;
-  if (p.kind === 'SET') return p.target + 60;
-  return p.choices.find((c) => c !== p.target)!;
+  if (!('choices' in p)) return p.target + 60;
+  return p.choices.find((c) => c !== correctValue(p))!;
 }
 
 function startMission(save: Save, theme: Theme, activity: Activity, seed = 1): Save {
@@ -86,8 +87,8 @@ describe('mission start (SPEC §10.1, §7.6)', () => {
     s = startMission(s, 'space', 'A');
     expect(s.mission!.level).toBe(4);
     for (const p of s.mission!.puzzles) {
-      expect(p.kind).not.toBe('ELAPSED');
-      if (p.kind !== 'ELAPSED') expect(p.target).toBeGreaterThanOrEqual(makeTime(6, 0));
+      expect(['ELAPSED', 'ARRIVE']).not.toContain(p.kind);
+      expect(correctValue(p)).toBeGreaterThanOrEqual(makeTime(6, 0));
     }
     s = settingsReducer(createFreshSave(), { type: 'settings/elapsedLevel', level: 2 });
     s = startMission(s, 'space', 'B');
@@ -112,6 +113,39 @@ describe('answers', () => {
     expect(isCorrectAnswer({ kind: 'ELAPSED', start: 870, end: 1155, choices: [] }, 300)).toBe(
       false,
     );
+    expect(isCorrectAnswer({ kind: 'WORDS', target: 210, choices: [] }, 210)).toBe(true);
+    // DIGITS compares the digits: 15:30 is not 3:30 when the child builds a 24-hour time.
+    expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(15, 30))).toBe(
+      true,
+    );
+    expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(3, 30))).toBe(
+      false,
+    );
+    const later: Puzzle = { kind: 'LATER', start: 210, gap: 60, end: 270, choices: [] };
+    expect(isCorrectAnswer(later, 270)).toBe(true);
+    expect(isCorrectAnswer(later, 210)).toBe(false);
+    const arrive: Puzzle = { kind: 'ARRIVE', start: 870, end: 1155, choices: [] };
+    expect(isCorrectAnswer(arrive, 1155)).toBe(true);
+    expect(isCorrectAnswer(arrive, 285)).toBe(false);
+  });
+  it('records every kind in the results and the shown times in the recent history', () => {
+    const kinds = new Set<string>();
+    for (let seed = 1; kinds.size < 8 && seed < 200; seed++) {
+      for (const activity of ['A', 'B'] as const) {
+        const s = solve(startMission(createFreshSave(), 'space', activity, seed));
+        for (const r of s.mission!.results) kinds.add(r.kind);
+      }
+    }
+    expect([...kinds].sort()).toEqual([
+      'ARRIVE',
+      'DIGITS',
+      'ELAPSED',
+      'LATER',
+      'MATCH',
+      'READ',
+      'SET',
+      'WORDS',
+    ]);
   });
   it('Next does nothing before a correct answer; answers after solving are ignored', () => {
     let s = startMission(createFreshSave(), 'space', 'A');

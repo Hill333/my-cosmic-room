@@ -1,11 +1,13 @@
 import { expect, test } from '@playwright/test';
 import {
+  correctValue,
   grantSpace,
   holdGear,
   readSave,
   roomAndInventory,
   seedSave,
   seededSave,
+  shownTime,
   waitForMission,
 } from './helpers.ts';
 
@@ -141,12 +143,23 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
   const m = await waitForMission(page, 0);
   expect(m.level).toBe(4);
   for (const p of m.puzzles) {
-    expect(p.target! % 5).toBe(0);
-    expect(p.target!).toBeGreaterThanOrEqual(6 * 60);
-    expect(p.target!).toBeLessThan(22 * 60);
+    // The face shown (a LATER puzzle's start) and the answer both lie in the window.
+    for (const time of [shownTime(p), correctValue(p)]) {
+      expect(time % 5).toBe(0);
+      expect(time).toBeGreaterThanOrEqual(6 * 60);
+      expect(time).toBeLessThan(22 * 60);
+    }
   }
-  expect(m.puzzles.some((p) => p.target! % 15 !== 0)).toBe(true);
-  await expect(page.getByTestId('s3')).toContainText(/(0[6-9]|1\d|2[01]):[0-5]\d/);
+  expect(m.puzzles.some((p) => shownTime(p) % 15 !== 0)).toBe(true);
+  // 24-hour mode (D11): digits with a leading zero wherever digits are shown, and the
+  // day-period badge under every analog face (MATCH shows only the digital prompt).
+  const first = m.puzzles[0]!;
+  if (first.kind !== 'WORDS' && first.kind !== 'LATER') {
+    await expect(page.getByTestId('s3')).toContainText(/(0[6-9]|1\d|2[01]):[0-5]\d/);
+  }
+  if (first.kind !== 'MATCH') {
+    await expect(page.getByTestId('s3')).toContainText(/morning|afternoon|evening|night/);
+  }
   await page.getByTestId('leave-button').click();
   await page.getByTestId('leave-confirm').click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Space Playroom');

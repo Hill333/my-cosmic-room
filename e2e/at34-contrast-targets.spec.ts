@@ -10,6 +10,7 @@ import {
   solveWithMouse,
   startMission,
   waitForMission,
+  wrongValue,
 } from './helpers.ts';
 
 /**
@@ -102,45 +103,46 @@ test('AT-34: S0, S1 with both panels, S2, S6', async ({ page }) => {
   await audit(page, 'S2 with locked levels');
 });
 
-test('AT-34: S3 READ, MATCH and SET with hints, wrong picks and the leave dialog', async ({
-  page,
-}) => {
-  const base = seededSave();
-  const seed = seedForFirstKind(base, 'space', 'READ');
-  await seedSave(page, startMission(base, 'space', 'A', seed));
-  await page.goto('/');
-  await expect(page.getByTestId('s3')).toBeVisible();
+for (const extra of ['WORDS', 'LATER', 'DIGITS'] as const) {
+  test(`AT-34: S3 READ, MATCH, SET and ${extra} with hints, wrong picks and the leave dialog`, async ({
+    page,
+  }) => {
+    const base = seededSave();
+    const seed = seedForFirstKind(base, 'space', 'READ', extra);
+    await seedSave(page, startMission(base, 'space', 'A', seed));
+    await page.goto('/');
+    await expect(page.getByTestId('s3')).toBeVisible();
 
-  const seen = new Set<string>();
-  for (let i = 0; i < 4; i++) {
-    const m = await waitForMission(page, i);
-    const p = m.puzzles[i]!;
-    if (!seen.has(p.kind)) {
-      seen.add(p.kind);
-      await audit(page, `S3 ${p.kind}`);
-      if (p.kind !== 'SET') {
-        // A wrong pick shows ✕ "Try again" on the option and the feedback line.
-        const wrong = p.choices!.find((c) => c !== p.target)!;
-        await page.locator(`[data-testid="answer"][data-value="${wrong}"]`).click();
-        await expect(page.getByTestId('feedback')).toContainText('✕');
-        await audit(page, `S3 ${p.kind} after a wrong pick`);
+    const seen = new Set<string>();
+    for (let i = 0; i < 4; i++) {
+      const m = await waitForMission(page, i);
+      const p = m.puzzles[i]!;
+      if (!seen.has(p.kind)) {
+        seen.add(p.kind);
+        await audit(page, `S3 ${p.kind}`);
+        if (p.kind !== 'SET' && p.kind !== 'DIGITS') {
+          // A wrong pick shows ✕ "Try again" on the option and the feedback line.
+          await page.locator(`[data-testid="answer"][data-value="${wrongValue(p)}"]`).click();
+          await expect(page.getByTestId('feedback')).toContainText('✕');
+          await audit(page, `S3 ${p.kind} after a wrong pick`);
+        }
+        await page.getByTestId('hint-button').click();
+        await expect(page.getByTestId('hint-button')).toHaveAttribute('aria-pressed', 'true');
+        await audit(page, `S3 ${p.kind} with the hint`);
       }
-      await page.getByTestId('hint-button').click();
-      await expect(page.getByTestId('hint-button')).toHaveAttribute('aria-pressed', 'true');
-      await audit(page, `S3 ${p.kind} with the hint`);
+      if (i === 0) {
+        await page.getByTestId('leave-button').click();
+        await expect(page.getByTestId('leave-dialog')).toBeVisible();
+        await audit(page, 'S3 leave dialog');
+        await page.getByTestId('leave-cancel').click();
+      }
+      await solveWithMouse(page, m);
     }
-    if (i === 0) {
-      await page.getByTestId('leave-button').click();
-      await expect(page.getByTestId('leave-dialog')).toBeVisible();
-      await audit(page, 'S3 leave dialog');
-      await page.getByTestId('leave-cancel').click();
-    }
-    await solveWithMouse(page, m);
-  }
-  expect([...seen].sort()).toEqual(['MATCH', 'READ', 'SET']);
-  await expect(page.getByTestId('s5')).toBeVisible();
-  await audit(page, 'S5 after the mission');
-});
+    expect([...seen].sort()).toEqual(['MATCH', 'READ', 'SET', extra].sort());
+    await expect(page.getByTestId('s5')).toBeVisible();
+    await audit(page, 'S5 after the mission');
+  });
+}
 
 test('AT-34: S4 with the jump timeline, S5 seeded', async ({ page }) => {
   const save = grantSpace(seededSave(), ['space.moonBed'], ['space.cloudPyjamas']);

@@ -1,7 +1,12 @@
 import { expect, type Page } from '@playwright/test';
-import { isCorrectAnswer, missionReducer, PUZZLES_PER_MISSION } from '../src/core/mission.ts';
+import {
+  correctValue as coreCorrectValue,
+  isCorrectAnswer,
+  missionReducer,
+  PUZZLES_PER_MISSION,
+} from '../src/core/mission.ts';
 import { createFreshSave } from '../src/core/save.ts';
-import type { Activity, Save, Theme } from '../src/core/types.ts';
+import type { Activity, PuzzleKind, Save, Theme } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -12,11 +17,12 @@ import type { Activity, Save, Theme } from '../src/core/types.ts';
 export const SAVE_KEY = 'mcr.save.v1';
 
 export interface StoredPuzzle {
-  kind: 'READ' | 'MATCH' | 'SET' | 'ELAPSED';
+  kind: PuzzleKind;
   target?: number;
   choices?: number[];
   start?: number;
   end?: number;
+  gap?: number;
 }
 
 export interface StoredMission {
@@ -99,7 +105,7 @@ export function completeMission(save: Save): Save {
   for (let i = 0; i < PUZZLES_PER_MISSION; i++) {
     const m = next.mission!;
     const p = m.puzzles[m.index]!;
-    const choice = p.kind === 'ELAPSED' ? p.end - p.start : p.target;
+    const choice = coreCorrectValue(p);
     if (!isCorrectAnswer(p, choice)) throw new Error('completeMission: wrong answer');
     next = missionReducer(next, { type: 'mission/answer', choice, seconds: 5 });
     next = missionReducer(next, { type: 'mission/next' });
@@ -107,13 +113,37 @@ export function completeMission(save: Save): Save {
   return next;
 }
 
-/** Seed whose Activity A mission starts with the wanted puzzle kind (READ or MATCH). */
-export function seedForFirstKind(save: Save, theme: Theme, kind: 'READ' | 'MATCH'): number {
-  for (let seed = 1; seed < 500; seed++) {
+/**
+ * Seed whose Activity A mission starts with the wanted puzzle kind (never SET or DIGITS,
+ * which are never first) and, when given, contains the wanted extra kind (D14).
+ */
+export function seedForFirstKind(
+  save: Save,
+  theme: Theme,
+  kind: 'READ' | 'MATCH' | 'WORDS' | 'LATER',
+  extra?: 'WORDS' | 'LATER' | 'DIGITS',
+): number {
+  for (let seed = 1; seed < 2000; seed++) {
     const m = startMission(save, theme, 'A', seed).mission!;
-    if (m.puzzles[0]!.kind === kind) return seed;
+    const kinds = m.puzzles.map((p) => p.kind);
+    if (kinds[0] === kind && (extra === undefined || kinds.includes(extra))) return seed;
   }
-  throw new Error(`No seed found for ${kind}`);
+  throw new Error(`No seed found for ${kind}${extra ? ` with ${extra}` : ''}`);
+}
+
+/** Seed whose Activity A mission contains every extra kind wanted, in any order. */
+export function seedWithKinds(
+  save: Save,
+  theme: Theme,
+  activity: Activity,
+  kinds: PuzzleKind[],
+): number {
+  for (let seed = 1; seed < 2000; seed++) {
+    const m = startMission(save, theme, activity, seed).mission!;
+    const present = m.puzzles.map((p) => p.kind);
+    if (kinds.every((k) => present.includes(k))) return seed;
+  }
+  throw new Error(`No seed found with ${kinds.join(', ')}`);
 }
 
 /** Grants earnable Space items so the next pair is the one a test needs (SPEC §10.2). */
@@ -199,10 +229,43 @@ export function setClockKeys(target: number, level: number): { hours: number; st
   return { hours, steps };
 }
 
-/** Correct answer value of a puzzle as the option's `data-value`. */
+/** Correct answer value of a puzzle as the option's `data-value` (or the time to build/set). */
 export function correctValue(p: StoredPuzzle): number {
   if (p.kind === 'ELAPSED') return p.end! - p.start!;
+  if (p.kind === 'LATER' || p.kind === 'ARRIVE') return p.end!;
   return p.target!;
+}
+
+/** The time a puzzle shows the child: the target, a LATER puzzle's start, or the arrival. */
+export function shownTime(p: StoredPuzzle): number {
+  if (p.kind === 'LATER') return p.start!;
+  if (p.kind === 'ELAPSED' || p.kind === 'ARRIVE') return p.end!;
+  return p.target!;
+}
+
+/** A wrong choice of a choice puzzle (every kind but SET and DIGITS). */
+export function wrongValue(p: StoredPuzzle): number {
+  const right = correctValue(p);
+  return p.choices!.find((c) => c !== right)!;
+}
+
+/**
+ * Button presses that build the target on the DIGITS display from its start position:
+ * hours cycle 1–12 (12-hour) or 06–21 (24-hour), minutes cycle the level's steps.
+ */
+export function digitsClicks(
+  target: number,
+  level: number,
+  mode: '12h' | '24h' = '12h',
+): { hours: number; minutes: number } {
+  const from = initialSetTime(target);
+  const hourOf = (t: number) => Math.floor(t / 60);
+  const span = mode === '24h' ? 16 : 12;
+  const base = mode === '24h' ? 6 : 0;
+  const norm = (h: number) => (((h - base) % span) + span) % span;
+  const hours = (norm(hourOf(target)) - norm(hourOf(from)) + span) % span;
+  const minutes = (target % 60) / stepOf(level);
+  return { hours, minutes };
 }
 
 /** First launch: choose English and open the Space room. */
@@ -223,6 +286,11 @@ export async function solveWithMouse(page: Page, m: StoredMission): Promise<stri
     for (let i = 0; i < hours; i++) await page.getByTestId('set-plus-hour').click();
     for (let i = 0; i < steps; i++) await page.getByTestId('set-plus-step').click();
     await page.getByTestId('set-check').click();
+  } else if (p.kind === 'DIGITS') {
+    const { hours, minutes } = digitsClicks(p.target!, m.level);
+    for (let i = 0; i < hours; i++) await page.getByTestId('digits-hour-up').click();
+    for (let i = 0; i < minutes; i++) await page.getByTestId('digits-minute-up').click();
+    await page.getByTestId('digits-check').click();
   } else {
     await page.locator(`[data-testid="answer"][data-value="${correctValue(p)}"]`).click();
   }

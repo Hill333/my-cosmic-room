@@ -1,20 +1,32 @@
 import { describe, expect, it } from 'vitest';
+import { arrivalChoices } from './elapsed.ts';
 import {
   ELAPSED_LEVELS,
   ELAPSED_WINDOW_END,
   ELAPSED_WINDOW_START,
+  LATER_GAPS,
   READING_LEVELS,
   REQUIRED_E3_PAIR,
   makeActivityAMission,
   makeActivityBMission,
+  makeLaterChoices,
   makeReadingChoices,
   pickInterval,
   pickTarget,
   sameReading,
 } from './generate.ts';
+import { correctValue, shownTime } from './mission.ts';
 import { createRng } from './rng.ts';
-import { hoursOf, makeTime, minutesOf, periodOf } from './time.ts';
-import type { DigitalMode, ElapsedLevel, Puzzle, ReadingLevel, ReadingPuzzle } from './types.ts';
+import { hoursOf, makeTime, minutesOf, periodOf, sameFace } from './time.ts';
+import {
+  EXTRA_KINDS,
+  isInputKind,
+  type DigitalMode,
+  type ElapsedLevel,
+  type Puzzle,
+  type ReadingLevel,
+  type ReadingPuzzle,
+} from './types.ts';
 
 const T = makeTime;
 const MISSIONS = 5000;
@@ -27,11 +39,16 @@ const sortedFaces = (choices: number[]) =>
 /** Distinct readings: by face in 12-hour mode, by value in 24-hour mode (SPEC §6.3). */
 const distinct = (times: number[], mode: DigitalMode) =>
   new Set<string | number>(mode === '12h' ? sortedFaces(times) : times).size;
-/** Reading target of an Activity A puzzle. */
+/** Reading target of an Activity A puzzle: the face it shows (a LATER puzzle's start). */
 const targetOf = (p: Puzzle): number => {
-  if (p.kind === 'ELAPSED') throw new Error('not a reading puzzle');
-  return p.target;
+  if (p.kind === 'ELAPSED' || p.kind === 'ARRIVE') throw new Error('not a reading puzzle');
+  return shownTime(p);
 };
+/** The time choices of a choice puzzle in Activity A (READ, MATCH, WORDS, LATER), else null. */
+const timeChoices = (p: Puzzle): number[] | null =>
+  p.kind === 'READ' || p.kind === 'MATCH' || p.kind === 'WORDS' || p.kind === 'LATER'
+    ? p.choices
+    : null;
 
 describe('AT-05 precision per level (5,000 seeded missions per level)', () => {
   for (const level of READING) {
@@ -42,9 +59,8 @@ describe('AT-05 precision per level (5,000 seeded missions per level)', () => {
           const m = makeActivityAMission(level, mode, [], createRng(seed));
           for (const p of m.puzzles) {
             expect(allowed.has(minutesOf(targetOf(p)))).toBe(true);
-            if (p.kind !== 'SET' && p.kind !== 'ELAPSED') {
-              for (const c of p.choices) expect(allowed.has(minutesOf(c))).toBe(true);
-            }
+            expect(allowed.has(minutesOf(correctValue(p)))).toBe(true);
+            for (const c of timeChoices(p) ?? []) expect(allowed.has(minutesOf(c))).toBe(true);
           }
         }
       });
@@ -59,12 +75,13 @@ describe('AT-06 choices', () => {
         for (let seed = 0; seed < MISSIONS; seed++) {
           const m = makeActivityAMission(level, mode, [], createRng(seed));
           for (const p of m.puzzles) {
-            if (p.kind === 'SET' || p.kind === 'ELAPSED') continue;
-            expect(p.choices).toHaveLength(3);
-            expect(new Set(sortedFaces(p.choices)).size).toBe(3);
-            expect(p.choices.filter((c) => c === p.target)).toHaveLength(1);
+            const choices = timeChoices(p);
+            if (!choices) continue;
+            expect(choices).toHaveLength(3);
+            expect(new Set(sortedFaces(choices)).size).toBe(3);
+            expect(choices.filter((c) => c === correctValue(p))).toHaveLength(1);
             if (mode === '24h') {
-              for (const c of p.choices) {
+              for (const c of choices) {
                 expect(hoursOf(c)).toBeGreaterThanOrEqual(6);
                 expect(hoursOf(c)).toBeLessThanOrEqual(21);
               }
@@ -111,7 +128,7 @@ describe('AT-07 concept examples', () => {
 
 describe('AT-08 mission shape', () => {
   for (const level of READING) {
-    it(`R${level}: two READ, one MATCH, one SET, SET never first, distinct targets, no recent`, () => {
+    it(`R${level}: READ, MATCH, SET and one extra kind, no input puzzle first, distinct targets, no recent`, () => {
       for (const mode of MODES) {
         for (let seed = 0; seed < MISSIONS; seed++) {
           const rng = createRng(seed);
@@ -121,10 +138,11 @@ describe('AT-08 mission shape', () => {
           expect(m.level).toBe(level);
           expect(m.puzzles).toHaveLength(4);
           const kinds = m.puzzles.map((p) => p.kind);
-          expect(kinds.filter((k) => k === 'READ')).toHaveLength(2);
+          expect(kinds.filter((k) => k === 'READ')).toHaveLength(1);
           expect(kinds.filter((k) => k === 'MATCH')).toHaveLength(1);
           expect(kinds.filter((k) => k === 'SET')).toHaveLength(1);
-          expect(kinds[0]).not.toBe('SET');
+          expect(kinds.filter((k) => EXTRA_KINDS.includes(k as never))).toHaveLength(1);
+          expect(isInputKind(kinds[0]!)).toBe(false);
           const targets = m.puzzles.map(targetOf);
           expect(distinct(targets, mode)).toBe(4);
           // Recent targets are avoided whenever the level leaves room for it; R1 in 12-hour
@@ -156,9 +174,8 @@ describe('AT-09 new-minutes weighting', () => {
       for (let seed = 0; seed < MISSIONS; seed++) {
         const m = makeActivityAMission(level, '12h', [], createRng(seed));
         for (const p of m.puzzles) {
-          if (p.kind === 'ELAPSED') continue;
           total++;
-          if (isNew.has(minutesOf(p.target))) fresh++;
+          if (isNew.has(minutesOf(targetOf(p)))) fresh++;
         }
       }
       const share = fresh / total;
@@ -179,15 +196,17 @@ describe('AT-10 24-hour mode', () => {
       for (let seed = 0; seed < MISSIONS; seed++) {
         const m = makeActivityAMission(level, '24h', [], createRng(seed));
         for (const p of m.puzzles) {
-          if (p.kind === 'ELAPSED') continue;
-          expect(hoursOf(p.target)).toBeGreaterThanOrEqual(6);
-          expect(hoursOf(p.target)).toBeLessThanOrEqual(21);
+          for (const t of [targetOf(p), correctValue(p)]) {
+            expect(hoursOf(t)).toBeGreaterThanOrEqual(6);
+            expect(hoursOf(t)).toBeLessThanOrEqual(21);
+          }
         }
         const m12 = makeActivityAMission(level, '12h', [], createRng(seed));
         for (const p of m12.puzzles) {
-          if (p.kind === 'ELAPSED') continue;
-          expect(hoursOf(p.target)).toBeGreaterThanOrEqual(1);
-          expect(hoursOf(p.target)).toBeLessThanOrEqual(12);
+          for (const t of [targetOf(p), correctValue(p)]) {
+            expect(hoursOf(t)).toBeGreaterThanOrEqual(1);
+            expect(hoursOf(t)).toBeLessThanOrEqual(12);
+          }
         }
       }
     }
@@ -209,9 +228,11 @@ describe('AT-15 level windows (5,000 seeded missions per level)', () => {
         const m = makeActivityBMission(level, [], createRng(seed), false);
         expect(m.activity).toBe('B');
         expect(m.puzzles).toHaveLength(4);
+        const kinds = m.puzzles.map((p) => p.kind);
+        expect(kinds.filter((k) => k === 'ELAPSED')).toHaveLength(3);
+        expect(kinds.filter((k) => k === 'ARRIVE')).toHaveLength(1);
         for (const p of m.puzzles) {
-          expect(p.kind).toBe('ELAPSED');
-          if (p.kind !== 'ELAPSED') continue;
+          if (p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE') throw new Error(p.kind);
           const gap = p.end - p.start;
           expect(p.start).toBeGreaterThanOrEqual(ELAPSED_WINDOW_START);
           expect(p.end).toBeLessThanOrEqual(ELAPSED_WINDOW_END);
@@ -222,12 +243,22 @@ describe('AT-15 level windows (5,000 seeded missions per level)', () => {
           expect(p.start % spec.step).toBe(0);
           expect(p.choices).toHaveLength(3);
           expect(new Set(p.choices).size).toBe(3);
-          expect(p.choices.filter((c) => c === gap)).toHaveLength(1);
+          expect(p.choices.filter((c) => c === correctValue(p))).toHaveLength(1);
+          if (p.kind === 'ARRIVE') {
+            for (const c of p.choices) {
+              expect(c).toBeGreaterThan(p.start);
+              expect(c).toBeLessThan(24 * 60);
+            }
+          }
         }
         // Distinct pairs; at most two share a duration.
-        const keys = m.puzzles.map((p) => (p.kind === 'ELAPSED' ? `${p.start}-${p.end}` : ''));
+        const keys = m.puzzles.map((p) =>
+          p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE' ? '' : `${p.start}-${p.end}`,
+        );
         expect(new Set(keys).size).toBe(4);
-        const gaps = m.puzzles.map((p) => (p.kind === 'ELAPSED' ? p.end - p.start : 0));
+        const gaps = m.puzzles.map((p) =>
+          p.kind === 'ELAPSED' || p.kind === 'ARRIVE' ? p.end - p.start : 0,
+        );
         for (const g of gaps) expect(gaps.filter((x) => x === g).length).toBeLessThanOrEqual(2);
       }
     });
@@ -262,7 +293,7 @@ describe('AT-15 level windows (5,000 seeded missions per level)', () => {
       const recent = Array.from({ length: 8 }, () => pickInterval(3, rng));
       const m = makeActivityBMission(3, recent, rng, false);
       for (const p of m.puzzles) {
-        if (p.kind !== 'ELAPSED') continue;
+        if (p.kind !== 'ELAPSED' && p.kind !== 'ARRIVE') continue;
         expect(recent.some(([s, e]) => s === p.start && e === p.end)).toBe(false);
       }
     }
@@ -278,10 +309,13 @@ describe('AT-17 first E3 mission (generator part)', () => {
       if (last.kind !== 'ELAPSED') continue;
       expect([last.start, last.end]).toEqual([...REQUIRED_E3_PAIR]);
       expect([...last.choices].sort((a, b) => a - b)).toEqual([255, 285, 300]);
-      const keys = m.puzzles.map((p) => (p.kind === 'ELAPSED' ? `${p.start}-${p.end}` : ''));
+      const pairs = m.puzzles.map((p) => (p.kind === 'ELAPSED' || p.kind === 'ARRIVE' ? p : null));
+      const keys = pairs.map((p) => (p ? `${p.start}-${p.end}` : ''));
       expect(new Set(keys).size).toBe(4);
-      const gaps = m.puzzles.map((p) => (p.kind === 'ELAPSED' ? p.end - p.start : 0));
+      const gaps = pairs.map((p) => (p ? p.end - p.start : 0));
       expect(gaps.filter((g) => g === 285).length).toBeLessThanOrEqual(2);
+      // The ARRIVE puzzle sits among the first three.
+      expect(m.puzzles.slice(0, 3).filter((p) => p.kind === 'ARRIVE')).toHaveLength(1);
     }
   });
   it('ignores the flag at E1 and E2', () => {
@@ -311,8 +345,106 @@ describe('determinism (SPEC §7.6)', () => {
   });
   it('matches the SPEC §19.1 shape for Space, Activity A, R2', () => {
     const m = makeActivityAMission(2, '12h', [], createRng(7));
-    expect(m.puzzles.map((p) => p.kind).sort()).toEqual(['MATCH', 'READ', 'READ', 'SET']);
+    const kinds = m.puzzles.map((p) => p.kind).sort();
+    expect(kinds.filter((k) => ['MATCH', 'READ', 'SET'].includes(k))).toEqual([
+      'MATCH',
+      'READ',
+      'SET',
+    ]);
     const read = m.puzzles.find((p) => p.kind === 'READ') as ReadingPuzzle;
     expect(read.choices).toContain(read.target);
+  });
+});
+
+describe('extra kinds in Activity A (D14 revised)', () => {
+  it('uses each extra kind about a third of the time', () => {
+    const counts: Record<string, number> = {};
+    for (let seed = 0; seed < MISSIONS; seed++) {
+      const m = makeActivityAMission(2, '12h', [], createRng(seed));
+      const extra = m.puzzles.find((p) => EXTRA_KINDS.includes(p.kind as never))!;
+      counts[extra.kind] = (counts[extra.kind] ?? 0) + 1;
+    }
+    for (const kind of EXTRA_KINDS) {
+      expect(counts[kind]! / MISSIONS).toBeGreaterThan(0.25);
+      expect(counts[kind]! / MISSIONS).toBeLessThan(0.42);
+    }
+  });
+  it('WORDS choices are on the five-minute grid so every one has a spoken form', () => {
+    for (let seed = 0; seed < 500; seed++) {
+      const m = makeActivityAMission(4, '12h', [], createRng(seed));
+      for (const p of m.puzzles) {
+        if (p.kind !== 'WORDS') continue;
+        for (const c of p.choices) expect(minutesOf(c) % 5).toBe(0);
+      }
+    }
+  });
+  for (const level of READING) {
+    for (const mode of MODES) {
+      it(`LATER at R${level} ${mode}: a level gap, end = start + gap, in range, one clock right`, () => {
+        let seen = 0;
+        for (let seed = 0; seed < MISSIONS && seen < 400; seed++) {
+          const m = makeActivityAMission(level, mode, [], createRng(seed));
+          for (const p of m.puzzles) {
+            if (p.kind !== 'LATER') continue;
+            seen++;
+            expect(LATER_GAPS[level]).toContain(p.gap);
+            expect(sameFace(p.end, p.start + p.gap)).toBe(true);
+            if (mode === '24h') {
+              expect(p.end).toBe(p.start + p.gap);
+              expect(hoursOf(p.end)).toBeLessThanOrEqual(21);
+            } else {
+              expect(hoursOf(p.end)).toBeGreaterThanOrEqual(1);
+              expect(hoursOf(p.end)).toBeLessThanOrEqual(12);
+            }
+            expect(p.choices).toHaveLength(3);
+            expect(new Set(sortedFaces(p.choices)).size).toBe(3);
+            expect(p.choices.filter((c) => c === p.end)).toHaveLength(1);
+          }
+        }
+        expect(seen).toBeGreaterThan(0);
+      });
+    }
+  }
+  it('LATER distractors model an hour too many, an hour too few and not moving', () => {
+    // 3:30 + 1 hour = 4:30; the first two candidates are 5:30 and 3:30 (an hour too few is
+    // the unchanged start here, so "not moving" merges with it).
+    const choices = makeLaterChoices(T(3, 30), 60, 2, '12h', createRng(1));
+    expect(sortedFaces(choices)).toEqual(sortedFaces([T(4, 30), T(5, 30), T(3, 30)]));
+    // 9:15 + 45 min = 10:00; candidates 11:00 and 9:00.
+    expect(sortedFaces(makeLaterChoices(T(9, 15), 45, 3, '12h', createRng(1)))).toEqual(
+      sortedFaces([T(10, 0), T(11, 0), T(9, 0)]),
+    );
+    // 21:00 + 1 hour in 24-hour mode: 23:00 is out of range, so 21:00 and 20:00 follow.
+    expect(makeLaterChoices(T(20, 0), 60, 1, '24h', createRng(1)).sort((a, b) => a - b)).toEqual(
+      [T(20, 0), T(21, 0), T(19, 0)].sort((a, b) => a - b),
+    );
+  });
+});
+
+describe('ARRIVE choices (SPEC §8.3 applied to the start)', () => {
+  it('14:30 → 19:15 at E3 offers 18:45 and 19:30 (the 255 and 300 minute mistakes)', () => {
+    const choices = arrivalChoices(T(14, 30), T(19, 15), 3, createRng(1));
+    expect([...choices].sort((a, b) => a - b)).toEqual([T(18, 45), T(19, 15), T(19, 30)]);
+  });
+  it('never offers a time before the start or past midnight, at every level and window corner', () => {
+    for (const level of ELAPSED) {
+      for (let seed = 0; seed < 2000; seed++) {
+        const [s, e] = pickInterval(level, createRng(seed));
+        const choices = arrivalChoices(s, e, level, createRng(seed));
+        expect(choices).toHaveLength(3);
+        expect(new Set(choices).size).toBe(3);
+        expect(choices.filter((c) => c === e)).toHaveLength(1);
+        for (const c of choices) {
+          expect(c).toBeGreaterThan(s);
+          expect(c).toBeLessThan(24 * 60);
+          expect(c % 15).toBe(0);
+        }
+      }
+    }
+    // The tightest corner: a one-hour journey ending at 22:00 at E1.
+    const late = arrivalChoices(T(21, 0), T(22, 0), 1, createRng(1));
+    expect(late).toContain(T(22, 0));
+    expect(late).toContain(T(23, 0));
+    expect(late).toContain(T(22, 30));
   });
 });

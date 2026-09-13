@@ -67,7 +67,9 @@ for (const mode of ['system', 'setting'] as const) {
     await page.getByTestId('hint-button').click();
     await expect(page.getByTestId('read-hint')).toBeVisible();
     expect((await animationOf(page, '.clock-minute-wrap')).duration).toBe(INSTANT);
-    expect(await minutesCounter(page)).toBe(String(p0.target! % 60));
+    // The 0.01 ms animation lands on its final frame within a frame or two; with motion on,
+    // the counter would still be counting for 1.2 s (seeds with a :00 target hid this race).
+    await expect.poll(() => minutesCounter(page), { timeout: 500 }).toBe(String(p0.target! % 60));
     // Fully visible within a frame or two: with motion on, the caption waits 1.2 s + 300 ms.
     await expect(page.locator('.hint-hour')).toHaveCSS('opacity', '1', { timeout: 500 });
 

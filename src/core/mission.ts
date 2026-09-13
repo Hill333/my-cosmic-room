@@ -18,11 +18,12 @@ import type {
   ReadingLevel,
   Save,
   Theme,
+  TimeValue,
 } from './types.ts';
 
 export type MissionEvent =
   | { type: 'mission/start'; theme: Theme; activity: Activity; seed: number; now: string }
-  /** `choice` is the chosen value: a time for READ/MATCH/SET, a duration in minutes for ELAPSED. */
+  /** `choice` is the chosen value: a time for every kind but ELAPSED, whose value is a duration. */
   | { type: 'mission/answer'; choice: number; seconds: number }
   | { type: 'mission/hint' }
   | { type: 'mission/next' }
@@ -39,17 +40,50 @@ const RECENT_TARGETS = 8;
 const RECENT_PAIRS = 8;
 const HISTORY_LENGTH = 20;
 
-/** True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours. */
-export function isCorrectAnswer(puzzle: Puzzle, choice: number): boolean {
+/**
+ * The value that answers a puzzle: the target time (READ, MATCH, WORDS, SET, DIGITS), the
+ * later time (LATER), the duration in minutes (ELAPSED) or the arrival time (ARRIVE).
+ */
+export function correctValue(puzzle: Puzzle): number {
   switch (puzzle.kind) {
     case 'READ':
     case 'MATCH':
-      return choice === puzzle.target;
+    case 'WORDS':
     case 'SET':
-      return sameFace(choice, puzzle.target);
+    case 'DIGITS':
+      return puzzle.target;
+    case 'LATER':
+    case 'ARRIVE':
+      return puzzle.end;
     case 'ELAPSED':
-      return choice === puzzle.end - puzzle.start;
+      return puzzle.end - puzzle.start;
   }
+}
+
+/**
+ * The time a puzzle shows the child: the reading target, a LATER puzzle's start, or an
+ * elapsed puzzle's arrival. Feeds the recent-targets history (SPEC §7.3).
+ */
+export function shownTime(puzzle: Puzzle): TimeValue {
+  switch (puzzle.kind) {
+    case 'LATER':
+      return puzzle.start;
+    case 'ELAPSED':
+    case 'ARRIVE':
+      return puzzle.end;
+    default:
+      return puzzle.target;
+  }
+}
+
+/**
+ * True when `choice` answers the puzzle (SPEC §9.1, §9.2). SET compares faces on 12 hours (a
+ * face cannot express more); DIGITS compares the digits themselves, so in 24-hour mode the
+ * child builds the badge's half of the day too.
+ */
+export function isCorrectAnswer(puzzle: Puzzle, choice: number): boolean {
+  if (puzzle.kind === 'SET') return sameFace(choice, puzzle.target);
+  return choice === correctValue(puzzle);
 }
 
 export function missionReducer(save: Save, event: MissionEvent): Save {
@@ -158,7 +192,7 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       progress.recentReadingTargets,
       rng,
     ).puzzles;
-    const targets = puzzles.map((p) => (p.kind === 'ELAPSED' ? p.end : p.target));
+    const targets = puzzles.map(shownTime);
     nextProgress = {
       ...progress,
       recentReadingTargets: [...progress.recentReadingTargets, ...targets].slice(-RECENT_TARGETS),
@@ -173,7 +207,7 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       firstEverAtE3,
     ).puzzles;
     const pairs = puzzles.flatMap((p) =>
-      p.kind === 'ELAPSED' ? [[p.start, p.end] as [number, number]] : [],
+      p.kind === 'ELAPSED' || p.kind === 'ARRIVE' ? [[p.start, p.end] as [number, number]] : [],
     );
     nextProgress = {
       ...progress,

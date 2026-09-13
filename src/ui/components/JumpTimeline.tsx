@@ -6,6 +6,11 @@ import { language } from '../../state/store.ts';
 interface Props {
   start: TimeValue;
   end: TimeValue;
+  /**
+   * ARRIVE hint: the jumps are shown but the times they reach are left as "?", so the
+   * child still works out the arrival (the last pill would otherwise be the answer).
+   */
+  hideTimes?: boolean;
 }
 
 /** Geometry in SVG units; the timeline is a sequence of equally spaced jumps (SPEC §8.5). */
@@ -24,14 +29,18 @@ const REVEAL_MS = 300;
  * with the 24-hour time under each point, and an arc with an arrowhead and a short label
  * per jump. Jumps reveal one after another with CSS animation delays.
  */
-export function JumpTimeline({ start, end }: Props) {
+export function JumpTimeline({ start, end, hideTimes = false }: Props) {
   const lang = language.value;
   const jumps = decomposeJumps(start, end);
   const points = [start, ...jumps.map((j) => j.to)];
   const stepX = (WIDTH - 2 * PAD) / Math.max(1, points.length - 1);
   const x = (i: number) => PAD + i * stepX;
   const description = jumps
-    .map((j) => `${formatJump(j.minutes, lang)} → ${formatTime(j.to, '24h')}`)
+    .map((j) =>
+      hideTimes
+        ? formatJump(j.minutes, lang)
+        : `${formatJump(j.minutes, lang)} → ${formatTime(j.to, '24h')}`,
+    )
     .join(', ');
 
   return (
@@ -44,6 +53,7 @@ export function JumpTimeline({ start, end }: Props) {
       aria-label={description}
       data-testid="jump-timeline"
       data-jumps={jumps.length}
+      data-hidden-times={hideTimes}
     >
       <defs>
         <marker
@@ -79,7 +89,7 @@ export function JumpTimeline({ start, end }: Props) {
             <text class="jump-label" x={mid} y={LABEL_Y} text-anchor="middle">
               {formatJump(j.minutes, lang)}
             </text>
-            <Point x={to} time={j.to} />
+            <Point x={to} time={j.to} hidden={hideTimes} />
           </g>
         );
       })}
@@ -87,7 +97,7 @@ export function JumpTimeline({ start, end }: Props) {
   );
 }
 
-function Point({ x, time }: { x: number; time: TimeValue }) {
+function Point({ x, time, hidden = false }: { x: number; time: TimeValue; hidden?: boolean }) {
   return (
     <g class="jump-point">
       <circle cx={x} cy={BASE_Y} r={9} />
@@ -106,7 +116,7 @@ function Point({ x, time }: { x: number; time: TimeValue }) {
         text-anchor="middle"
         dominant-baseline="central"
       >
-        {formatTime(time, '24h')}
+        {hidden ? '?' : formatTime(time, '24h')}
       </text>
     </g>
   );
