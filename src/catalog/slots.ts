@@ -66,7 +66,7 @@ export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
   space: {
     BED: { x: 1200, y: 840, scale: 1.35, z: 50 },
     RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
-    LAMP: { x: 1125, y: 548, scale: 0.85, z: 20 },
+    LAMP: { x: 1105, y: 482, scale: 0.85, z: 20 },
     WALL: { x: 960, y: 180, scale: 0.9, z: 12 },
     SHELF: { x: 280, y: 400, scale: 0.8, z: 21 },
     HANGING: { x: 700, y: 40, scale: 1.1, z: 22 },
