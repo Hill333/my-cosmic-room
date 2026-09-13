@@ -675,8 +675,10 @@ button:disabled {
  * prefers-reduced-motion. Reduced motion means no confetti, no sweep, no reveal delays, no
  * looping animation, and every state change still visible (animations end in their final
  * frame immediately). Celebrations become a static scene with a sparkle icon on the card:
- * the rocket stays on its pad without a flame, the tea table is fully set. The hold ring is
- * exempt: it is progress feedback for the 1.5 s gate, not decoration.
+ * the rocket stays on its pad without a flame, the tea table is fully set. The purely
+ * decorative layers (the scene life behind the mission panel, the answer sparks and the
+ * vehicle's trail) are hidden. The hold ring is exempt: it is progress feedback for the
+ * 1.5 s gate, not decoration.
  */
 .stage[data-motion='reduced'] *,
 .stage[data-motion='reduced'] *::before,
@@ -687,7 +689,10 @@ button:disabled {
   animation-iteration-count: 1 !important;
 }
 .stage[data-motion='reduced'] .confetti,
-.stage[data-motion='reduced'] .celebration-flame {
+.stage[data-motion='reduced'] .celebration-flame,
+.stage[data-motion='reduced'] .scene-life,
+.stage[data-motion='reduced'] .burst,
+.stage[data-motion='reduced'] .journey-trail {
   display: none;
 }
 .stage[data-motion='reduced'] .celebration-rocket {
@@ -709,7 +714,10 @@ button:disabled {
     animation-iteration-count: 1 !important;
   }
   .stage[data-motion='system'] .confetti,
-  .stage[data-motion='system'] .celebration-flame {
+  .stage[data-motion='system'] .celebration-flame,
+  .stage[data-motion='system'] .scene-life,
+  .stage[data-motion='system'] .burst,
+  .stage[data-motion='system'] .journey-trail {
     display: none;
   }
   .stage[data-motion='system'] .celebration-rocket {

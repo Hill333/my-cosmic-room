@@ -4,6 +4,21 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
 ## 0.1.0 — release candidate (M0 to M5)
 
+- Mission screens brought to life (S3 / S4, SPEC §3.6–§3.7), all CSS under the stage's motion
+  setting: the scene behind the panel twinkles on the stars its backdrop already draws, a
+  shooting star crosses the window, the cockpit radar sweeps and its lamps blink, the Sweet
+  kitchen sparkles and its pot steams (`components/SceneLife.tsx`, hidden under reduced
+  motion); the companion floats and repeats the feedback line in a speech bubble, saying the
+  story line on the first puzzle; the heroine sways and hops when a puzzle is solved; each
+  puzzle slides in with its answers popping up in turn (translations only, so AT-34 samples
+  full-size targets and full-contrast text at every frame); a right answer throws sparks
+  (`components/Burst.tsx`, also on the SET clock), pops, and flashes the panel gold; a lit
+  tracker step bounces and all four wave; the journey strip is bigger, with stop lights along
+  the path, a bobbing vehicle that boosts off with a spark trail on every advance and a
+  destination that glows on arrival; the last Next reads the story's verb ("Launch!",
+  "Deliver it!", "Start the party!", keys `q.finish.*`) and glows. The mission progress dots
+  now show their state (room.css's `.dot` rule for the collection dots was overriding them).
+
 - Renamed to Tick-Tock (D9): `app.title` in all three languages (the name stays untranslated),
   the page title, the package name, the export filename (`tick-tock-save.json`), the S6
   import message, the docs and the e2e checks. The `mcr.*` localStorage keys are kept on

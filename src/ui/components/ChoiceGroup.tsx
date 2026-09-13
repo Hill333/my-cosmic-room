@@ -2,6 +2,7 @@ import type { ComponentChildren } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { t } from '../i18n.ts';
 import { groupKeyHandler } from '../hooks.ts';
+import { Burst } from './Burst.tsx';
 
 export interface ChoiceOption {
   /** The value dispatched as the answer: a time for READ/MATCH, a duration for ELAPSED. */
@@ -61,12 +62,13 @@ export function ChoiceGroup({ label, options, wrong, correct, onPick, class: cla
       aria-label={label}
       onKeyDown={groupKeyHandler}
     >
-      {options.map((o) => {
+      {options.map((o, i) => {
         const isWrong = wrong.includes(o.value);
         const isCorrect = correct === o.value;
         const state = isCorrect ? 'correct' : isWrong ? 'wrong' : 'idle';
         return (
-          <div key={o.value} class="choice-cell">
+          // --i staggers the options' entrance (mission.css).
+          <div key={o.value} class="choice-cell" style={{ '--i': i }}>
             {o.letter && (
               <span class="choice-letter" aria-hidden="true">
                 {o.letter}
@@ -89,9 +91,12 @@ export function ChoiceGroup({ label, options, wrong, correct, onPick, class: cla
                 </span>
               )}
               {isCorrect && (
-                <span class="choice-mark choice-mark-correct" aria-hidden="true">
-                  ✓
-                </span>
+                <>
+                  <span class="choice-mark choice-mark-correct" aria-hidden="true">
+                    ✓
+                  </span>
+                  <Burst />
+                </>
               )}
             </button>
           </div>

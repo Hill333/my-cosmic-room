@@ -112,6 +112,10 @@ export const en = {
   'q.hint': 'Hint',
   'q.next': 'Next',
   'q.leave': 'Leave',
+  'q.finish.a.space': 'Launch!',
+  'q.finish.a.sweet': 'Start the party!',
+  'q.finish.b.space': 'Deliver it!',
+  'q.finish.b.sweet': 'Deliver it!',
 
   'hint.minutes': '{m} minutes',
   'hint.hourPast': 'The short hand is just past {h}.',

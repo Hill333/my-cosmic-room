@@ -230,6 +230,8 @@
   bottom: 140px;
   width: 220px;
   height: 220px;
+  /* Above the panel, so the speech bubble can lean over its edge. */
+  z-index: 1;
 }
 .companion {
   display: block;
@@ -240,6 +242,17 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+.companion-idle {
+  animation: companion-float 2.6s ease-in-out infinite alternate;
+}
+@keyframes companion-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
 }
 .companion-cheer {
   animation: companion-cheer 700ms ease-in-out 2;
@@ -362,11 +375,18 @@
   border: 3px solid var(--plum);
   background: #fff;
 }
-.dot-done {
+/* Scoped: room.css also styles `.dot` (collection dots) and loads later. */
+.progress-dots .dot-done {
   background: var(--plum);
 }
-.dot-now {
+.progress-dots .dot-now {
   background: var(--star);
+  animation: dot-now 1.4s ease-in-out infinite alternate;
+}
+@keyframes dot-now {
+  to {
+    transform: scale(1.25);
+  }
 }
 .btn-hint[aria-pressed='true'] {
   background: var(--lilac);
@@ -630,12 +650,13 @@
 .journey {
   display: flex;
   align-items: center;
-  gap: 16px;
-  height: 72px;
+  gap: 12px;
+  height: 116px;
+  padding: 0 16px;
 }
 .journey-end {
-  width: 68px;
-  height: 68px;
+  width: 104px;
+  height: 104px;
   object-fit: contain;
 }
 .journey-path {
@@ -646,12 +667,146 @@
 }
 .journey-vehicle {
   position: absolute;
-  top: -36px;
-  width: 72px;
-  height: 72px;
-  margin-left: -36px;
+  top: -52px;
+  width: 104px;
+  height: 104px;
+  margin-left: -52px;
+  transition: left 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.journey-vehicle-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  transition: left 600ms ease-in-out;
+  /* Boosts off on every advance (remounted per solved puzzle), then bobs while it waits. */
+  animation:
+    vehicle-boost 700ms ease-out 1,
+    vehicle-float 2.4s ease-in-out 700ms infinite alternate;
+}
+@keyframes vehicle-boost {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  35% {
+    transform: translateY(-10px) rotate(-10deg) scale(1.18);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+@keyframes vehicle-float {
+  from {
+    transform: translateY(-4px);
+  }
+  to {
+    transform: translateY(4px);
+  }
+}
+.mission-sweet .journey-vehicle-img {
+  animation-name: vehicle-boost-balloon, vehicle-float;
+}
+@keyframes vehicle-boost-balloon {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  35% {
+    transform: translateY(-14px) rotate(6deg) scale(1.15);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+/* Sparks streaming back from the vehicle on each advance (remounted per solved puzzle). */
+.journey-trail {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.journey-trail i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--star);
+  opacity: 0;
+  animation: trail-spark 800ms ease-out 1 both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+.journey-trail i:nth-child(2n) {
+  background: var(--coral);
+  width: 9px;
+  height: 9px;
+}
+.journey-trail i:nth-child(3n) {
+  background: var(--mint);
+}
+.mission-sweet .journey-trail i {
+  background: var(--pink);
+  border-radius: 30% 30% 50% 50%;
+}
+@keyframes trail-spark {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-80px, calc((var(--i) - 2) * 12px)) scale(0.2);
+  }
+}
+/* Stop lights along the path: one per quarter, lit once the vehicle has passed. */
+.journey-stop {
+  position: absolute;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-radius: 50%;
+  border: 3px solid var(--lavender);
+  background: #fff;
+  transition: background 300ms ease-out 500ms;
+}
+.journey-stop-lit {
+  background: var(--star);
+  border-color: var(--plum);
+  animation: stop-light 500ms ease-out 600ms 1;
+}
+@keyframes stop-light {
+  50% {
+    transform: scale(1.6);
+    box-shadow: 0 0 12px 4px var(--star);
+  }
+}
+.journey-from,
+.journey-to {
+  animation: end-bob 3s ease-in-out infinite alternate;
+}
+.journey-to {
+  animation-delay: 1.5s;
+}
+@keyframes end-bob {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}
+/* The parcel has arrived: the destination glows. */
+.journey[data-solved='4'] .journey-to {
+  animation: end-glow 900ms ease-in-out 700ms 3;
+}
+@keyframes end-glow {
+  50% {
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 16px var(--star)) brightness(1.1);
+  }
 }
 .journey-times {
   display: flex;
@@ -662,6 +817,7 @@
   width: 72px;
   height: 72px;
   object-fit: contain;
+  animation: vehicle-float 2s ease-in-out infinite alternate;
 }
 .jumps-box {
   display: flex;
@@ -1015,4 +1171,504 @@
   min-height: 64px;
   padding: 6px 22px;
   font-size: 24px;
+}
+
+/* Life in the mission scene (components/SceneLife.tsx): decorative, hidden under reduced
+   motion (base.css). Every spot is placed by --x / --y in stage px with size --s. */
+.scene-life {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.scene-life > * {
+  position: absolute;
+}
+.twinkle,
+.lamp-glow,
+.sparkle-dot {
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  animation-delay: var(--d);
+}
+.twinkle {
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 246, 200, 0.95) 0,
+    rgba(255, 216, 107, 0.5) 35%,
+    rgba(255, 216, 107, 0) 70%
+  );
+  mix-blend-mode: screen;
+  animation: twinkle 2.2s ease-in-out infinite;
+}
+.twinkle::after {
+  content: '✦';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff8d6;
+  font-size: calc(var(--s) * 0.55);
+  line-height: 1;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+.lamp-glow {
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 236, 160, 0.9) 0,
+    rgba(255, 216, 107, 0.35) 40%,
+    rgba(255, 216, 107, 0) 70%
+  );
+  mix-blend-mode: screen;
+  animation: lamp-blink 1.8s ease-in-out infinite;
+}
+@keyframes lamp-blink {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.sparkle-dot::before {
+  content: '✦';
+}
+.sparkle-dot {
+  display: grid;
+  place-items: center;
+  color: var(--sunny);
+  font-size: var(--s);
+  line-height: 1;
+  text-shadow: 0 0 10px #fff;
+  animation: sparkle-drift 3.2s ease-in-out infinite;
+}
+.sparkle-dot:nth-child(2n) {
+  color: var(--pink);
+}
+@keyframes sparkle-drift {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.1) rotate(25deg);
+  }
+}
+/* Radar sweep over the cockpit's left screen (centre 112, 415, radius 78 in the art). */
+.radar-sweep {
+  left: 34px;
+  top: 337px;
+  width: 156px;
+  height: 156px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(169, 229, 208, 0.75) 0deg,
+    rgba(169, 229, 208, 0) 70deg,
+    transparent 360deg
+  );
+  mix-blend-mode: screen;
+  animation: radar-turn 4s linear infinite;
+}
+@keyframes radar-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* A shooting star: a streak that crosses the window every few seconds. */
+.shooting-star {
+  width: 140px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, #fff 100%);
+  opacity: 0;
+  transform-origin: 100% 50%;
+}
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px 4px rgba(255, 246, 200, 0.9);
+}
+.shooting-star-window {
+  left: 300px;
+  top: 30px;
+  animation: shoot-window 9s ease-in 2s infinite;
+}
+@keyframes shoot-window {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(4deg);
+  }
+  2% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 0;
+    transform: translate(900px, 60px) rotate(4deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(900px, 60px) rotate(4deg);
+  }
+}
+.shooting-star-room {
+  left: 1290px;
+  top: 40px;
+  animation: shoot-room 11s ease-in 3s infinite;
+}
+@keyframes shoot-room {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(38deg);
+  }
+  2% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 0;
+    transform: translate(200px, 240px) rotate(38deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(200px, 240px) rotate(38deg);
+  }
+}
+/* Steam from the pot on the kitchen stove (Sweet A). */
+.steam {
+  left: 1478px;
+  top: 540px;
+  width: 0;
+  height: 0;
+}
+.steam i {
+  position: absolute;
+  left: calc(var(--i) * 14px - 14px);
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  opacity: 0;
+  animation: steam-rise 2.4s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.8s);
+}
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-90px) translateX(12px) scale(1.5);
+  }
+}
+
+/* Heroine: a gentle sway while the child thinks, a hop when the puzzle is solved. */
+.mission-heroine {
+  transform-origin: 50% 100%;
+  animation: heroine-sway 3.4s ease-in-out infinite alternate;
+}
+@keyframes heroine-sway {
+  from {
+    transform: rotate(-1.5deg);
+  }
+  to {
+    transform: rotate(1.5deg);
+  }
+}
+.mission-heroine[data-cheer='true'] {
+  animation:
+    heroine-hop 520ms cubic-bezier(0.3, 0, 0.2, 1) 2,
+    heroine-sway 3.4s ease-in-out 1.1s infinite alternate;
+}
+@keyframes heroine-hop {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  35% {
+    transform: translateY(-44px) rotate(-3deg);
+  }
+  70% {
+    transform: translateY(0) scaleY(0.96);
+  }
+}
+
+/* Companion speech bubble: repeats the feedback line beside the companion. */
+.companion-bubble {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  max-width: 260px;
+  padding: 12px 20px;
+  border: 4px solid var(--plum);
+  border-radius: 28px 28px 8px 28px;
+  background: #fff;
+  color: var(--plum);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  box-shadow: 0 6px 0 rgba(59, 42, 94, 0.2);
+  transform-origin: 90% 100%;
+  animation: bubble-in 380ms cubic-bezier(0.34, 1.56, 0.64, 1) 1 both;
+}
+.companion-bubble::after {
+  content: '';
+  position: absolute;
+  right: 36px;
+  bottom: -18px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  border-right: 4px solid var(--plum);
+  border-bottom: 4px solid var(--plum);
+  transform: skewX(20deg) rotate(45deg);
+}
+.companion-bubble-cheer {
+  background: var(--star);
+}
+.companion-bubble-cheer::after {
+  background: var(--star);
+}
+@keyframes bubble-in {
+  from {
+    transform: scale(0.2) translateY(20px);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Puzzle entrance: the panel content slides in, then the answers pop up one after another.
+   Translations only, no fades and no scaling of the buttons: text keeps its full contrast
+   and every target its full size at every frame (AT-34 samples the screen as soon as it is
+   visible). */
+.puzzle {
+  animation: puzzle-in 380ms ease-out both;
+}
+@keyframes puzzle-in {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.choice-cell {
+  animation: choice-in 420ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation-delay: calc(140ms + var(--i, 0) * 100ms);
+}
+@keyframes choice-in {
+  from {
+    transform: translateY(60px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.question {
+  animation: question-in 420ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+@keyframes question-in {
+  from {
+    transform: scale(0.85);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Solved: the right answer pops and throws sparks; the panel flashes gold. */
+.choice-correct {
+  animation: choice-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+}
+@keyframes choice-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.1) rotate(-1.5deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.burst i {
+  position: absolute;
+  left: -16px;
+  top: -16px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--star);
+  font-size: 38px;
+  font-style: normal;
+  line-height: 1;
+  text-shadow: 0 0 8px #fff;
+  transform: rotate(var(--a)) translateY(0);
+  animation: burst 1.3s cubic-bezier(0.1, 0.7, 0.3, 1) 1 both;
+}
+.burst i::before {
+  content: '✦';
+}
+.burst i:nth-child(2n) {
+  color: var(--coral);
+  font-size: 22px;
+}
+.burst i:nth-child(2n)::before {
+  content: '●';
+}
+.burst i:nth-child(3n) {
+  color: var(--mint);
+}
+.burst i:nth-child(4n)::before {
+  content: '★';
+}
+@keyframes burst {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) scale(0.5);
+  }
+  25% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(calc(var(--reach, 190px) * -0.5)) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(calc(var(--reach, 190px) * -1)) scale(0.4);
+  }
+}
+/* The SET clock's sparks start at its centre and clear the 440 px face. */
+.set-clock-face {
+  position: relative;
+}
+.set-clock-face .burst i {
+  --reach: 320px;
+}
+.mission-panel-solved {
+  animation: panel-glow 1.3s ease-out 1;
+}
+@keyframes panel-glow {
+  0% {
+    box-shadow:
+      0 12px 0 rgba(59, 42, 94, 0.2),
+      0 0 0 0 rgba(255, 216, 107, 0);
+  }
+  30% {
+    box-shadow:
+      0 12px 0 rgba(59, 42, 94, 0.2),
+      0 0 70px 24px rgba(255, 216, 107, 0.85);
+  }
+  100% {
+    box-shadow:
+      0 12px 0 rgba(59, 42, 94, 0.2),
+      0 0 0 0 rgba(255, 216, 107, 0);
+  }
+}
+.feedback-correct {
+  animation: feedback-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+}
+.feedback-wrong {
+  animation: feedback-nudge 420ms ease-out 1;
+}
+@keyframes feedback-pop {
+  from {
+    transform: scale(0.6);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes feedback-nudge {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Tracker: a lit step bounces in with a glow; all four lit, the row does a wave. */
+.tracker-lit {
+  animation: tracker-pop 650ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+}
+@keyframes tracker-pop {
+  0% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 rgba(255, 216, 107, 0.9);
+  }
+  50% {
+    transform: scale(1.15) translateY(-8px);
+    box-shadow: 0 0 24px 10px rgba(255, 216, 107, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 216, 107, 0);
+  }
+}
+.tracker-ready .tracker-step {
+  animation: tracker-wave 600ms ease-in-out 3;
+  animation-delay: calc(500ms + var(--i, 0) * 130ms);
+}
+@keyframes tracker-wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* The story verb on the last Next ("Launch!") glows so the ending is hard to miss. Only the
+   shadow animates: the box stays still, so a click never waits for it to settle. */
+.btn-finish {
+  animation: finish-glow 900ms ease-in-out 600ms infinite alternate;
+}
+@keyframes finish-glow {
+  from {
+    box-shadow: 0 6px 0 rgba(59, 42, 94, 0.25);
+  }
+  to {
+    box-shadow:
+      0 6px 0 rgba(59, 42, 94, 0.25),
+      0 0 26px 8px rgba(255, 216, 107, 0.9);
+  }
 }

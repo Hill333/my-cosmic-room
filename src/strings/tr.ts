@@ -114,6 +114,10 @@ export const tr: Record<StringKey, string> = {
   'q.hint': 'İpucu',
   'q.next': 'İleri',
   'q.leave': 'Çık',
+  'q.finish.a.space': 'Fırlat!',
+  'q.finish.a.sweet': 'Partiyi başlat!',
+  'q.finish.b.space': 'Teslim et!',
+  'q.finish.b.sweet': 'Teslim et!',
 
   'hint.minutes': '{m} dakika',
   'hint.hourPast': 'Akrep {h} rakamını biraz geçmiş.',

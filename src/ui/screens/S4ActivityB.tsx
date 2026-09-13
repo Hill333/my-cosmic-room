@@ -26,9 +26,13 @@ export function S4ActivityB({ mission }: Props) {
   const solved = mission.current.solved;
   const pose: CompanionPose = solved ? 'cheer' : mission.current.wrongAttempts > 0 ? 'hmm' : 'idle';
   const variant = solved ? mission.results.length % 4 : mission.current.wrongAttempts % 2;
+  const [feedback, setFeedback] = useState<StringKey | null>(null);
+  const story = t(`b.story.${theme}`);
+  const bubble = feedback ? t(feedback) : mission.index === 0 && !solved ? story : null;
 
   const next = () => {
     play('next');
+    setFeedback(null);
     dispatch({ type: 'mission/next' });
     const m = save.value.mission;
     if (m && m.state !== 'IN_PROGRESS') go({ id: 'S5' });
@@ -38,12 +42,19 @@ export function S4ActivityB({ mission }: Props) {
     <MissionFrame
       mission={mission}
       title={t(`mission.b.${theme}`)}
-      story={t(`b.story.${theme}`)}
+      story={story}
       companionPose={pose}
       companionVariant={variant}
+      bubble={bubble}
     >
       <JourneyStrip theme={theme} solved={mission.results.length} />
-      <PuzzleB key={mission.index} mission={mission} onNext={next} />
+      <PuzzleB
+        key={mission.index}
+        mission={mission}
+        feedback={feedback}
+        onFeedback={setFeedback}
+        onNext={next}
+      />
     </MissionFrame>
   );
 }
@@ -61,34 +72,59 @@ const JOURNEY = {
   },
 } as const;
 
-/** Origin, dashed path and destination; the vehicle advances a quarter per solved puzzle. */
+const TRAIL = [0, 1, 2, 3, 4];
+const STOPS = [1, 2, 3];
+
+/**
+ * Origin, dashed path and destination; the vehicle advances a quarter per solved puzzle.
+ * Three stop lights on the path come on as it passes them; the vehicle bobs while it waits
+ * and boosts off with a burst of sparks on every advance (both keyed on `solved`, so the CSS
+ * animations replay); the destination glows once the parcel arrives.
+ */
 function JourneyStrip({ theme, solved }: { theme: Theme; solved: number }) {
   const art = JOURNEY[theme];
-  const progress = Math.min(solved, PUZZLES_PER_MISSION) / PUZZLES_PER_MISSION;
+  const done = Math.min(solved, PUZZLES_PER_MISSION);
+  const progress = done / PUZZLES_PER_MISSION;
   return (
     <div class="journey" aria-hidden="true" data-testid="journey" data-solved={solved}>
-      <img src={assetUrl(art.from)} alt="" class="journey-end" draggable={false} />
+      <img src={assetUrl(art.from)} alt="" class="journey-end journey-from" draggable={false} />
       <div class="journey-path">
-        <img
-          src={assetUrl(art.vehicle)}
-          alt=""
-          class="journey-vehicle"
-          style={{ left: `${progress * 100}%` }}
-          draggable={false}
-        />
+        {STOPS.map((i) => (
+          <i
+            key={i}
+            class={`journey-stop${done >= i ? ' journey-stop-lit' : ''}`}
+            style={{ left: `${(i / PUZZLES_PER_MISSION) * 100}%` }}
+          />
+        ))}
+        <div class="journey-vehicle" style={{ left: `${progress * 100}%` }}>
+          <span key={`trail-${done}`} class="journey-trail">
+            {TRAIL.map((i) => (
+              <i key={i} style={{ '--i': i }} />
+            ))}
+          </span>
+          <img
+            key={`vehicle-${done}`}
+            src={assetUrl(art.vehicle)}
+            alt=""
+            class="journey-vehicle-img"
+            draggable={false}
+          />
+        </div>
       </div>
-      <img src={assetUrl(art.to)} alt="" class="journey-end" draggable={false} />
+      <img src={assetUrl(art.to)} alt="" class="journey-end journey-to" draggable={false} />
     </div>
   );
 }
 
 interface PuzzleProps {
   mission: Mission;
+  feedback: StringKey | null;
+  onFeedback: (key: StringKey | null) => void;
   onNext: () => void;
 }
 
 /** One elapsed puzzle; remounted per `index`, so the jumps panel and wrong picks reset. */
-function PuzzleB({ mission, onNext }: PuzzleProps) {
+function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
   if (puzzle.kind !== 'ELAPSED') throw new Error('Activity B expects ELAPSED puzzles');
   const theme = mission.theme;
@@ -96,7 +132,6 @@ function PuzzleB({ mission, onNext }: PuzzleProps) {
   const elapsed = useElapsedSeconds();
   const question = useRef<HTMLParagraphElement>(null);
   const [wrong, setWrong] = useState<number[]>([]);
-  const [feedback, setFeedback] = useState<StringKey | null>(null);
   const [jumpsOpen, setJumpsOpen] = useState(false);
   const solved = mission.current.solved;
   const correct = puzzle.end - puzzle.start;

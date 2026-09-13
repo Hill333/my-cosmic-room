@@ -11,6 +11,7 @@ import {
 import type { ReadingLevel, Theme, TimeValue } from '../../core/types.ts';
 import { t } from '../i18n.ts';
 import { AnalogClock, CLOCK, CLOCK_SIZE, hitTestHand, type Hand } from './AnalogClock.tsx';
+import { Burst } from './Burst.tsx';
 
 export type SetStatus = 'idle' | 'correct' | 'wrong';
 
@@ -184,6 +185,7 @@ export function SetClock({
           ghost={showGhost ? target : null}
           period={period}
         />
+        {status === 'correct' && <Burst />}
       </div>
       {wholeHours && lockedNote && (
         <p class="set-clock-note" role="status">
