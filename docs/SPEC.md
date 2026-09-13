@@ -45,7 +45,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D11 | Digital time format in Activity A | 12-hour digits without a period label ("3:30") at every reading level by default, so the analog face and the digital answer agree without implying a 24-hour reading. A Parent-corner toggle "24-hour digital clocks in reading puzzles" switches Activity A to "15:30" and adds a sun/moon day-period badge to every analog face. Activity B always uses 24-hour digits. |
 | D12 | Hint timeline geometry | The jump timeline is an explicit sequence of jumps with equal spacing between points, not a proportional scale. Labels therefore never collide and always sit under their own point. |
 | D13 | Advancing after a correct answer | A large "Next" button (auto-focused) advances; there is no auto-advance timer. The child controls pacing. |
-| D14 | Mission composition | Activity A missions contain exactly two READ, one MATCH and one SET puzzle, shuffled, with SET never first. Activity B missions contain four elapsed-time puzzles. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. |
+| D14 | Mission composition | Activity A missions contain exactly two READ, one MATCH and one SET puzzle, shuffled, with SET never first. Activity B missions contain four elapsed-time puzzles. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. **Revised by D19 and D20 (13 September 2026):** the later READ may be a SHIFT (from R2, half of the missions), the MATCH may be a DIGITS (half of the missions), READ/MATCH/SET may be in words; in Activity B puzzle 2 or 3 may be a SCHEDULE (half of the missions) and one ELAPSED per mission is an ARRIVE. Mission length, levels and the target rules are unchanged; an input puzzle (SET, DIGITS) or a SHIFT is never first. See §7.3 and §7.5. |
 | D15 | Companions | Space companion: a turquoise alien, placeholder name *Pip*. Sweet companion: a grey-and-white cat, placeholder name *Mimi*. Names are strings and can be changed. |
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
@@ -1048,7 +1048,8 @@ Prompts, presets, attempts and the generated PNGs are committed with the manifes
 ```
 src/
   core/time.ts        time values, formatting, hand angles, snapping        (pure)
-  core/elapsed.ts     duration formatting, choices, decomposeJumps           (pure)
+  core/elapsed.ts     duration formatting, duration and arrival choices, decomposeJumps   (pure)
+  core/words.ts       times in words per language (§7.7)                    (pure)
   core/generate.ts    seeded RNG, level tables, mission generators           (pure)
   core/mission.ts     mission reducer: start / answer / next / complete / choose / apply / leave   (pure)
   core/inventory.ts   nextPair, place, wear, counters, stars, invariants     (pure)
@@ -1057,7 +1058,7 @@ src/
   strings/en.ts, strings/tr.ts, strings/nl.ts, strings/index.ts (t(key, params))
   ui/Stage.tsx        scaling, letterbox, focus management
   ui/screens/         S0 Title, S1 Room, S2 Board, S3 ActivityA, S4 ActivityB, S5 Complete, S6 Parent
-  ui/components/      AnalogClock, DigitalDisplay, ChoiceGroup, SidePanel, Heroine, Companion, JumpTimeline, HoldButton, Dialog
+  ui/components/      AnalogClock, DigitalDisplay, DigitalBuilder (DIGITS), SetClock, ScheduleBar, ChoiceGroup, SidePanel, Heroine, Companion, JumpTimeline, HoldButton, Dialog
   assets/             manifest.json and files (§15)
 tools/gen-assets.ts   drives Codex CLI per manifest entry (§15.6); not part of the app bundle
 ```
@@ -1104,12 +1105,13 @@ Automated unless marked (manual). PRD §9 criteria are referenced as P9.
 | AT-05 | Precision per level | Every target's minutes are in the level's allowed set (P9: intended precision) |
 | AT-06 | Choices | Exactly three, distinct, exactly one equals the target, all at level precision (P9: distinct, one correct) |
 | AT-07 | Concept example | 3:30 at R2 produces the choice set {3:00, 3:30, 4:30}; 3:00 at R1 produces {2:00, 3:00, 4:00} |
-| AT-08 | Mission shape | Activity A: two READ (the later of which may be a SHIFT from R2), one MATCH, one SET; neither SET nor SHIFT first; four distinct targets; none of the last eight recent targets |
+| AT-08 | Mission shape | Activity A: two READ (the later of which may be a SHIFT from R2), one MATCH (which may be a DIGITS, D20), one SET; neither SET, DIGITS nor SHIFT first; four distinct targets; none of the last eight recent targets |
 | AT-09 | New-minutes weighting | At R2–R4, between 50 % and 70 % of targets use the level's new minutes over 5,000 missions |
 | AT-10 | 24-hour mode | Targets within 06:00–21:59; badge period computed correctly at the boundaries 05:00, 12:00, 18:00, 22:00 |
 | AT-39 | Times in words (§7.7) | The table of §7.7 reproduces in all three languages; next-hour rules per language; Turkish inflection; every five-minute face formats without a stray placeholder; non-multiples of five throw |
 | AT-40 | SHIFT (§7.3) | Over 5,000 missions per level and mode: delta from the level set, start and target at level precision and inside the mode's window, three distinct choices with exactly one correct; R1 never, R2+ about half of the missions; 3:15 + 30 min at R3 gives {3:45, 2:45, 3:15}; 12:45 + 30 min is 1:15 |
-| AT-41 | Words share | About half of READ, MATCH and SET puzzles carry `words` when enabled, none when disabled |
+| AT-41 | Words share | About half of READ, MATCH and SET puzzles carry `words` when enabled, none when disabled; never a SHIFT or a DIGITS |
+| AT-43 | DIGITS (§7.3, D20) | Over 5,000 missions per level: about half of the missions carry a DIGITS in place of the MATCH, never at puzzle 1, never in words, target at level precision; the answer compares digits, so in 24-hour mode 3:30 does not answer 15:30 |
 
 ### 17.3 Elapsed time (unit)
 
@@ -1119,9 +1121,10 @@ Automated unless marked (manual). PRD §9 criteria are referenced as P9.
 | AT-12 | Jumps for the example | [+4 h → 18:30, +30 min → 19:00, +15 min → 19:15]; sum 285 (P9: help mathematically correct) |
 | AT-13 | Jump invariants | For all S < E multiples of 15 within 06:00–22:00: jumps sum to E − S, last `to` = E, at most 3 jumps, each a positive multiple of 15 |
 | AT-14 | Worked examples of §8.4 | All six rows reproduce exactly |
-| AT-15 | Level windows | E1 gaps 60–300 on whole hours; E2 gaps 15–120; E3 gaps 135–360; never before 06:00 or after 22:00; never across midnight |
+| AT-15 | Level windows | E1 gaps 60–300 on whole hours; E2 gaps 15–120; E3 gaps 135–360; never before 06:00 or after 22:00; never across midnight (ELAPSED and ARRIVE alike) |
 | AT-16 | Duration formatting | 60 → "1 hour" / "1 saat"; 75 → "1 hour 15 minutes"; 300 → "5 hours"; 30 → "30 minutes" |
 | AT-17 | First E3 mission | Puzzle 4 is 14:30 → 19:15 in each theme's first E3 mission, never afterwards |
+| AT-44 | ARRIVE (§7.5, D20) | Every Activity B mission has exactly one ARRIVE, never on the reserved 14:30 → 19:15 slot and never on a SCHEDULE; its three arrival times are distinct, after the start, before midnight, on the quarter grid, exactly one equal to the end; 14:30 → 19:15 offers 18:45 and 19:30 |
 | AT-42 | SCHEDULE (§8.6) | Over 5,000 missions per level: four contiguous segments from a whole hour in 07:00–14:00, level lengths, span ≤ 6 h, distinct labels, only at puzzle 2 or 3, about half of the missions; the reserved first-E3 slot is never replaced |
 
 ### 17.4 Mission and reward state (unit)
@@ -1172,6 +1175,8 @@ Automated unless marked (manual). PRD §9 criteria are referenced as P9.
 3. Keyboard-only mission A including a SET puzzle.
 4. Theme switch preserves both layouts; wardrobe shared.
 5. Parent corner: lock levels, toggle 24-hour, export, reset.
+6. Workbook kinds (D19): a mission A with words and a SHIFT, a mission B with a SCHEDULE, the "Times in words" switch.
+7. DIGITS and ARRIVE (D20): build the digits with the buttons (wrong check, hint, wrap-around), an ARRIVE with the jump hint's hidden times; the AT-34 audit covers both.
 
 ### 17.9 Parent-and-child play session (manual, before calling the release done)
 

@@ -1,10 +1,11 @@
 # Release handoff: 0.1.0 release candidate
 
 Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, the
-heroine ankle and hair-gap fixes, and the walking heroine of 13 September 2026, D18) is
+heroine ankle and hair-gap fixes, the walking heroine of 13 September 2026, D18, and the
+question types of the same day: the workbook kinds D19 and DIGITS / ARRIVE D20) is
 implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build passes
 `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(175 unit tests, 36 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(179 unit tests, 33 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
 
@@ -53,8 +54,10 @@ checklist, followed by the known limitations and the open spec questions.
    `words.m55` (Dutch "10 voor half 4", Turkish case endings from `core/words.ts` — check
    "on ikiyi", "altıya"), the day-plan activity names `sched.*` (they sit inside "Hoe lang
    duurt {activity}?" / "{activity} ne kadar sürer?", so Turkish ones are capitalised as
-   sentence starts) and the SHIFT questions `a.shift.*`. `npm test` enforces sentence case
-   and that every key exists in all three languages, so edits are safe to make directly.
+   sentence starts) and the SHIFT questions `a.shift.*`; and the D20 additions: the DIGITS
+   question and button labels `a.digits.*` and the arrival questions `b.arrive.q.*`,
+   `b.takes`, `b.arrivesUnknown`. `npm test` enforces sentence case and that every key
+   exists in all three languages, so edits are safe to make directly.
 7. **Deploy (SPEC §16.5).** When you are happy: commit, then either push a tag
    (`git tag v0.1.0 && git push origin main v0.1.0`) or run the "Deploy to GitHub Pages"
    workflow by hand from the Actions tab. Pages must be set to "GitHub Actions" as the source
