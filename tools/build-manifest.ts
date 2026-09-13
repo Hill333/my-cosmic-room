@@ -5,23 +5,35 @@
  *
  *   node tools/build-manifest.ts
  */
-import { allItems, defaultHeroine, figureId, requireItem } from '../src/catalog/index.ts';
+import {
+  allItems,
+  defaultHeroine,
+  figureId,
+  requireItem,
+  sitFigureId,
+  sleepHeadId,
+} from '../src/catalog/index.ts';
 import type { AssetEntry, AssetManifest, GenRecord } from '../src/assetTypes.ts';
 import {
   DECORATION_GEN,
   DEFAULT_ANCHORS,
+  DEFAULT_SIT_ANCHORS,
   EXTRA_ASSETS,
   GARMENT_LABELS,
   HEROINE_CANVAS,
   HEROINE_SHEET,
   OVERLAY_GEN,
+  SIT_CANVAS,
   SIZE_OVERRIDES,
+  SLEEP_SIZE,
   SLOT_SIZES,
   SOUNDS,
   SPACE_REF,
   SWEET_REF,
   TILE_SIZE,
   figurePrompt,
+  sitPrompt,
+  sleepPrompt,
 } from './manifest-data.ts';
 import { readManifest, writeManifest } from './lib/manifest.ts';
 
@@ -133,6 +145,36 @@ for (const outfit of allItems.filter((i) => i.kind === 'outfit')) {
       ]),
     });
   }
+}
+
+// Sitting figures (SPEC §4.3): the same girl cross-legged, one per outfit × hairstyle, and
+// her sleeping head, one per hairstyle; both generated from the sheet like the figures.
+for (const outfit of allItems.filter((i) => i.kind === 'outfit')) {
+  for (const hair of allItems.filter((i) => i.kind === 'hair')) {
+    const id = sitFigureId(outfit.art.figure!, hair.art.figure!);
+    desired.set(id, {
+      path: placeholderPath(id),
+      theme: 'shared',
+      category: 'heroine',
+      size: SIT_CANVAS,
+      layer: 'sit',
+      anchors: structuredClone(DEFAULT_SIT_ANCHORS),
+      label: `${titleCase(GARMENT_LABELS[outfit.id] ?? outfit.id)}, ${GARMENT_LABELS[hair.id] ?? hair.id}, sitting`,
+      gen: newGen('astra-light', sitPrompt(outfit.art.figure!, hair.art.figure!), [HEROINE_SHEET]),
+    });
+  }
+}
+for (const hair of allItems.filter((i) => i.kind === 'hair')) {
+  const id = sleepHeadId(hair.art.figure!);
+  desired.set(id, {
+    path: placeholderPath(id),
+    theme: 'shared',
+    category: 'heroine',
+    size: SLEEP_SIZE,
+    layer: 'sleep',
+    label: `Sleeping head, ${GARMENT_LABELS[hair.id] ?? hair.id}`,
+    gen: newGen('astra-light', sleepPrompt(hair.art.figure!), [HEROINE_SHEET]),
+  });
 }
 
 for (const extra of EXTRA_ASSETS) {

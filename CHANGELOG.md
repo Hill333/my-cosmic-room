@@ -4,6 +4,25 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
 ## 0.1.0 — release candidate (M0 to M5)
 
+- Heroine walks (SPEC §4.3 "Walk, bed, sit", D18): clicking her picks her (pulsing ring,
+  `aria-pressed`); the next click on the floor walks her there, the bed puts her to sleep
+  (head on the pillow over the bed, "z z z", the room darkens without saving a lamp
+  change), the nook seats her, any other slot walks her up beside the item and then plays
+  its reaction; Pip / Mimi trot after her. Arrow keys walk her while picked; Escape or a panel
+  drops the pick and stands her up. Pure geometry in `catalog/walk.ts` (floor band
+  `FLOOR_GEOMETRY`, depth scale, stacking in front of the bed and nook once past their floor
+  line, `rest` spots per bed and nook in the catalogue), the state machine in
+  `ui/useRoomWalk.ts`, the CSS in `room.css` (`--walk-ms`, `--facing`, `heroine-walking`,
+  `heroine-pose-bed`, `heroine-pose-sit`, `heroine-selected`); reduced motion lands every move
+  at once. New unit tests (`catalog/walk.test.ts`) and `e2e/walk.spec.ts`.
+- Pose art for the walking heroine (SPEC §4.3, §4.5): 21 generated **sitting figures**
+  (`shared/heroine/sit/<outfit>-<hair>`, cross-legged, feet tucked so no shoe overlay is
+  needed, own anchors for clips, headband, backpack and faces) and 3 generated **sleeping
+  heads** (`shared/heroine/sleep/<hair>`, closed eyes, drawn rotated onto the pillow). The
+  manifest, `build-manifest`, `post-assets` (a `sit` branch: cut out, bottom aligned, no
+  ankle cut) and `HeroinePreview` (`pose="sit"`) know the new layers; the companion waits
+  beside the bed or cushion instead of in front of the pillow; the standing figure stays
+  as a masked stand-in while a pose entry is a placeholder.
 - Mission screens brought to life (S3 / S4, SPEC §3.6–§3.7), all CSS under the stage's motion
   setting: the scene behind the panel twinkles on the stars its backdrop already draws, a
   shooting star crosses the window, the cockpit radar sweeps and its lamps blink, the Sweet

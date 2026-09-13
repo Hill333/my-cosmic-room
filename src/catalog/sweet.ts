@@ -36,6 +36,8 @@ export const sweetItems: Item[] = [
     collection: 'sweet.sunnyGarden',
     order: 0,
     reaction: 'bed',
+    // The daisy headboard sits high: her head goes a little lower, clear of the petals.
+    rest: { fx: 0.3, fy: 0.47, rotate: -24 },
   }),
   decoration('sweet', 'butterflyMobile', 'HANGING', { collection: 'sweet.sunnyGarden', order: 1 }),
   decoration('sweet', 'sunPoster', 'WALL', { collection: 'sweet.sunnyGarden', order: 2 }),

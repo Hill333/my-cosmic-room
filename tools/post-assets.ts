@@ -38,7 +38,13 @@ import type {
 import { defaultHeroine, figureId, requireItem } from '../src/catalog/index.ts';
 import { overlayCanvas, overlayPlacements } from './lib/heroine.ts';
 import { ASSETS_DIR, assetFile, readManifest, writeManifest } from './lib/manifest.ts';
-import { DEFAULT_ANCHORS, FACE_SIZE, HEROINE_CANVAS } from './manifest-data.ts';
+import {
+  DEFAULT_ANCHORS,
+  DEFAULT_SIT_ANCHORS,
+  FACE_SIZE,
+  HEROINE_CANVAS,
+  SIT_CANVAS,
+} from './manifest-data.ts';
 
 const PADDING = 8;
 /** Channels at or above this value count as the plain white background. */
@@ -116,6 +122,10 @@ const BASE_FIGURE = figureId(
 
 function isFigure(entry: AssetEntry): boolean {
   return entry.category === 'heroine' && entry.layer === 'figure';
+}
+
+function isSitFigure(entry: AssetEntry): boolean {
+  return entry.category === 'heroine' && entry.layer === 'sit';
 }
 
 function isOverlay(entry: AssetEntry): boolean {
@@ -696,6 +706,49 @@ async function processEntry(
       if (note) notes.push(note);
     }
     return `${outRel} ${w}×${h} (figure ${fitted.info.width}×${fitted.info.height}, ankle cut ${entry.anchors.feet.cutY}, legs ${legX ? legX.join('/') : 'not found'}) ${(statSync(out).size / 1024).toFixed(0)} KB${notes.length ? ', tiles → ' + notes.join(', ') : ''}`;
+  }
+
+  if (isSitFigure(entry)) {
+    // Sitting figure (SPEC §4.3): cut out like the standing figure and bottom-aligned on its
+    // own canvas; no ankle cut (her feet are tucked away) and no tiles derive from it. The
+    // anchors are a proportional guess the first time, then kept for hand tuning.
+    const [w, h] = SIT_CANVAS;
+    const { data, info } = await sharp(raw)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const cut = cutOut(data, info.width, info.height, true);
+    const cropped = await sharp(cut.data, {
+      raw: { width: cut.width, height: cut.height, channels: 4 },
+    })
+      .extract(cut.box)
+      .png()
+      .toBuffer();
+    const fitted = await sharp(cropped)
+      .resize(w, h, { fit: 'inside', withoutEnlargement: false })
+      .toBuffer({ resolveWithObject: true });
+    const left = Math.round((w - fitted.info.width) / 2);
+    const top = h - fitted.info.height;
+    const info2 = await sharp({
+      create: { width: w, height: h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    })
+      .composite([{ input: fitted.data, left, top }])
+      .png(pngOptions())
+      .toFile(out);
+    const firstTime = !entry.path.endsWith('.png');
+    if (firstTime || args.resetAnchors || !entry.anchors) {
+      const y = (canvasY: number) => Math.round(top + (fitted.info.height * canvasY) / h);
+      const at = (a: Anchor, yy: number): Anchor => ({ x: w / 2, y: yy, scale: a.scale });
+      entry.anchors = {
+        face: at(DEFAULT_SIT_ANCHORS.face, y(DEFAULT_SIT_ANCHORS.face.y)),
+        head: at(DEFAULT_SIT_ANCHORS.head, y(DEFAULT_SIT_ANCHORS.head.y)),
+        feet: at(DEFAULT_SIT_ANCHORS.feet, h),
+        back: at(DEFAULT_SIT_ANCHORS.back, y(DEFAULT_SIT_ANCHORS.back.y)),
+      };
+    }
+    entry.path = outRel;
+    entry.size = [info2.width, info2.height];
+    return `${outRel} ${w}×${h} (sitting figure ${fitted.info.width}×${fitted.info.height}) ${(statSync(out).size / 1024).toFixed(0)} KB`;
   }
 
   if (isFullFrame(entry)) {

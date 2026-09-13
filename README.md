@@ -49,6 +49,23 @@ node tools/screenshots.ts      # review screenshots of both rooms and the dress-
 node tools/heroine-matrix.ts   # contact sheet of every outfit × shoe into docs/screenshots/heroine-shoes-matrix.png
 ```
 
+### Walking (SPEC §4.3)
+
+Clicking the heroine picks her; the next click on the floor, the bed, the nook or another item
+walks her there (she sleeps in the bed, sits on the nook, and other items react when she
+arrives); the companion follows. The floor band and stacking live in `src/catalog/walk.ts`
+(`FLOOR_GEOMETRY` in `slots.ts`); where she lies or sits per bed and nook is the item's `rest`
+in `src/catalog/space.ts` / `sweet.ts` (fractions of the item's room box: `fx, fy` is the
+pillow point or the seat centre, `sitY` where the sitting figure's bottom edge lands; the
+defaults in `helpers.ts` fit the current art). The poses are generated art: a sitting figure
+per outfit × hairstyle (`shared/heroine/sit/*`) and a sleeping head per hairstyle
+(`shared/heroine/sleep/*`), made like the figures (`npm run assets:gen -- --only
+shared/heroine/sit/planetTee-buns`, then `npm run assets:post -- --only <id>`); while one is
+still a placeholder the standing figure stands in, masked by CSS (`heroine-pose-bed`,
+`heroine-pose-sit` in `src/styles/room.css`). To retune after new bed or cushion art: place
+it, pick her, click it, and adjust `rest` until her head sits on the pillow or she sits on
+the cushion.
+
 ### Heroine (SPEC §4.5)
 
 The heroine is one generated full-body figure per outfit × hairstyle

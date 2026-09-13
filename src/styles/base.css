@@ -372,6 +372,9 @@ button:disabled {
   height: 100%;
   aspect-ratio: 600 / 900;
 }
+.heroine-sitting {
+  aspect-ratio: 600 / 600;
+}
 .heroine-figure {
   position: absolute;
   inset: 0;
@@ -704,6 +707,10 @@ button:disabled {
 .stage[data-motion='reduced'] .hold-btn.holding .hold-ring-fill {
   animation-duration: var(--hold-ms, 1500ms) !important;
 }
+.stage[data-motion='reduced'] .heroine-pose-bed::after {
+  animation: none;
+  opacity: 1;
+}
 @media (prefers-reduced-motion: reduce) {
   .stage[data-motion='system'] *,
   .stage[data-motion='system'] *::before,
@@ -728,5 +735,9 @@ button:disabled {
   }
   .stage[data-motion='system'] .hold-btn.holding .hold-ring-fill {
     animation-duration: var(--hold-ms, 1500ms) !important;
+  }
+  .stage[data-motion='system'] .heroine-pose-bed::after {
+    animation: none;
+    opacity: 1;
   }
 }

@@ -66,10 +66,12 @@ export interface AssetEntry {
   pivot?: [number, number];
   slot?: SlotType;
   /**
-   * Heroine layer (SPEC §4.5): `figure` is a full-body raster (one per outfit × hairstyle);
-   * `shoes`, `extra` and `face` are overlays snapped to one of the figure's anchors.
+   * Heroine layer (SPEC §4.5): `figure` is a full-body standing raster (one per outfit ×
+   * hairstyle) and `sit` the same girl sitting cross-legged (SPEC §4.3 "walk, bed, sit");
+   * `sleep` is her sleeping head (one per hairstyle) drawn on a bed's pillow; `shoes`, `extra`
+   * and `face` are overlays snapped to one of a figure's anchors.
    */
-  layer?: 'figure' | 'face' | 'shoes' | 'extra';
+  layer?: 'figure' | 'sit' | 'sleep' | 'face' | 'shoes' | 'extra';
   /** Overlays: the figure anchor the overlay's pivot lands on; `back` draws behind the figure. */
   anchor?: AnchorKind;
   /** Overlays: extra shift from the anchor in figure px (a clip sits beside the parting). */
