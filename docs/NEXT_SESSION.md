@@ -65,7 +65,9 @@ checklist, followed by the known limitations and the open spec questions.
 
 - The walking heroine (SPEC §4.3, D18) bobs rather than steps (a walk cycle would be frames
   per outfit × hairstyle). Sleeping and sitting are generated art (`shared/heroine/sleep/*`,
-  `shared/heroine/sit/*`, none `approved` yet: check them like the figures, item 3); the
+  `shared/heroine/sit/*`, all 24 generated, none `approved` yet: check them like the figures,
+  item 3; `sit/planetTee-loose` needed a second attempt after an OpenAI output-moderation
+  false positive, so a regeneration of any pose can trip that too and is simply retried); the
   `rest` spots per bed and nook are the knobs to turn when bed or cushion art changes, and a
   pose entry that is regenerated goes through `npm run assets:post -- --only <id> --force`.
 
