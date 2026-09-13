@@ -135,12 +135,150 @@ button.room-companion {
   object-fit: contain;
 }
 .heroine-turned .heroine {
-  transform: perspective(900px) rotateY(-16deg);
+  transform: scaleX(var(--facing, 1)) perspective(900px) rotateY(-16deg);
   transition: transform 250ms ease-out;
 }
 .room-heroine .heroine {
   transition: transform 250ms ease-out;
   transform-origin: 50% 100%;
+  transform: scaleX(var(--facing, 1));
+}
+
+/*
+ * Walking (SPEC §4.3): the walkers' boxes glide to their new feet point over --walk-ms
+ * (sized to the distance by ui/useRoomWalk.ts; 0 under reduced motion, where base.css also
+ * cuts the transition), the figure bobs while it moves and faces the way it goes.
+ */
+.room-heroine,
+.room-companion {
+  transition:
+    left var(--walk-ms, 0ms) linear,
+    top var(--walk-ms, 0ms) linear,
+    width var(--walk-ms, 0ms) linear,
+    height var(--walk-ms, 0ms) linear;
+}
+.room-companion .companion {
+  transform: scaleX(var(--facing, 1));
+}
+.heroine-walking .heroine {
+  animation: heroine-step 460ms ease-in-out infinite;
+}
+.companion-walking .companion {
+  animation: companion-step 380ms ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+@keyframes heroine-step {
+  0%,
+  50%,
+  100% {
+    transform: scaleX(var(--facing, 1)) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: scaleX(var(--facing, 1)) translateY(-14px) rotate(2.5deg);
+  }
+  75% {
+    transform: scaleX(var(--facing, 1)) translateY(-14px) rotate(-2.5deg);
+  }
+}
+@keyframes companion-step {
+  0%,
+  100% {
+    transform: scaleX(var(--facing, 1)) translateY(0) scale(1, 1);
+  }
+  50% {
+    transform: scaleX(var(--facing, 1)) translateY(-22px) scale(0.96, 1.06);
+  }
+}
+/* Picked (SPEC §4.3): a pulsing ring at her feet says the next click sends her there. */
+.heroine-selected::before {
+  content: '';
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -18px;
+  height: 48px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 5px solid var(--plum);
+  background: rgba(255, 216, 107, 0.6);
+  animation: heroine-ring 1100ms ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes heroine-ring {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+/*
+ * In bed (SPEC §4.3): the button rises over the bed (HEROINE_BED_Z) with only her head and
+ * shoulders showing above the blanket, tilted back onto the pillow; the rest of the figure
+ * fades out under a mask, and "z z z" floats up while the room goes dark.
+ */
+.heroine-pose-bed .heroine {
+  transform: rotate(var(--rest-rotate, 0deg));
+  transform-origin: 50% 17%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 21%, transparent 30%);
+  mask-image: linear-gradient(to bottom, #000 21%, transparent 30%);
+  animation: heroine-tuck 320ms ease-out 1;
+}
+@keyframes heroine-tuck {
+  0% {
+    transform: rotate(0deg) translateY(-30px);
+  }
+  100% {
+    transform: rotate(var(--rest-rotate, 0deg)) translateY(0);
+  }
+}
+.heroine-pose-bed::after {
+  content: 'z z z';
+  position: absolute;
+  left: 58%;
+  top: -2%;
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: 4px;
+  color: var(--plum);
+  text-shadow: 0 0 10px #fff;
+  animation: heroine-zzz 2400ms ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes heroine-zzz {
+  0% {
+    opacity: 0;
+    transform: translate(0, 12px) scale(0.7);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(34px, -80px) scale(1.15);
+  }
+}
+/* Sitting (SPEC §4.3): her hips land in the nook, which draws in front; her legs fade out. */
+.heroine-pose-sit .heroine {
+  -webkit-mask-image: linear-gradient(to bottom, #000 56%, transparent 64%);
+  mask-image: linear-gradient(to bottom, #000 56%, transparent 64%);
+  animation: heroine-sit 320ms ease-out 1;
+}
+@keyframes heroine-sit {
+  0% {
+    transform: translateY(-24px) scale(1, 1);
+  }
+  60% {
+    transform: translateY(0) scale(1.05, 0.93);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
 }
 
 /* The star chart poster hangs at a fixed spot per theme (catalog/slots.ts), behind the slots. */
@@ -165,6 +303,16 @@ button.room-companion {
     rgba(35, 20, 80, 0.55) 1000px
   );
   animation: lighting-in 400ms ease-out 1;
+}
+/* Bedtime (SPEC §4.3): a deeper night while the heroine sleeps, without touching the save. */
+.room-lighting-night {
+  background: radial-gradient(
+    circle at var(--lamp-x, 1138px) var(--lamp-y, 470px),
+    rgba(255, 216, 107, 0) 0,
+    rgba(255, 216, 107, 0.08) 120px,
+    rgba(35, 25, 95, 0.5) 420px,
+    rgba(25, 15, 70, 0.62) 1000px
+  );
 }
 @keyframes lighting-in {
   from {
@@ -341,16 +489,16 @@ button.room-companion {
 @keyframes react-wave {
   0%,
   100% {
-    transform: rotate(0deg);
+    transform: scaleX(var(--facing, 1)) rotate(0deg);
   }
   25% {
-    transform: rotate(-5deg) translateY(-6px);
+    transform: scaleX(var(--facing, 1)) rotate(-5deg) translateY(-6px);
   }
   50% {
-    transform: rotate(4deg) translateY(-10px);
+    transform: scaleX(var(--facing, 1)) rotate(4deg) translateY(-10px);
   }
   75% {
-    transform: rotate(-3deg) translateY(-4px);
+    transform: scaleX(var(--facing, 1)) rotate(-3deg) translateY(-4px);
   }
 }
 @keyframes react-blink {

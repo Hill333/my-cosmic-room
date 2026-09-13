@@ -1,12 +1,19 @@
 import type { SlotType, Theme, WardrobeKind } from '../core/types.ts';
-import type { Item, ItemReaction } from './types.ts';
+import type { Item, ItemReaction, RestSpot } from './types.ts';
 
 interface DecorationOptions {
   order: number;
   starter?: boolean;
   collection?: string;
   reaction?: ItemReaction;
+  rest?: RestSpot;
 }
+
+/** Default rest spots (SPEC §4.3): a bed's pillow is at its top left, a nook's seat centre. */
+const DEFAULT_REST: Partial<Record<SlotType, RestSpot>> = {
+  BED: { fx: 0.28, fy: 0.42, rotate: -24 },
+  NOOK: { fx: 0.5, fy: 0.47 },
+};
 
 interface GarmentOptions {
   order: number;
@@ -28,6 +35,8 @@ export function decoration(theme: Theme, name: string, slot: SlotType, o: Decora
     reaction: o.reaction ?? 'generic',
   };
   if (o.collection) item.collection = o.collection;
+  const rest = o.rest ?? DEFAULT_REST[slot];
+  if (rest) item.rest = rest;
   return item;
 }
 

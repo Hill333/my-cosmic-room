@@ -49,6 +49,18 @@ node tools/screenshots.ts      # review screenshots of both rooms and the dress-
 node tools/heroine-matrix.ts   # contact sheet of every outfit × shoe into docs/screenshots/heroine-shoes-matrix.png
 ```
 
+### Walking (SPEC §4.3)
+
+Clicking the heroine picks her; the next click on the floor, the bed, the nook or another item
+walks her there (she sleeps in the bed, sits in the nook, and other items react when she
+arrives); the companion follows. The floor band and stacking live in `src/catalog/walk.ts`
+(`FLOOR_GEOMETRY` in `slots.ts`), where she lies or sits per bed and nook is the item's `rest`
+in `src/catalog/space.ts` / `sweet.ts` (fractions of the item's room box; the defaults in
+`helpers.ts` fit the current art), and the poses are CSS in `src/styles/room.css`
+(`heroine-pose-bed` masks her below the shoulders, `heroine-pose-sit` below the hips). To
+retune after new bed art: place the bed, pick her, click the bed, and adjust `rest` until her
+head sits on the pillow.
+
 ### Heroine (SPEC §4.5)
 
 The heroine is one generated full-body figure per outfit × hairstyle

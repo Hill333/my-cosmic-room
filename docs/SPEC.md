@@ -49,6 +49,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D15 | Companions | Space companion: a turquoise alien, placeholder name *Pip*. Sweet companion: a grey-and-white cat, placeholder name *Mimi*. Names are strings and can be changed. |
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
+| D18 | Heroine walks in the room (13 September 2026) | Requested by the child after playing: pick the heroine, click somewhere, she walks there; the bed puts her to sleep, the nook seats her, other items react when she arrives, the companion follows. Done with the existing standing figure and CSS only (a bob while walking, a mask above the blanket or the cushion), no new art; positions are UI state, never saved (§4.3). |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
@@ -127,7 +128,7 @@ Fixed elements, same positions in both themes:
 
 Room states:
 
-- **Free play**: clicking a placed decoration triggers its reaction (§4.3); clicking the heroine makes her wave; clicking the companion triggers its reaction. Nothing here can change progress or inventory.
+- **Free play**: clicking a placed decoration triggers its reaction (§4.3); clicking the heroine makes her wave and picks her, after which a click on the floor, the bed, the nook or an item makes her walk there (§4.3 "Walk, bed, sit"); clicking the companion triggers its reaction. Nothing here can change progress or inventory.
 - **Decorate mode**: slots are outlined; the panel lists owned decorations for this theme (§4.2).
 - **Dress-up mode**: the panel shows the wardrobe (§4.4); the heroine turns slightly to face the panel.
 
@@ -235,6 +236,7 @@ Rules:
   - Sweet: LAMP toggles lighting the same way; BED makes Mimi curl up on the bed; the toy letterbox flips its flag and a tiny envelope pops out and back.
 - Heroine: waves and blinks. Companion: Pip spins and giggles; Mimi purrs and stretches.
 - Reactions are purely visual and never write to the save, except LAMP lighting state, which is saved per theme.
+- **Walk, bed, sit [D18].** Clicking the heroine also *picks* her (a pulsing ring at her feet; `aria-pressed`); the next click sends her there and drops the pick: a click on the floor makes her walk to that point (the floor band is catalogue data, `FLOOR_GEOMETRY`; a click on the wall walks her to the nearest floor point); the BED makes her walk over and lie down (head and shoulders on the pillow above the blanket, "z z z", the room goes dark like the LAMP evening without saving it); the NOOK makes her sit in it; any other slot makes her walk up beside the item, which then reacts as above. Clicking her again, or the floor, gets her up. The companion trots after her and stops beside her. While picked, the arrow keys walk her a step at a time and Escape drops the pick. Opening a panel drops the pick and stands her up. She walks in front of the bed and the nook once past their floor line and behind them otherwise; the figure shrinks a little towards the wall. Every move is a CSS transition sized to the distance (about 260 stage px/s) and lands at once under reduced motion. Positions are UI state on S1 and never reach the save. Where she lies or sits on an item is catalogue data (`rest` per bed and nook, fractions of the item's box).
 
 ### 4.4 Wardrobe and heroine [P, D5]
 
@@ -737,7 +739,7 @@ Export writes the current save as `tick-tock-save.json`. Import reads a file, va
 | --- | --- |
 | Everywhere | Tab / Shift+Tab move focus in visual order; Enter or Space activate; Escape closes the open panel or dialog |
 | Groups (answers, tiles, chips, tabs) | Arrow keys move inside the group; Home/End jump to first/last |
-| Room | D opens Decorate, W opens Dress up, M opens the mission board |
+| Room | D opens Decorate, W opens Dress up, M opens the mission board; with the heroine picked (Enter on her), arrow keys walk her and Escape drops the pick (§4.3) |
 | SET clock (focused) | Up/Down ± 1 hour; Left/Right ± one minute step; Enter = Check |
 | Parent gear | Hold Enter or Space 1.5 s |
 

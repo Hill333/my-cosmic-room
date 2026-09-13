@@ -1,15 +1,13 @@
 import { assetEntry, assetUrl } from '../../assets.ts';
 import { requireItem } from '../../catalog/index.ts';
+import { SLOT_GEOMETRY, STAR_CHART_GEOMETRY, slotBox, type StageBox } from '../../catalog/slots.ts';
 import {
-  COMPANION_GEOMETRY,
-  COMPANION_Z,
-  HEROINE_GEOMETRY,
-  HEROINE_Z,
-  SLOT_GEOMETRY,
-  STAR_CHART_GEOMETRY,
-  slotBox,
-  type StageBox,
-} from '../../catalog/slots.ts';
+  companionBoxAt,
+  heroineBoxAt,
+  homePoints,
+  type Point,
+  restBox,
+} from '../../catalog/walk.ts';
 import type { HeroineState, ItemId, SlotMap, SlotType, Theme } from '../../core/types.ts';
 import { SLOT_TYPES } from '../../core/types.ts';
 import type { StringKey } from '../../strings/index.ts';
@@ -17,6 +15,8 @@ import { t } from '../i18n.ts';
 import { Companion, type CompanionPose } from './Companion.tsx';
 import { HeroinePreview, type Face } from './Heroine.tsx';
 import { StarChart } from './StarChart.tsx';
+import type { WalkState } from '../useRoomWalk.ts';
+import { STAGE_WIDTH } from '../Stage.tsx';
 
 export type RoomMode = 'free' | 'decorate' | 'dressup';
 
@@ -39,6 +39,10 @@ export interface RoomInteraction {
   onHeroineClick: () => void;
   onCompanionClick: () => void;
   onReactionEnd: () => void;
+  /** Free-play walking (SPEC §4.3): where the heroine and companion are and what she does. */
+  walk: WalkState;
+  /** A click on the floor (or the wall), in stage px; the heroine walks there when picked. */
+  onFloorClick: (p: Point) => void;
 }
 
 interface Props {
@@ -131,24 +135,31 @@ export function RoomScene({
   const armedSlot = interaction?.armed ? requireItem(interaction.armed).slot : undefined;
   const ghostItem = interaction?.ghost ? requireItem(interaction.ghost) : null;
   const reaction = interaction?.reaction ?? null;
-  const hg = HEROINE_GEOMETRY[theme];
-  const heroineBox: StageBox = {
-    width: (hg.height * 600) / 900,
-    height: hg.height,
-    left: hg.x - (hg.height * 600) / 900 / 2,
-    top: hg.y - hg.height,
-    z: HEROINE_Z,
-  };
-  const cg = COMPANION_GEOMETRY[theme];
-  const companionBox: StageBox = {
-    width: (cg.height * 400) / 480,
-    height: cg.height,
-    left: cg.x - (cg.height * 400) / 480 / 2,
-    top: cg.y - cg.height,
-    z: COMPANION_Z,
-  };
-  // BED reaction: the companion jumps onto the bed and bounces (SPEC §4.3).
+  // The walkers' boxes follow their feet points (catalog/walk.ts); a resting heroine sits
+  // inside the nook or lies over the bed she walked to.
+  const walk = interaction?.walk;
+  const home = homePoints(theme);
+  const heroineAt = walk?.heroineAt ?? home.heroine;
   const bedBox = roomLayerBox(theme, 'BED', requireItem(slots.BED).art.room!);
+  const nookBox = roomLayerBox(theme, 'NOOK', requireItem(slots.NOOK).art.room!);
+  // Walkers step in front of the bed and the nook once they pass their floor line.
+  const occluders = [bedBox, nookBox].map((b) => ({ bottom: b.top + b.height, z: b.z }));
+  const heroineBox: StageBox =
+    walk && walk.pose !== 'stand' && walk.resting
+      ? restBox(theme, walk.pose, walk.resting.box, walk.resting.spot)
+      : heroineBoxAt(theme, heroineAt, occluders);
+  const companionBox = companionBoxAt(theme, walk?.companionAt ?? home.companion, occluders);
+  const heroineVars = walk
+    ? {
+        '--walk-ms': `${walk.walkMs}ms`,
+        '--facing': walk.facing,
+        '--rest-rotate': `${walk.pose === 'bed' ? (walk.resting?.spot.rotate ?? 0) : 0}deg`,
+      }
+    : {};
+  const companionVars = walk
+    ? { '--walk-ms': `${walk.companionWalkMs}ms`, '--facing': walk.companionFacing }
+    : {};
+  // BED reaction: the companion jumps onto the bed and bounces (SPEC §4.3).
   const jump = {
     '--jump-dx': `${bedBox.left + bedBox.width * 0.55 - (companionBox.left + companionBox.width / 2)}px`,
     '--jump-dy': `${bedBox.top + bedBox.height * 0.45 - (companionBox.top + companionBox.height)}px`,
@@ -171,6 +182,7 @@ export function RoomScene({
         : 'idle';
   const companionClass = [
     'room-companion',
+    walk?.companionWalking && 'companion-walking',
     reaction?.target === 'companion' && (theme === 'space' ? 'react-spin' : 'react-stretch'),
     reaction?.target === 'BED' && (theme === 'space' ? 'react-jump' : 'react-curl'),
   ]
@@ -182,13 +194,35 @@ export function RoomScene({
     'room-heroine',
     sparkleOnHeroine && 'sparkle',
     interaction?.mode === 'dressup' && 'heroine-turned',
-    reaction?.target === 'heroine' && 'react-wave',
+    reaction?.target === 'heroine' && !walk?.walking && 'react-wave',
+    walk?.selected && 'heroine-selected',
+    walk?.walking && 'heroine-walking',
+    walk && walk.pose !== 'stand' && `heroine-pose-${walk.pose}`,
   ]
     .filter(Boolean)
     .join(' ');
 
+  // A click on the scene that hits no button is a click on the floor (SPEC §4.3): its stage
+  // coordinates come from the scene's own box, so the stage scale and the panel's room scale
+  // both cancel out.
+  const onSceneClick = interaction
+    ? (e: MouseEvent) => {
+        const target = e.target as HTMLElement | null;
+        if (target?.closest('button')) return;
+        const el = e.currentTarget as HTMLElement;
+        const rect = el.getBoundingClientRect();
+        const k = STAGE_WIDTH / rect.width;
+        interaction.onFloorClick({ x: (e.clientX - rect.left) * k, y: (e.clientY - rect.top) * k });
+      }
+    : undefined;
+
   return (
-    <div class="room-scene" aria-hidden={interaction ? undefined : true} data-theme={theme}>
+    <div
+      class="room-scene"
+      aria-hidden={interaction ? undefined : true}
+      data-theme={theme}
+      onClick={onSceneClick}
+    >
       <img src={assetUrl(`${theme}/room/background`)} alt="" class="room-bg" draggable={false} />
       <div class="room-slots">
         {SLOT_TYPES.map((slot) => {
@@ -271,9 +305,9 @@ export function RoomScene({
         testId="room-star-chart"
         style={starChartStyle(theme)}
       />
-      {lampOn && (
+      {(lampOn || walk?.pose === 'bed') && (
         <div
-          class="room-lighting"
+          class={`room-lighting${!lampOn ? ' room-lighting-night' : ''}`}
           style={lampGlow}
           data-testid="room-lighting"
           aria-hidden="true"
@@ -284,9 +318,12 @@ export function RoomScene({
           <button
             type="button"
             class={heroineClass}
-            style={boxStyle(heroineBox)}
+            style={{ ...boxStyle(heroineBox), ...heroineVars }}
             data-testid="room-heroine"
+            data-pose={walk?.pose}
+            data-walking={walk?.walking || undefined}
             aria-label={t('ui.heroine')}
+            aria-pressed={walk?.selected}
             onClick={interaction.onHeroineClick}
             onAnimationEnd={interaction.onReactionEnd}
           >
@@ -295,7 +332,8 @@ export function RoomScene({
           <button
             type="button"
             class={companionClass}
-            style={{ ...boxStyle(companionBox), ...jump }}
+            style={{ ...boxStyle(companionBox), ...jump, ...companionVars }}
+            data-walking={walk?.companionWalking || undefined}
             data-testid="room-companion"
             aria-label={t(`companion.${theme}`)}
             onClick={interaction.onCompanionClick}

@@ -4,6 +4,17 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
 ## 0.1.0 — release candidate (M0 to M5)
 
+- Heroine walks (SPEC §4.3 "Walk, bed, sit", D18): clicking her picks her (pulsing ring,
+  `aria-pressed`); the next click on the floor walks her there, the bed puts her to sleep
+  (head on the pillow over the bed, "z z z", the room darkens without saving a lamp
+  change), the nook seats her, any other slot walks her up beside the item and then plays
+  its reaction; Pip / Mimi trot after her. Arrow keys walk her while picked; Escape or a panel
+  drops the pick and stands her up. Pure geometry in `catalog/walk.ts` (floor band
+  `FLOOR_GEOMETRY`, depth scale, stacking in front of the bed and nook once past their floor
+  line, `rest` spots per bed and nook in the catalogue), the state machine in
+  `ui/useRoomWalk.ts`, the CSS in `room.css` (`--walk-ms`, `--facing`, `heroine-walking`,
+  `heroine-pose-bed`, `heroine-pose-sit`, `heroine-selected`); reduced motion lands every move
+  at once. New unit tests (`catalog/walk.test.ts`) and `e2e/walk.spec.ts`.
 - Renamed to Tick-Tock (D9): `app.title` in all three languages (the name stays untranslated),
   the page title, the package name, the export filename (`tick-tock-save.json`), the S6
   import message, the docs and the e2e checks. The `mcr.*` localStorage keys are kept on

@@ -1,10 +1,10 @@
 # Release handoff: 0.1.0 release candidate
 
-Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, and the
-heroine ankle and hair-gap fixes of 13 September 2026) is implemented and committed (see
-[CHANGELOG.md](../CHANGELOG.md)). The build passes
+Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, the
+heroine ankle and hair-gap fixes, and the walking heroine of 13 September 2026, D18) is
+implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build passes
 `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(141 unit tests, 27 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(150 unit tests, 29 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
 
@@ -57,6 +57,13 @@ checklist, followed by the known limitations and the open spec questions.
    output `dist`. The build uses relative paths and was verified under a sub-path.
 
 ## Known limitations
+
+- The walking heroine (SPEC §4.3, D18) is the standing figure moved and masked by CSS: she
+  bobs rather than steps, lies in bed as head-and-shoulders on the pillow (`rest` per bed in
+  the catalogue: the daisy bed's pillow is highest and her head covers part of its headboard)
+  and sits as a torso above the cushion. A generated sleeping face or a sitting figure would
+  be the next step if the child wants more; the `rest` spots are the knobs to turn when bed
+  or cushion art changes.
 
 - Shoes are clipped at the figure's ankle (`clipAtAnkle`) with a drawn outline along the clip,
   so the sneakers' yellow crew socks show as ankle socks and the space boots as low boots
