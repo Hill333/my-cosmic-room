@@ -58,12 +58,11 @@ checklist, followed by the known limitations and the open spec questions.
 
 ## Known limitations
 
-- The walking heroine (SPEC §4.3, D18) is the standing figure moved and masked by CSS: she
-  bobs rather than steps, lies in bed as head-and-shoulders on the pillow (`rest` per bed in
-  the catalogue: the daisy bed's pillow is highest and her head covers part of its headboard)
-  and sits as a torso above the cushion. A generated sleeping face or a sitting figure would
-  be the next step if the child wants more; the `rest` spots are the knobs to turn when bed
-  or cushion art changes.
+- The walking heroine (SPEC §4.3, D18) bobs rather than steps (a walk cycle would be frames
+  per outfit × hairstyle). Sleeping and sitting are generated art (`shared/heroine/sleep/*`,
+  `shared/heroine/sit/*`, none `approved` yet: check them like the figures, item 3); the
+  `rest` spots per bed and nook are the knobs to turn when bed or cushion art changes, and a
+  pose entry that is regenerated goes through `npm run assets:post -- --only <id> --force`.
 
 - Shoes are clipped at the figure's ankle (`clipAtAnkle`) with a drawn outline along the clip,
   so the sneakers' yellow crew socks show as ankle socks and the space boots as low boots

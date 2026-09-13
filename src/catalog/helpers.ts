@@ -11,8 +11,8 @@ interface DecorationOptions {
 
 /** Default rest spots (SPEC §4.3): a bed's pillow is at its top left, a nook's seat centre. */
 const DEFAULT_REST: Partial<Record<SlotType, RestSpot>> = {
-  BED: { fx: 0.28, fy: 0.42, rotate: -24 },
-  NOOK: { fx: 0.5, fy: 0.47 },
+  BED: { fx: 0.26, fy: 0.37, rotate: -24 },
+  NOOK: { fx: 0.5, fy: 0.47, sitY: 0.64 },
 };
 
 interface GarmentOptions {
@@ -64,4 +64,14 @@ export function garment(theme: Theme, name: string, kind: WardrobeKind, o: Garme
 /** Manifest id of the heroine figure for an outfit and a hairstyle (SPEC §4.5). */
 export function figureId(outfitFigure: string, hairFigure: string): string {
   return `shared/heroine/figure/${outfitFigure}-${hairFigure}`;
+}
+
+/** Manifest id of the sitting figure for an outfit and a hairstyle (SPEC §4.3). */
+export function sitFigureId(outfitFigure: string, hairFigure: string): string {
+  return `shared/heroine/sit/${outfitFigure}-${hairFigure}`;
+}
+
+/** Manifest id of the sleeping head for a hairstyle (SPEC §4.3). */
+export function sleepHeadId(hairFigure: string): string {
+  return `shared/heroine/sleep/${hairFigure}`;
 }

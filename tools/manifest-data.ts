@@ -218,6 +218,38 @@ export const HAIR_PROMPTS: Record<string, string> = {
     'her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet',
 };
 
+/**
+ * Sitting figures (SPEC §4.3): the same girl cross-legged on a 600 × 600 canvas, bottom
+ * aligned; her feet are tucked away, so the shoe overlays are not drawn on her. The default
+ * anchors are guessed by post-processing from her silhouette, like the standing figure's.
+ */
+export const SIT_CANVAS: [number, number] = [600, 600];
+export const DEFAULT_SIT_ANCHORS: FigureAnchors = {
+  face: { x: 300, y: 150, scale: 1 },
+  head: { x: 300, y: 55, scale: 0.8 },
+  feet: { x: 300, y: 595, scale: 0.78 },
+  back: { x: 300, y: 330, scale: 0.9 },
+};
+
+/** Sleeping heads (SPEC §4.3): one per hairstyle, the head alone, drawn on the bed's pillow. */
+export const SLEEP_SIZE: [number, number] = [360, 320];
+
+export function sitPrompt(outfit: string, hair: string): string {
+  return (
+    `the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with ${HAIR_PROMPTS[hair]}, ` +
+    `full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing ${OUTFIT_PROMPTS[outfit]}, ` +
+    'her feet tucked under her legs and out of sight, neutral small closed-mouth smile'
+  );
+}
+
+export function sleepPrompt(hair: string): string {
+  return (
+    `only the head of the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone), with ${HAIR_PROMPTS[hair]}, ` +
+    'front view, upright, fast asleep: both eyes gently closed with small lashes, relaxed eyebrows, a small content smile, pink blush; ' +
+    'the whole head with its hair and ears, cut off just under the chin, no neck, no shoulders, no body, no pillow'
+  );
+}
+
 export function figurePrompt(outfit: string, hair: string): string {
   return (
     `the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with ${HAIR_PROMPTS[hair]}, ` +

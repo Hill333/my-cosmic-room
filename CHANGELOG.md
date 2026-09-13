@@ -15,6 +15,14 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
   `ui/useRoomWalk.ts`, the CSS in `room.css` (`--walk-ms`, `--facing`, `heroine-walking`,
   `heroine-pose-bed`, `heroine-pose-sit`, `heroine-selected`); reduced motion lands every move
   at once. New unit tests (`catalog/walk.test.ts`) and `e2e/walk.spec.ts`.
+- Pose art for the walking heroine (SPEC §4.3, §4.5): 21 generated **sitting figures**
+  (`shared/heroine/sit/<outfit>-<hair>`, cross-legged, feet tucked so no shoe overlay is
+  needed, own anchors for clips, headband, backpack and faces) and 3 generated **sleeping
+  heads** (`shared/heroine/sleep/<hair>`, closed eyes, drawn rotated onto the pillow). The
+  manifest, `build-manifest`, `post-assets` (a `sit` branch: cut out, bottom aligned, no
+  ankle cut) and `HeroinePreview` (`pose="sit"`) know the new layers; the companion waits
+  beside the bed or cushion instead of in front of the pillow; the standing figure stays
+  as a masked stand-in while a pose entry is a placeholder.
 - Renamed to Tick-Tock (D9): `app.title` in all three languages (the name stays untranslated),
   the page title, the package name, the export filename (`tick-tock-save.json`), the S6
   import message, the docs and the e2e checks. The `mcr.*` localStorage keys are kept on

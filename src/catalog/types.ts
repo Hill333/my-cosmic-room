@@ -11,7 +11,10 @@ export type ItemReaction = 'generic' | 'lamp' | 'bed' | 'entry';
 export interface RestSpot {
   fx: number;
   fy: number;
+  /** Bed, without the sleeping-head art: tilt of the masked standing figure. */
   rotate?: number;
+  /** Nook, with the sitting art: where the sitting figure's bottom edge lands (defaults to `fy`). */
+  sitY?: number;
 }
 
 /** Catalogue item (SPEC §11.1). Static data; one module per theme plus shared. */

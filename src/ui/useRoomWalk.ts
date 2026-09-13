@@ -3,6 +3,7 @@ import type { SlotType, Theme } from '../core/types.ts';
 import type { StageBox } from '../catalog/slots.ts';
 import type { RestSpot } from '../catalog/types.ts';
 import {
+  besidePoint,
   clampToFloor,
   COMPANION_SPEED,
   facingOf,
@@ -120,10 +121,10 @@ export function useRoomWalk(theme: Theme): RoomWalk {
   }, [theme, clearTimers]);
 
   const follow = useCallback(
-    (target: Point) => {
+    (target: Point, exact = false) => {
       later(() => {
         const s = stateRef.current;
-        const to = followPoint(theme, target, s.companionAt);
+        const to = exact ? target : followPoint(theme, target, s.companionAt);
         const ms = walkMs(s.companionAt, to, COMPANION_SPEED, reducedMotion());
         setState((c) => ({
           ...c,
@@ -138,9 +139,9 @@ export function useRoomWalk(theme: Theme): RoomWalk {
     [theme, later],
   );
 
-  /** The walk itself, from wherever she stands now. */
+  /** The walk itself, from wherever she stands now; the companion follows to `followAt` or beside her. */
   const startWalk = useCallback(
-    (to: Point, then?: () => void) => {
+    (to: Point, then?: () => void, followAt?: Point) => {
       const s = stateRef.current;
       const ms = walkMs(s.heroineAt, to, HEROINE_SPEED, reducedMotion());
       setState((c) => ({
@@ -153,7 +154,8 @@ export function useRoomWalk(theme: Theme): RoomWalk {
         walkMs: ms,
         facing: facingOf(c.heroineAt, to, c.facing),
       }));
-      follow(to);
+      if (followAt) follow(followAt, true);
+      else follow(to);
       later(() => {
         setState((c) => ({ ...c, walking: false }));
         then?.();
@@ -179,14 +181,14 @@ export function useRoomWalk(theme: Theme): RoomWalk {
   }, []);
 
   const walkTo = useCallback(
-    (p: Point, then?: () => void) => {
+    (p: Point, then?: () => void, followAt?: Point) => {
       clearTimers();
       const to = clampToFloor(theme, p);
       if (stateRef.current.pose !== 'stand') {
         // Out of the bed or the nook first, then off.
         standUp();
-        later(() => startWalk(to, then), reducedMotion() ? 0 : STAND_MS);
-      } else startWalk(to, then);
+        later(() => startWalk(to, then, followAt), reducedMotion() ? 0 : STAND_MS);
+      } else startWalk(to, then, followAt);
     },
     [theme, clearTimers, standUp, later, startWalk],
   );
@@ -195,19 +197,25 @@ export function useRoomWalk(theme: Theme): RoomWalk {
     (slot: SlotType, box: StageBox, rest: RestSpot | undefined, then?: () => void) => {
       const standAt = standPointFor(theme, slot, box, stateRef.current.heroineAt);
       const pose: HeroinePose | null = slot === 'BED' ? 'bed' : slot === 'NOOK' ? 'sit' : null;
-      walkTo(standAt, () => {
-        if (pose && rest) {
-          setState((c) => ({
-            ...c,
-            pose,
-            resting: { slot, box, spot: rest, standAt },
-            selected: false,
-            walkMs: reducedMotion() ? 0 : STAND_MS,
-            facing: 1,
-          }));
-        }
-        then?.();
-      });
+      // The companion waits beside the bed or the cushion, clear of her.
+      const followAt = pose ? besidePoint(theme, box, stateRef.current.companionAt) : undefined;
+      walkTo(
+        standAt,
+        () => {
+          if (pose && rest) {
+            setState((c) => ({
+              ...c,
+              pose,
+              resting: { slot, box, spot: rest, standAt },
+              selected: false,
+              walkMs: reducedMotion() ? 0 : STAND_MS,
+              facing: 1,
+            }));
+          }
+          then?.();
+        },
+        followAt,
+      );
     },
     [theme, walkTo],
   );

@@ -45,6 +45,13 @@ const HEAD_Y = 0.17;
 const HIP_Y = 0.56;
 /** In bed the figure is drawn a little smaller, so her head fits the pillow. */
 const BED_SCALE = 0.88;
+/** Sitting figure canvas (SPEC §4.3) and its height relative to the standing figure's. */
+export const SIT_CANVAS = [600, 600] as const;
+const SIT_SCALE = 0.62;
+/** Sleeping head canvas, its height relative to the standing figure's, and its tilt onto the pillow. */
+export const SLEEP_CANVAS = [360, 320] as const;
+const SLEEP_SCALE = 0.31;
+export const SLEEP_ROTATE = -62;
 
 /** Where the heroine and the companion stand on entering the room. */
 export function homePoints(theme: Theme): { heroine: Point; companion: Point } {
@@ -105,22 +112,36 @@ export function companionBoxAt(theme: Theme, p: Point, occluders: Occluder[] = [
 }
 
 /**
- * Stage box of the heroine resting on an item (SPEC §4.3): in bed, her head centre lands on
- * the pillow (`rest.fx, fy` of the bed box) and she draws over the bed, the CSS masking her
- * below the shoulders; on a nook her hips land in the cushion, she stays behind it and the
- * CSS masks her legs, so the cushion reads as her seat.
+ * Stage box of the heroine resting on an item (SPEC §4.3). With the pose art (`art`): in bed
+ * her sleeping head is centred on the pillow (`rest.fx, fy` of the bed box) over the bed;
+ * on a nook the sitting figure sits on top of the cushion with its bottom edge at the rest
+ * point. Without it (placeholders): the standing figure with its head centre on the pillow,
+ * the CSS masking her below the shoulders; or behind the cushion with her hips at the rest
+ * point and her legs masked, so the cushion reads as her seat.
  */
 export function restBox(
   theme: Theme,
   pose: 'bed' | 'sit',
   item: StageBox,
   rest: RestSpot,
+  art = false,
 ): StageBox {
   const px = item.left + item.width * rest.fx;
   const py = item.top + item.height * rest.fy;
   const bed = pose === 'bed';
-  const height =
-    HEROINE_GEOMETRY[theme].height * (bed ? BED_SCALE : depthScale(theme, item.top + item.height));
+  const base = HEROINE_GEOMETRY[theme].height;
+  if (art && bed) {
+    const height = base * SLEEP_SCALE;
+    const width = (height * SLEEP_CANVAS[0]) / SLEEP_CANVAS[1];
+    return { left: px - width / 2, top: py - height / 2, width, height, z: HEROINE_BED_Z };
+  }
+  if (art) {
+    const height = base * SIT_SCALE * depthScale(theme, item.top + item.height);
+    const width = (height * SIT_CANVAS[0]) / SIT_CANVAS[1];
+    const bottom = item.top + item.height * (rest.sitY ?? rest.fy);
+    return { left: px - width / 2, top: bottom - height, width, height, z: item.z + 1 };
+  }
+  const height = base * (bed ? BED_SCALE : depthScale(theme, item.top + item.height));
   const width = (height * HEROINE_CANVAS[0]) / HEROINE_CANVAS[1];
   return {
     left: px - width / 2,
@@ -163,6 +184,20 @@ export function standPointFor(theme: Theme, slot: SlotType, item: StageBox, from
   let x = centre + side * reach;
   if (x < f.left || x > f.right) x = centre - side * reach;
   return clampToFloor(theme, { x, y: bottom });
+}
+
+/**
+ * Where the companion waits while the heroine uses an item: just outside the item's box on
+ * the side it comes from, so it never sits in front of the bed's pillow or the cushion.
+ */
+export function besidePoint(theme: Theme, item: StageBox, companion: Point): Point {
+  const f = FLOOR_GEOMETRY[theme];
+  const gap = companionBoxAt(theme, companion).width / 2 + BESIDE_GAP;
+  const centre = item.left + item.width / 2;
+  const side = companion.x < centre ? -1 : 1;
+  let x = side < 0 ? item.left - gap : item.left + item.width + gap;
+  if (x < f.left || x > f.right) x = side < 0 ? item.left + item.width + gap : item.left - gap;
+  return clampToFloor(theme, { x, y: item.top + item.height + 10 });
 }
 
 /** Where the companion stops when following the heroine to `target`: beside her, on the free side. */

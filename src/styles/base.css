@@ -372,6 +372,9 @@ button:disabled {
   height: 100%;
   aspect-ratio: 600 / 900;
 }
+.heroine-sitting {
+  aspect-ratio: 600 / 600;
+}
 .heroine-figure {
   position: absolute;
   inset: 0;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FLOOR_GEOMETRY, HEROINE_BED_Z, HEROINE_GEOMETRY, HEROINE_Z } from './slots.ts';
 import {
+  besidePoint,
   clampToFloor,
   companionBoxAt,
   depthScale,
@@ -93,6 +94,16 @@ describe('walking geometry (SPEC §4.3)', () => {
     expect(sitting.z).toBe(HEROINE_Z);
     expect(sitting.left + sitting.width / 2).toBeCloseTo(250);
     expect(sitting.top + sitting.height * 0.56).toBeCloseTo(780);
+  });
+
+  it('waits beside an item on the side it comes from, clear of its box', () => {
+    const bed = { left: 900, top: 600, width: 340, height: 260, z: 50 };
+    const fromLeft = besidePoint('sweet', bed, { x: 600, y: 800 });
+    expect(fromLeft.x).toBeLessThan(bed.left - 80);
+    expect(fromLeft.y).toBe(870);
+    expect(besidePoint('sweet', bed, { x: 1300, y: 800 }).x).toBeGreaterThan(1240 + 80);
+    const edge = { left: 1300, top: 600, width: 240, height: 260, z: 50 };
+    expect(besidePoint('sweet', edge, { x: 1500, y: 800 }).x).toBeLessThan(edge.left);
   });
 
   it('follows to the free side of the heroine, swapping sides at the wall', () => {

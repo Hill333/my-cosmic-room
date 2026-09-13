@@ -240,6 +240,7 @@ button.room-companion {
   position: absolute;
   left: 58%;
   top: -2%;
+  white-space: nowrap;
   font-family: var(--font);
   font-weight: 800;
   font-size: 44px;
@@ -261,6 +262,51 @@ button.room-companion {
   100% {
     opacity: 0;
     transform: translate(34px, -80px) scale(1.15);
+  }
+}
+/*
+ * With the pose art (SPEC §4.3): the sleeping head lies on the pillow, tilted towards the
+ * headboard, and the sitting figure sits on the cushion; neither needs a mask.
+ */
+.heroine-pose-bed.heroine-pose-art::after {
+  left: 80%;
+  top: -40%;
+}
+.heroine-pose-sit.heroine-pose-art .heroine {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.heroine-sleep {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: rotate(var(--rest-rotate, 0deg));
+  transform-origin: 50% 50%;
+  animation: heroine-settle 360ms ease-out 1;
+}
+@keyframes heroine-settle {
+  0% {
+    transform: rotate(0deg) translateY(-24px);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(var(--rest-rotate, 0deg)) translateY(0);
+    opacity: 1;
+  }
+}
+.heroine-pose-sit.heroine-pose-art .heroine {
+  animation: heroine-sit-art 320ms ease-out 1;
+}
+@keyframes heroine-sit-art {
+  0% {
+    transform: translateY(-30px) scale(1, 1);
+  }
+  60% {
+    transform: translateY(0) scale(1.04, 0.94);
+  }
+  100% {
+    transform: translateY(0) scale(1, 1);
   }
 }
 /* Sitting (SPEC §4.3): her hips land in the nook, which draws in front; her legs fade out. */

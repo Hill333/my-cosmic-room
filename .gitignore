@@ -10,3 +10,4 @@ e2e/.auth/
 # Raw Codex CLI generations (PNG) are committed with the manifest (SPEC §15.6); agent logs are not.
 assets/.gen/**/*.last.md
 assets/.gen/**/*.log
+tools/.scratch

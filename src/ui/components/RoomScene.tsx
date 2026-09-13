@@ -7,13 +7,15 @@ import {
   homePoints,
   type Point,
   restBox,
+  SLEEP_ROTATE,
 } from '../../catalog/walk.ts';
 import type { HeroineState, ItemId, SlotMap, SlotType, Theme } from '../../core/types.ts';
 import { SLOT_TYPES } from '../../core/types.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
+import { save } from '../../state/store.ts';
 import { Companion, type CompanionPose } from './Companion.tsx';
-import { HeroinePreview, type Face } from './Heroine.tsx';
+import { HeroinePreview, sitFigureFor, sleepHeadFor, type Face } from './Heroine.tsx';
 import { StarChart } from './StarChart.tsx';
 import type { WalkState } from '../useRoomWalk.ts';
 import { STAGE_WIDTH } from '../Stage.tsx';
@@ -144,16 +146,24 @@ export function RoomScene({
   const nookBox = roomLayerBox(theme, 'NOOK', requireItem(slots.NOOK).art.room!);
   // Walkers step in front of the bed and the nook once they pass their floor line.
   const occluders = [bedBox, nookBox].map((b) => ({ bottom: b.top + b.height, z: b.z }));
+  // The pose art (SPEC §4.3): her sleeping head on the pillow, the sitting figure on the
+  // cushion; while either is still a placeholder the standing figure is masked instead.
+  const drawn = heroine ?? save.value.heroine;
+  const sleepHead = walk?.pose === 'bed' ? sleepHeadFor(drawn) : null;
+  const sitFigure = walk?.pose === 'sit' ? sitFigureFor(drawn) : null;
+  const poseArt = sleepHead !== null || sitFigure !== null;
   const heroineBox: StageBox =
     walk && walk.pose !== 'stand' && walk.resting
-      ? restBox(theme, walk.pose, walk.resting.box, walk.resting.spot)
+      ? restBox(theme, walk.pose, walk.resting.box, walk.resting.spot, poseArt)
       : heroineBoxAt(theme, heroineAt, occluders);
   const companionBox = companionBoxAt(theme, walk?.companionAt ?? home.companion, occluders);
+  const restRotate =
+    walk?.pose === 'bed' ? (sleepHead ? SLEEP_ROTATE : (walk.resting?.spot.rotate ?? 0)) : 0;
   const heroineVars = walk
     ? {
         '--walk-ms': `${walk.walkMs}ms`,
         '--facing': walk.facing,
-        '--rest-rotate': `${walk.pose === 'bed' ? (walk.resting?.spot.rotate ?? 0) : 0}deg`,
+        '--rest-rotate': `${restRotate}deg`,
       }
     : {};
   const companionVars = walk
@@ -198,6 +208,7 @@ export function RoomScene({
     walk?.selected && 'heroine-selected',
     walk?.walking && 'heroine-walking',
     walk && walk.pose !== 'stand' && `heroine-pose-${walk.pose}`,
+    poseArt && 'heroine-pose-art',
   ]
     .filter(Boolean)
     .join(' ');
@@ -327,7 +338,21 @@ export function RoomScene({
             onClick={interaction.onHeroineClick}
             onAnimationEnd={interaction.onReactionEnd}
           >
-            <HeroinePreview face={shownFace} heroine={heroine} />
+            {sleepHead ? (
+              <img
+                src={assetUrl(sleepHead)}
+                alt=""
+                class="heroine-sleep"
+                data-testid="heroine-sleep"
+                draggable={false}
+              />
+            ) : (
+              <HeroinePreview
+                face={shownFace}
+                heroine={heroine}
+                pose={sitFigure ? 'sit' : 'stand'}
+              />
+            )}
           </button>
           <button
             type="button"
