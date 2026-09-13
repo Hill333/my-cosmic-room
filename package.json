@@ -21,6 +21,7 @@
     "assets:post": "node tools/post-assets.ts",
     "assets:sounds": "node tools/gen-sounds.ts",
     "assets:thumbs": "node tools/gen-thumbs.ts",
+    "assets:favicon": "node tools/gen-favicon.ts",
     "measure": "node tools/measure-load.ts"
   },
   "dependencies": {

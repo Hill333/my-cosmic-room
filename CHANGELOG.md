@@ -11,6 +11,9 @@ All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
   the new lettering and is shown on S0 in place of the text lockup (`TITLE_LOGO`), the
   heading keeping the title text for assistive technology. The GitHub repository, its Pages
   URL and the branch still say `my-cosmic-room`.
+- Favicon: the friendly clock from the title logo, drawn as `public/favicon.svg` in the
+  palette, with PNG fallbacks for Safari and iOS (`favicon-32.png`, `apple-touch-icon.png`)
+  rasterised by `npm run assets:favicon` (`tools/gen-favicon.ts`).
 
 The first complete build: two playrooms (Space and Sweet) with generated art, the clock
 engine (reading at four levels, elapsed time at three), four-puzzle missions with hints and
