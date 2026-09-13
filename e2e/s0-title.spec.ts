@@ -12,7 +12,7 @@ test.describe('S0 title and room choice', () => {
     await dialog.getByTestId('lang-nl').click();
     await expect(dialog).toBeHidden();
 
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Cosmic Room');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tick-Tock');
     await expect(page.getByTestId('room-card-space')).toContainText('Ruimtespeelkamer');
     await expect(page.getByTestId('room-card-sweet')).toContainText('Zoete speelkamer');
     await expect(page.locator('html')).toHaveAttribute('lang', 'nl');

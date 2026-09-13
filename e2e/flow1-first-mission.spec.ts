@@ -70,7 +70,7 @@ test('flow 1: first launch, Rocket launch at half hours, Moon bed placed and kep
 
   // Reload persists the room and ends the mission.
   await page.reload();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Cosmic Room');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tick-Tock');
   await page.getByTestId('room-card-space').click();
   await expect(page.locator('.s1').getByTestId('slot-BED')).toHaveAttribute(
     'data-item',

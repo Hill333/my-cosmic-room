@@ -48,6 +48,9 @@ const SINGLE_OBJECT =
 const ROOM_CLAUSE = 'Full scene, no text, no watermark.';
 const FIGURE_CLAUSE =
   'Single character, centred, plain white background, no text, no shadow, no watermark.';
+/** The title logo is lettering, so it is the one entry that may (must) contain text. */
+const LOGO_CLAUSE =
+  'Single lettering lockup, centred, plain white background, no other text or words, no shadow, no watermark; spell the title exactly as given.';
 
 interface Args {
   smoke: boolean;
@@ -161,7 +164,9 @@ function buildPrompt(id: string, entry: AssetEntry, variant: string | null): str
       ? ROOM_CLAUSE
       : entry.category === 'heroine' && entry.layer === 'figure'
         ? FIGURE_CLAUSE
-        : SINGLE_OBJECT;
+        : entry.category === 'logo'
+          ? LOGO_CLAUSE
+          : SINGLE_OBJECT;
   const out = `assets/.gen/${id}${variant ? '.' + variant : ''}.png`;
   return (
     `You are generating one piece of game art. Use your image generation tool. ${STYLE_BLOCK} ` +

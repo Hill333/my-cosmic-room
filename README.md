@@ -1,6 +1,6 @@
-# My Cosmic Room
+# Tick-Tock
 
-Browser clock-learning game concept for a seven-year-old: two distinct playrooms (Space and Sweet), sharing clock-learning games, room decoration and dress-up rewards. My Cosmic Room is a provisional working title.
+Browser clock-learning game concept for a seven-year-old: two distinct playrooms (Space and Sweet), sharing clock-learning games, room decoration and dress-up rewards. Named Tick-Tock (decision D9); its working title during concept work was "My Cosmic Room", which the concept images and the repository URL still carry.
 
 - [Product requirements](docs/PRD.md)
 - [Specification](docs/SPEC.md)
@@ -79,7 +79,7 @@ background.
 ## Deployment (SPEC §16.5)
 
 `npm run build` writes a static `dist/` with relative paths, so it runs from any static host
-and from a sub-path (verified under `/my-cosmic-room/`).
+and from a sub-path (verified under `/my-cosmic-room/`, the repository's current name).
 
 - GitHub Pages: set Pages to "GitHub Actions" once in the repository settings, then either run
   the "Deploy to GitHub Pages" workflow by hand (Actions → Run workflow) or push a tag such as

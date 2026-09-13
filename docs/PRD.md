@@ -1,7 +1,7 @@
-# My Cosmic Room — Product Requirements
+# Tick-Tock — Product Requirements
 
 Status: concept-approved PRD; ready for specification, not implementation.
-Date: 12 September 2026. Updated to require two separate playroom themes. Working title: My Cosmic Room (provisional; an umbrella name covering both themes remains open).
+Date: 12 September 2026. Updated to require two separate playroom themes. Title: Tick-Tock (decided 13 September 2026, SPEC decision D9). The working title during concept work was "My Cosmic Room", which the concept images still show.
 
 ## 1. Purpose and audience
 
@@ -179,7 +179,7 @@ A parent-and-child play session should evaluate whether instructions are underst
 6. **Persistence:** local-device save recommended for the first version; cross-device accounts are not requested. Specify reset/recovery behavior.
 7. **Audio and access:** narration, effects, mute, keyboard alternatives, reduced motion and target browser/device support.
 8. **Two-theme behavior:** theme switching, shared learning progression, per-room layouts, cross-theme inventory/outfits, sweet mission names and a bounded art inventory for both themes.
-9. **Product name:** keep My Cosmic Room as a temporary working title; choose an umbrella title if needed for the sweet theme.
+9. **Product name:** decided: Tick-Tock (SPEC D9), an umbrella title covering both themes; "My Cosmic Room" was the temporary working title.
 10. **Implementation and delivery:** stack, asset pipeline and hosting should be selected in the spec. No site was registered or deployed during concept work.
 
 ## 11. Outside current scope

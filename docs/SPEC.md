@@ -1,6 +1,6 @@
 # My Cosmic Room — Specification
 
-Status: specification draft for the first release, derived from [PRD.md](PRD.md) and the approved concept images in [concepts/README.md](concepts/README.md). Date: 12 September 2026. Working title: My Cosmic Room (provisional, see decision D9).
+Status: specification draft for the first release, derived from [PRD.md](PRD.md) and the approved concept images in [concepts/README.md](concepts/README.md). Date: 12 September 2026. Title: Tick-Tock (decided 13 September 2026, decision D9; the working title during concept work was "My Cosmic Room").
 
 This document is the input for the implementation session. It contains no code and no implementation was started while writing it.
 
@@ -35,7 +35,7 @@ Each row resolves one open decision from PRD §10. "If overridden" says what els
 | D6 | Persistence | Single local profile in `localStorage`, versioned JSON, autosaved after every state change. A backup copy of the last good save is kept; if the main save fails to parse, the backup is restored. Parent corner offers Export (download JSON), Import, and Reset with a hold-to-confirm. | Local-only is what the PRD recommends; export/import gives a manual way to move to another computer without accounts. | Cloud sync would add an account layer; the save schema in §11.3 is designed to be uploaded as-is. |
 | D7 | Audio and access | Sound effects (about ten short clips) with a persisted mute toggle; no music and no recorded narration at launch. Full keyboard operation. Reduced motion honoured from the OS setting with an in-app override. Target: current desktop Chrome, Edge, Firefox and Safari on macOS/Windows, window at least 1024×640, mouse plus keyboard; touch works but is not tuned. | Effects are cheap and rewarding; narration in two languages is a recording project and the child reads. Keyboard alternatives satisfy "precise dragging is not the only input". | Narration: add an audio key per string in §14 and a speaker button on question screens. |
 | D8 | Two-theme behaviour | Both rooms are open from the first launch. Switching is instant from the room screen. Per-theme: room layout, earned decorations, collection counter, star chart. Shared: heroine and wardrobe, levels, statistics, settings. Missions cannot be switched mid-way; leaving a mission discards it. Sweet mission names: *Tea-party time* (Activity A) and *Toy delivery* (Activity B). Sweet mission entry object: a toy letterbox on the shelf. | Follows PRD §6 proposed switching behaviour. The letterbox fits both an invitation (tea party) and a parcel (delivery). | Different sweet names change only the string table and the two illustrations named in §15. |
-| D9 | Product name | Keep "My Cosmic Room" as the app title constant until the user picks an umbrella name. Candidates for the user: *Tick-Tock Playrooms* (TR: *Tik Tak Oyun Odaları*), *My Little Playrooms* (TR: *Küçük Oyun Odalarım*), *Clock Club* (TR: *Saat Kulübü*). The room names *Space Playroom* and *Sweet Playroom* are used everywhere in the UI. | The title is a single string and one logo asset; nothing structural depends on it. | Change the `app.title` string and the logo. |
+| D9 | Product name | **Decided 13 September 2026: the game is "Tick-Tock"** (like a clock), kept untranslated in Turkish and Dutch as a brand name. It replaces the working title "My Cosmic Room" in `app.title`, the page title, the package name, the export filename (`tick-tock-save.json`) and the logo. The `mcr.*` localStorage keys keep the legacy prefix so existing saves survive. The room names *Space Playroom* and *Sweet Playroom* are used everywhere in the UI. (Other candidates considered: *Tick-Tock Playrooms*, *My Little Playrooms*, *Clock Club*.) | The title is a single string and one logo asset; nothing structural depends on it. | Change the `app.title` string and the logo. |
 | D10 | Implementation and delivery | TypeScript, Vite, Preact for UI, SVG for clocks, CSS for layout and animation, no backend. Vitest for logic, Playwright for a few end-to-end flows. Static hosting on GitHub Pages or Cloudflare Pages; no domain required. Art: placeholder shapes first, then assets generated through Codex CLI (`codex exec`) with two model presets chosen by asset complexity, sol-med for low-complexity assets and astra-light for high-complexity ones (§15.6), background-removed, exported as PNG at 2× plus SVG where practical. | A small component framework keeps state → UI predictable; SVG gives exact clock geometry; static hosting matches "no accounts, no backend". | Vanilla TypeScript is acceptable if Preact is unwanted; §16 module boundaries do not depend on the framework. |
 
 Additional decisions made in this document that were not listed in the PRD:
@@ -50,7 +50,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
 
-Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits), D9 (title). Everything else can be changed later without rework.
+Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
 ## 2. Scope of the first release
 
@@ -191,7 +191,7 @@ Reference: [03-mission-reward.png](concepts/03-mission-reward.png).
   - Levels: Reading level R1–R4 and Elapsed level E1–E3 as radio rows with the same child-facing names plus a short adult description; a "Lock levels (child cannot change them)" switch.
   - Clock options: "24-hour digital clocks in reading puzzles" switch (D11).
   - Sound: on/off. Motion: Follow system / Reduced / Full.
-  - Save: "Export save file" (downloads `my-cosmic-room-save.json`), "Import save file" (file picker, validates, then replaces after a confirm), "Reset everything" (hold 2 s, then a typed confirm word is not required; the hold is the confirm).
+  - Save: "Export save file" (downloads `tick-tock-save.json`), "Import save file" (file picker, validates, then replaces after a confirm), "Reset everything" (hold 2 s, then a typed confirm word is not required; the hold is the confirm).
   - About: version, credits, a note that nothing is collected or sent anywhere.
 - "Done" returns to the screen that opened it.
 
@@ -711,7 +711,7 @@ Loading:
 4. A save with a `version` greater than the app's is quarantined the same way and the app starts fresh with a message.
 5. Migrations run in order by version; v1 has none.
 
-Export writes the current save as `my-cosmic-room-save.json`. Import reads a file, validates it as above, shows the summary (rooms, collected counts, stars) and replaces the current save after a confirm, keeping the old one as the backup. Reset (hold 2 s) removes the current save and backup and returns to the first-launch flow.
+Export writes the current save as `tick-tock-save.json`. Import reads a file, validates it as above, shows the summary (rooms, collected counts, stars) and replaces the current save after a confirm, keeping the old one as the backup. Reset (hold 2 s) removes the current save and backup and returns to the first-launch flow.
 
 ### 11.4 Invariants (asserted in tests)
 
@@ -772,7 +772,7 @@ Keys and all three languages for every gameplay string. Item names are in §11.2
 
 | Key | English | Türkçe | Nederlands |
 | --- | --- | --- | --- |
-| app.title | My Cosmic Room | My Cosmic Room | My Cosmic Room |
+| app.title | Tick-Tock | Tick-Tock | Tick-Tock |
 | room.space | Space Playroom | Uzay Oyun Odası | Ruimtespeelkamer |
 | room.sweet | Sweet Playroom | Tatlı Oyun Odası | Zoete speelkamer |
 | companion.space | Pip | Pip | Pip |
@@ -918,7 +918,7 @@ Keys and all three languages for every gameplay string. Item names are in §11.2
 | Activity B scene art | Space: planet, moon, rocket-with-parcel; Sweet: toy shop, playroom window, balloon parcel with cat courier | 6 | PNG 2× |
 | Star chart poster | 1 | SVG | Theme-tinted by CSS |
 | UI icons | about 24 | SVG | incl. 8 preparation-step icons |
-| Title logo | 1 | SVG | Replace when D9 is decided |
+| Title logo | 1 | PNG 2× | "Tick-Tock" lettering with a clock motif (D9, generated astra-light) |
 | Sounds | 10 | MP3 | §15.4 |
 | Font | 1 family, 2 weights | WOFF2 | Turkish glyph coverage required |
 
@@ -1167,4 +1167,4 @@ Time value: minutes since midnight. Step: the minute precision of a level. Slot:
 
 ### 19.4 Confirmation checklist for the user
 
-Before implementation starts, confirm or change: D1 language set-up, D3 inventory size and prize timing, D4 slots instead of dragging, D5 shared wardrobe and hair at launch, D11 12-hour digits in reading puzzles, D9 title. Silence means the proposals stand.
+Before implementation starts, confirm or change: D1 language set-up, D3 inventory size and prize timing, D4 slots instead of dragging, D5 shared wardrobe and hair at launch, D11 12-hour digits in reading puzzles (D9, the title, is decided: Tick-Tock). Silence means the proposals stand.

@@ -6,7 +6,7 @@ import type { StringKey } from './en.ts';
  * Starter item names are new and marked for native review.
  */
 export const nl: Record<StringKey, string> = {
-  'app.title': 'My Cosmic Room',
+  'app.title': 'Tick-Tock',
   'room.space': 'Ruimtespeelkamer',
   'room.sweet': 'Zoete speelkamer',
   'companion.space': 'Pip',
@@ -193,7 +193,7 @@ export const nl: Record<StringKey, string> = {
   's6.importConfirm': 'Vervangen',
   's6.cancel': 'Annuleren',
   's6.imported': 'Opslag geïmporteerd.',
-  's6.importInvalid': 'Dat bestand is geen opslag van My Cosmic Room.',
+  's6.importInvalid': 'Dat bestand is geen opslag van Tick-Tock.',
   's6.importNewer': 'Die opslag komt uit een nieuwere versie van het spel.',
   's6.recentEmpty': 'Nog geen missies.',
   's6.col.when': 'Wanneer',

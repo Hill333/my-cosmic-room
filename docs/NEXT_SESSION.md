@@ -39,12 +39,13 @@ checklist, followed by the known limitations and the open spec questions.
    copy the candidate over `background.png`, run
    `npm run assets:post -- --only <theme>/room/background --force`, `npm run assets:thumbs`,
    and retune `SLOT_GEOMETRY` in `src/catalog/slots.ts` with `?debug=slots`.
-5. **Title decision (D9).** The game is called "My Cosmic Room" (working title). If you keep
-   it, set `TITLE_LOGO = true` in `src/ui/screens/S0Title.tsx` to show the generated logo
-   (`assets/shared/ui/logo.png`) in place of the text lockup; the heading keeps the title text
-   for assistive technology and the tests. If you change the name, update `app.title` in all
-   three string files and regenerate the logo (`npm run assets:gen -- --regen shared/ui/logo`
-   after editing its prompt in `tools/manifest-data.ts`), or leave the text lockup.
+5. **Title (D9): done.** The game is called "Tick-Tock" (decided 13 September 2026): strings,
+   page title, package name, export filename, docs, e2e checks and the regenerated logo
+   (`assets/shared/ui/logo.png`, shown on S0 with `TITLE_LOGO = true` in
+   `src/ui/screens/S0Title.tsx`; the heading keeps the title text for assistive technology and
+   the tests). The `mcr.*` localStorage keys keep the legacy prefix so saves survive. Still
+   named after the working title and yours to rename if you want: the GitHub repository and
+   its Pages URL (`/my-cosmic-room/`), the branch and `.github/workflows`.
 6. **Native-speaker wording review (SPEC §13.4, AT-37).** Have a Turkish and a Dutch speaker
    read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
    is not. Start with the longest sentences: the S2 mission descriptions

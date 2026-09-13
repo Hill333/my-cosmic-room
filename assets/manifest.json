@@ -1541,12 +1541,12 @@
       "label": "Title logo",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a playful rounded title logo reading \"My Cosmic Room\" in chunky friendly letters, lavender and coral with a small star and moon, on plain white",
+        "prompt": "a title logo for a children's clock game: the single word \"Tick-Tock\" (exactly that spelling, with the hyphen, and no other words) in playful rounded chunky children's-game lettering, lavender letters with coral accents, a small friendly clock face tucked into the lettering as the only extra motif, on plain white",
         "references": [
           "docs/concepts/01-room-and-wardrobe.png"
         ],
-        "attempts": 1,
-        "generatedAt": "2026-09-12T13:35:22.228Z",
+        "attempts": 2,
+        "generatedAt": "2026-09-13T07:12:33.658Z",
         "status": "generated"
       }
     },

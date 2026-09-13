@@ -25,11 +25,14 @@ import type {
 import { SLOT_TYPES } from './types.ts';
 
 export const SAVE_VERSION = 1 as const;
+// "mcr" is the legacy storage prefix from the working title "My Cosmic Room". The game was
+// renamed to Tick-Tock (D9) but the keys stay, since changing them would orphan every
+// existing save in players' browsers.
 export const SAVE_KEY = 'mcr.save.v1';
 export const BACKUP_KEY = 'mcr.save.backup';
 export const QUARANTINE_KEY = 'mcr.save.quarantine';
 export const NOTICE_KEY = 'mcr.save.notice';
-export const EXPORT_FILENAME = 'my-cosmic-room-save.json';
+export const EXPORT_FILENAME = 'tick-tock-save.json';
 
 /** Structural subset of the DOM Storage interface, so core stays DOM-free. */
 export interface KeyValueStore {

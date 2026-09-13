@@ -12,11 +12,11 @@ import { HoldButton } from '../components/HoldButton.tsx';
 import { GEAR_HOLD_MS } from './S6Parent.tsx';
 
 /**
- * D9 (title): the generated logo `shared/ui/logo` (reads "My Cosmic Room") is wired up but
- * off until the user confirms the title; the text lockup stays. Flip to true to show it (the
- * heading keeps the title text for assistive technology and the e2e checks).
+ * D9 (title): the generated logo `shared/ui/logo` (reads "Tick-Tock") is shown in place of
+ * the text lockup; the heading keeps the title text (visually hidden) for assistive technology
+ * and the e2e checks. Flip to false to fall back to the text lockup.
  */
-const TITLE_LOGO = false;
+const TITLE_LOGO = true;
 
 /** S0 Title and room choice (SPEC §3.3). */
 export function S0Title() {

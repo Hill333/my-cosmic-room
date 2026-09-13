@@ -5,7 +5,7 @@ import type { StringKey } from './en.ts';
  * (Tam saat, Buçuk, Çeyrek). Starter item names are new and marked for native review.
  */
 export const tr: Record<StringKey, string> = {
-  'app.title': 'My Cosmic Room',
+  'app.title': 'Tick-Tock',
   'room.space': 'Uzay Oyun Odası',
   'room.sweet': 'Tatlı Oyun Odası',
   'companion.space': 'Pip',
@@ -192,7 +192,7 @@ export const tr: Record<StringKey, string> = {
   's6.importConfirm': 'Değiştir',
   's6.cancel': 'Vazgeç',
   's6.imported': 'Kayıt yüklendi.',
-  's6.importInvalid': 'Bu dosya bir My Cosmic Room kaydı değil.',
+  's6.importInvalid': 'Bu dosya bir Tick-Tock kaydı değil.',
   's6.importNewer': 'Bu kayıt oyunun daha yeni bir sürümünden geliyor.',
   's6.recentEmpty': 'Henüz görev yok.',
   's6.col.when': 'Ne zaman',

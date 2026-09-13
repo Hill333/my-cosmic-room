@@ -52,7 +52,7 @@ test('AT-26 / flow 4: both rooms keep their layout, counters are separate, the w
 
   // --- Rooms → Sweet: its own layout and counter; the boots came along.
   await page.getByTestId('rooms-button').click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Cosmic Room');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tick-Tock');
   await page.getByTestId('room-card-sweet').click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sweet Playroom');
   await expect(page.getByTestId('collected')).toContainText('3 / 12 collected');

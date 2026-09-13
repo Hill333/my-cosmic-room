@@ -1,8 +1,16 @@
 # Changelog
 
-All notable changes to My Cosmic Room. Milestones follow docs/SPEC.md §18.
+All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
 ## 0.1.0 — release candidate (M0 to M5)
+
+- Renamed to Tick-Tock (D9): `app.title` in all three languages (the name stays untranslated),
+  the page title, the package name, the export filename (`tick-tock-save.json`), the S6
+  import message, the docs and the e2e checks. The `mcr.*` localStorage keys are kept on
+  purpose so existing saves survive. The title logo (`shared/ui/logo`) was regenerated with
+  the new lettering and is shown on S0 in place of the text lockup (`TITLE_LOGO`), the
+  heading keeping the title text for assistive technology. The GitHub repository, its Pages
+  URL and the branch still say `my-cosmic-room`.
 
 The first complete build: two playrooms (Space and Sweet) with generated art, the clock
 engine (reading at four levels, elapsed time at three), four-puzzle missions with hints and
@@ -11,8 +19,7 @@ corner with levels, lock, 24-hour clocks, sound, motion, export / import / reset
 languages (English, Turkish, Dutch), ten synthesized sound effects, reduced-motion support,
 an accessibility review (AT-34 to AT-38) and a static build for GitHub Pages or any static
 host. 133 unit tests, 27 Playwright end-to-end tests. Not yet done, all the user's: the §17.9
-parent-and-child session, the §15.6 art approval (no manifest entry is `approved`), the D9
-title decision (the text lockup is shown; the generated logo is wired but off), the
+parent-and-child session, the §15.6 art approval (no manifest entry is `approved`), the
 native-speaker wording review of Turkish and Dutch, and the deployment itself.
 
 ## M3b Heroine and backdrops

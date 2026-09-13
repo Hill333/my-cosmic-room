@@ -677,7 +677,7 @@ export const EXTRA_ASSETS: Extra[] = [
     label: 'Title logo',
     ...gen(
       'astra-light',
-      'a playful rounded title logo reading "My Cosmic Room" in chunky friendly letters, lavender and coral with a small star and moon, on plain white',
+      'a title logo for a children\'s clock game: the single word "Tick-Tock" (exactly that spelling, with the hyphen, and no other words) in playful rounded chunky children\'s-game lettering, lavender letters with coral accents, a small friendly clock face tucked into the lettering as the only extra motif, on plain white',
       [SPACE_REF],
     ),
   },

@@ -3,7 +3,7 @@
  * Keys are namespaced; values are whole sentences with {placeholders}.
  */
 export const en = {
-  'app.title': 'My Cosmic Room',
+  'app.title': 'Tick-Tock',
   'room.space': 'Space Playroom',
   'room.sweet': 'Sweet Playroom',
   'companion.space': 'Pip',
@@ -191,7 +191,7 @@ export const en = {
   's6.importConfirm': 'Replace',
   's6.cancel': 'Cancel',
   's6.imported': 'Save imported.',
-  's6.importInvalid': 'That file is not a My Cosmic Room save.',
+  's6.importInvalid': 'That file is not a Tick-Tock save.',
   's6.importNewer': 'That save comes from a newer version of the game.',
   's6.recentEmpty': 'No missions yet.',
   's6.col.when': 'When',

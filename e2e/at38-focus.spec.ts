@@ -167,7 +167,7 @@ test('AT-38: S0, S1 with both panels, S2 and S6 (walk, Escape, focus return)', a
   );
   await page.getByTestId('s6-import').focus();
   await page.getByTestId('s6-import-file').setInputFiles({
-    name: 'my-cosmic-room-save.json',
+    name: 'tick-tock-save.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(seededSave('nl'))),
   });

@@ -53,7 +53,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
   const downloadPromise = page.waitForEvent('download');
   await page.getByTestId('s6-export').click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toBe('my-cosmic-room-save.json');
+  expect(download.suggestedFilename()).toBe('tick-tock-save.json');
   const exportedPath = await download.path();
   const { readFileSync } = await import('node:fs');
   const exported = JSON.parse(readFileSync(exportedPath, 'utf8')) as {
@@ -73,7 +73,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
     mimeType: 'application/json',
     buffer: Buffer.from('{"version": 1, "nonsense": true}'),
   });
-  await expect(page.getByTestId('s6-status')).toHaveText('That file is not a My Cosmic Room save.');
+  await expect(page.getByTestId('s6-status')).toHaveText('That file is not a Tick-Tock save.');
   await page.getByTestId('s6-import-file').setInputFiles({
     name: 'future.json',
     mimeType: 'application/json',
@@ -87,7 +87,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
     themes: { ...exported.themes, sweet: { ...exported.themes.sweet, stars: 7 } },
   };
   await page.getByTestId('s6-import-file').setInputFiles({
-    name: 'my-cosmic-room-save.json',
+    name: 'tick-tock-save.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(edited)),
   });
@@ -98,7 +98,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
   await expect(dialog).toHaveCount(0);
   await expect.poll(async () => (await readSave(page)).themes.sweet.stars).toBe(2);
   await page.getByTestId('s6-import-file').setInputFiles({
-    name: 'my-cosmic-room-save.json',
+    name: 'tick-tock-save.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(edited)),
   });
@@ -110,7 +110,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
 
   // Done returns to the screen that opened the corner.
   await page.getByTestId('s6-done').click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Cosmic Room');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tick-Tock');
 
   // AT-29: with levels locked, the S2 chips are disabled and a lock icon shows.
   await page.getByTestId('room-card-space').click();

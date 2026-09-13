@@ -1,9 +1,9 @@
 {
-  "name": "my-cosmic-room",
+  "name": "tick-tock",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Browser clock-learning game with two playrooms (Space and Sweet). Working title.",
+  "description": "Tick-Tock: browser clock-learning game with two playrooms (Space and Sweet).",
   "scripts": {
     "dev": "vite",
     "build": "npm run check:assets && tsc -b && vite build",
