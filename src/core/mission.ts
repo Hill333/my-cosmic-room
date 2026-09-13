@@ -17,13 +17,15 @@ import type {
   PuzzleResult,
   ReadingLevel,
   Save,
+  SchedulePuzzle,
+  ScheduleSegment,
   Theme,
   TimeValue,
 } from './types.ts';
 
 export type MissionEvent =
   | { type: 'mission/start'; theme: Theme; activity: Activity; seed: number; now: string }
-  /** `choice` is the chosen value: a time for every kind but ELAPSED, whose value is a duration. */
+  /** `choice` is the chosen value: a time for READ/MATCH/SET, a duration in minutes for ELAPSED. */
   | { type: 'mission/answer'; choice: number; seconds: number }
   | { type: 'mission/hint' }
   | { type: 'mission/next' }
@@ -40,40 +42,50 @@ const RECENT_TARGETS = 8;
 const RECENT_PAIRS = 8;
 const HISTORY_LENGTH = 20;
 
+/** The asked segment of a schedule puzzle. */
+export function askedSegment(puzzle: SchedulePuzzle): ScheduleSegment {
+  return puzzle.segments[puzzle.ask]!;
+}
+
 /**
- * The value that answers a puzzle: the target time (READ, MATCH, WORDS, SET, DIGITS), the
- * later time (LATER), the duration in minutes (ELAPSED) or the arrival time (ARRIVE).
+ * The value that answers a puzzle: a time for READ, MATCH, SET, DIGITS and SHIFT, the
+ * arrival time for ARRIVE, a duration in minutes for ELAPSED and SCHEDULE.
  */
 export function correctValue(puzzle: Puzzle): number {
   switch (puzzle.kind) {
     case 'READ':
     case 'MATCH':
-    case 'WORDS':
     case 'SET':
     case 'DIGITS':
+    case 'SHIFT':
       return puzzle.target;
-    case 'LATER':
     case 'ARRIVE':
       return puzzle.end;
     case 'ELAPSED':
       return puzzle.end - puzzle.start;
+    case 'SCHEDULE': {
+      const seg = askedSegment(puzzle);
+      return seg.end - seg.start;
+    }
   }
 }
 
-/**
- * The time a puzzle shows the child: the reading target, a LATER puzzle's start, or an
- * elapsed puzzle's arrival. Feeds the recent-targets history (SPEC §7.3).
- */
-export function shownTime(puzzle: Puzzle): TimeValue {
-  switch (puzzle.kind) {
-    case 'LATER':
-      return puzzle.start;
-    case 'ELAPSED':
-    case 'ARRIVE':
-      return puzzle.end;
-    default:
-      return puzzle.target;
+/** The reading target a puzzle adds to `recentReadingTargets` (SPEC §7.3), or null. */
+export function readingTargetOf(puzzle: Puzzle): TimeValue | null {
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'ARRIVE' || puzzle.kind === 'SCHEDULE') {
+    return null;
   }
+  return puzzle.target;
+}
+
+/** The interval a puzzle adds to `recentElapsedPairs` (SPEC §7.5), or null. */
+export function elapsedPairOf(puzzle: Puzzle): [TimeValue, TimeValue] | null {
+  if (puzzle.kind === 'ELAPSED' || puzzle.kind === 'ARRIVE') return [puzzle.start, puzzle.end];
+  if (puzzle.kind === 'SCHEDULE') {
+    const seg = askedSegment(puzzle);
+    return [seg.start, seg.end];
+  }
+  return null;
 }
 
 /**
@@ -191,8 +203,12 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       mode,
       progress.recentReadingTargets,
       rng,
+      { words: save.settings.timeWords },
     ).puzzles;
-    const targets = puzzles.map(shownTime);
+    const targets = puzzles.flatMap((p) => {
+      const t = readingTargetOf(p);
+      return t === null ? [] : [t];
+    });
     nextProgress = {
       ...progress,
       recentReadingTargets: [...progress.recentReadingTargets, ...targets].slice(-RECENT_TARGETS),
@@ -206,9 +222,10 @@ function start(save: Save, theme: Theme, activity: Activity, seed: number, now: 
       rng,
       firstEverAtE3,
     ).puzzles;
-    const pairs = puzzles.flatMap((p) =>
-      p.kind === 'ELAPSED' || p.kind === 'ARRIVE' ? [[p.start, p.end] as [number, number]] : [],
-    );
+    const pairs = puzzles.flatMap((p) => {
+      const pair = elapsedPairOf(p);
+      return pair === null ? [] : [pair];
+    });
     nextProgress = {
       ...progress,
       recentElapsedPairs: [...progress.recentElapsedPairs, ...pairs].slice(-RECENT_PAIRS),

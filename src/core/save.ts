@@ -88,6 +88,7 @@ export function freshSettings(): Settings {
     elapsedLevel: 1,
     levelsLocked: false,
     hour24Reading: false,
+    timeWords: true,
     lastTheme: 'space',
   };
 }
@@ -140,6 +141,8 @@ function validateSettings(v: unknown): Settings | string {
   if (!isIntIn(v['elapsedLevel'], 1, 3)) return 'settings.elapsedLevel';
   if (!isBool(v['levelsLocked'])) return 'settings.levelsLocked';
   if (!isBool(v['hour24Reading'])) return 'settings.hour24Reading';
+  // Additive field (SPEC §7.7): a save written before it exists loads with words on.
+  if (!(v['timeWords'] === undefined || isBool(v['timeWords']))) return 'settings.timeWords';
   if (!isTheme(v['lastTheme'])) return 'settings.lastTheme';
   return {
     language: v['language'],
@@ -149,6 +152,7 @@ function validateSettings(v: unknown): Settings | string {
     elapsedLevel: v['elapsedLevel'] as Settings['elapsedLevel'],
     levelsLocked: v['levelsLocked'],
     hour24Reading: v['hour24Reading'],
+    timeWords: v['timeWords'] ?? true,
     lastTheme: v['lastTheme'],
   };
 }

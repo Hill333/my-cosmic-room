@@ -220,6 +220,12 @@ export function S6Parent({ returnTo }: Props) {
                 testId="s6-hour24"
                 onChange={(enabled) => dispatch({ type: 'settings/hour24Reading', enabled })}
               />
+              <Switch
+                label={t('s6.timeWords')}
+                checked={settings.timeWords}
+                testId="s6-time-words"
+                onChange={(enabled) => dispatch({ type: 'settings/timeWords', enabled })}
+              />
             </section>
 
             <section class="s6-section" aria-labelledby="s6-sound">

@@ -45,12 +45,13 @@ Additional decisions made in this document that were not listed in the PRD:
 | D11 | Digital time format in Activity A | 12-hour digits without a period label ("3:30") at every reading level by default, so the analog face and the digital answer agree without implying a 24-hour reading. A Parent-corner toggle "24-hour digital clocks in reading puzzles" switches Activity A to "15:30" and adds a sun/moon day-period badge to every analog face. Activity B always uses 24-hour digits. |
 | D12 | Hint timeline geometry | The jump timeline is an explicit sequence of jumps with equal spacing between points, not a proportional scale. Labels therefore never collide and always sit under their own point. |
 | D13 | Advancing after a correct answer | A large "Next" button (auto-focused) advances; there is no auto-advance timer. The child controls pacing. |
-| D14 | Mission composition | **Revised 13 September 2026 (D19).** Activity A missions contain one READ, one MATCH, one SET and one *extra* puzzle drawn per mission from WORDS, LATER and DIGITS, shuffled, with an input puzzle (SET or DIGITS) never first. Activity B missions contain three ELAPSED puzzles and one ARRIVE puzzle in a random order. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. (Originally: two READ, one MATCH, one SET; four ELAPSED.) |
+| D14 | Mission composition | Activity A missions contain exactly two READ, one MATCH and one SET puzzle, shuffled, with SET never first. Activity B missions contain four elapsed-time puzzles. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. |
 | D15 | Companions | Space companion: a turquoise alien, placeholder name *Pip*. Sweet companion: a grey-and-white cat, placeholder name *Mimi*. Names are strings and can be changed. |
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
 | D18 | Heroine walks in the room (13 September 2026) | Requested by the child after playing: pick the heroine, click somewhere, she walks there; the bed puts her to sleep, the nook seats her, other items react when she arrives, the companion follows. Done with the existing standing figure and CSS only (a bob while walking, a mask above the blanket or the cushion), no new art; positions are UI state, never saved (§4.3). |
-| D19 | New question types (13 September 2026) | Four kinds join the original four, one per mission (D14): **WORDS** (Activity A: read the clock and pick the time in words, the school way of saying it in each language, "half past three" / "üç buçuk" / "half vier"; `core/words.ts`); **LATER** (Activity A: a clock shows the start, "What time will it be in 1 hour?", pick the clock face; a bridge from reading to elapsed time); **DIGITS** (Activity A: read the clock and build the digital time with up/down buttons on a digital display, the reverse of MATCH and an input puzzle like SET); **ARRIVE** (Activity B: "Leaves at 14:30, the flight takes 2 h 15 min, when does it land?", pick the arrival time; the inverse of ELAPSED). No new art; the strings, generators, distractor models and hints are in §3.6, §3.7, §7.3–§7.5 and §9.3. |
+| D19 | Workbook question types (13 September 2026) | Three question types from the child's Dutch workbook ("Blok 4", quarter hours) are mixed into the existing missions rather than given a third card: **times in words** (§7.7: READ answers, MATCH and SET prompts as "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor", about half of the reading puzzles, off via a Parent-corner switch), **SHIFT** (§7.3: "the rocket launches in 30 minutes, what time will it be?", ± quarter steps from R2) and **SCHEDULE** (§8.6: a day-plan bar of themed activities, "how long does refuelling take?"). Chosen with the user over a new activity card because the child's practice is the same four skills at the same levels, and the prize economy stays untouched. |
+| D20 | Digits and arrival puzzles (13 September 2026) | Two more kinds, developed in parallel with D19 and merged behind it: **DIGITS** (Activity A: read the clock and build the digital time with up/down buttons on a digital display; the reverse of MATCH and an input puzzle like SET; it replaces the MATCH in about half of the missions) and **ARRIVE** (Activity B: "Leaves at 14:30, the flight takes 2 h 15 min, when does it land?", pick the arrival time; the inverse of ELAPSED; one per mission). The same parallel work also produced a "time in words" kind and a "what time will it be in …" kind; those were dropped in favour of D19's words option and SHIFT, which cover them. No new art; §3.6, §3.7, §7.3, §7.5, §8.3 and §9.3 carry the rules. |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
@@ -152,14 +153,13 @@ Frame, both themes: a large light panel occupying the centre (about 1000×820 st
 Inside the panel, top to bottom:
 
 1. Mission name and story line (e.g., "Rocket launch — Get the rocket ready!").
-2. The question line, one sentence (§14 strings `a.read.q`, `a.match.q`, `a.set.q`, `a.words.q`, `a.later.q`, `a.digits.q`).
+2. The question line, one sentence (§14 strings `a.read.q`, `a.match.q`, `a.set.q`).
 3. The puzzle body:
-   - READ: one large analog clock (diameter 440 stage px) showing the target; under it three digital answer buttons.
-   - MATCH: one large digital time display; under it three analog clocks (diameter 240 stage px each) as answer buttons, each with a plain letter label A/B/C above it.
-   - SET: one large analog clock the child can manipulate, a control strip (§6.4), and a "Check" button.
-   - WORDS [D19]: the READ layout with the three answers in words ("Half past three", `core/words.ts`), wrapping to two lines where needed.
-   - LATER [D19]: a 300 px analog clock showing the start with a pill beside it ("➜ in 1 hour"); under it three 200 px analog clocks as answer buttons labelled A/B/C, one of which shows the start moved forward by the gap.
-   - DIGITS [D19]: the 440 px analog clock on the left and, on the right, a digital display whose hours and minutes the child steps with ▲/▼ buttons (hours cycle 1–12, or 06–21 in 24-hour mode; minutes cycle the level's steps and stay at 00 at whole hours), plus "Check". The display takes the SET clock's keys while focused (Up/Down ± 1 hour, Left/Right ± one step, Enter = Check) and starts at 12:00 or 6:00 like the SET clock. Correct means the digits match the target (in 24-hour mode the child builds the badge's half of the day).
+   - READ: one large analog clock (diameter 440 stage px) showing the target; under it three digital answer buttons. With `words` (§7.7) the buttons carry the time in words instead ("quarter past 4").
+   - MATCH: one large digital time display; under it three analog clocks (diameter 240 stage px each) as answer buttons, each with a plain letter label A/B/C above it. With `words` the display is a dark pill with the time in words and the question line repeats it.
+   - SET: one large analog clock the child can manipulate, a control strip (§6.4), and a "Check" button. With `words` the question line names the target in words.
+   - SHIFT (§7.3): the large clock shows the start; the question is themed and names the shift ("The rocket launches in 30 minutes. What time will it be?" / "The countdown started 15 minutes ago. What time was it?"; Sweet: the guests arrive / the cake went into the oven); under it three digital answer buttons. In 24-hour mode the period badge belongs to the start shown.
+   - DIGITS [D20]: "Write this time in digits." The 440 px analog clock on the left and, on the right, a digital display whose hours and minutes the child steps with ▲/▼ buttons (hours cycle 1–12, or 06–21 in 24-hour mode; minutes cycle the level's steps and stay at 00 at whole hours), plus "Check". The display takes the SET clock's keys while focused (Up/Down ± 1 hour, Left/Right ± one step, Enter = Check) and starts at 12:00 or 6:00 like the SET clock (§6.4). Correct means the digits match the target (in 24-hour mode the child builds the badge's half of the day). The `words` option never applies.
 4. Bottom row: "Hint" button (left), progress "Question k of 4" with four dots (centre), and "Next" (right, appears after a correct answer).
 
 Preparation tracker: four small icons under the panel that light up one per solved puzzle. Space: fuel, hatch, lights, countdown. Sweet: cups, cake, teapot, guests. After the fourth, the story reaction plays (rocket launch animation; tea party begins) before S5.
@@ -172,8 +172,8 @@ Same frame as S3. Inside the panel:
 
 1. Mission name and story line ("Space delivery — Your parcel is on its way!" / "Toy delivery — A parcel is coming to the playroom!").
 2. Journey strip: origin icon, dashed path with the vehicle (rocket carrying a parcel / balloon-carried parcel with the cat courier), destination icon. The vehicle advances one quarter of the path per solved puzzle.
-3. Question line: "How long is the journey?" / "How long does the delivery take?". ARRIVE [D19]: "The flight takes 2 hours 15 minutes. When does the parcel land?" / "The delivery takes …. When does the parcel arrive?".
-4. Two digital displays labelled "Leaves" and "Arrives" (24-hour, §6.2) with a small vehicle icon between them. ARRIVE: the duration sits in a "Takes" pill under the vehicle and the "Arrives" display shows "?:??".
+3. Question line: "How long is the journey?" / "How long does the delivery take?". ARRIVE [D20]: "The flight takes 2 hours 15 minutes. When does the parcel land?" / "The delivery takes …. When does the parcel arrive?".
+4. Two digital displays labelled "Leaves" and "Arrives" (24-hour, §6.2) with a small vehicle icon between them. For a SCHEDULE puzzle (§8.6) the displays are replaced by the day-plan bar and the question names the asked activity ("How long does refuelling take?"). For an ARRIVE puzzle the duration sits in a "Takes" pill under the vehicle and the "Arrives" display shows "?:??".
 5. Three duration answer buttons (§8.3). ARRIVE: three 24-hour digital time buttons, one of which is the arrival.
 6. Collapsible "Show the jumps" hint (§8.4), collapsed by default, remembers nothing between puzzles. ARRIVE: the same timeline with every reached time shown as "?" until the puzzle is solved, so the jumps scaffold the sum without giving the answer.
 7. Bottom row identical to S3.
@@ -194,7 +194,7 @@ Reference: [03-mission-reward.png](concepts/03-mission-reward.png).
 - Sections and controls:
   - Language: English / Türkçe / Nederlands.
   - Levels: Reading level R1–R4 and Elapsed level E1–E3 as radio rows with the same child-facing names plus a short adult description; a "Lock levels (child cannot change them)" switch.
-  - Clock options: "24-hour digital clocks in reading puzzles" switch (D11).
+  - Clock options: "24-hour digital clocks in reading puzzles" switch (D11); "Times in words (quarter past 3)" switch (§7.7, on by default).
   - Sound: on/off. Motion: Follow system / Reduced / Full.
   - Save: "Export save file" (downloads `tick-tock-save.json`), "Import save file" (file picker, validates, then replaces after a confirm), "Reset everything" (hold 2 s, then a typed confirm word is not required; the hold is the confirm).
   - About: version, credits, a note that nothing is collected or sent anywhere.
@@ -404,28 +404,27 @@ For elapsed puzzles: at E2 and E3 the gap is a non-whole-hour duration with prob
 ### 7.3 Activity A mission generator
 
 ```
-makeActivityAMission(level, mode, recentTargets, rng):
-  extra := pick([WORDS, LATER, DIGITS], rng)                       // D14, D19
-  kinds := shuffle([READ, MATCH, SET, extra], rng) until kinds[0] not in (SET, DIGITS)
-  gap := extra == LATER ? pick(LATER_GAPS[level], rng) : 0        // chosen before the start
+makeActivityAMission(level, mode, recentTargets, rng, { words }):
+  kinds := shuffle([READ, READ, MATCH, SET], rng) until kinds[0] != SET
+  if level ≥ R2 and chance(0.5): the later READ becomes SHIFT      // D19; never puzzle 1
+  if chance(0.5): the MATCH becomes DIGITS                          // D20; a MATCH in slot 1 first trades places with a READ
   targets := []
   repeat for i in 0..3:
-    t := pickTarget(level, mode, rng)            // §7.2
-    reject if t in targets or t in recentTargets  // up to 50 tries, then ignore recentTargets
-    reject if kinds[i] == LATER and t + gap leaves the mode's hour range
-    targets.push(t)
+    if kinds[i] == SHIFT: { start, delta, target } := makeShift(level, mode, rng)   // below
+    else t := pickTarget(level, mode, rng)            // §7.2
+    reject if target in targets or in recentTargets   // up to 50 tries, then ignore recentTargets
+    targets.push(target)
   puzzles := for i in 0..3:
-    if kinds[i] in (SET, DIGITS): { kind, target: targets[i] }
-    if kinds[i] == LATER: { kind: LATER, start: targets[i], gap, end: face(targets[i] + gap), choices: makeLaterChoices(...) }
-    else: { kind: kinds[i], target: targets[i], choices: makeReadingChoices(targets[i], level, mode, rng) }
+    w := words and chance(0.5)                        // §7.7; never on SHIFT
+    if kinds[i] == SET: { kind: SET, target, words?: w }
+    if kinds[i] == SHIFT: { kind: SHIFT, start, delta, target, choices: makeShiftChoices(...) }
+    else: { kind: kinds[i], target, words?: w, choices: makeReadingChoices(target, level, mode, rng) }
   return { activity: A, level, puzzles }
 ```
 
-`LATER_GAPS` per level: R1 {60, 120}; R2 {30, 60, 90, 120}; R3 {15, 30, 45, 60, 75, 90}; R4 {5, 10, 15, 20, 25, 30, 45, 60} minutes. In 12-hour mode the end wraps on the face (11:30 + 1 hour = 12:30); in 24-hour mode the start is chosen so the end stays within 06:00–21:59.
+`recentTargets` is the last eight reading targets across all missions and themes (§11.3), so consecutive missions do not repeat the same time. A SHIFT contributes its answer, not its start.
 
-`recentTargets` is the last eight reading targets across all missions and themes (§11.3), so consecutive missions do not repeat the same time; a LATER puzzle contributes its start.
-
-LATER distractors (two, in order, validated like §7.4, random fallback): an hour too many (end + 60), an hour too few (end − 60), not moving (the start), moving backwards (start − gap), moving twice (end + gap). WORDS uses the READ distractors of §7.4 shown in words, so "quarter past three" sits beside "quarter to four".
+**SHIFT** (D19, the workbook's "Hoe laat was het een kwartier geleden?" and "Wat is de nieuwe tijd? + 30 minuten"): `start` is drawn like a target; `delta` is a signed shift from the level's set, R2 {±30, ±60}, R3 and R4 {±15, ±30, ±45, ±60}; the answer is the face of `start + delta` (12:45 + 30 min is 1:15 in 12-hour mode). In 24-hour mode both ends stay within 06:00–21:59 (redraw up to 50 times, then use the whole hour that fits). Distractors, in order and validated like §7.4: moved the wrong way (`start − delta`), did not move (`start`), an hour too far (`start + delta ± 60`), the mirror minute (`start ± (60 − |delta|)`), then a random allowed time.
 
 ### 7.4 Distractors for READ and MATCH
 
@@ -454,10 +453,9 @@ makeActivityBMission(level, recentPairs, rng, firstEverAtE3):
     reject if (S, E) in pairs or in recentPairs or gap(S, E) equals the gap of two earlier pairs
     pairs.push((S, E))
   if firstEverAtE3: pairs[3] := (14:30, 19:15)
-  kinds := shuffle([ELAPSED, ELAPSED, ELAPSED, ARRIVE], rng)     // D14, D19; the reserved pair stays ELAPSED
-  puzzles := pairs.map((p, i) =>
-    kinds[i] == ARRIVE ? { kind: ARRIVE, start: S, end: E, choices: makeArrivalChoices(S, E, level, rng) }
-                       : { kind: ELAPSED, start: S, end: E, choices: makeDurationChoices(E − S, level, rng) })
+  puzzles := pairs.map(p => { kind: ELAPSED, start: S, end: E, choices: makeDurationChoices(E − S, level, rng) })
+  if chance(0.5): puzzles[1 or 2] := makeSchedule(level, rng)                       // D19, §8.6
+  one remaining ELAPSED (never the reserved pair) becomes ARRIVE with makeArrivalChoices(S, E, level, rng)   // D20
 ```
 
 `makeArrivalChoices` applies the duration mistakes of §8.3 to the start (S + D′ for each distractor duration D′, then S + D ± 30 and ± 15 as the fallback), keeping every choice after the start and before midnight; for 14:30 → 19:15 the wrong arrivals are 18:45 and 19:30. At most two of the four puzzles may share the same duration. `firstEverAtE3` is true for the first E3 mission played in each theme, so both the space and the sweet presentation show the required example [C].
@@ -465,6 +463,25 @@ makeActivityBMission(level, recentPairs, rng, firstEverAtE3):
 ### 7.6 Determinism
 
 Every mission stores its random seed and its fully generated puzzles in the save. Resuming a mission after a reload shows the same puzzles. Unit tests generate with fixed seeds and assert the rules above over thousands of generated missions (§17).
+
+### 7.7 Times in words [D19]
+
+The workbook writes times as words ("kwart voor 1", "half 3"), so READ answers, the MATCH prompt and the SET prompt can too. Each such puzzle carries `words: true`; the generator sets it with probability 0.5 per READ, MATCH and SET puzzle when the Parent-corner switch "Times in words" is on (default on, `settings.timeWords`). SHIFT never uses words, matching the workbook's digital answers. Answer values stay time values; only the presentation changes.
+
+`formatTimeWords(t, lang)` (`core/words.ts`) fills one of twelve string-table templates `words.m0` … `words.m55` (one per five-minute value, each with a single `{h}`) with the hour the phrase names:
+
+| Minutes | English | Dutch | Turkish |
+| --- | --- | --- | --- |
+| 0 | 3 o'clock | 3 uur | saat üç |
+| 15 | quarter past 3 | kwart over 3 | üçü çeyrek geçiyor |
+| 20 | twenty past 3 | 10 voor half 4 | üçü yirmi geçiyor |
+| 30 | half past 3 | half 4 | üç buçuk |
+| 35 | twenty-five to 4 | 5 over half 4 | dörde yirmi beş var |
+| 45 | quarter to 4 | kwart voor 4 | dörde çeyrek var |
+
+Rules: English and Turkish name the next hour from 35 minutes on; Dutch from 20 minutes on ("half 4" is 3:30 and the "voor/over half" forms hang off it). Turkish inflects the hour word: nominative for whole and half hours ("saat üç", "üç buçuk"), accusative before "geçiyor" (üçü, dördü, on ikiyi), dative before "var" (üçe, dörde, on ikiye); the tables live in `core/words.ts` as linguistic data. English and Dutch use the digit, as the workbook does. Only multiples of five minutes are ever formatted.
+
+Hints: READ keeps the sweep and hour caption; MATCH shows "{words} = {digits}" above the split display; SET keeps the ghost hands.
 
 ## 8. Elapsed-time maths and hints
 
@@ -529,9 +546,15 @@ Worked examples:
 - "Show the jumps" expands the panel and reveals the jumps one after another (300 ms each; instantly under reduced motion). The total is not displayed; the child adds the jumps. Pressing the button again collapses it. The panel state resets for the next puzzle.
 - Using the hint sets `hintUsed` for the puzzle and has no other effect [C: hints never disqualify].
 
+### 8.6 Schedule bar [D19]
+
+The workbook's "Hoeveel uren en minuten?" reads durations off a coloured day timeline. In Activity B, with probability 0.5, puzzle 2 or 3 (never puzzle 1, never the reserved 14:30 → 19:15 slot) is a SCHEDULE puzzle: four contiguous segments starting on a whole hour between 07:00 and 14:00, each a length from the level's set (E1 {60, 120}; E2 {15, 30, 45, 60, 75, 90}; E3 {45, 60, …, 180}), the whole spanning at most six hours (redrawn otherwise), with four distinct activity names out of six per theme (Space: waking up, breakfast, refuelling, training, the launch check, stargazing; Sweet: waking up, baking, decorating, the tea party, games, story time) and one segment asked about. Answer choices come from §8.3 for the asked length; the asked `[start, end]` joins `recentElapsedPairs`.
+
+Rendering (`ScheduleBar`): an 880-unit bar over a quarter-hour tick scale with 24-hour labels every 30 minutes (every hour when the span exceeds three hours); each segment has a distinct fill **and** an ordinal badge 1–4, and a legend below pairs badge, colour and name, so colour is never the only cue (§13.2). The asked segment is outlined in the bar and the legend. Accessible name: "Day plan: refuelling from 10:00 to 10:45; …". No animation. The "Show the jumps" hint is the §8.4 timeline for the asked segment.
+
 ## 9. Answer validation and feedback
 
-### 9.1 Choice puzzles (READ, MATCH, WORDS, LATER, ELAPSED, ARRIVE)
+### 9.1 Choice puzzles (READ, MATCH, SHIFT, ELAPSED, ARRIVE, SCHEDULE)
 
 - The three options form a group; each is a large button (minimum 280 × 96 stage px, 44 px text) with a visible focus ring.
 - Wrong option: the button shakes once, shows an ✕ icon and the word "Try again" inside it, becomes disabled and dimmed; the companion makes a friendly "hmm" pose; a soft low sound plays; `wrongAttempts` increments. The child chooses again among the remaining options.
@@ -541,7 +564,7 @@ Worked examples:
 
 ### 9.2 SET and DIGITS puzzles
 
-- "Check" validates as in §6.4 (DIGITS compares the digits, §3.6). Wrong: gentle shake, one of three rotating messages with an icon, the Hint button pulses once, `wrongAttempts` increments. Unlimited attempts. Correct: as above.
+- "Check" validates as in §6.4. Wrong: gentle shake, one of three rotating messages with an icon, the Hint button pulses once, `wrongAttempts` increments. Unlimited attempts. Correct: as above.
 
 ### 9.3 Hints
 
@@ -552,11 +575,11 @@ One Hint button per puzzle; it can be used once per puzzle and sets `hintUsed`.
 | READ | The minute hand animates sweeping from 12 to its position while a counter counts the minutes ("30 minutes"); then the hour hand is highlighted with the caption "The short hand is just past 3" (or "exactly at 3" when M = 0). |
 | MATCH | The digital display splits into its hour and minute parts with captions "short hand → 3" and "long hand → 30". |
 | SET | Faint ghost hands show the target position under the real hands until the puzzle is solved. |
-| WORDS | The READ hint. |
-| LATER | A caption names the start in digits and the direction: "It is 3:30 now. Move the hands forward 1 hour." The sum stays with the child. |
+| SHIFT | Faint ghost hands show the answer on the start clock with the caption "The faint hands show the new time." |
 | DIGITS | The READ hint (sweep, minute counter, hour caption) beside the display. |
 | ELAPSED | The jump timeline (§8.4–8.5). |
 | ARRIVE | The jump timeline with every reached time hidden as "?" until solved. |
+| SCHEDULE | The jump timeline for the asked segment. |
 
 ### 9.4 Reactions and text
 
@@ -1081,9 +1104,12 @@ Automated unless marked (manual). PRD §9 criteria are referenced as P9.
 | AT-05 | Precision per level | Every target's minutes are in the level's allowed set (P9: intended precision) |
 | AT-06 | Choices | Exactly three, distinct, exactly one equals the target, all at level precision (P9: distinct, one correct) |
 | AT-07 | Concept example | 3:30 at R2 produces the choice set {3:00, 3:30, 4:30}; 3:00 at R1 produces {2:00, 3:00, 4:00} |
-| AT-08 | Mission shape | Activity A: two READ, one MATCH, one SET; SET never first; four distinct targets; none of the last eight recent targets |
+| AT-08 | Mission shape | Activity A: two READ (the later of which may be a SHIFT from R2), one MATCH, one SET; neither SET nor SHIFT first; four distinct targets; none of the last eight recent targets |
 | AT-09 | New-minutes weighting | At R2–R4, between 50 % and 70 % of targets use the level's new minutes over 5,000 missions |
 | AT-10 | 24-hour mode | Targets within 06:00–21:59; badge period computed correctly at the boundaries 05:00, 12:00, 18:00, 22:00 |
+| AT-39 | Times in words (§7.7) | The table of §7.7 reproduces in all three languages; next-hour rules per language; Turkish inflection; every five-minute face formats without a stray placeholder; non-multiples of five throw |
+| AT-40 | SHIFT (§7.3) | Over 5,000 missions per level and mode: delta from the level set, start and target at level precision and inside the mode's window, three distinct choices with exactly one correct; R1 never, R2+ about half of the missions; 3:15 + 30 min at R3 gives {3:45, 2:45, 3:15}; 12:45 + 30 min is 1:15 |
+| AT-41 | Words share | About half of READ, MATCH and SET puzzles carry `words` when enabled, none when disabled |
 
 ### 17.3 Elapsed time (unit)
 
@@ -1096,6 +1122,7 @@ Automated unless marked (manual). PRD §9 criteria are referenced as P9.
 | AT-15 | Level windows | E1 gaps 60–300 on whole hours; E2 gaps 15–120; E3 gaps 135–360; never before 06:00 or after 22:00; never across midnight |
 | AT-16 | Duration formatting | 60 → "1 hour" / "1 saat"; 75 → "1 hour 15 minutes"; 300 → "5 hours"; 30 → "30 minutes" |
 | AT-17 | First E3 mission | Puzzle 4 is 14:30 → 19:15 in each theme's first E3 mission, never afterwards |
+| AT-42 | SCHEDULE (§8.6) | Over 5,000 missions per level: four contiguous segments from a whole hour in 07:00–14:00, level lengths, span ≤ 6 h, distinct labels, only at puzzle 2 or 3, about half of the missions; the reserved first-E3 slot is never replaced |
 
 ### 17.4 Mission and reward state (unit)
 

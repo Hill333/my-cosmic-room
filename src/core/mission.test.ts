@@ -87,7 +87,7 @@ describe('mission start (SPEC §10.1, §7.6)', () => {
     s = startMission(s, 'space', 'A');
     expect(s.mission!.level).toBe(4);
     for (const p of s.mission!.puzzles) {
-      expect(['ELAPSED', 'ARRIVE']).not.toContain(p.kind);
+      expect(['ELAPSED', 'ARRIVE', 'SCHEDULE']).not.toContain(p.kind);
       expect(correctValue(p)).toBeGreaterThanOrEqual(makeTime(6, 0));
     }
     s = settingsReducer(createFreshSave(), { type: 'settings/elapsedLevel', level: 2 });
@@ -113,7 +113,26 @@ describe('answers', () => {
     expect(isCorrectAnswer({ kind: 'ELAPSED', start: 870, end: 1155, choices: [] }, 300)).toBe(
       false,
     );
-    expect(isCorrectAnswer({ kind: 'WORDS', target: 210, choices: [] }, 210)).toBe(true);
+    const shift: Puzzle = {
+      kind: 'SHIFT',
+      start: makeTime(12, 45),
+      delta: 30,
+      target: makeTime(1, 15),
+      choices: [],
+    };
+    expect(isCorrectAnswer(shift, makeTime(1, 15))).toBe(true);
+    expect(isCorrectAnswer(shift, makeTime(13, 15))).toBe(false);
+    const schedule: Puzzle = {
+      kind: 'SCHEDULE',
+      segments: [
+        { label: 1, start: makeTime(8, 0), end: makeTime(9, 15) },
+        { label: 2, start: makeTime(9, 15), end: makeTime(9, 45) },
+      ],
+      ask: 1,
+      choices: [],
+    };
+    expect(isCorrectAnswer(schedule, 30)).toBe(true);
+    expect(isCorrectAnswer(schedule, 75)).toBe(false);
     // DIGITS compares the digits: 15:30 is not 3:30 when the child builds a 24-hour time.
     expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(15, 30))).toBe(
       true,
@@ -121,31 +140,58 @@ describe('answers', () => {
     expect(isCorrectAnswer({ kind: 'DIGITS', target: makeTime(15, 30) }, makeTime(3, 30))).toBe(
       false,
     );
-    const later: Puzzle = { kind: 'LATER', start: 210, gap: 60, end: 270, choices: [] };
-    expect(isCorrectAnswer(later, 270)).toBe(true);
-    expect(isCorrectAnswer(later, 210)).toBe(false);
     const arrive: Puzzle = { kind: 'ARRIVE', start: 870, end: 1155, choices: [] };
     expect(isCorrectAnswer(arrive, 1155)).toBe(true);
     expect(isCorrectAnswer(arrive, 285)).toBe(false);
   });
-  it('records every kind in the results and the shown times in the recent history', () => {
+  it('records every kind in the results and the ARRIVE pair in the recent pairs (D20)', () => {
     const kinds = new Set<string>();
-    for (let seed = 1; kinds.size < 8 && seed < 200; seed++) {
+    for (let seed = 1; kinds.size < 8 && seed < 300; seed++) {
       for (const activity of ['A', 'B'] as const) {
-        const s = solve(startMission(createFreshSave(), 'space', activity, seed));
-        for (const r of s.mission!.results) kinds.add(r.kind);
+        const started = startMission(createFreshSave(), 'space', activity, seed);
+        const arrive = started.mission!.puzzles.find((p) => p.kind === 'ARRIVE');
+        if (arrive && arrive.kind === 'ARRIVE') {
+          expect(started.progress.recentElapsedPairs).toContainEqual([arrive.start, arrive.end]);
+        }
+        for (const r of solve(started).mission!.results) kinds.add(r.kind);
       }
     }
     expect([...kinds].sort()).toEqual([
       'ARRIVE',
       'DIGITS',
       'ELAPSED',
-      'LATER',
       'MATCH',
       'READ',
+      'SCHEDULE',
       'SET',
-      'WORDS',
+      'SHIFT',
     ]);
+  });
+  it('adds the asked schedule segment to the recent elapsed pairs (SPEC §7.5)', () => {
+    for (let seed = 1; seed < 200; seed++) {
+      const s = startMission(createFreshSave(), 'sweet', 'B', seed);
+      const schedule = s.mission!.puzzles.find((p) => p.kind === 'SCHEDULE');
+      if (!schedule || schedule.kind !== 'SCHEDULE') continue;
+      const asked = schedule.segments[schedule.ask]!;
+      expect(s.progress.recentElapsedPairs).toContainEqual([asked.start, asked.end]);
+      expect(s.progress.recentElapsedPairs).toHaveLength(4);
+      return;
+    }
+    throw new Error('no seed produced a SCHEDULE');
+  });
+  it('passes the words setting to the generator (SPEC §7.7)', () => {
+    const off = settingsReducer(createFreshSave(), { type: 'settings/timeWords', enabled: false });
+    for (let seed = 1; seed < 50; seed++) {
+      for (const p of startMission(off, 'space', 'A', seed).mission!.puzzles) {
+        expect('words' in p && p.words).toBeFalsy();
+      }
+    }
+    let anyWords = false;
+    for (let seed = 1; seed < 50 && !anyWords; seed++) {
+      const m = startMission(createFreshSave(), 'space', 'A', seed).mission!;
+      anyWords = m.puzzles.some((p) => 'words' in p && p.words === true);
+    }
+    expect(anyWords).toBe(true);
   });
   it('Next does nothing before a correct answer; answers after solving are ignored', () => {
     let s = startMission(createFreshSave(), 'space', 'A');

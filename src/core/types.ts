@@ -1,7 +1,6 @@
 /**
  * Shared types for the pure game core (SPEC §6–§11).
- * This module has no DOM or framework imports; its only runtime code is a few constant
- * lists and kind predicates.
+ * This module has no DOM or framework imports; its only runtime code is the kind predicate.
  */
 
 /** Minutes since midnight, integer 0–1439 (SPEC §0). */
@@ -35,40 +34,23 @@ export type ReadingLevel = 1 | 2 | 3 | 4;
 export type ElapsedLevel = 1 | 2 | 3;
 
 export type Activity = 'A' | 'B';
-/**
- * Puzzle kinds. Activity A: READ, MATCH, SET (SPEC §3.6) plus one of the extra kinds per
- * mission (D14, revised): WORDS (say the time), LATER (what time will it be in …), DIGITS
- * (build the digital time). Activity B: ELAPSED (how long) plus ARRIVE (when does it arrive).
- */
 export type PuzzleKind =
-  'READ' | 'MATCH' | 'WORDS' | 'SET' | 'DIGITS' | 'LATER' | 'ELAPSED' | 'ARRIVE';
+  'READ' | 'MATCH' | 'SET' | 'DIGITS' | 'SHIFT' | 'ELAPSED' | 'ARRIVE' | 'SCHEDULE';
 
-/** The kinds that can stand in for one READ in an Activity A mission. */
-export type ExtraKind = 'WORDS' | 'LATER' | 'DIGITS';
-export const EXTRA_KINDS: readonly ExtraKind[] = ['WORDS', 'LATER', 'DIGITS'];
-
-/** A clock to read (READ), a digital time to find on a face (MATCH), or a clock to say (WORDS). */
 export interface ReadingPuzzle {
-  kind: 'READ' | 'MATCH' | 'WORDS';
+  kind: 'READ' | 'MATCH';
   target: TimeValue;
   choices: TimeValue[];
+  /** Word-form presentation (SPEC §7.7): READ answers and the MATCH prompt read "quarter past 4". */
+  words?: true;
 }
 
-/** A time to set on the analog clock (SET) or to build on a digital display (DIGITS). */
+/** A time to set on the analog clock (SET) or to build on a digital display (DIGITS, D20). */
 export interface SetPuzzle {
   kind: 'SET' | 'DIGITS';
   target: TimeValue;
-}
-
-/** "What time will it be in {gap}?": the clock shows `start`; the answer is `end`. */
-export interface LaterPuzzle {
-  kind: 'LATER';
-  start: TimeValue;
-  /** Minutes forward, a multiple of the level step. */
-  gap: number;
-  end: TimeValue;
-  /** Times shown as clock faces; exactly one equals `end`. */
-  choices: TimeValue[];
+  /** Word-form prompt (SPEC §7.7): "Set the clock to quarter to 1." SET only. */
+  words?: true;
 }
 
 export interface ElapsedPuzzle {
@@ -79,7 +61,37 @@ export interface ElapsedPuzzle {
   choices: number[];
 }
 
-/** "Leaves at {start}, takes {end − start}: when does it arrive?" */
+/** "What time will it be in 30 minutes?" / "What time was it 15 minutes ago?" (SPEC §7.3). */
+export interface ShiftPuzzle {
+  kind: 'SHIFT';
+  /** The time the clock shows. */
+  start: TimeValue;
+  /** Signed minutes: +15, +30, +45, +60 (later) or the negatives (ago). */
+  delta: number;
+  /** The answer: the face of start + delta, stored like a reading target (§6.3). */
+  target: TimeValue;
+  choices: TimeValue[];
+}
+
+export interface ScheduleSegment {
+  /** Index 1–6 into the theme's activity names (`sched.<theme>.<n>`). */
+  label: number;
+  start: TimeValue;
+  end: TimeValue;
+}
+
+/** "How long does refuelling take?" read off a day-plan bar (SPEC §8.6). */
+export interface SchedulePuzzle {
+  kind: 'SCHEDULE';
+  /** Contiguous, in order: each segment starts where the previous one ends. */
+  segments: ScheduleSegment[];
+  /** Index of the segment asked about. */
+  ask: number;
+  /** Durations in minutes; exactly one equals the asked segment's length. */
+  choices: number[];
+}
+
+/** "Leaves at {start}, takes {end − start}: when does it arrive?" (SPEC §7.5, D20). */
 export interface ArrivePuzzle {
   kind: 'ARRIVE';
   start: TimeValue;
@@ -88,7 +100,8 @@ export interface ArrivePuzzle {
   choices: TimeValue[];
 }
 
-export type Puzzle = ReadingPuzzle | SetPuzzle | LaterPuzzle | ElapsedPuzzle | ArrivePuzzle;
+export type Puzzle =
+  ReadingPuzzle | SetPuzzle | ElapsedPuzzle | ShiftPuzzle | ArrivePuzzle | SchedulePuzzle;
 
 /** The kinds that need a hand, a button strip or a keyboard rather than a pick (SPEC §9.2). */
 export function isInputKind(kind: PuzzleKind): kind is 'SET' | 'DIGITS' {
@@ -150,6 +163,8 @@ export interface Settings {
   elapsedLevel: ElapsedLevel;
   levelsLocked: boolean;
   hour24Reading: boolean;
+  /** Word-form times in reading puzzles ("quarter past 3"), SPEC §7.7. Additive; defaults on. */
+  timeWords: boolean;
   lastTheme: Theme;
 }
 

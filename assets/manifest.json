@@ -1845,7 +1845,7 @@
       }
     },
     "shared/heroine/sit/planetTee-loose": {
-      "path": "shared/heroine/sit/planetTee-loose.svg",
+      "path": "shared/heroine/sit/planetTee-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -1866,7 +1866,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -1882,9 +1882,9 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 1,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 2,
+        "generatedAt": "2026-09-13T18:54:01.352Z",
+        "status": "generated"
       }
     },
     "shared/heroine/sit/planetTee-ponytail": {
@@ -2275,7 +2275,7 @@
       }
     },
     "shared/heroine/sit/strawberryDress-ponytail": {
-      "path": "shared/heroine/sit/strawberryDress-ponytail.svg",
+      "path": "shared/heroine/sit/strawberryDress-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2296,7 +2296,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -2312,9 +2312,9 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-13T18:50:35.222Z",
+        "status": "generated"
       }
     },
     "shared/heroine/sleep/buns": {
@@ -2339,12 +2339,12 @@
       }
     },
     "shared/heroine/sleep/loose": {
-      "path": "shared/heroine/sleep/loose.svg",
+      "path": "shared/heroine/sleep/loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
         360,
-        320
+        289
       ],
       "layer": "sleep",
       "label": "Sleeping head, loose brown hair with a clip",
@@ -2354,17 +2354,17 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-13T18:51:33.157Z",
+        "status": "generated"
       }
     },
     "shared/heroine/sleep/ponytail": {
-      "path": "shared/heroine/sleep/ponytail.svg",
+      "path": "shared/heroine/sleep/ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
-        360,
+        351,
         320
       ],
       "layer": "sleep",
@@ -2375,9 +2375,9 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-13T18:52:31.337Z",
+        "status": "generated"
       }
     },
     "shared/sceneB/parcel": {

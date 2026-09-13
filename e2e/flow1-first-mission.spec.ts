@@ -38,13 +38,10 @@ test('flow 1: first launch, Rocket launch at half hours, Moon bed placed and kep
     await expect(page.getByTestId('tracker')).toHaveAttribute('data-solved', String(i));
     kinds.push(await solveWithMouse(page, m));
   }
-  // READ, MATCH, SET and one extra kind (D14).
-  expect(kinds.filter((k) => ['MATCH', 'READ', 'SET'].includes(k)).sort()).toEqual([
-    'MATCH',
-    'READ',
-    'SET',
-  ]);
-  expect(kinds.filter((k) => ['WORDS', 'LATER', 'DIGITS'].includes(k))).toHaveLength(1);
+  // The later READ may be a SHIFT (SPEC §7.3) and the MATCH a DIGITS (D20); the shape is
+  // otherwise fixed.
+  const asBase = (k: string) => (k === 'SHIFT' ? 'READ' : k === 'DIGITS' ? 'MATCH' : k);
+  expect(kinds.map(asBase).sort()).toEqual(['MATCH', 'READ', 'READ', 'SET']);
 
   // S5: Moon bed pre-selected, the preview shows it in the BED slot, "Put it in my room".
   await expect(page.getByTestId('s5')).toBeVisible();

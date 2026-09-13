@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { assetUrl } from '../../assets.ts';
 import { formatDuration } from '../../core/elapsed.ts';
-import { correctValue, isCorrectAnswer, PUZZLES_PER_MISSION } from '../../core/mission.ts';
+import {
+  askedSegment,
+  correctValue,
+  isCorrectAnswer,
+  PUZZLES_PER_MISSION,
+} from '../../core/mission.ts';
 import { formatTime } from '../../core/time.ts';
 import type { Mission, Theme } from '../../core/types.ts';
 import { dispatch, language, save } from '../../state/store.ts';
@@ -15,15 +20,13 @@ import type { CompanionPose } from '../components/Companion.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { JumpTimeline } from '../components/JumpTimeline.tsx';
 import { MissionFrame, PuzzleFooter } from '../components/MissionFrame.tsx';
+import { ScheduleBar } from '../components/ScheduleBar.tsx';
 
 interface Props {
   mission: Mission;
 }
 
-/**
- * S4 Activity B (SPEC §3.7): elapsed-time puzzles (ELAPSED: how long; ARRIVE: when does it
- * arrive) with the journey strip and the jump hint.
- */
+/** S4 Activity B (SPEC §3.7): elapsed-time puzzles with the journey strip and the jump hint. */
 export function S4ActivityB({ mission }: Props) {
   const theme = mission.theme;
   const solved = mission.current.solved;
@@ -127,14 +130,16 @@ interface PuzzleProps {
 }
 
 /**
- * One elapsed puzzle; remounted per `index`, so the jumps panel and wrong picks reset.
- * ELAPSED shows both times and asks for the duration; ARRIVE shows the start and the
- * duration and asks for the arrival time, with the jump timeline's times hidden.
+ * One elapsed, arrival or schedule puzzle; remounted per `index`, so the jumps panel and
+ * wrong picks reset. ELAPSED and SCHEDULE ask for a duration: between two digital displays,
+ * or for one segment of the day-plan bar (SPEC §8.6). ARRIVE (D20) shows the start and the
+ * duration and asks for the arrival time; its jump hint hides the reached times until
+ * solved. The jump hint covers the puzzle's interval either way.
  */
 function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
-  if (puzzle.kind !== 'ELAPSED' && puzzle.kind !== 'ARRIVE') {
-    throw new Error('Activity B expects ELAPSED or ARRIVE puzzles');
+  if (puzzle.kind !== 'ELAPSED' && puzzle.kind !== 'ARRIVE' && puzzle.kind !== 'SCHEDULE') {
+    throw new Error('Activity B expects ELAPSED, ARRIVE or SCHEDULE puzzles');
   }
   const arrive = puzzle.kind === 'ARRIVE';
   const theme = mission.theme;
@@ -144,8 +149,17 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
   const [wrong, setWrong] = useState<number[]>([]);
   const [jumpsOpen, setJumpsOpen] = useState(false);
   const solved = mission.current.solved;
+  const { start, end } = puzzle.kind === 'SCHEDULE' ? askedSegment(puzzle) : puzzle;
   const correct = correctValue(puzzle);
-  const duration = formatDuration(puzzle.end - puzzle.start, lang);
+  const duration = formatDuration(end - start, lang);
+  const questionText =
+    puzzle.kind === 'ELAPSED'
+      ? t(`b.q.${theme}`)
+      : puzzle.kind === 'ARRIVE'
+        ? t(`b.arrive.q.${theme}`, { dur: duration })
+        : t('b.sched.q', {
+            activity: t(`sched.${theme}.${askedSegment(puzzle).label}` as StringKey),
+          });
 
   useEffect(() => {
     question.current?.focus({ preventScroll: true });
@@ -186,49 +200,53 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
   return (
     <div class="puzzle" data-testid="puzzle" data-kind={puzzle.kind} data-index={mission.index}>
       <p class="question" data-testid="question" tabIndex={-1} ref={question}>
-        {arrive ? t(`b.arrive.q.${theme}`, { dur: duration }) : t(`b.q.${theme}`)}
+        {questionText}
       </p>
       <div class="puzzle-body">
-        <div class="journey-times">
-          <DigitalDisplay
-            time={puzzle.start}
-            mode="24h"
-            caption={t('b.leaves')}
-            label={`${t('b.leaves')} ${formatTime(puzzle.start, '24h')}`}
-          />
-          <div class="journey-times-middle">
-            <img
-              src={assetUrl(JOURNEY[theme].vehicle)}
-              alt=""
-              class="journey-times-icon"
-              draggable={false}
+        {puzzle.kind === 'SCHEDULE' ? (
+          <ScheduleBar theme={theme} segments={puzzle.segments} ask={puzzle.ask} />
+        ) : (
+          <div class="journey-times">
+            <DigitalDisplay
+              time={start}
+              mode="24h"
+              caption={t('b.leaves')}
+              label={`${t('b.leaves')} ${formatTime(start, '24h')}`}
             />
-            {arrive && (
-              <span class="journey-takes" data-testid="journey-takes">
-                <span class="journey-takes-caption">{t('b.takes')}</span>
-                {duration}
+            <div class="journey-times-middle">
+              <img
+                src={assetUrl(JOURNEY[theme].vehicle)}
+                alt=""
+                class="journey-times-icon"
+                draggable={false}
+              />
+              {arrive && (
+                <span class="journey-takes" data-testid="journey-takes">
+                  <span class="journey-takes-caption">{t('b.takes')}</span>
+                  {duration}
+                </span>
+              )}
+            </div>
+            {arrive ? (
+              <span
+                class="digital digital-big digital-unknown"
+                role="img"
+                aria-label={t('b.arrivesUnknown')}
+                data-testid="arrives-unknown"
+              >
+                <span class="digital-caption">{t('b.arrives')}</span>
+                <span class="digital-digits">?:??</span>
               </span>
+            ) : (
+              <DigitalDisplay
+                time={end}
+                mode="24h"
+                caption={t('b.arrives')}
+                label={`${t('b.arrives')} ${formatTime(end, '24h')}`}
+              />
             )}
           </div>
-          {arrive ? (
-            <span
-              class="digital digital-big digital-unknown"
-              role="img"
-              aria-label={t('b.arrivesUnknown')}
-              data-testid="arrives-unknown"
-            >
-              <span class="digital-caption">{t('b.arrives')}</span>
-              <span class="digital-digits">?:??</span>
-            </span>
-          ) : (
-            <DigitalDisplay
-              time={puzzle.end}
-              mode="24h"
-              caption={t('b.arrives')}
-              label={`${t('b.arrives')} ${formatTime(puzzle.end, '24h')}`}
-            />
-          )}
-        </div>
+        )}
         <ChoiceGroup
           label={t('ui.answers')}
           options={options}
@@ -250,7 +268,7 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
           </button>
           {jumpsOpen && (
             <div class="jumps-panel">
-              <JumpTimeline start={puzzle.start} end={puzzle.end} hideTimes={arrive && !solved} />
+              <JumpTimeline start={start} end={end} hideTimes={arrive && !solved} />
             </div>
           )}
         </div>

@@ -6,7 +6,7 @@ import {
   PUZZLES_PER_MISSION,
 } from '../src/core/mission.ts';
 import { createFreshSave } from '../src/core/save.ts';
-import type { Activity, PuzzleKind, Save, Theme } from '../src/core/types.ts';
+import type { Activity, Puzzle, PuzzleKind, Save, Theme } from '../src/core/types.ts';
 
 /**
  * Shared helpers for the smoke flows (SPEC §17.8). The tests run against the production
@@ -22,7 +22,13 @@ export interface StoredPuzzle {
   choices?: number[];
   start?: number;
   end?: number;
-  gap?: number;
+  /** READ, MATCH and SET in words (SPEC §7.7). */
+  words?: true;
+  /** SHIFT: signed minutes. */
+  delta?: number;
+  /** SCHEDULE: the segments and the one asked about (SPEC §8.6). */
+  segments?: { label: number; start: number; end: number }[];
+  ask?: number;
 }
 
 export interface StoredMission {
@@ -52,6 +58,7 @@ export interface StoredSave {
     elapsedLevel: number;
     levelsLocked: boolean;
     hour24Reading: boolean;
+    timeWords?: boolean;
     sound: boolean;
   };
   progress: { history: { activity: string; level: number }[] };
@@ -113,37 +120,27 @@ export function completeMission(save: Save): Save {
   return next;
 }
 
-/**
- * Seed whose Activity A mission starts with the wanted puzzle kind (never SET or DIGITS,
- * which are never first) and, when given, contains the wanted extra kind (D14).
- */
-export function seedForFirstKind(
-  save: Save,
-  theme: Theme,
-  kind: 'READ' | 'MATCH' | 'WORDS' | 'LATER',
-  extra?: 'WORDS' | 'LATER' | 'DIGITS',
-): number {
-  for (let seed = 1; seed < 2000; seed++) {
+/** Seed whose Activity A mission starts with the wanted puzzle kind (READ or MATCH). */
+export function seedForFirstKind(save: Save, theme: Theme, kind: 'READ' | 'MATCH'): number {
+  for (let seed = 1; seed < 500; seed++) {
     const m = startMission(save, theme, 'A', seed).mission!;
-    const kinds = m.puzzles.map((p) => p.kind);
-    if (kinds[0] === kind && (extra === undefined || kinds.includes(extra))) return seed;
+    if (m.puzzles[0]!.kind === kind) return seed;
   }
-  throw new Error(`No seed found for ${kind}${extra ? ` with ${extra}` : ''}`);
+  throw new Error(`No seed found for ${kind}`);
 }
 
-/** Seed whose Activity A mission contains every extra kind wanted, in any order. */
-export function seedWithKinds(
+/** Seed whose mission satisfies `wanted` (for the workbook kinds of SPEC §7.3, §7.7, §8.6). */
+export function seedForMission(
   save: Save,
   theme: Theme,
   activity: Activity,
-  kinds: PuzzleKind[],
+  wanted: (puzzles: Puzzle[]) => boolean,
 ): number {
   for (let seed = 1; seed < 2000; seed++) {
     const m = startMission(save, theme, activity, seed).mission!;
-    const present = m.puzzles.map((p) => p.kind);
-    if (kinds.every((k) => present.includes(k))) return seed;
+    if (wanted(m.puzzles)) return seed;
   }
-  throw new Error(`No seed found with ${kinds.join(', ')}`);
+  throw new Error('No seed found for the wanted mission');
 }
 
 /** Grants earnable Space items so the next pair is the one a test needs (SPEC §10.2). */
@@ -229,24 +226,15 @@ export function setClockKeys(target: number, level: number): { hours: number; st
   return { hours, steps };
 }
 
-/** Correct answer value of a puzzle as the option's `data-value` (or the time to build/set). */
+/** Correct answer value of a puzzle as the option's `data-value`. */
 export function correctValue(p: StoredPuzzle): number {
   if (p.kind === 'ELAPSED') return p.end! - p.start!;
-  if (p.kind === 'LATER' || p.kind === 'ARRIVE') return p.end!;
+  if (p.kind === 'ARRIVE') return p.end!;
+  if (p.kind === 'SCHEDULE') {
+    const seg = p.segments![p.ask!]!;
+    return seg.end - seg.start;
+  }
   return p.target!;
-}
-
-/** The time a puzzle shows the child: the target, a LATER puzzle's start, or the arrival. */
-export function shownTime(p: StoredPuzzle): number {
-  if (p.kind === 'LATER') return p.start!;
-  if (p.kind === 'ELAPSED' || p.kind === 'ARRIVE') return p.end!;
-  return p.target!;
-}
-
-/** A wrong choice of a choice puzzle (every kind but SET and DIGITS). */
-export function wrongValue(p: StoredPuzzle): number {
-  const right = correctValue(p);
-  return p.choices!.find((c) => c !== right)!;
 }
 
 /**
@@ -266,6 +254,12 @@ export function digitsClicks(
   const hours = (norm(hourOf(target)) - norm(hourOf(from)) + span) % span;
   const minutes = (target % 60) / stepOf(level);
   return { hours, minutes };
+}
+
+/** A wrong option's `data-value` (never for SET or DIGITS, which have no options). */
+export function wrongValue(p: StoredPuzzle): number {
+  const correct = correctValue(p);
+  return p.choices!.find((c) => c !== correct)!;
 }
 
 /** First launch: choose English and open the Space room. */

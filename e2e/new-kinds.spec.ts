@@ -1,9 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
-  correctValue,
   digitsClicks,
+  seedForMission,
   seedSave,
-  seedWithKinds,
   seededSave,
   solveWithMouse,
   startMission,
@@ -12,20 +11,12 @@ import {
 } from './helpers.ts';
 
 /**
- * The extra Activity A kinds (WORDS, LATER, DIGITS) and the Activity B ARRIVE kind (D14):
- * what each shows, its hint, a wrong answer and the correct one, with the mouse. The
- * mission is seeded through the real reducer so the wanted kind is known to be present.
+ * The DIGITS kind of Activity A and the ARRIVE kind of Activity B (D20): what each shows,
+ * its hint, a wrong answer and the correct one, with the mouse. The mission is seeded
+ * through the real reducer so the wanted kind is known to be present.
  */
 
-/** "1 hour 30 minutes" the way `formatDuration` says it in English. */
-function durationText(minutes: number): string {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  const hours = h === 1 ? '1 hour' : `${h} hours`;
-  if (h >= 1 && m > 0) return `${hours} ${m} minutes`;
-  if (h >= 1) return hours;
-  return `${m} minutes`;
-}
+const has = (kind: string) => (ps: { kind: string }[]) => ps.some((p) => p.kind === kind);
 
 /** Plays the seeded mission up to the puzzle of `kind` and returns that puzzle's index. */
 async function reachKind(
@@ -40,71 +31,11 @@ async function reachKind(
   throw new Error(`No ${kind} puzzle in the mission`);
 }
 
-test('WORDS: the answers are the time in words; a wrong pick, the READ hint, the right pick', async ({
-  page,
-}) => {
-  const base = seededSave();
-  const seed = seedWithKinds(base, 'space', 'A', ['WORDS']);
-  await seedSave(page, startMission(base, 'space', 'A', seed));
-  await page.goto('/');
-  await expect(page.getByTestId('s3')).toBeVisible();
-
-  const { mission } = await reachKind(page, 'WORDS');
-  const p = mission.puzzles[mission.index]!;
-  await expect(page.getByTestId('question')).toHaveText('How do you say this time?');
-  const answers = page.locator('[data-testid="answer"]');
-  await expect(answers).toHaveCount(3);
-  // Every option reads as words: no digits, an English time phrase (R2: whole or half hours).
-  for (const text of await answers.allInnerTexts()) {
-    expect(text).toMatch(/o'clock|half past/i);
-    expect(text).not.toMatch(/\d/);
-  }
-
-  await page.locator(`[data-testid="answer"][data-value="${wrongValue(p)}"]`).click();
-  await expect(page.getByTestId('feedback')).toContainText('✕');
-  await page.getByTestId('hint-button').click();
-  await expect(page.getByTestId('read-hint')).toBeVisible();
-  await page.locator(`[data-testid="answer"][data-value="${correctValue(p)}"]`).click();
-  await expect(page.getByTestId('feedback')).toContainText(/Yes!|That's it!|Great!/);
-  await expect(page.getByTestId('next-button')).toBeFocused();
-});
-
-test('LATER: a start clock with the gap pill, three clock options, the hint names the start', async ({
-  page,
-}) => {
-  const base = seededSave();
-  const seed = seedWithKinds(base, 'space', 'A', ['LATER']);
-  await seedSave(page, startMission(base, 'space', 'A', seed));
-  await page.goto('/');
-  await expect(page.getByTestId('s3')).toBeVisible();
-
-  const { mission } = await reachKind(page, 'LATER');
-  const p = mission.puzzles[mission.index]!;
-  // The end is the start moved forward by the gap, on the 12-hour face.
-  expect(p.end! % (12 * 60)).toBe((p.start! + p.gap!) % (12 * 60));
-  const gapText = durationText(p.gap!);
-  await expect(page.getByTestId('question')).toContainText(`What time will it be in ${gapText}`);
-  await expect(page.getByTestId('later-gap')).toContainText(gapText);
-  // Three clock options labelled A, B, C; exactly one carries the end time.
-  await expect(page.locator('[data-testid="answer"]')).toHaveCount(3);
-  await expect(page.locator(`[data-testid="answer"][data-value="${p.end}"]`)).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Clock A' })).toBeVisible();
-
-  await page.getByTestId('hint-button').click();
-  const startText = `${Math.floor(p.start! / 60) % 12 || 12}:${String(p.start! % 60).padStart(2, '0')}`;
-  await expect(page.getByTestId('later-hint')).toContainText(`It is ${startText} now`);
-
-  await page.locator(`[data-testid="answer"][data-value="${wrongValue(p)}"]`).click();
-  await expect(page.getByTestId('feedback')).toContainText('✕');
-  await page.locator(`[data-testid="answer"][data-value="${p.end}"]`).click();
-  await expect(page.getByTestId('feedback')).toContainText(/Yes!|That's it!|Great!/);
-});
-
 test('DIGITS: build the time with the up/down buttons; a wrong check shakes, the hint is the READ hint', async ({
   page,
 }) => {
   const base = seededSave();
-  const seed = seedWithKinds(base, 'space', 'A', ['DIGITS']);
+  const seed = seedForMission(base, 'space', 'A', has('DIGITS'));
   await seedSave(page, startMission(base, 'space', 'A', seed));
   await page.goto('/');
   await expect(page.getByTestId('s3')).toBeVisible();
@@ -141,7 +72,7 @@ test('DIGITS: the minutes wrap within the hour and the hours wrap on the face', 
   page,
 }) => {
   const base = seededSave();
-  const seed = seedWithKinds(base, 'space', 'A', ['DIGITS']);
+  const seed = seedForMission(base, 'space', 'A', has('DIGITS'));
   await seedSave(page, startMission(base, 'space', 'A', seed));
   await page.goto('/');
   await reachKind(page, 'DIGITS');
@@ -168,7 +99,7 @@ test('ARRIVE: leaves + takes → which arrival time; the jump hint hides the tim
   const base = seededSave();
   base.settings.elapsedLevel = 3;
   base.progress.firstE3Done.space = true;
-  const seed = seedWithKinds(base, 'space', 'B', ['ARRIVE']);
+  const seed = seedForMission(base, 'space', 'B', has('ARRIVE'));
   await seedSave(page, startMission(base, 'space', 'B', seed));
   await page.goto('/');
   await expect(page.getByTestId('s4')).toBeVisible();

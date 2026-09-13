@@ -1,144 +1,90 @@
 /**
- * The time in words for WORDS puzzles: the school way of saying a clock time in each
- * language ("half past three", "üç buçuk", "half vier"). Pure; the grammar lives here rather
- * than in the string tables because Turkish declines the hour and Dutch counts to and from
- * the half hour, so the phrase is not a template with placeholders.
+ * Times in words (SPEC §7.7): "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor".
+ * Pure. The twelve minute forms are string-table templates with a single `{h}`; this module
+ * decides which hour fills it (the current one or the next) and, for Turkish, in which case.
  */
+import { translate } from '../strings/index.ts';
+import type { StringKey } from '../strings/index.ts';
+import { hour12Of, minutesOf } from './time.ts';
 import type { Language, TimeValue } from './types.ts';
-import { hoursOf, minutesOf } from './time.ts';
 
-/** Hour words indexed by hour on the face, 1–12 (index 0 unused). */
-const EN_HOURS = [
-  '',
-  'one',
-  'two',
-  'three',
-  'four',
-  'five',
-  'six',
-  'seven',
-  'eight',
-  'nine',
-  'ten',
-  'eleven',
-  'twelve',
-];
-const NL_HOURS = [
-  '',
-  'één',
-  'twee',
-  'drie',
-  'vier',
-  'vijf',
-  'zes',
-  'zeven',
-  'acht',
-  'negen',
-  'tien',
-  'elf',
-  'twaalf',
-];
-const TR_HOURS = [
-  '',
-  'bir',
-  'iki',
-  'üç',
-  'dört',
-  'beş',
-  'altı',
-  'yedi',
-  'sekiz',
-  'dokuz',
-  'on',
-  'on bir',
-  'on iki',
-];
-/** Accusative ("üçü beş geçiyor") and dative ("dörde beş var") forms of the Turkish hours. */
-const TR_HOURS_ACC = [
-  '',
-  'biri',
-  'ikiyi',
-  'üçü',
-  'dördü',
-  'beşi',
-  'altıyı',
-  'yediyi',
-  'sekizi',
-  'dokuzu',
-  'onu',
-  'on biri',
-  'on ikiyi',
-];
-const TR_HOURS_DAT = [
-  '',
-  'bire',
-  'ikiye',
-  'üçe',
-  'dörde',
-  'beşe',
-  'altıya',
-  'yediye',
-  'sekize',
-  'dokuza',
-  'ona',
-  'on bire',
-  'on ikiye',
-];
+/** Minute forms that name the *next* hour, per language. */
+const NEXT_HOUR: Record<Language, readonly number[]> = {
+  // "quarter to 4", "twenty-five to 4", …
+  en: [35, 40, 45, 50, 55],
+  // "half 4" is 3:30, and the forms built on it: "10 voor half 4" (3:20), "5 over half 4" (3:35).
+  nl: [20, 25, 30, 35, 40, 45, 50, 55],
+  // "dörde çeyrek var" (3:45), "dörde yirmi beş var" (3:35).
+  tr: [35, 40, 45, 50, 55],
+};
 
-/** Minute words for the five-minute counts up to 25, by minutes / 5. */
-const EN_MINUTES = ['', 'five', 'ten', 'quarter', 'twenty', 'twenty-five'];
-const NL_MINUTES = ['', 'vijf', 'tien', 'kwart', 'twintig', 'vijfentwintig'];
-const TR_MINUTES = ['', 'beş', 'on', 'çeyrek', 'yirmi', 'yirmi beş'];
+/** Turkish hour words: nominative ("saat üç", "üç buçuk"), accusative ("üçü … geçiyor"), dative ("dörde … var"). */
+const TR_HOURS = {
+  nominative: [
+    'bir',
+    'iki',
+    'üç',
+    'dört',
+    'beş',
+    'altı',
+    'yedi',
+    'sekiz',
+    'dokuz',
+    'on',
+    'on bir',
+    'on iki',
+  ],
+  accusative: [
+    'biri',
+    'ikiyi',
+    'üçü',
+    'dördü',
+    'beşi',
+    'altıyı',
+    'yediyi',
+    'sekizi',
+    'dokuzu',
+    'onu',
+    'on biri',
+    'on ikiyi',
+  ],
+  dative: [
+    'bire',
+    'ikiye',
+    'üçe',
+    'dörde',
+    'beşe',
+    'altıya',
+    'yediye',
+    'sekize',
+    'dokuza',
+    'ona',
+    'on bire',
+    'on ikiye',
+  ],
+} as const;
 
-/** Hour on the face, 1–12, and the following hour (12 → 1). */
-function faceHours(t: TimeValue): [number, number] {
-  const h = hoursOf(t) % 12 || 12;
-  return [h, (h % 12) + 1];
+function turkishHour(hour12: number, minute: number): string {
+  const form = minute === 0 || minute === 30 ? 'nominative' : minute < 30 ? 'accusative' : 'dative';
+  return TR_HOURS[form][hour12 - 1]!;
 }
 
-function english(t: TimeValue): string {
-  const [h, next] = faceHours(t);
+/** The hour spoken in the phrase: 1–12, the current one or the next depending on language and minute. */
+export function spokenHour(t: TimeValue, lang: Language): number {
   const m = minutesOf(t);
-  if (m === 0) return `${EN_HOURS[h]} o'clock`;
-  if (m === 30) return `half past ${EN_HOURS[h]}`;
-  if (m < 30) return `${EN_MINUTES[m / 5]} past ${EN_HOURS[h]}`;
-  return `${EN_MINUTES[(60 - m) / 5]} to ${EN_HOURS[next]}`;
-}
-
-/** Dutch counts around the half hour: 3:20 is "tien voor half vier", 3:35 "vijf over half vier". */
-function dutch(t: TimeValue): string {
-  const [h, next] = faceHours(t);
-  const m = minutesOf(t);
-  if (m === 0) return `${NL_HOURS[h]} uur`;
-  if (m === 15) return `kwart over ${NL_HOURS[h]}`;
-  if (m === 30) return `half ${NL_HOURS[next]}`;
-  if (m === 45) return `kwart voor ${NL_HOURS[next]}`;
-  if (m < 15) return `${NL_MINUTES[m / 5]} over ${NL_HOURS[h]}`;
-  if (m < 30) return `${NL_MINUTES[(30 - m) / 5]} voor half ${NL_HOURS[next]}`;
-  if (m < 45) return `${NL_MINUTES[(m - 30) / 5]} over half ${NL_HOURS[next]}`;
-  return `${NL_MINUTES[(60 - m) / 5]} voor ${NL_HOURS[next]}`;
-}
-
-/** Turkish: "saat üç", "üçü çeyrek geçiyor", "üç buçuk" (12:30 is "yarım"), "dörde çeyrek var". */
-function turkish(t: TimeValue): string {
-  const [h, next] = faceHours(t);
-  const m = minutesOf(t);
-  if (m === 0) return `saat ${TR_HOURS[h]}`;
-  if (m === 30) return h === 12 ? 'yarım' : `${TR_HOURS[h]} buçuk`;
-  if (m < 30) return `${TR_HOURS_ACC[h]} ${TR_MINUTES[m / 5]} geçiyor`;
-  return `${TR_HOURS_DAT[next]} ${TR_MINUTES[(60 - m) / 5]} var`;
+  const h = hour12Of(t);
+  if (!NEXT_HOUR[lang].includes(m)) return h;
+  return h === 12 ? 1 : h + 1;
 }
 
 /**
- * The time in words, capitalised as a sentence. Only five-minute times have a spoken form;
- * anything else throws, as the generators never produce it (SPEC §7.1: one-minute reading
- * is deferred).
+ * Formats a time in words. Only multiples of five minutes are allowed (reading precision R4);
+ * anything else is a caller bug.
  */
 export function formatTimeWords(t: TimeValue, lang: Language): string {
-  if (minutesOf(t) % 5 !== 0) {
-    throw new RangeError(`No words for a time off the five-minute grid: ${t}`);
-  }
-  const words = lang === 'tr' ? turkish(t) : lang === 'nl' ? dutch(t) : english(t);
-  // Capitalise in the language: Turkish "i" upper-cases to "İ", never "I".
-  return words.charAt(0).toLocaleUpperCase(lang) + words.slice(1);
+  const m = minutesOf(t);
+  if (m % 5 !== 0) throw new RangeError(`formatTimeWords needs a multiple of 5 minutes, got ${m}`);
+  const hour = spokenHour(t, lang);
+  const h = lang === 'tr' ? turkishHour(hour, m) : String(hour);
+  return translate(lang, `words.m${m}` as StringKey, { h });
 }

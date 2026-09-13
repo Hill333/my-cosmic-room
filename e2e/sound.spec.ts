@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import {
   completeMission,
-  correctValue,
   digitsClicks,
   grantSpace,
   seedForFirstKind,
@@ -10,7 +9,6 @@ import {
   setClockKeys,
   startMission,
   waitForMission,
-  wrongValue,
 } from './helpers.ts';
 
 /**
@@ -85,7 +83,8 @@ test('sounds wait for a gesture, follow the toggle and match the hook points', a
     const p = m.puzzles[i]!;
     await page.evaluate('window.__plays.length = 0');
     if (i === 0 && p.kind !== 'SET' && p.kind !== 'DIGITS') {
-      await page.locator(`[data-testid="answer"][data-value="${wrongValue(p)}"]`).click();
+      const wrong = p.choices!.find((c) => c !== p.target)!;
+      await page.locator(`[data-testid="answer"][data-value="${wrong}"]`).click();
       await page.getByTestId('hint-button').click();
       expect(await plays(page)).toEqual(['wrong', 'hint']);
       await page.evaluate('window.__plays.length = 0');
@@ -103,7 +102,7 @@ test('sounds wait for a gesture, follow the toggle and match the hook points', a
       await page.evaluate('window.__plays.length = 0');
       await page.getByTestId('digits-check').click();
     } else {
-      await page.locator(`[data-testid="answer"][data-value="${correctValue(p)}"]`).click();
+      await page.locator(`[data-testid="answer"][data-value="${p.target}"]`).click();
     }
     await expect(page.getByTestId('next-button')).toBeFocused();
     expect(await plays(page)).toEqual([i === 3 ? 'fanfare' : 'correct']);
