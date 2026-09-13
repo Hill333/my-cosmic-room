@@ -38,7 +38,13 @@ test('flow 1: first launch, Rocket launch at half hours, Moon bed placed and kep
     await expect(page.getByTestId('tracker')).toHaveAttribute('data-solved', String(i));
     kinds.push(await solveWithMouse(page, m));
   }
-  expect(kinds.sort()).toEqual(['MATCH', 'READ', 'READ', 'SET']);
+  // The later READ may be a SHIFT (SPEC §7.3); the shape is otherwise fixed.
+  expect(kinds.map((k) => (k === 'SHIFT' ? 'READ' : k)).sort()).toEqual([
+    'MATCH',
+    'READ',
+    'READ',
+    'SET',
+  ]);
 
   // S5: Moon bed pre-selected, the preview shows it in the BED slot, "Put it in my room".
   await expect(page.getByTestId('s5')).toBeVisible();

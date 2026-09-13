@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { earnableItems } from '../catalog/index.ts';
 import { REQUIRED_E3_PAIR } from './generate.ts';
 import { checkInvariants, collectedCount, nextPair } from './inventory.ts';
-import { isCorrectAnswer, missionReducer, suggestedLevel, type MissionEvent } from './mission.ts';
+import {
+  correctValue,
+  isCorrectAnswer,
+  missionReducer,
+  suggestedLevel,
+  type MissionEvent,
+} from './mission.ts';
 import { createFreshSave, validateSave } from './save.ts';
 import { settingsReducer } from './settings.ts';
 import { makeTime } from './time.ts';
@@ -11,14 +17,9 @@ import type { Activity, Puzzle, Save, Theme } from './types.ts';
 const NOW = '2026-09-12T10:00:00.000Z';
 const LATER = '2026-09-12T10:05:00.000Z';
 
-function correctValue(p: Puzzle): number {
-  return p.kind === 'ELAPSED' ? p.end - p.start : p.target;
-}
-
 function wrongValue(p: Puzzle): number {
-  if (p.kind === 'ELAPSED') return p.choices.find((c) => c !== p.end - p.start)!;
   if (p.kind === 'SET') return p.target + 60;
-  return p.choices.find((c) => c !== p.target)!;
+  return p.choices.find((c) => c !== correctValue(p))!;
 }
 
 function startMission(save: Save, theme: Theme, activity: Activity, seed = 1): Save {
@@ -87,7 +88,8 @@ describe('mission start (SPEC §10.1, §7.6)', () => {
     expect(s.mission!.level).toBe(4);
     for (const p of s.mission!.puzzles) {
       expect(p.kind).not.toBe('ELAPSED');
-      if (p.kind !== 'ELAPSED') expect(p.target).toBeGreaterThanOrEqual(makeTime(6, 0));
+      expect(p.kind).not.toBe('SCHEDULE');
+      expect(correctValue(p)).toBeGreaterThanOrEqual(makeTime(6, 0));
     }
     s = settingsReducer(createFreshSave(), { type: 'settings/elapsedLevel', level: 2 });
     s = startMission(s, 'space', 'B');
@@ -112,6 +114,52 @@ describe('answers', () => {
     expect(isCorrectAnswer({ kind: 'ELAPSED', start: 870, end: 1155, choices: [] }, 300)).toBe(
       false,
     );
+    const shift: Puzzle = {
+      kind: 'SHIFT',
+      start: makeTime(12, 45),
+      delta: 30,
+      target: makeTime(1, 15),
+      choices: [],
+    };
+    expect(isCorrectAnswer(shift, makeTime(1, 15))).toBe(true);
+    expect(isCorrectAnswer(shift, makeTime(13, 15))).toBe(false);
+    const schedule: Puzzle = {
+      kind: 'SCHEDULE',
+      segments: [
+        { label: 1, start: makeTime(8, 0), end: makeTime(9, 15) },
+        { label: 2, start: makeTime(9, 15), end: makeTime(9, 45) },
+      ],
+      ask: 1,
+      choices: [],
+    };
+    expect(isCorrectAnswer(schedule, 30)).toBe(true);
+    expect(isCorrectAnswer(schedule, 75)).toBe(false);
+  });
+  it('adds the asked schedule segment to the recent elapsed pairs (SPEC §7.5)', () => {
+    for (let seed = 1; seed < 200; seed++) {
+      const s = startMission(createFreshSave(), 'sweet', 'B', seed);
+      const schedule = s.mission!.puzzles.find((p) => p.kind === 'SCHEDULE');
+      if (!schedule || schedule.kind !== 'SCHEDULE') continue;
+      const asked = schedule.segments[schedule.ask]!;
+      expect(s.progress.recentElapsedPairs).toContainEqual([asked.start, asked.end]);
+      expect(s.progress.recentElapsedPairs).toHaveLength(4);
+      return;
+    }
+    throw new Error('no seed produced a SCHEDULE');
+  });
+  it('passes the words setting to the generator (SPEC §7.7)', () => {
+    const off = settingsReducer(createFreshSave(), { type: 'settings/timeWords', enabled: false });
+    for (let seed = 1; seed < 50; seed++) {
+      for (const p of startMission(off, 'space', 'A', seed).mission!.puzzles) {
+        expect('words' in p && p.words).toBeFalsy();
+      }
+    }
+    let anyWords = false;
+    for (let seed = 1; seed < 50 && !anyWords; seed++) {
+      const m = startMission(createFreshSave(), 'space', 'A', seed).mission!;
+      anyWords = m.puzzles.some((p) => 'words' in p && p.words === true);
+    }
+    expect(anyWords).toBe(true);
   });
   it('Next does nothing before a correct answer; answers after solving are ignored', () => {
     let s = startMission(createFreshSave(), 'space', 'A');

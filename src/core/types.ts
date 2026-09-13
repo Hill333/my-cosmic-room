@@ -34,17 +34,21 @@ export type ReadingLevel = 1 | 2 | 3 | 4;
 export type ElapsedLevel = 1 | 2 | 3;
 
 export type Activity = 'A' | 'B';
-export type PuzzleKind = 'READ' | 'MATCH' | 'SET' | 'ELAPSED';
+export type PuzzleKind = 'READ' | 'MATCH' | 'SET' | 'ELAPSED' | 'SHIFT' | 'SCHEDULE';
 
 export interface ReadingPuzzle {
   kind: 'READ' | 'MATCH';
   target: TimeValue;
   choices: TimeValue[];
+  /** Word-form presentation (SPEC §7.7): READ answers and the MATCH prompt read "quarter past 4". */
+  words?: true;
 }
 
 export interface SetPuzzle {
   kind: 'SET';
   target: TimeValue;
+  /** Word-form prompt (SPEC §7.7): "Set the clock to quarter to 1." */
+  words?: true;
 }
 
 export interface ElapsedPuzzle {
@@ -55,7 +59,37 @@ export interface ElapsedPuzzle {
   choices: number[];
 }
 
-export type Puzzle = ReadingPuzzle | SetPuzzle | ElapsedPuzzle;
+/** "What time will it be in 30 minutes?" / "What time was it 15 minutes ago?" (SPEC §7.3). */
+export interface ShiftPuzzle {
+  kind: 'SHIFT';
+  /** The time the clock shows. */
+  start: TimeValue;
+  /** Signed minutes: +15, +30, +45, +60 (later) or the negatives (ago). */
+  delta: number;
+  /** The answer: the face of start + delta, stored like a reading target (§6.3). */
+  target: TimeValue;
+  choices: TimeValue[];
+}
+
+export interface ScheduleSegment {
+  /** Index 1–6 into the theme's activity names (`sched.<theme>.<n>`). */
+  label: number;
+  start: TimeValue;
+  end: TimeValue;
+}
+
+/** "How long does refuelling take?" read off a day-plan bar (SPEC §8.6). */
+export interface SchedulePuzzle {
+  kind: 'SCHEDULE';
+  /** Contiguous, in order: each segment starts where the previous one ends. */
+  segments: ScheduleSegment[];
+  /** Index of the segment asked about. */
+  ask: number;
+  /** Durations in minutes; exactly one equals the asked segment's length. */
+  choices: number[];
+}
+
+export type Puzzle = ReadingPuzzle | SetPuzzle | ElapsedPuzzle | ShiftPuzzle | SchedulePuzzle;
 
 export interface PuzzleResult {
   kind: PuzzleKind;
@@ -112,6 +146,8 @@ export interface Settings {
   elapsedLevel: ElapsedLevel;
   levelsLocked: boolean;
   hour24Reading: boolean;
+  /** Word-form times in reading puzzles ("quarter past 3"), SPEC §7.7. Additive; defaults on. */
+  timeWords: boolean;
   lastTheme: Theme;
 }
 

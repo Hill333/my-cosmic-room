@@ -8,8 +8,9 @@ import {
   pickTarget,
   type GeneratedMission,
 } from '../../core/generate.ts';
-import { isCorrectAnswer } from '../../core/mission.ts';
+import { askedSegment, isCorrectAnswer } from '../../core/mission.ts';
 import { formatTime, makeTime, periodOf, sameFace } from '../../core/time.ts';
+import { formatTimeWords } from '../../core/words.ts';
 import type {
   Activity,
   DigitalMode,
@@ -25,6 +26,7 @@ import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { AnalogClock, CLOCK_SIZE } from '../components/AnalogClock.tsx';
 import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
+import { ScheduleBar } from '../components/ScheduleBar.tsx';
 import { SetClock, type SetStatus } from '../components/SetClock.tsx';
 
 const READING: ReadingLevel[] = [1, 2, 3, 4];
@@ -186,7 +188,9 @@ function GeneratorPanel() {
   const mode: DigitalMode = save.value.settings.hour24Reading ? '24h' : '12h';
   const mission: GeneratedMission =
     activity === 'A'
-      ? makeActivityAMission(rLevel, mode, [], createRng(seed))
+      ? makeActivityAMission(rLevel, mode, [], createRng(seed), {
+          words: save.value.settings.timeWords,
+        })
       : makeActivityBMission(eLevel, [], createRng(seed), firstE3);
   return (
     <section class="harness-section">
@@ -258,9 +262,21 @@ function describePuzzle(p: Puzzle, mode: DigitalMode): string {
     const choices = p.choices.map((c) => formatDuration(c, lang)).join(' | ');
     return `ELAPSED ${formatTime(p.start, '24h')} → ${formatTime(p.end, '24h')} = ${formatDuration(p.end - p.start, lang)}; choices: ${choices}; jumps: ${jumps}`;
   }
+  if (p.kind === 'SCHEDULE') {
+    const segments = p.segments
+      .map((s) => `${s.label}: ${formatTime(s.start, '24h')}–${formatTime(s.end, '24h')}`)
+      .join(', ');
+    const asked = askedSegment(p);
+    const choices = p.choices.map((c) => formatDuration(c, lang)).join(' | ');
+    return `SCHEDULE [${segments}] ask #${p.ask + 1} = ${formatDuration(asked.end - asked.start, lang)}; choices: ${choices}`;
+  }
   const target = formatTime(p.target, mode);
-  if (p.kind === 'SET') return `SET ${target}`;
-  return `${p.kind} ${target}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
+  if (p.kind === 'SHIFT') {
+    return `SHIFT ${formatTime(p.start, mode)} ${p.delta > 0 ? '+' : '−'}${Math.abs(p.delta)} min = ${target}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
+  }
+  const words = p.words ? ` (words: ${formatTimeWords(p.target, lang)})` : '';
+  if (p.kind === 'SET') return `SET ${target}${words}`;
+  return `${p.kind} ${target}${words}; choices: ${p.choices.map((c) => formatTime(c, mode)).join(' | ')}`;
 }
 
 /** Drives the mission reducer through the store, rendering the current puzzle with the components. */
@@ -446,12 +462,22 @@ interface PuzzleViewProps {
 function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }: PuzzleViewProps) {
   const lang = language.value;
   const rLevel = level as ReadingLevel;
-  const period = mode === '24h' && p.kind !== 'ELAPSED' ? periodOf(p.target) : null;
-  if (p.kind === 'READ') {
+  const shownTime = (target: TimeValue, words: boolean | undefined) =>
+    words ? formatTimeWords(target, lang) : formatTime(target, mode);
+  if (p.kind === 'SHIFT') {
     return (
       <div class="harness-puzzle">
-        <p>{t('a.read.q')}</p>
-        <AnalogClock time={p.target} level={rLevel} theme={theme} period={period} />
+        <p>
+          {t(`a.shift.${p.delta > 0 ? 'later' : 'ago'}.${theme}`, {
+            delta: formatDuration(Math.abs(p.delta), lang),
+          })}
+        </p>
+        <AnalogClock
+          time={p.start}
+          level={rLevel}
+          theme={theme}
+          period={mode === '24h' ? periodOf(p.start) : null}
+        />
         <div class="harness-row">
           {p.choices.map((c) => (
             <button
@@ -468,11 +494,63 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
       </div>
     );
   }
+  if (p.kind === 'SCHEDULE') {
+    const asked = askedSegment(p);
+    return (
+      <div class="harness-puzzle">
+        <p>{t('b.sched.q', { activity: t(`sched.${theme}.${asked.label}` as StringKey) })}</p>
+        <ScheduleBar theme={theme} segments={p.segments} ask={p.ask} />
+        <div class="harness-row">
+          {p.choices.map((c) => (
+            <button
+              key={c}
+              type="button"
+              class="btn answer"
+              disabled={solved}
+              onClick={() => onAnswer(c)}
+            >
+              {formatDuration(c, lang)}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  const period = mode === '24h' && p.kind !== 'ELAPSED' ? periodOf(p.target) : null;
+  if (p.kind === 'READ') {
+    return (
+      <div class="harness-puzzle">
+        <p>{t('a.read.q')}</p>
+        <AnalogClock time={p.target} level={rLevel} theme={theme} period={period} />
+        <div class="harness-row">
+          {p.choices.map((c) => (
+            <button
+              key={c}
+              type="button"
+              class="btn answer"
+              disabled={solved}
+              onClick={() => onAnswer(c)}
+            >
+              {p.words ? (
+                formatTimeWords(c, lang)
+              ) : (
+                <DigitalDisplay time={c} mode={mode} size="button" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
   if (p.kind === 'MATCH') {
     return (
       <div class="harness-puzzle">
-        <p>{t('a.match.q', { time: formatTime(p.target, mode) })}</p>
-        <DigitalDisplay time={p.target} mode={mode} label={formatTime(p.target, mode)} />
+        <p>{t('a.match.q', { time: shownTime(p.target, p.words) })}</p>
+        {p.words ? (
+          <p class="words-big">{formatTimeWords(p.target, lang)}</p>
+        ) : (
+          <DigitalDisplay time={p.target} mode={mode} label={formatTime(p.target, mode)} />
+        )}
         <div class="harness-row">
           {p.choices.map((c, i) => (
             <button
@@ -499,7 +577,7 @@ function PuzzleView({ puzzle: p, level, mode, theme, solved, status, onAnswer }:
   if (p.kind !== 'ELAPSED') {
     return (
       <div class="harness-puzzle">
-        <p>{t('a.set.q', { time: formatTime(p.target, mode) })}</p>
+        <p>{t('a.set.q', { time: shownTime(p.target, p.words) })}</p>
         <SetClock
           target={p.target}
           level={rLevel}

@@ -2,6 +2,31 @@
 
 All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
+## Unreleased — workbook question types (D19)
+
+Three question types from the child's Dutch workbook ("Blok 4", quarter hours; see
+[docs/NEW_QUESTION_TYPES.md](docs/NEW_QUESTION_TYPES.md)), mixed into the existing missions:
+
+- **Times in words** (SPEC §7.7): about half of the READ, MATCH and SET puzzles now read
+  "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor" instead of digits — READ on the
+  answer buttons, MATCH as the prompt pill (the hint adds "kwart voor 4 = 3:45"), SET in the
+  question. `core/words.ts` picks the hour each language names (Dutch "half 4" is 3:30) and
+  inflects the Turkish hour word. A Parent-corner switch "Times in words" (on by default,
+  `settings.timeWords`, additive save field) turns it off.
+- **SHIFT** (SPEC §7.3): from R2 the later READ of an Activity A mission is, half the time, a
+  "what time will it be in 30 minutes / was it 45 minutes ago?" puzzle told in the mission's
+  story (rocket launch and countdown; guests and cake). The clock shows the start; the hint
+  draws the answer as ghost hands.
+- **SCHEDULE** (SPEC §8.6): half of the Activity B missions swap puzzle 2 or 3 for a day-plan
+  bar of four themed activities (refuelling, the launch check…; baking, story time…) and ask
+  how long one of them takes. Ordinal badges and a legend pair with the colours; the jump hint
+  covers the asked segment.
+- Tests: `words.test.ts`, AT-39 to AT-42 in `generate.test.ts`, the reducer and save cases,
+  and the Playwright `flow6-workbook-kinds` (28 e2e, 161 unit). The dev harness describes and
+  renders the new kinds.
+- The Dutch and Turkish word forms and activity names (`words.*`, `sched.*`, `a.shift.*`) are
+  drafts for the native-speaker review.
+
 ## 0.1.0 — release candidate (M0 to M5)
 
 - Heroine walks (SPEC §4.3 "Walk, bed, sit", D18): clicking her picks her (pulsing ring,

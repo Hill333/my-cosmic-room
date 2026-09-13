@@ -43,6 +43,7 @@ describe('fresh save', () => {
       elapsedLevel: 1,
       levelsLocked: false,
       hour24Reading: false,
+      timeWords: true,
       lastTheme: 'space',
     });
     expect(save.themes.space.owned).toHaveLength(7);
@@ -198,6 +199,28 @@ describe('newItems (M3 additive field)', () => {
     expect(validateSave({ ...save, newItems: 'nope' }).ok).toBe(false);
     expect(validateSave({ ...save, newItems: ['space.rainbowRug'] }).ok).toBe(false);
     expect(validateSave({ ...save, newItems: ['space.plainRug'] }).ok).toBe(false);
+  });
+});
+
+describe('settings.timeWords (SPEC §7.7 additive field)', () => {
+  it('loads a save written before the field existed with words on', () => {
+    const store = new MemoryStore();
+    const legacy = createFreshSave(NOW);
+    delete (legacy.settings as Partial<Save['settings']>).timeWords;
+    store.setItem(SAVE_KEY, JSON.stringify(legacy));
+    const result = loadSave(store, NOW);
+    expect(result.status).toBe('loaded');
+    expect(result.save.settings.timeWords).toBe(true);
+  });
+  it('round-trips an off switch and rejects a non-boolean', () => {
+    const { store, save } = seeded();
+    save.settings.timeWords = false;
+    storeSave(store, save, NOW);
+    expect(loadSave(store, NOW).save.settings.timeWords).toBe(false);
+    const imported = importSave(exportSave(save));
+    expect(imported.ok && imported.save.settings.timeWords).toBe(false);
+    const bad = { ...save, settings: { ...save.settings, timeWords: 'yes' } };
+    expect(validateSave(bad).ok).toBe(false);
   });
 });
 
