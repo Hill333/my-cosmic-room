@@ -27,7 +27,7 @@ npm run preview      # serve dist/ locally (a file:// open does not work with mo
 
 Full verification before a release: `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`.
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet` for the Sweet room), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, generators and a mission-reducer walkthrough), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, `,` `.` move the ankle cut line, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
+Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet` for the Sweet room), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, the generators with every puzzle kind described, and a mission-reducer walkthrough that renders each kind), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, `,` `.` move the ankle cut line, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
 
 Asset pipeline (SPEC §15):
 

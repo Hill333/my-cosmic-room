@@ -1,9 +1,10 @@
 # Plan: three new question types from the workbook (words, before/after, schedule bar)
 
-> Status (13 September 2026): **implemented** on branch `claude/daughter-game-question-types-3db045`
-> (decision D19 in SPEC §1; SPEC §3.6, §3.7, §3.9, §7.3, §7.7, §8.6, §9.3, §17; CHANGELOG
-> "Unreleased"). `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-> pass (161 unit, 28 e2e). Left for a person: the native-speaker review of the new Dutch and
+> Status (13 September 2026): **implemented and merged** (PR #7; decision D19 in SPEC §1;
+> SPEC §3.6, §3.7, §3.9, §7.3, §7.7, §8.6, §9.3, §17; CHANGELOG "Unreleased"). Two further
+> kinds developed in parallel, DIGITS and ARRIVE, were merged behind it as D20 (PR #9); a
+> "time in words" kind and a "what time will it be in …" kind from that work were dropped
+> because the words option and SHIFT below cover them. Left for a person: the native-speaker review of the new Dutch and
 > Turkish strings (NEXT_SESSION.md item 6) and a play session with the child. The workbook
 > photos that prompted this are in `~/Downloads/Photos-1-001(3).zip` (five pages of "Blok 4",
 > quarter hours). The sections below are the plan as approved; the code follows it, with two

@@ -149,6 +149,13 @@ placements and the lighting still show.
 
 ## Still open (for the user)
 
+- The question types added after this review (D19: words, SHIFT, SCHEDULE; D20: DIGITS,
+  ARRIVE) are audited automatically only in part: AT-34 measures a DIGITS and an ARRIVE
+  (jumps open) and whichever SHIFT or SCHEDULE its seeds happen to include; AT-38 walks
+  focus through S3 and S4; `flow6-workbook-kinds` checks behaviour, not contrast. None of
+  them has the screen-by-screen wording notes above; look at them in the §17.9 session, in
+  particular the words pill, the day-plan bar, the "?:??" arrival display and the ▲/▼
+  digit buttons.
 - Native-speaker wording review of `src/strings/tr.ts` and `src/strings/nl.ts` (SPEC §13.4).
   The longest sentences to look at first: the S2 mission descriptions, the S6 level
   descriptions and import summary, the hint captions.
