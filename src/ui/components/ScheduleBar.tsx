@@ -12,13 +12,13 @@ interface Props {
 
 /** Geometry in SVG units, the same width as the jump timeline (SPEC §8.6). */
 const WIDTH = 880;
-const HEIGHT = 118;
+const HEIGHT = 90;
 const PAD = 40;
-const BAR = { y: 6, height: 60 };
-const TICK = { minor: 8, major: 16, y: BAR.y + BAR.height };
-const LABEL_Y = TICK.y + 40;
+const BAR = { y: 4, height: 50 };
+const TICK = { minor: 6, major: 12, y: BAR.y + BAR.height };
+const LABEL_Y = TICK.y + 31;
 /** Badge radius, shrunk on a segment too narrow for the full circle (a 15-minute one at E2). */
-const BADGE = { radius: 20, min: 13 };
+const BADGE = { radius: 18, min: 12 };
 /** Hour labels only when the bar spans more than this, so they never collide. */
 const HALF_HOUR_LABELS_UP_TO = 180;
 

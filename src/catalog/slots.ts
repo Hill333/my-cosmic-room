@@ -19,6 +19,20 @@ export interface SlotGeometry {
 /** Heroine and companion sit in front of RUG and behind BED and NOOK (SPEC §4.1). */
 export const HEROINE_Z = 40;
 export const COMPANION_Z = 41;
+/** In bed (SPEC §4.3) her head and shoulders show above the blanket, so she draws over the bed. */
+export const HEROINE_BED_Z = 51;
+
+/**
+ * The floor band the heroine and companion can walk on (SPEC §4.3): limits for the feet
+ * point in stage px, inside the painted floor and clear of the bottom buttons.
+ */
+export const FLOOR_GEOMETRY: Record<
+  Theme,
+  { left: number; right: number; top: number; bottom: number }
+> = {
+  space: { left: 110, right: 1460, top: 640, bottom: 935 },
+  sweet: { left: 110, right: 1460, top: 640, bottom: 935 },
+};
 
 /** Where the heroine's feet land (bottom centre of the 600 × 900 canvas) and her stage height. */
 export const HEROINE_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
@@ -52,7 +66,7 @@ export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
   space: {
     BED: { x: 1200, y: 840, scale: 1.35, z: 50 },
     RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
-    LAMP: { x: 1125, y: 548, scale: 0.85, z: 20 },
+    LAMP: { x: 1105, y: 482, scale: 0.85, z: 20 },
     WALL: { x: 960, y: 180, scale: 0.9, z: 12 },
     SHELF: { x: 280, y: 400, scale: 0.8, z: 21 },
     HANGING: { x: 700, y: 40, scale: 1.1, z: 22 },

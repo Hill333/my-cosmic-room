@@ -17,7 +17,13 @@ import { DressUpPanel } from '../components/DressUpPanel.tsx';
 import { HoldButton } from '../components/HoldButton.tsx';
 import { IconButton } from '../components/IconButton.tsx';
 import { GEAR_HOLD_MS } from './S6Parent.tsx';
-import { RoomScene, type RoomMode, type RoomReaction } from '../components/RoomScene.tsx';
+import {
+  roomLayerBox,
+  RoomScene,
+  type RoomMode,
+  type RoomReaction,
+} from '../components/RoomScene.tsx';
+import { useRoomWalk } from '../useRoomWalk.ts';
 
 interface Props {
   theme: Theme;
@@ -56,6 +62,8 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
   const entryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const decorateButton = useRef<HTMLButtonElement>(null);
   const dressupButton = useRef<HTMLButtonElement>(null);
+  // Free-play walking (SPEC §4.3): pick the heroine, then click where she should go.
+  const walk = useRoomWalk(theme);
 
   // Progression suggestion (SPEC §7.1): "Ready for a bigger challenge?" once after a mission.
   const [suggestOpen, setSuggestOpen] = useState(suggest);
@@ -97,20 +105,29 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
     [],
   );
 
+  // Opening a panel stands the heroine up and drops her selection (dress-up shows the whole
+  // figure turned; decorate mode ignores her).
+  const { standUp, deselect, onKey: onWalkKey } = walk;
   const closePanel = useCallback(() => {
     setMode('free');
     setArmed(null);
     setGhost(null);
   }, []);
-  const toggle = useCallback((next: RoomMode) => {
-    setMode((current) => (current === next ? 'free' : next));
-    setArmed(null);
-    setGhost(null);
-  }, []);
+  const toggle = useCallback(
+    (next: RoomMode) => {
+      setMode((current) => (current === next ? 'free' : next));
+      setArmed(null);
+      setGhost(null);
+      standUp();
+      deselect();
+    },
+    [standUp, deselect],
+  );
 
   // Keyboard shortcuts (SPEC §13.1): D decorate, W dress up, M mission board, Escape closes
-  // the open panel. Registered once; state is read through setters and a ref so a key that
-  // arrives between a render and its effects never sees a stale closure.
+  // the open panel (or drops the picked heroine); arrow keys walk her while she is picked.
+  // Registered once; state is read through setters and a ref so a key that arrives between
+  // a render and its effects never sees a stale closure.
   const modeRef = useRef(mode);
   modeRef.current = mode;
   useEffect(() => {
@@ -118,13 +135,15 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
       if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
       const key = e.key.toLowerCase();
       if (key === 'escape' && modeRef.current !== 'free') closePanel();
+      else if (key === 'escape') deselect();
       else if (key === 'm') openBoard();
       else if (key === 'd') toggle('decorate');
       else if (key === 'w') toggle('dressup');
+      else if (modeRef.current === 'free' && onWalkKey(e)) e.preventDefault();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [closePanel, openBoard, toggle]);
+  }, [closePanel, openBoard, toggle, deselect, onWalkKey]);
 
   const place = (item: ItemId) => {
     const slot = requireItem(item).slot!;
@@ -158,12 +177,41 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
     setPop(null);
   }, []);
 
+  // Picked heroine + an item (SPEC §4.3): she walks over first; a bed or nook she gets
+  // into, anything else reacts once she arrives. Unpicked, the item reacts at once.
   const onSlotClick = (slot: SlotType) => {
     if (mode !== 'decorate') {
-      react(slot);
+      if (walk.selected) {
+        const item = requireItem(themeState.slots[slot]);
+        const box = roomLayerBox(theme, slot, item.art.room!);
+        const rests = slot === 'BED' || slot === 'NOOK';
+        setReaction(null);
+        play('tap');
+        walk.goToSlot(slot, box, item.rest, rests ? undefined : () => react(slot));
+      } else react(slot);
       return;
     }
     if (armed && requireItem(armed).slot === slot) place(armed);
+  };
+
+  // The heroine's own click: pick her (she waves), unpick her, or get her up.
+  const onHeroineClick = () => {
+    if (mode === 'decorate') return;
+    if (walk.pose !== 'stand') {
+      walk.toggleSelected();
+      play('tap');
+      return;
+    }
+    walk.toggleSelected();
+    if (!walk.selected) react('heroine');
+    else play('tap');
+  };
+
+  const onFloorClick = (p: { x: number; y: number }) => {
+    if (mode !== 'free') return;
+    if (!walk.selected && walk.pose === 'stand') return;
+    setReaction(null);
+    walk.walkTo(p);
   };
 
   // Clicking anywhere except a tile or a target slot cancels the armed tile (SPEC §4.2).
@@ -199,9 +247,11 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
             pop,
             reaction,
             onSlotClick,
-            onHeroineClick: () => react('heroine'),
+            onHeroineClick,
             onCompanionClick: () => react('companion'),
             onReactionEnd: endReaction,
+            walk,
+            onFloorClick,
           }}
         />
         <button

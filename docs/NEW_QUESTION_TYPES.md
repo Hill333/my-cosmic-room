@@ -1,7 +1,7 @@
 # Plan: three new question types from the workbook (words, before/after, schedule bar)
 
 > Status (13 September 2026): **implemented** on branch `claude/daughter-game-question-types-3db045`
-> (decision D18 in SPEC §1; SPEC §3.6, §3.7, §3.9, §7.3, §7.7, §8.6, §9.3, §17; CHANGELOG
+> (decision D19 in SPEC §1; SPEC §3.6, §3.7, §3.9, §7.3, §7.7, §8.6, §9.3, §17; CHANGELOG
 > "Unreleased"). `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
 > pass (161 unit, 28 e2e). Left for a person: the native-speaker review of the new Dutch and
 > Turkish strings (NEXT_SESSION.md item 6) and a play session with the child. The workbook
@@ -208,7 +208,7 @@ All three tables (the test enforces completeness, placeholder parity and sentenc
 - `docs/SPEC.md`: §3.6 (words presentation, SHIFT body), §3.7 (SCHEDULE body), §3.9 (switch),
   §7.3/§7.5 pseudocode, new §7.7 "Time in words" (templates + reference-hour rules) and §8.6
   "Schedule bar", §9.3 hint table rows, §14 new keys, §17.2/§17.3 new ATs, D-register entry
-  (D18: workbook kinds mixed into missions).
+  (D19: workbook kinds mixed into missions).
 - `CHANGELOG.md` entry; `docs/NEXT_SESSION.md` wording-review list gains `words.*`, `sched.*`,
   `a.shift.*`.
 

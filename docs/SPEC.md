@@ -48,8 +48,9 @@ Additional decisions made in this document that were not listed in the PRD:
 | D14 | Mission composition | Activity A missions contain exactly two READ, one MATCH and one SET puzzle, shuffled, with SET never first. Activity B missions contain four elapsed-time puzzles. All four puzzles in a mission use the mission's level; puzzles never repeat a target within the mission and avoid the last eight targets seen across missions. |
 | D15 | Companions | Space companion: a turquoise alien, placeholder name *Pip*. Sweet companion: a grey-and-white cat, placeholder name *Mimi*. Names are strings and can be changed. |
 | D16 | Asset generation tooling | Codex CLI is the generation tool [C, requested 12 September 2026]. Two model presets are used, chosen per asset by the complexity rubric in §15.6: **astra-light** for high-complexity assets and **sol-med** for low-complexity assets [C: the user confirmed that astra is the more capable model, so it takes the harder assets even at light effort, while sol at medium effort is enough for simple single objects]. The rubric that classifies assets is [P]. The exact model identifiers behind the two preset names are verified against the installed Codex CLI in M0 (only `gpt-6-astra` is configured locally today; effort levels minimal to xhigh exist). |
-| D18 | Workbook question types (13 September 2026) | Three question types from the child's Dutch workbook ("Blok 4", quarter hours) are mixed into the existing missions rather than given a third card: **times in words** (§7.7: READ answers, MATCH and SET prompts as "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor", about half of the reading puzzles, off via a Parent-corner switch), **SHIFT** (§7.3: "the rocket launches in 30 minutes, what time will it be?", ± quarter steps from R2) and **SCHEDULE** (§8.6: a day-plan bar of themed activities, "how long does refuelling take?"). Chosen with the user over a new activity card because the child's practice is the same four skills at the same levels, and the prize economy stays untouched. |
 | D17 | Heroine as raster figures (12 September 2026) | The heroine is generated art, not a traced SVG: one full-body figure per outfit × hairstyle from the reference sheet, with shoes, extras and expression faces as generated overlays snapped to per-figure anchors recorded in the manifest (§4.5, §15.2 item 2). Decided after the user compared the SVG heroine with the concept doll (`docs/concepts/01-room-and-wardrobe.png`) and the Codex figure mock. Cost: 21 figures instead of 3 hair + 7 outfit layers, and per-figure anchor tuning; gain: the heroine looks like the concept. Room backgrounds are regenerated with the concept as the primary reference and a prompt that describes its layout (§15.2 item 4). |
+| D18 | Heroine walks in the room (13 September 2026) | Requested by the child after playing: pick the heroine, click somewhere, she walks there; the bed puts her to sleep, the nook seats her, other items react when she arrives, the companion follows. Done with the existing standing figure and CSS only (a bob while walking, a mask above the blanket or the cushion), no new art; positions are UI state, never saved (§4.3). |
+| D19 | Workbook question types (13 September 2026) | Three question types from the child's Dutch workbook ("Blok 4", quarter hours) are mixed into the existing missions rather than given a third card: **times in words** (§7.7: READ answers, MATCH and SET prompts as "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor", about half of the reading puzzles, off via a Parent-corner switch), **SHIFT** (§7.3: "the rocket launches in 30 minutes, what time will it be?", ± quarter steps from R2) and **SCHEDULE** (§8.6: a day-plan bar of themed activities, "how long does refuelling take?"). Chosen with the user over a new activity card because the child's practice is the same four skills at the same levels, and the prize economy stays untouched. |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
@@ -128,7 +129,7 @@ Fixed elements, same positions in both themes:
 
 Room states:
 
-- **Free play**: clicking a placed decoration triggers its reaction (§4.3); clicking the heroine makes her wave; clicking the companion triggers its reaction. Nothing here can change progress or inventory.
+- **Free play**: clicking a placed decoration triggers its reaction (§4.3); clicking the heroine makes her wave and picks her, after which a click on the floor, the bed, the nook or an item makes her walk there (§4.3 "Walk, bed, sit"); clicking the companion triggers its reaction. Nothing here can change progress or inventory.
 - **Decorate mode**: slots are outlined; the panel lists owned decorations for this theme (§4.2).
 - **Dress-up mode**: the panel shows the wardrobe (§4.4); the heroine turns slightly to face the panel.
 
@@ -237,6 +238,7 @@ Rules:
   - Sweet: LAMP toggles lighting the same way; BED makes Mimi curl up on the bed; the toy letterbox flips its flag and a tiny envelope pops out and back.
 - Heroine: waves and blinks. Companion: Pip spins and giggles; Mimi purrs and stretches.
 - Reactions are purely visual and never write to the save, except LAMP lighting state, which is saved per theme.
+- **Walk, bed, sit [D18].** Clicking the heroine also *picks* her (a pulsing ring at her feet; `aria-pressed`); the next click sends her there and drops the pick: a click on the floor makes her walk to that point (the floor band is catalogue data, `FLOOR_GEOMETRY`; a click on the wall walks her to the nearest floor point); the BED makes her walk over and lie down (her **sleeping head**, a generated overlay per hairstyle with closed eyes, on the pillow above the blanket, "z z z", the room goes dark like the LAMP evening without saving it); the NOOK makes her sit on it (a generated **sitting figure** per outfit × hairstyle, cross-legged with her feet tucked away, so no shoes are drawn; clips, headband and backpack still snap to its anchors); any other slot makes her walk up beside the item, which then reacts as above. Clicking her again, or the floor, gets her up. The companion trots after her and stops beside her. While picked, the arrow keys walk her a step at a time and Escape drops the pick. Opening a panel drops the pick and stands her up. She walks in front of the bed and the nook once past their floor line and behind them otherwise; the figure shrinks a little towards the wall. Every move is a CSS transition sized to the distance (about 260 stage px/s) and lands at once under reduced motion. Positions are UI state on S1 and never reach the save. Where she lies or sits on an item is catalogue data (`rest` per bed and nook, fractions of the item's box). While a sitting figure or sleeping head is still a placeholder, the standing figure stands in, masked below the shoulders on the pillow or below the hips behind the cushion.
 
 ### 4.4 Wardrobe and heroine [P, D5]
 
@@ -262,6 +264,7 @@ Slots: Hair, Outfit, Shoes, Extra.
 - Because generated figures are not pixel-identical, every figure entry in `manifest.json` carries `anchors: { face, feet, head, back }`, each `{ x, y, scale }` in figure px: the overlay's `pivot` (bottom centre for shoes, centre otherwise) plus its own `offset` lands on the anchor and the overlay is sized by `scale`. Post-processing writes a proportional guess; the `?debug=heroine` overlay (§16.4) nudges and copies the tuned values. This replaces the earlier "no per-item offsets" rule.
 - The shoes never rely on covering the figure's socks: post-processing erases the figure below the **ankle cut** (`anchors.feet.cutY`, guessed from the sock silhouette, tuned like the other anchors) and extrudes the leg a little way down behind the shoe; a shoe overlay drawn with socks, legs or a shaft above the shoe is marked `clipAtAnkle` and is clipped just above the cut, with an outline drawn along the clip so it reads as a cuff, so it never paints over the shin or a trouser hem. Generated shoe pairs stand closer together than the figure's legs, so post-processing measures the centre of each leg at the cut (`anchors.feet.legX`) and of each foot in a feet overlay (`footX`), and the renderer draws the overlay as two halves split at its pivot column, each moved onto its leg. White gaps between hair strands (background walled off by the strands' outlines) are made transparent by post-processing.
 - Wardrobe tiles are cropped views of the composited figure: the torso of `<outfit>-buns` for outfits (and for the backpack), the head of `planetTee-<hair>` for hair styles and clips, the feet for shoes.
+- Two more generated sets serve the room poses (§4.3): a **sitting figure** per outfit × hairstyle (`shared/heroine/sit/<outfit>-<hair>`, 600×600, cross-legged, bottom aligned, its own `anchors` for the head, face and back overlays, no ankle cut and no shoes) and a **sleeping head** per hairstyle (`shared/heroine/sleep/<hair>`, the head alone with closed eyes, drawn rotated onto the pillow).
 - The same heroine component is used on S1, S3, S4, S5 and the S0 cards, at different scales; only the current outfit × hairstyle figure is loaded. Missions show the happy/thinking/cheering faces according to the puzzle state; the room shows the neutral figure and lights up the happy face during the heroine's tap reaction.
 
 ## 5. Two-theme behaviour [P, D8]
@@ -401,7 +404,7 @@ For elapsed puzzles: at E2 and E3 the gap is a non-whole-hour duration with prob
 ```
 makeActivityAMission(level, mode, recentTargets, rng, { words }):
   kinds := shuffle([READ, READ, MATCH, SET], rng) until kinds[0] != SET
-  if level ≥ R2 and chance(0.5): the later READ becomes SHIFT      // D18; never puzzle 1
+  if level ≥ R2 and chance(0.5): the later READ becomes SHIFT      // D19; never puzzle 1
   targets := []
   repeat for i in 0..3:
     if kinds[i] == SHIFT: { start, delta, target } := makeShift(level, mode, rng)   // below
@@ -418,7 +421,7 @@ makeActivityAMission(level, mode, recentTargets, rng, { words }):
 
 `recentTargets` is the last eight reading targets across all missions and themes (§11.3), so consecutive missions do not repeat the same time. A SHIFT contributes its answer, not its start.
 
-**SHIFT** (D18, the workbook's "Hoe laat was het een kwartier geleden?" and "Wat is de nieuwe tijd? + 30 minuten"): `start` is drawn like a target; `delta` is a signed shift from the level's set, R2 {±30, ±60}, R3 and R4 {±15, ±30, ±45, ±60}; the answer is the face of `start + delta` (12:45 + 30 min is 1:15 in 12-hour mode). In 24-hour mode both ends stay within 06:00–21:59 (redraw up to 50 times, then use the whole hour that fits). Distractors, in order and validated like §7.4: moved the wrong way (`start − delta`), did not move (`start`), an hour too far (`start + delta ± 60`), the mirror minute (`start ± (60 − |delta|)`), then a random allowed time.
+**SHIFT** (D19, the workbook's "Hoe laat was het een kwartier geleden?" and "Wat is de nieuwe tijd? + 30 minuten"): `start` is drawn like a target; `delta` is a signed shift from the level's set, R2 {±30, ±60}, R3 and R4 {±15, ±30, ±45, ±60}; the answer is the face of `start + delta` (12:45 + 30 min is 1:15 in 12-hour mode). In 24-hour mode both ends stay within 06:00–21:59 (redraw up to 50 times, then use the whole hour that fits). Distractors, in order and validated like §7.4: moved the wrong way (`start − delta`), did not move (`start`), an hour too far (`start + delta ± 60`), the mirror minute (`start ± (60 − |delta|)`), then a random allowed time.
 
 ### 7.4 Distractors for READ and MATCH
 
@@ -456,7 +459,7 @@ At most two of the four puzzles may share the same duration. `firstEverAtE3` is 
 
 Every mission stores its random seed and its fully generated puzzles in the save. Resuming a mission after a reload shows the same puzzles. Unit tests generate with fixed seeds and assert the rules above over thousands of generated missions (§17).
 
-### 7.7 Times in words [D18]
+### 7.7 Times in words [D19]
 
 The workbook writes times as words ("kwart voor 1", "half 3"), so READ answers, the MATCH prompt and the SET prompt can too. Each such puzzle carries `words: true`; the generator sets it with probability 0.5 per READ, MATCH and SET puzzle when the Parent-corner switch "Times in words" is on (default on, `settings.timeWords`). SHIFT never uses words, matching the workbook's digital answers. Answer values stay time values; only the presentation changes.
 
@@ -538,7 +541,7 @@ Worked examples:
 - "Show the jumps" expands the panel and reveals the jumps one after another (300 ms each; instantly under reduced motion). The total is not displayed; the child adds the jumps. Pressing the button again collapses it. The panel state resets for the next puzzle.
 - Using the hint sets `hintUsed` for the puzzle and has no other effect [C: hints never disqualify].
 
-### 8.6 Schedule bar [D18]
+### 8.6 Schedule bar [D19]
 
 The workbook's "Hoeveel uren en minuten?" reads durations off a coloured day timeline. In Activity B, with probability 0.5, puzzle 2 or 3 (never puzzle 1, never the reserved 14:30 → 19:15 slot) is a SCHEDULE puzzle: four contiguous segments starting on a whole hour between 07:00 and 14:00, each a length from the level's set (E1 {60, 120}; E2 {15, 30, 45, 60, 75, 90}; E3 {45, 60, …, 180}), the whole spanning at most six hours (redrawn otherwise), with four distinct activity names out of six per theme (Space: waking up, breakfast, refuelling, training, the launch check, stargazing; Sweet: waking up, baking, decorating, the tea party, games, story time) and one segment asked about. Answer choices come from §8.3 for the asked length; the asked `[start, end]` joins `recentElapsedPairs`.
 
@@ -772,7 +775,7 @@ Export writes the current save as `tick-tock-save.json`. Import reads a file, va
 | --- | --- |
 | Everywhere | Tab / Shift+Tab move focus in visual order; Enter or Space activate; Escape closes the open panel or dialog |
 | Groups (answers, tiles, chips, tabs) | Arrow keys move inside the group; Home/End jump to first/last |
-| Room | D opens Decorate, W opens Dress up, M opens the mission board |
+| Room | D opens Decorate, W opens Dress up, M opens the mission board; with the heroine picked (Enter on her), arrow keys walk her and Escape drops the pick (§4.3) |
 | SET clock (focused) | Up/Down ± 1 hour; Left/Right ± one minute step; Enter = Check |
 | Parent gear | Hold Enter or Space 1.5 s |
 

@@ -1414,6 +1414,972 @@
         168
       ]
     },
+    "shared/heroine/sit/cloudPyjamas-buns": {
+      "path": "shared/heroine/sit/cloudPyjamas-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:52:47.347Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/cloudPyjamas-loose": {
+      "path": "shared/heroine/sit/cloudPyjamas-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:54:35.420Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/cloudPyjamas-ponytail": {
+      "path": "shared/heroine/sit/cloudPyjamas-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Cloud pyjamas, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing light blue long-sleeved pyjamas, top and trousers, patterned with small white clouds, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:55:34.242Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralPyjamas-buns": {
+      "path": "shared/heroine/sit/floralPyjamas-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:56:41.337Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralPyjamas-loose": {
+      "path": "shared/heroine/sit/floralPyjamas-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:57:46.952Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralPyjamas-ponytail": {
+      "path": "shared/heroine/sit/floralPyjamas-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral pyjamas, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:58:47.824Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralSweater-buns": {
+      "path": "shared/heroine/sit/floralSweater-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:59:48.639Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralSweater-loose": {
+      "path": "shared/heroine/sit/floralSweater-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:01:31.066Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/floralSweater-ponytail": {
+      "path": "shared/heroine/sit/floralSweater-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Floral sweater with pinafore, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac long-sleeved sweater patterned with small white daisies under a mint pinafore dress, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:02:35.812Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/planetTee-buns": {
+      "path": "shared/heroine/sit/planetTee-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:49:34.105Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/planetTee-loose": {
+      "path": "shared/heroine/sit/planetTee-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/planetTee-ponytail": {
+      "path": "shared/heroine/sit/planetTee-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Lilac planet tee with mint skirt, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac short-sleeved tee with a purple ringed planet and small yellow stars on the chest and a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:04:27.441Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/spacesuit-buns": {
+      "path": "shared/heroine/sit/spacesuit-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:05:27.786Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/spacesuit-loose": {
+      "path": "shared/heroine/sit/spacesuit-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:07:11.020Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/spacesuit-ponytail": {
+      "path": "shared/heroine/sit/spacesuit-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Colourful spacesuit, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a colourful child's spacesuit without a helmet: a white suit with lavender and coral panels, a round mint chest badge and a yellow collar ring, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:08:10.131Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/starHoodie-buns": {
+      "path": "shared/heroine/sit/starHoodie-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:09:06.855Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/starHoodie-loose": {
+      "path": "shared/heroine/sit/starHoodie-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:10:10.760Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/starHoodie-ponytail": {
+      "path": "shared/heroine/sit/starHoodie-ponytail.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Star hoodie with trousers, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a dark navy hoodie with small yellow stars and a crescent moon, hood down, with matching navy trousers, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:11:15.226Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/strawberryDress-buns": {
+      "path": "shared/heroine/sit/strawberryDress-buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:12:17.974Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/strawberryDress-loose": {
+      "path": "shared/heroine/sit/strawberryDress-loose.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 600,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T14:13:14.259Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sit/strawberryDress-ponytail": {
+      "path": "shared/heroine/sit/strawberryDress-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Strawberry dress, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sleep/buns": {
+      "path": "shared/heroine/sleep/buns.png",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        349,
+        320
+      ],
+      "layer": "sleep",
+      "label": "Sleeping head, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the head of the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone), with the same brown hair in two buns as in the reference sheet, front view, upright, fast asleep: both eyes gently closed with small lashes, relaxed eyebrows, a small content smile, pink blush; the whole head with its hair and ears, cut off just under the chin, no neck, no shoulders, no body, no pillow",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T13:50:34.536Z",
+        "status": "generated"
+      }
+    },
+    "shared/heroine/sleep/loose": {
+      "path": "shared/heroine/sleep/loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        360,
+        320
+      ],
+      "layer": "sleep",
+      "label": "Sleeping head, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the head of the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, front view, upright, fast asleep: both eyes gently closed with small lashes, relaxed eyebrows, a small content smile, pink blush; the whole head with its hair and ears, cut off just under the chin, no neck, no shoulders, no body, no pillow",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sleep/ponytail": {
+      "path": "shared/heroine/sleep/ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        360,
+        320
+      ],
+      "layer": "sleep",
+      "label": "Sleeping head, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "only the head of the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, front view, upright, fast asleep: both eyes gently closed with small lashes, relaxed eyebrows, a small content smile, pink blush; the whole head with its hair and ears, cut off just under the chin, no neck, no shoulders, no body, no pillow",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
     "shared/sceneB/parcel": {
       "path": "shared/sceneB/parcel.png",
       "theme": "shared",
