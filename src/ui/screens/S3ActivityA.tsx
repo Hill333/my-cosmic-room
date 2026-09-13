@@ -27,9 +27,15 @@ export function S3ActivityA({ mission }: Props) {
   const solved = mission.current.solved;
   const pose: CompanionPose = solved ? 'cheer' : mission.current.wrongAttempts > 0 ? 'hmm' : 'idle';
   const variant = solved ? mission.results.length % 4 : mission.current.wrongAttempts % 2;
+  // The feedback line lives here so the companion can repeat it in its bubble; on the first
+  // puzzle, before any answer, the companion says the story line instead.
+  const [feedback, setFeedback] = useState<StringKey | null>(null);
+  const story = t(`a.story.${theme}`);
+  const bubble = feedback ? t(feedback) : mission.index === 0 && !solved ? story : null;
 
   const next = () => {
     play('next');
+    setFeedback(null);
     dispatch({ type: 'mission/next' });
     const m = save.value.mission;
     if (m && m.state !== 'IN_PROGRESS') go({ id: 'S5' });
@@ -39,22 +45,31 @@ export function S3ActivityA({ mission }: Props) {
     <MissionFrame
       mission={mission}
       title={t(`mission.a.${theme}`)}
-      story={t(`a.story.${theme}`)}
+      story={story}
       companionPose={pose}
       companionVariant={variant}
+      bubble={bubble}
     >
-      <PuzzleA key={mission.index} mission={mission} onNext={next} />
+      <PuzzleA
+        key={mission.index}
+        mission={mission}
+        feedback={feedback}
+        onFeedback={setFeedback}
+        onNext={next}
+      />
     </MissionFrame>
   );
 }
 
 interface PuzzleProps {
   mission: Mission;
+  feedback: StringKey | null;
+  onFeedback: (key: StringKey | null) => void;
   onNext: () => void;
 }
 
 /** One puzzle; remounted per `index`, so the wrong picks and messages reset (SPEC §9.1). */
-function PuzzleA({ mission, onNext }: PuzzleProps) {
+function PuzzleA({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleProps) {
   const puzzle = mission.puzzles[mission.index]!;
   const level = mission.level as ReadingLevel;
   const theme = mission.theme;
@@ -64,7 +79,6 @@ function PuzzleA({ mission, onNext }: PuzzleProps) {
   const elapsed = useElapsedSeconds();
   const question = useRef<HTMLParagraphElement>(null);
   const [wrong, setWrong] = useState<number[]>([]);
-  const [feedback, setFeedback] = useState<StringKey | null>(null);
   const [setStatus, setSetStatus] = useState<SetStatus>('idle');
   const solved = mission.current.solved;
   const hintUsed = mission.current.hintUsed;

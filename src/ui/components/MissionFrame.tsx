@@ -13,6 +13,7 @@ import { Companion, type CompanionPose } from './Companion.tsx';
 import { Dialog } from './Dialog.tsx';
 import { HeroinePreview } from './Heroine.tsx';
 import { IconButton } from './IconButton.tsx';
+import { SceneLife } from './SceneLife.tsx';
 
 interface FrameProps {
   mission: Mission;
@@ -21,6 +22,8 @@ interface FrameProps {
   story: string;
   companionPose: CompanionPose;
   companionVariant: number;
+  /** What the companion says in its speech bubble (the feedback line); null hides it. */
+  bubble?: string | null;
   children: ComponentChildren;
 }
 
@@ -28,7 +31,10 @@ interface FrameProps {
  * The shared frame of S3 and S4 (SPEC §3.6): the light panel in the theme's scene, the
  * heroine left, the companion right, the preparation tracker under the panel, the prizes
  * waiting top right, and the only interactive elements outside the panel: "Leave" and the
- * sound toggle. "Leave" opens the confirm dialog (SPEC §10.1).
+ * sound toggle. "Leave" opens the confirm dialog (SPEC §10.1). The scene lives a little
+ * (SceneLife), the companion repeats the feedback in a speech bubble, the heroine sways and
+ * hops when a puzzle is solved, and the panel glows gold at that moment; all of it CSS under
+ * the stage's motion setting.
  */
 export function MissionFrame({
   mission,
@@ -36,6 +42,7 @@ export function MissionFrame({
   story,
   companionPose,
   companionVariant,
+  bubble = null,
   children,
 }: FrameProps) {
   const heading = useFocusOnMount<HTMLHeadingElement>();
@@ -44,6 +51,7 @@ export function MissionFrame({
   const solved = mission.results.length;
   const face =
     companionPose === 'cheer' ? 'cheering' : companionPose === 'hmm' ? 'thinking' : 'happy';
+  const cheering = mission.current.solved;
 
   const confirmLeave = () => {
     setLeaving(false);
@@ -63,6 +71,7 @@ export function MissionFrame({
         class="room-bg"
         draggable={false}
       />
+      <SceneLife theme={theme} activity={mission.activity} />
       <div class="mission-topleft">
         <button
           type="button"
@@ -97,13 +106,24 @@ export function MissionFrame({
           <span aria-hidden="true">{soundOn.value ? '🔊' : '🔇'}</span>
         </IconButton>
       </div>
-      <div class="mission-heroine" aria-hidden="true">
+      <div class="mission-heroine" aria-hidden="true" data-cheer={cheering}>
         <HeroinePreview face={face} />
       </div>
       <div class="mission-companion">
         <Companion theme={theme} pose={companionPose} variant={companionVariant} />
+        {bubble && (
+          // The panel's feedback line is the live region; the bubble only repeats it.
+          <span
+            key={bubble}
+            class={`companion-bubble companion-bubble-${companionPose}`}
+            aria-hidden="true"
+            data-testid="companion-bubble"
+          >
+            {bubble}
+          </span>
+        )}
       </div>
-      <section class="card mission-panel">
+      <section class={`card mission-panel${cheering ? ' mission-panel-solved' : ''}`}>
         <h1 id="mission-title" class="mission-title" tabIndex={-1} ref={heading}>
           <span class="mission-name">{title}</span>
           <span class="mission-story">{story}</span>
@@ -150,12 +170,21 @@ const STEP_ICONS = {
 /** Preparation tracker (SPEC §3.6): four icons under the panel, one lit per solved puzzle. */
 function Tracker({ theme, solved }: { theme: Mission['theme']; solved: number }) {
   return (
-    <ol class="tracker" data-testid="tracker" data-solved={solved}>
+    <ol
+      class={`tracker${solved >= PUZZLES_PER_MISSION ? ' tracker-ready' : ''}`}
+      data-testid="tracker"
+      data-solved={solved}
+    >
       {STEP_ICONS[theme].map((icon, i) => {
         const lit = i < solved;
         const name = t(`a.steps.${theme}.${i + 1}` as StringKey);
         return (
-          <li key={icon} class={`tracker-step${lit ? ' tracker-lit' : ''}`} data-lit={lit}>
+          <li
+            key={icon}
+            class={`tracker-step${lit ? ' tracker-lit' : ''}`}
+            data-lit={lit}
+            style={{ '--i': i }}
+          >
             <img src={assetUrl(`${theme}/sceneA/step/${icon}`)} alt="" draggable={false} />
             <span class="tracker-label">
               {lit && <span aria-hidden="true">✓ </span>}
@@ -167,6 +196,11 @@ function Tracker({ theme, solved }: { theme: Mission['theme']; solved: number })
     </ol>
   );
 }
+
+const FINISH_ICON: Record<Mission['activity'], Record<Mission['theme'], string>> = {
+  A: { space: '🚀', sweet: '🎉' },
+  B: { space: '📦', sweet: '📦' },
+};
 
 interface FooterProps {
   mission: Mission;
@@ -184,6 +218,9 @@ export function PuzzleFooter({ mission, hintUsed, onHint, onNext }: FooterProps)
   const nextButton = useRef<HTMLButtonElement>(null);
   const solved = mission.current.solved;
   const k = Math.min(mission.index + 1, PUZZLES_PER_MISSION);
+  // The fourth right answer turns Next into the story's own verb: "Launch!", "Deliver it!".
+  const finishing = solved && mission.results.length >= PUZZLES_PER_MISSION;
+  const finishKey = `q.finish.${mission.activity.toLowerCase()}.${mission.theme}` as StringKey;
 
   useEffect(() => {
     if (solved) nextButton.current?.focus({ preventScroll: true });
@@ -219,14 +256,17 @@ export function PuzzleFooter({ mission, hintUsed, onHint, onNext }: FooterProps)
         {solved && (
           <button
             type="button"
-            class="btn btn-primary"
+            class={`btn btn-primary btn-next${finishing ? ' btn-finish' : ''}`}
             data-testid="next-button"
             data-sound="none"
+            data-finish={finishing}
             ref={nextButton}
             onClick={onNext}
           >
-            {t('q.next')}
-            <span aria-hidden="true"> ▶</span>
+            {finishing ? t(finishKey) : t('q.next')}
+            <span aria-hidden="true">
+              {finishing ? ` ${FINISH_ICON[mission.activity][mission.theme]}` : ' ▶'}
+            </span>
           </button>
         )}
       </div>

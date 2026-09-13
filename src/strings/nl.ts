@@ -115,6 +115,10 @@ export const nl: Record<StringKey, string> = {
   'q.hint': 'Hint',
   'q.next': 'Volgende',
   'q.leave': 'Stoppen',
+  'q.finish.a.space': 'Lanceren!',
+  'q.finish.a.sweet': 'Start het feest!',
+  'q.finish.b.space': 'Bezorgen!',
+  'q.finish.b.sweet': 'Bezorgen!',
 
   'hint.minutes': '{m} minuten',
   'hint.hourPast': 'De kleine wijzer is net voorbij de {h}.',
