@@ -440,7 +440,7 @@ describe('AT-42 SCHEDULE puzzles (SPEC §8.6, 5,000 seeded missions per level)',
   });
 });
 
-describe('D20 DIGITS puzzles (SPEC §7.3, 5,000 seeded missions per level)', () => {
+describe('AT-43 DIGITS puzzles (SPEC §7.3, D20; 5,000 seeded missions per level)', () => {
   for (const level of READING) {
     it(`R${level}: about half of the missions swap the MATCH for a DIGITS, never first`, () => {
       let digits = 0;
@@ -460,7 +460,7 @@ describe('D20 DIGITS puzzles (SPEC §7.3, 5,000 seeded missions per level)', () 
   }
 });
 
-describe('D20 ARRIVE choices (SPEC §8.3 applied to the start)', () => {
+describe('AT-44 ARRIVE puzzles (SPEC §7.5, D20; §8.3 applied to the start)', () => {
   it('14:30 → 19:15 at E3 offers 18:45 and 19:30 (the 255 and 300 minute mistakes)', () => {
     const choices = arrivalChoices(T(14, 30), T(19, 15), 3, createRng(1));
     expect([...choices].sort((a, b) => a - b)).toEqual([T(18, 45), T(19, 15), T(19, 30)]);
