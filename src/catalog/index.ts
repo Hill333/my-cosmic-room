@@ -3,6 +3,8 @@ import { SLOT_TYPES } from '../core/types.ts';
 import { sharedItems } from './shared.ts';
 import { spaceCollections, spaceItems } from './space.ts';
 import { sweetCollections, sweetItems } from './sweet.ts';
+import { heartsCollections, heartsItems } from './hearts.ts';
+import { kpopCollections, kpopItems } from './kpop.ts';
 import type { Collection, Item } from './types.ts';
 import { figureId, sitFigureId, sleepHeadId } from './helpers.ts';
 
@@ -10,8 +12,19 @@ export type { Collection, Item } from './types.ts';
 export { defaultHeroine } from './shared.ts';
 export { figureId, sitFigureId, sleepHeadId } from './helpers.ts';
 
-export const allItems: readonly Item[] = [...sharedItems, ...spaceItems, ...sweetItems];
-export const allCollections: readonly Collection[] = [...spaceCollections, ...sweetCollections];
+export const allItems: readonly Item[] = [
+  ...sharedItems,
+  ...spaceItems,
+  ...sweetItems,
+  ...heartsItems,
+  ...kpopItems,
+];
+export const allCollections: readonly Collection[] = [
+  ...spaceCollections,
+  ...sweetCollections,
+  ...heartsCollections,
+  ...kpopCollections,
+];
 
 const byId = new Map<ItemId, Item>(allItems.map((i) => [i.id, i]));
 

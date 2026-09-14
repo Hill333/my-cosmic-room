@@ -253,6 +253,46 @@ const RECIPES: Record<string, () => Samples> = {
         0.6,
       ),
     ),
+  // Heart post (D21): a gentle rising bell phrase in thirds with a warm note under it, like
+  // a music box opening.
+  'hearts/sound/jingle': () =>
+    sequence(
+      [
+        { from: N.E5, duration: 0.28, volume: 0.34, harmonics: BELL },
+        { from: N.G5, duration: 0.28, volume: 0.34, harmonics: BELL },
+        { from: N.E5, duration: 0.28, volume: 0.32, harmonics: BELL },
+        { from: N.G5, duration: 0.28, volume: 0.34, harmonics: BELL },
+        { from: N.C6, duration: 0.28, volume: 0.36, harmonics: BELL },
+        { from: N.E6, duration: 0.8, volume: 0.4, harmonics: BELL, decay: 3 },
+      ],
+      0.18,
+      mix(
+        mix(silence(0), tone({ from: N.C5 / 2, duration: 0.8, volume: 0.16, harmonics: WARM }), 0),
+        tone({ from: N.E5 / 4, duration: 0.9, volume: 0.16, harmonics: WARM }),
+        0.7,
+      ),
+    ),
+  // Showtime (D21): a bright drum-like low thump, a whoosh and a quick fanfare of bells
+  // ending on a held high note, as the lights come up.
+  'kpop/sound/jingle': () =>
+    mix(
+      mix(
+        whoosh(1.0, 0.3, true),
+        tone({ from: 90, to: 140, duration: 0.5, volume: 0.35, harmonics: WARM, decay: 4 }),
+        0,
+      ),
+      sequence(
+        [
+          { from: N.G5, duration: 0.18, volume: 0.32, harmonics: BELL },
+          { from: N.G5, duration: 0.18, volume: 0.32, harmonics: BELL },
+          { from: N.C6, duration: 0.24, volume: 0.34, harmonics: BELL },
+          { from: N.E6, duration: 0.24, volume: 0.34, harmonics: BELL },
+          { from: N.G6, duration: 0.8, volume: 0.38, harmonics: BELL, decay: 3 },
+        ],
+        0.1,
+      ),
+      0.35,
+    ),
   // Star earned: a fast sparkling run up to a high shimmer.
   'shared/sound/star': () =>
     sequence(

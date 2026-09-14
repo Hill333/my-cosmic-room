@@ -1,13 +1,56 @@
 # Release handoff: 0.1.0 release candidate
 
 Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, the
-heroine ankle and hair-gap fixes, the walking heroine of 13 September 2026, D18, and the
-question types of the same day: the workbook kinds D19 and DIGITS / ARRIVE D20) is
-implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build passes
+heroine ankle and hair-gap fixes, the walking heroine of 13 September 2026, D18, the
+question types of the same day: the workbook kinds D19 and DIGITS / ARRIVE D20, and the
+Heart and K-pop playrooms D21) is implemented and committed (see
+[CHANGELOG.md](../CHANGELOG.md)). The build passes
 `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(179 unit tests, 33 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(184 unit tests, 36 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
+
+## First: finish the art of the two new rooms (D21)
+
+The Heart and K-pop playrooms play end to end (`npm run dev`, then the third and fourth
+cards; `?screen=S1&theme=hearts` / `&theme=kpop`). Of their 92 generated assets, **52 are
+made and post-processed** (run of 13–14 September 2026: both backdrops, all 14 starters, all
+8 companion poses, the 4 entry objects, the 20 scene pieces and tracker icons, and the Heart
+bed, beanbag, glowing lamp and garland); the generator then stopped itself at 95 % of the
+Codex weekly window, which **resets on 19 September 2026 at 10:15**. The **40 remaining**
+are still SVG placeholders with their prompts in the manifest: 8 earnable decorations
+(`hearts.heartRug`, `hearts.kindNotePoster`, the six K-pop earnables), the 8 shoe / extra
+overlays and the 24 heroine figures (four outfits × three hairstyles, standing and sitting).
+Their dependency roots exist, so the order no longer matters:
+
+1. After the reset, `node tools/codex-limits.ts`, then `npm run assets:gen` (every remaining
+   placeholder; the run pauses itself when the five-hour window fills). Do not run
+   `build-manifest` meanwhile. About 40 assets at 0.5 % of the weekly window each.
+2. `npm run assets:post` (cut-outs, tiles, first-guess anchors for the new figures).
+3. Tune on the real art: the `rest` spots of `kpop.starBed` and `kpop.karaokeStage` (the
+   stage has a first guess in `catalog/kpop.ts`; the Heart bed and beanbag were checked and
+   the defaults fit); `?debug=heroine` for the twelve new figures' anchors and the four new
+   shoes (the same routine as item 3 below); the `SceneLife` spots for the Heart and K-pop
+   scenes (`src/ui/components/SceneLife.tsx`, guessed before the scene art existed) and the
+   celebration boxes (`.celebration-hearts` with the balloons, the K-pop `celebration-arrive`
+   with the stage) in `mission.css`.
+4. Check the entry effects (the heart out of the music box, the note out of the microphone)
+   sit right on the reaction art (`.entry-heart`, `.entry-note` in `room.css`).
+5. Art QA and approval as in item 2 below, for the new entries too; then
+   `node tools/screenshots.ts` wants the two rooms added (it shoots Space and Sweet only).
+
+Already done on the real backdrops: `SLOT_GEOMETRY`, `ENTRY_GEOMETRY`, `STAR_CHART_GEOMETRY`
+and the K-pop home points in `src/catalog/slots.ts` (the K-pop standing group starts further
+right so the shelf toy on the clothes rail shows), and the S0 thumbnails.
+
+Decisions taken on the way, easy to flip: the Heart companion is a bunny (Lulu), not the
+concept's cat, so the child does not meet two cats (Mimi is the Sweet cat); the K-pop tiger
+is the companion (Bori), not an earnable plush; the film's trio appears only as an original
+cartoon poster (`kpop.trioPoster`), light sticks and albums stay in the backdrop prompt; the
+Heart missions are the kind-notes post and a lovebird's letter, the K-pop missions the
+concert set-up and a tour-bus delivery. Each of these is one line in `THEME_UI`, a catalogue
+file, or a prompt in `tools/manifest-data.ts`. The Turkish and Dutch strings of the two rooms
+are drafts for the native-speaker review (item 6).
 
 ## Your checklist
 
@@ -49,7 +92,10 @@ checklist, followed by the known limitations and the open spec questions.
    read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
    is not. Start with the longest sentences: the S2 mission descriptions
    (`mission.*.desc`), the S6 level descriptions (`level.*.desc`) and import summary
-   (`s6.importSummary`), and the hint captions (`hint.*`). Then the workbook additions
+   (`s6.importSummary`), and the hint captions (`hint.*`). Then the D21 rooms: everything
+   keyed `*.hearts*` and `*.kpop*` plus `collection.hearts.*`, `collection.kpop.*`,
+   `item.hearts.*`, `item.kpop.*` (the Dutch room names hyphenate as "Hartjes-speelkamer" /
+   "K-pop-speelkamer"; check the K-pop `sched.*` and `a.shift.*` phrasing). Then the workbook additions
    (D19, [NEW_QUESTION_TYPES.md](NEW_QUESTION_TYPES.md)): the times in words `words.m0` …
    `words.m55` (Dutch "10 voor half 4", Turkish case endings from `core/words.ts` — check
    "on ikiyi", "altıya"), the day-plan activity names `sched.*` (they sit inside "Hoe lang

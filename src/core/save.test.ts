@@ -138,8 +138,8 @@ describe('AT-32 export / import', () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.save).toEqual(save);
-    expect(r.summary.collected).toEqual({ space: 2, sweet: 0 });
-    expect(r.summary.stars).toEqual({ space: 0, sweet: 3 });
+    expect(r.summary.collected).toEqual({ space: 2, sweet: 0, hearts: 0, kpop: 0 });
+    expect(r.summary.stars).toEqual({ space: 0, sweet: 3, hearts: 0, kpop: 0 });
     expect(r.summary.language).toBe('nl');
   });
 
@@ -221,6 +221,79 @@ describe('settings.timeWords (SPEC §7.7 additive field)', () => {
     expect(imported.ok && imported.save.settings.timeWords).toBe(false);
     const bad = { ...save, settings: { ...save.settings, timeWords: 'yes' } };
     expect(validateSave(bad).ok).toBe(false);
+  });
+});
+
+describe('four rooms (D21): a two-room save loads with fresh Heart and K-pop rooms', () => {
+  /** A save exactly as the game wrote it before the Heart and K-pop rooms existed. */
+  function twoRoomSave(): Record<string, unknown> {
+    const { save } = seeded();
+    const legacy = JSON.parse(JSON.stringify(save)) as Record<string, unknown>;
+    const themes = legacy['themes'] as Record<string, unknown>;
+    delete themes['hearts'];
+    delete themes['kpop'];
+    const progress = legacy['progress'] as Record<string, unknown>;
+    progress['firstE3Done'] = { space: true, sweet: false };
+    return legacy;
+  }
+
+  it('loads, keeps the old rooms and progress and starts the new rooms fresh', () => {
+    const store = new MemoryStore();
+    store.setItem(SAVE_KEY, JSON.stringify(twoRoomSave()));
+    const result = loadSave(store, NOW);
+    expect(result.status).toBe('loaded');
+    const save = result.save;
+    expect(save.themes.space.slots.BED).toBe('space.moonBed');
+    expect(save.themes.sweet.stars).toBe(3);
+    expect(save.heroine.shoes).toBe('space.spaceBoots');
+    expect(save.themes.hearts).toEqual(createFreshSave(NOW).themes.hearts);
+    expect(save.themes.kpop).toEqual(createFreshSave(NOW).themes.kpop);
+    expect(save.themes.hearts.owned).toHaveLength(7);
+    expect(save.themes.kpop.slots.NOOK).toBe('kpop.purpleCushion');
+    expect(save.progress.firstE3Done).toEqual({
+      space: true,
+      sweet: false,
+      hearts: false,
+      kpop: false,
+    });
+    expect(checkInvariants(save)).toEqual([]);
+    // Written back, the save carries all four rooms from then on.
+    storeSave(store, save, NOW);
+    const again = JSON.parse(store.getItem(SAVE_KEY)!) as Save;
+    expect(Object.keys(again.themes).sort()).toEqual(['hearts', 'kpop', 'space', 'sweet']);
+  });
+
+  it('imports an exported two-room file the same way', () => {
+    const imported = importSave(JSON.stringify(twoRoomSave()));
+    expect(imported.ok).toBe(true);
+    if (!imported.ok) return;
+    expect(imported.save.themes.hearts.owned).toHaveLength(7);
+    expect(imported.summary.collected).toEqual({ space: 2, sweet: 0, hearts: 0, kpop: 0 });
+  });
+
+  it('still rejects a malformed room and an unknown room in lastTheme', () => {
+    const legacy = twoRoomSave();
+    (legacy['themes'] as Record<string, unknown>)['hearts'] = { owned: 'nope' };
+    expect(validateSave(legacy).ok).toBe(false);
+    const wrongTheme = twoRoomSave();
+    (wrongTheme['settings'] as Record<string, unknown>)['lastTheme'] = 'garden';
+    expect(validateSave(wrongTheme).ok).toBe(false);
+  });
+
+  it('keeps Heart and K-pop progress apart from the other rooms', () => {
+    const save = createFreshSave(NOW);
+    save.themes.hearts.owned.push('hearts.heartRug');
+    save.themes.hearts.slots.RUG = 'hearts.heartRug';
+    save.themes.kpop.stars = 5;
+    save.settings.lastTheme = 'kpop';
+    save.wardrobe.push('kpop.popJacket');
+    save.heroine.outfit = 'kpop.popJacket';
+    expect(checkInvariants(save)).toEqual([]);
+    const r = validateSave(JSON.parse(JSON.stringify(save)));
+    expect(r.ok && r.save).toEqual(save);
+    // A Heart decoration cannot sit in the K-pop room.
+    save.themes.kpop.owned.push('hearts.heartRug');
+    expect(checkInvariants(save)).toContain('kpop.owned holds hearts item hearts.heartRug');
   });
 });
 

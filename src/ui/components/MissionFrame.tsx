@@ -14,6 +14,7 @@ import { Dialog } from './Dialog.tsx';
 import { HeroinePreview } from './Heroine.tsx';
 import { IconButton } from './IconButton.tsx';
 import { SceneLife } from './SceneLife.tsx';
+import { THEME_UI } from '../themes.ts';
 
 interface FrameProps {
   mission: Mission;
@@ -66,7 +67,7 @@ export function MissionFrame({
       data-testid={`s${mission.activity === 'A' ? 3 : 4}`}
     >
       <img
-        src={assetUrl(SCENE[theme][mission.activity])}
+        src={assetUrl(THEME_UI[theme].scene[mission.activity])}
         alt=""
         class="room-bg"
         draggable={false}
@@ -156,17 +157,6 @@ export function MissionFrame({
   );
 }
 
-/** The scene behind the panel (SPEC §3.6): the cockpit or kitchen for Activity A, the room for B. */
-const SCENE: Record<Mission['theme'], Record<Mission['activity'], string>> = {
-  space: { A: 'space/sceneA/cockpitFrame', B: 'space/room/background' },
-  sweet: { A: 'sweet/sceneA/kitchenFrame', B: 'sweet/room/background' },
-};
-
-const STEP_ICONS = {
-  space: ['fuel', 'hatch', 'lights', 'countdown'],
-  sweet: ['cups', 'cake', 'teapot', 'guests'],
-} as const;
-
 /** Preparation tracker (SPEC §3.6): four icons under the panel, one lit per solved puzzle. */
 function Tracker({ theme, solved }: { theme: Mission['theme']; solved: number }) {
   return (
@@ -175,7 +165,7 @@ function Tracker({ theme, solved }: { theme: Mission['theme']; solved: number })
       data-testid="tracker"
       data-solved={solved}
     >
-      {STEP_ICONS[theme].map((icon, i) => {
+      {THEME_UI[theme].steps.map((icon, i) => {
         const lit = i < solved;
         const name = t(`a.steps.${theme}.${i + 1}` as StringKey);
         return (
@@ -196,11 +186,6 @@ function Tracker({ theme, solved }: { theme: Mission['theme']; solved: number })
     </ol>
   );
 }
-
-const FINISH_ICON: Record<Mission['activity'], Record<Mission['theme'], string>> = {
-  A: { space: '🚀', sweet: '🎉' },
-  B: { space: '📦', sweet: '📦' },
-};
 
 interface FooterProps {
   mission: Mission;
@@ -265,7 +250,7 @@ export function PuzzleFooter({ mission, hintUsed, onHint, onNext }: FooterProps)
           >
             {finishing ? t(finishKey) : t('q.next')}
             <span aria-hidden="true">
-              {finishing ? ` ${FINISH_ICON[mission.activity][mission.theme]}` : ' ▶'}
+              {finishing ? ` ${THEME_UI[mission.theme].finishIcon[mission.activity]}` : ' ▶'}
             </span>
           </button>
         )}

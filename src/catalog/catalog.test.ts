@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SLOT_TYPES } from '../core/types.ts';
+import { SLOT_TYPES, THEMES } from '../core/types.ts';
 import {
   allCollections,
   allItems,
@@ -19,7 +19,7 @@ describe('catalogue shape (SPEC §4.1, §4.4, §11.2)', () => {
   });
 
   it('has 12 earnable items per theme in two collections of six, three decorations each', () => {
-    for (const theme of ['space', 'sweet'] as const) {
+    for (const theme of THEMES) {
       const pool = earnableItems(theme);
       expect(pool).toHaveLength(12);
       expect(earnableTotal(theme)).toBe(12);
@@ -41,13 +41,28 @@ describe('catalogue shape (SPEC §4.1, §4.4, §11.2)', () => {
   });
 
   it('has exactly one starter per slot in each room', () => {
-    for (const theme of ['space', 'sweet'] as const) {
+    for (const theme of THEMES) {
       const starters = starterDecorations(theme);
       expect(starters).toHaveLength(7);
       const slots = starterSlots(theme);
       for (const slot of SLOT_TYPES) {
         expect(itemById(slots[slot])?.slot).toBe(slot);
         expect(itemById(slots[slot])?.theme).toBe(theme);
+      }
+    }
+  });
+
+  it('starts the Heart and K-pop pools with a decoration and a dress-up item each (D21)', () => {
+    const hearts = earnableItems('hearts').map((i) => i.id);
+    expect(hearts.slice(0, 2)).toEqual(['hearts.heartBeanbag', 'hearts.heartRug']);
+    expect(hearts.find((id) => itemById(id)?.kind !== 'decoration')).toBe('hearts.heartCardigan');
+    const kpop = earnableItems('kpop').map((i) => i.id);
+    expect(kpop.slice(0, 2)).toEqual(['kpop.musicLamp', 'kpop.karaokeStage']);
+    expect(kpop.find((id) => itemById(id)?.kind !== 'decoration')).toBe('kpop.popJacket');
+    // Every room's items are tagged with that room; nothing leaks between catalogues.
+    for (const theme of THEMES) {
+      for (const item of allItems.filter((i) => i.id.startsWith(`${theme}.`))) {
+        expect(item.theme, item.id).toBe(theme);
       }
     }
   });

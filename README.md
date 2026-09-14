@@ -1,6 +1,6 @@
 # Tick-Tock
 
-Browser clock-learning game concept for a seven-year-old: two distinct playrooms (Space and Sweet), sharing clock-learning games, room decoration and dress-up rewards. Named Tick-Tock (decision D9); its working title during concept work was "My Cosmic Room", which the concept images and the repository URL still carry.
+Browser clock-learning game concept for a seven-year-old: four distinct playrooms (Space, Sweet, Heart and K-pop), sharing clock-learning games, room decoration and dress-up rewards. Named Tick-Tock (decision D9); its working title during concept work was "My Cosmic Room", which the concept images and the repository URL still carry.
 
 - [Product requirements](docs/PRD.md)
 - [Specification](docs/SPEC.md)
@@ -8,11 +8,12 @@ Browser clock-learning game concept for a seven-year-old: two distinct playrooms
 - [Next-session handoff](docs/NEXT_SESSION.md)
 
 Current state: **release candidate 0.1.0**, milestones M0 to M5 implemented (see
-[CHANGELOG.md](CHANGELOG.md)): both rooms playable end to end with generated art, sounds,
+[CHANGELOG.md](CHANGELOG.md)): Space and Sweet playable end to end with generated art, sounds,
 reduced motion, the accessibility review ([docs/ACCESSIBILITY_REVIEW.md](docs/ACCESSIBILITY_REVIEW.md)),
-the performance budget and a static build. Not deployed. What remains is the user's: the
-parent-and-child play session, the art approval, the title decision, a native-speaker wording
-review and the deployment itself; see [docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
+the performance budget and a static build. The Heart and K-pop playrooms (D21, 13 September 2026) are playable end to end with their rooms, companions and mission scenes generated; the earnable decorations, garments and heroine figures of the new outfits are still placeholders until the Codex weekly window resets. Not
+deployed. What remains is the user's: the parent-and-child play session, the art generation
+and approval, a native-speaker wording review and the deployment itself; see
+[docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
 
 ## Development
 
@@ -27,7 +28,7 @@ npm run preview      # serve dist/ locally (a file:// open does not work with mo
 
 Full verification before a release: `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`.
 
-Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet` for the Sweet room), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, the generators with every puzzle kind described, and a mission-reducer walkthrough that renders each kind), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, `,` `.` move the ankle cut line, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
+Development aids (dev builds only): `?lang=tr`, `?screen=S1` (add `&theme=sweet`, `&theme=hearts` or `&theme=kpop` for the other rooms), `?screen=S2`, `?screen=S6`, `?screen=harness` (clock engine harness: clocks at every level, digital displays, SET drag/buttons/keyboard, the generators with every puzzle kind described, and a mission-reducer walkthrough that renders each kind), `?seed=<n>` (fixes the seed of new missions), `?debug=slots` (slot geometry overlay on S1: arrows nudge the selected box, `[` `]` scale it, C copies the JSON for `src/catalog/slots.ts`), `?debug=heroine` (heroine anchor overlay on S1: 1–4 select an anchor of the current figure, arrows nudge it, `[` `]` scale the overlay, `,` `.` move the ankle cut line, F cycles the face, C copies the `anchors` JSON for `assets/manifest.json`).
 
 Asset pipeline (SPEC §15):
 
@@ -45,7 +46,7 @@ npm run assets:post -- --tiles                  # re-derive the heroine wardrobe
 npm run assets:sounds          # synthesize the sound effects (needs ffmpeg on PATH)
 npm run assets:thumbs          # derive the S0 card thumbnails from the room backgrounds
 npm run measure                # first-load timings of dist/ under network throttling
-node tools/screenshots.ts      # review screenshots of both rooms and the dress-up panel into docs/screenshots/
+node tools/screenshots.ts      # review screenshots of the Space and Sweet rooms and the dress-up panel into docs/screenshots/
 node tools/heroine-matrix.ts   # contact sheet of every outfit × shoe into docs/screenshots/heroine-shoes-matrix.png
 ```
 
@@ -88,13 +89,30 @@ one figure: `npm run assets:gen -- --regen shared/heroine/figure/planetTee-buns`
 
 Generated entries stay `gen.status: 'generated'` until a person marks them `approved` in
 `assets/manifest.json`; approved entries are never regenerated. To review: `npm run dev`, open
-`http://localhost:5173/?screen=S1&debug=slots` for the Space room (add `&theme=sweet` for
-the Sweet room); the overlay draws every slot box and lists the
+`http://localhost:5173/?screen=S1&debug=slots` for the Space room (add `&theme=sweet`,
+`&theme=hearts` or `&theme=kpop` for the others); the overlay draws every slot box and lists the
 QA checklist. For each entry that passes, edit its `gen.status` from `"generated"` to
 `"approved"` in the manifest (search the id, for instance `"space/decorations/moonBed"`) and
 commit. To redo one that fails: `npm run assets:gen -- --regen <id>` then
 `npm run assets:post -- --only <id> --force`, and `npm run assets:thumbs` if it was a room
 background.
+
+### Adding a room (D21)
+
+A playroom is: its id in `THEMES` (`src/core/types.ts`); a catalogue file (`src/catalog/<id>.ts`,
+seven starters and two collections of six, registered in `catalog/index.ts`); one entry each in
+`SLOT_GEOMETRY`, `FLOOR_GEOMETRY`, `HEROINE_GEOMETRY`, `COMPANION_GEOMETRY`, `ENTRY_GEOMETRY` and
+`STAR_CHART_GEOMETRY` (`src/catalog/slots.ts`); one `THEME_UI` entry (`src/ui/themes.ts`:
+companion, entry object, mission scenes, tracker icons, journey art, celebration); its strings
+(`room.<id>`, `companion.<id>`, `mission.*.<id>`, `a.*.<id>`, `b.*.<id>`, `sched.<id>.*`,
+`q.finish.*.<id>`, `ui.themeBadge.<id>`, collection and item names, in all three languages); its
+prompts and scene assets in `tools/manifest-data.ts` (plus a `THEME_REF` concept image and a
+`THEME_LABEL`); a jingle recipe in `tools/gen-sounds.ts`; the CSS hooks `room-card-<id>`,
+`s1-<id>`, `clock-<id>`, `mission-<id>`, `star-chart-<id>` and the `THEME_TINTS` placeholder
+colours. Then `node tools/build-manifest.ts && npm run assets:placeholders && node
+tools/gen-sounds.ts --only <id>/sound/jingle && npm run assets:thumbs`; the TypeScript
+`Record<Theme, …>` types point at anything missed. Saves need nothing: a room absent from a
+save starts fresh.
 
 ## Deployment (SPEC §16.5)
 

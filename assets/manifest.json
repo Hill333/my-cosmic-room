@@ -1,6 +1,1855 @@
 {
   "version": 1,
   "assets": {
+    "hearts/companion/lulu/cheer": {
+      "path": "hearts/companion/lulu/cheer.png",
+      "theme": "hearts",
+      "category": "companion",
+      "size": [
+        400,
+        430
+      ],
+      "label": "Lulu cheer",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly white bunny with long floppy ears and a pink bandana with a red heart on it, jumping with both paws up, cheering",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
+          "hearts/companion/lulu/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:29:08.732Z",
+        "status": "generated"
+      }
+    },
+    "hearts/companion/lulu/hmm": {
+      "path": "hearts/companion/lulu/hmm.png",
+      "theme": "hearts",
+      "category": "companion",
+      "size": [
+        400,
+        421
+      ],
+      "label": "Lulu hmm",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly white bunny with long floppy ears and a pink bandana with a red heart on it, tilting its head with a puzzled friendly \"hmm\" look",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
+          "hearts/companion/lulu/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:30:01.377Z",
+        "status": "generated"
+      }
+    },
+    "hearts/companion/lulu/idle": {
+      "path": "hearts/companion/lulu/idle.png",
+      "theme": "hearts",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Lulu idle",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly white bunny with long floppy ears and a pink bandana with a red heart on it, sitting and smiling",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
+          "hearts/companion/lulu/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:11:25.589Z",
+        "status": "generated"
+      }
+    },
+    "hearts/companion/lulu/special": {
+      "path": "hearts/companion/lulu/special.png",
+      "theme": "hearts",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Lulu special",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly white bunny with long floppy ears and a pink bandana with a red heart on it, hopping in the air with little pink hearts around it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
+          "hearts/companion/lulu/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:52:07.905Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/glowHeartLamp": {
+      "path": "hearts/decorations/glowHeartLamp.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        200,
+        227
+      ],
+      "pivot": [
+        100,
+        227
+      ],
+      "slot": "LAMP",
+      "label": "Glow heart lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a bedside lamp shaped like a glowing pink heart on a short wooden stand, seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:13:49.897Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartBeanbag": {
+      "path": "hearts/decorations/heartBeanbag.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        323,
+        260
+      ],
+      "pivot": [
+        162,
+        260
+      ],
+      "slot": "NOOK",
+      "label": "Heart beanbag",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a soft heart-shaped strawberry-pink beanbag on the floor with a cream heart on it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:14:39.790Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartBed": {
+      "path": "hearts/decorations/heartBed.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        507,
+        420
+      ],
+      "pivot": [
+        254,
+        420
+      ],
+      "slot": "BED",
+      "label": "Heart bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a child's bed with a big heart-shaped rose-pink headboard, heart-patterned pink bedding and a soft pillow",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:15:25.786Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartBunny": {
+      "path": "hearts/decorations/heartBunny.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        200,
+        187
+      ],
+      "pivot": [
+        100,
+        187
+      ],
+      "slot": "SHELF",
+      "label": "Heart bunny",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small white plush bunny sitting upright and hugging a little pink heart",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:17:10.819Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartDrawing": {
+      "path": "hearts/decorations/heartDrawing.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        320,
+        233
+      ],
+      "pivot": [
+        160,
+        117
+      ],
+      "slot": "WALL",
+      "label": "Heart drawing",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed child's drawing of one big pink heart with a smiling face, hanging flat on a wall and seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:18:20.627Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartGarland": {
+      "path": "hearts/decorations/heartGarland.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        720,
+        195
+      ],
+      "pivot": [
+        360,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Heart garland",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a hanging garland of small pink, red and cream hearts with tiny warm fairy lights between them on a thin string",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:16:13.142Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/heartRug": {
+      "path": "hearts/decorations/heartRug.svg",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Heart rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a big fluffy heart-shaped rug in rings of pink and cream lying flat on the floor, seen from slightly above",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "hearts/decorations/kindNotePoster": {
+      "path": "hearts/decorations/kindNotePoster.svg",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Kind note poster",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed poster of a pink envelope with a red heart seal and a small pink heart floating above it, hanging flat on a wall and seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "hearts/decorations/paperHearts": {
+      "path": "hearts/decorations/paperHearts.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        67,
+        380
+      ],
+      "pivot": [
+        34,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Paper hearts",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a vertical string of pink and red paper hearts hanging down from a single point at the top on a thin thread",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:19:02.638Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/pinkCushion": {
+      "path": "hearts/decorations/pinkCushion.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        340,
+        224
+      ],
+      "pivot": [
+        170,
+        224
+      ],
+      "slot": "NOOK",
+      "label": "Pink cushion",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plump round blush-pink floor cushion",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:19:53.113Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/plainBed": {
+      "path": "hearts/decorations/plainBed.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        558,
+        420
+      ],
+      "pivot": [
+        279,
+        420
+      ],
+      "slot": "BED",
+      "label": "Plain bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a simple child's bed with a plain rose-pink blanket, white pillow and a low rounded headboard",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:20:42.466Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/plainLamp": {
+      "path": "hearts/decorations/plainLamp.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        200,
+        270
+      ],
+      "pivot": [
+        100,
+        270
+      ],
+      "slot": "LAMP",
+      "label": "Plain lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small plain bedside lamp with a peach shade and a wooden base, seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:21:27.333Z",
+        "status": "generated"
+      }
+    },
+    "hearts/decorations/plainRug": {
+      "path": "hearts/decorations/plainRug.png",
+      "theme": "hearts",
+      "category": "decoration",
+      "size": [
+        620,
+        281
+      ],
+      "pivot": [
+        310,
+        141
+      ],
+      "slot": "RUG",
+      "label": "Plain rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plain round soft peach rug lying flat on the floor, seen from slightly above",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:22:10.193Z",
+        "status": "generated"
+      }
+    },
+    "hearts/entry/heartBox": {
+      "path": "hearts/entry/heartBox.png",
+      "theme": "hearts",
+      "category": "entry",
+      "size": [
+        240,
+        264
+      ],
+      "pivot": [
+        120,
+        264
+      ],
+      "label": "Heart music box",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small heart-shaped pink music box with a closed lid and a tiny gold clasp, standing on a short cream stand",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:12:18.540Z",
+        "status": "generated"
+      }
+    },
+    "hearts/entry/heartBoxOpen": {
+      "path": "hearts/entry/heartBoxOpen.png",
+      "theme": "hearts",
+      "category": "entry",
+      "size": [
+        201,
+        300
+      ],
+      "pivot": [
+        101,
+        300
+      ],
+      "label": "Heart music box open",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "the same small heart-shaped pink music box with its lid open, a tiny pink envelope rising out of it and a soft glow inside",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
+          "hearts/entry/heartBox"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:53:03.917Z",
+        "status": "generated"
+      }
+    },
+    "hearts/room/background": {
+      "path": "hearts/room/background.png",
+      "theme": "hearts",
+      "category": "room",
+      "size": [
+        1536,
+        1024
+      ],
+      "label": "Heart room background",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the heart-filled playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm blush-pink walls, a heart-shaped white open shelf unit with a few books and a potted plant at the far left with trailing green leaves, a small white craft desk with a heart-backed chair under it, a big arched window on the upper right showing a sunny sky, a smiling sun and distant houses, a pale honey wooden floor, a low white cabinet with a potted tulip under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no garland, no canopy, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no hanging garland, no cushion, no beanbag, no letterbox and no character or animal; keep the floor centre and the right half of the floor clear",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:13:16.956Z",
+        "status": "generated"
+      }
+    },
+    "hearts/room/thumb": {
+      "path": "hearts/room/thumb.webp",
+      "theme": "hearts",
+      "category": "room",
+      "size": [
+        960,
+        640
+      ],
+      "label": "Heart room card thumbnail",
+      "derivedFrom": "hearts/room/background"
+    },
+    "hearts/sceneA/balloonHearts": {
+      "path": "hearts/sceneA/balloonHearts.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        134,
+        500
+      ],
+      "pivot": [
+        67,
+        0
+      ],
+      "label": "Trail of little hearts",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a loose vertical trail of small pink, red and cream hearts of different sizes drifting downwards, spaced apart",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:57:16.644Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/craftFrame": {
+      "path": "hearts/sceneA/craftFrame.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        1536,
+        1024
+      ],
+      "label": "Craft corner frame",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a cosy pink craft corner wall with heart bunting along the top, shelves of coloured paper, ribbons and jars of pencils at both sides, a sunny window at the upper left, and a large empty light rectangular panel in the centre",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:58:08.265Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/heartBalloons": {
+      "path": "hearts/sceneA/heartBalloons.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        553,
+        900
+      ],
+      "pivot": [
+        277,
+        900
+      ],
+      "label": "Heart balloons carrying the post bag",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a bunch of five pink and red heart-shaped balloons on strings lifting a small cream post bag with a red heart on it, seen from the front",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:59:33.522Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/postBag": {
+      "path": "hearts/sceneA/postBag.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        600,
+        684
+      ],
+      "pivot": [
+        300,
+        684
+      ],
+      "label": "Post bag of kind notes",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small cream canvas post bag with a red heart stitched on it, standing open with pink envelopes peeking out of the top",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:00:23.990Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/step/envelope": {
+      "path": "hearts/sceneA/step/envelope.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        300,
+        201
+      ],
+      "label": "Step envelope",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small pink envelope with a red heart seal",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:07:48.529Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/step/note": {
+      "path": "hearts/sceneA/step/note.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        300,
+        227
+      ],
+      "label": "Step note",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small folded pink note with a red heart drawn on the front",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:08:37.902Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/step/ribbon": {
+      "path": "hearts/sceneA/step/ribbon.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        300,
+        228
+      ],
+      "label": "Step ribbon",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small tied bow of red ribbon",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:09:18.737Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneA/step/stamp": {
+      "path": "hearts/sceneA/step/stamp.png",
+      "theme": "hearts",
+      "category": "sceneA",
+      "size": [
+        300,
+        294
+      ],
+      "label": "Step stamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small square postage stamp with a pink heart on it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:10:04.029Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneB/birdLetter": {
+      "path": "hearts/sceneB/birdLetter.png",
+      "theme": "hearts",
+      "category": "sceneB",
+      "size": [
+        600,
+        361
+      ],
+      "label": "Lovebird carrying a letter",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small round pink lovebird flying sideways and carrying a pink envelope with a red heart seal in its beak, little hearts trailing behind",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:01:18.733Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneB/heartHouse": {
+      "path": "hearts/sceneB/heartHouse.png",
+      "theme": "hearts",
+      "category": "sceneB",
+      "size": [
+        583,
+        500
+      ],
+      "label": "Heart house window",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a cosy cream house front with a heart-shaped window with pink curtains and a flower box below it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:02:07.581Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sceneB/postOffice": {
+      "path": "hearts/sceneB/postOffice.png",
+      "theme": "hearts",
+      "category": "sceneB",
+      "size": [
+        600,
+        465
+      ],
+      "label": "Heart post office",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small pink post office front with a heart-shaped sign over the door and a red letterbox beside it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:02:57.742Z",
+        "status": "generated"
+      }
+    },
+    "hearts/sound/jingle": {
+      "path": "hearts/sound/jingle.mp3",
+      "theme": "hearts",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Heart-post jingle",
+      "source": "synthesized",
+      "duration": 1.7
+    },
+    "hearts/tiles/glowHeartLamp": {
+      "path": "hearts/tiles/glowHeartLamp.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Glow heart lamp",
+      "derivedFrom": "hearts/decorations/glowHeartLamp"
+    },
+    "hearts/tiles/heartBeanbag": {
+      "path": "hearts/tiles/heartBeanbag.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart beanbag",
+      "derivedFrom": "hearts/decorations/heartBeanbag"
+    },
+    "hearts/tiles/heartBed": {
+      "path": "hearts/tiles/heartBed.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart bed",
+      "derivedFrom": "hearts/decorations/heartBed"
+    },
+    "hearts/tiles/heartBunny": {
+      "path": "hearts/tiles/heartBunny.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart bunny",
+      "derivedFrom": "hearts/decorations/heartBunny"
+    },
+    "hearts/tiles/heartCardigan": {
+      "path": "hearts/tiles/heartCardigan.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart cardigan",
+      "derivedFrom": "shared/heroine/figure/heartCardigan-buns",
+      "tileCrop": "torso"
+    },
+    "hearts/tiles/heartClip": {
+      "path": "hearts/tiles/heartClip.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart hair clip",
+      "derivedFrom": "shared/heroine/extra/heartClip",
+      "tileCrop": "head"
+    },
+    "hearts/tiles/heartDrawing": {
+      "path": "hearts/tiles/heartDrawing.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart drawing",
+      "derivedFrom": "hearts/decorations/heartDrawing"
+    },
+    "hearts/tiles/heartGarland": {
+      "path": "hearts/tiles/heartGarland.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart garland",
+      "derivedFrom": "hearts/decorations/heartGarland"
+    },
+    "hearts/tiles/heartHeadband": {
+      "path": "hearts/tiles/heartHeadband.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart headband",
+      "derivedFrom": "shared/heroine/extra/heartHeadband",
+      "tileCrop": "head"
+    },
+    "hearts/tiles/heartRug": {
+      "path": "hearts/tiles/heartRug.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart rug",
+      "derivedFrom": "hearts/decorations/heartRug"
+    },
+    "hearts/tiles/heartSlippers": {
+      "path": "hearts/tiles/heartSlippers.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart slippers",
+      "derivedFrom": "shared/heroine/shoes/heartSlippers",
+      "tileCrop": "feet"
+    },
+    "hearts/tiles/heartSneakers": {
+      "path": "hearts/tiles/heartSneakers.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Heart sneakers",
+      "derivedFrom": "shared/heroine/shoes/heartSneakers",
+      "tileCrop": "feet"
+    },
+    "hearts/tiles/kindNotePoster": {
+      "path": "hearts/tiles/kindNotePoster.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Kind note poster",
+      "derivedFrom": "hearts/decorations/kindNotePoster"
+    },
+    "hearts/tiles/paperHearts": {
+      "path": "hearts/tiles/paperHearts.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Paper hearts",
+      "derivedFrom": "hearts/decorations/paperHearts"
+    },
+    "hearts/tiles/pinkCushion": {
+      "path": "hearts/tiles/pinkCushion.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Pink cushion",
+      "derivedFrom": "hearts/decorations/pinkCushion"
+    },
+    "hearts/tiles/plainBed": {
+      "path": "hearts/tiles/plainBed.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain bed",
+      "derivedFrom": "hearts/decorations/plainBed"
+    },
+    "hearts/tiles/plainLamp": {
+      "path": "hearts/tiles/plainLamp.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain lamp",
+      "derivedFrom": "hearts/decorations/plainLamp"
+    },
+    "hearts/tiles/plainRug": {
+      "path": "hearts/tiles/plainRug.png",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain rug",
+      "derivedFrom": "hearts/decorations/plainRug"
+    },
+    "hearts/tiles/rosePyjamas": {
+      "path": "hearts/tiles/rosePyjamas.svg",
+      "theme": "hearts",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Rose pyjamas",
+      "derivedFrom": "shared/heroine/figure/rosePyjamas-buns",
+      "tileCrop": "torso"
+    },
+    "kpop/companion/bori/cheer": {
+      "path": "kpop/companion/bori/cheer.png",
+      "theme": "kpop",
+      "category": "companion",
+      "size": [
+        371,
+        480
+      ],
+      "label": "Bori cheer",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small chunky friendly blue tiger cub with darker blue stripes, big round yellow eyes, a white belly and a purple collar with a gold heart tag, standing on hind legs with paws up, cheering",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/companion/bori/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:53:56.466Z",
+        "status": "generated"
+      }
+    },
+    "kpop/companion/bori/hmm": {
+      "path": "kpop/companion/bori/hmm.png",
+      "theme": "kpop",
+      "category": "companion",
+      "size": [
+        400,
+        480
+      ],
+      "label": "Bori hmm",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small chunky friendly blue tiger cub with darker blue stripes, big round yellow eyes, a white belly and a purple collar with a gold heart tag, tilting its head with a puzzled friendly \"hmm\" look",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/companion/bori/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:54:48.358Z",
+        "status": "generated"
+      }
+    },
+    "kpop/companion/bori/idle": {
+      "path": "kpop/companion/bori/idle.png",
+      "theme": "kpop",
+      "category": "companion",
+      "size": [
+        377,
+        480
+      ],
+      "label": "Bori idle",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small chunky friendly blue tiger cub with darker blue stripes, big round yellow eyes, a white belly and a purple collar with a gold heart tag, sitting and smiling",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/companion/bori/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:14:08.981Z",
+        "status": "generated"
+      }
+    },
+    "kpop/companion/bori/special": {
+      "path": "kpop/companion/bori/special.png",
+      "theme": "kpop",
+      "category": "companion",
+      "size": [
+        326,
+        480
+      ],
+      "label": "Bori special",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small chunky friendly blue tiger cub with darker blue stripes, big round yellow eyes, a white belly and a purple collar with a gold heart tag, dancing on hind legs with little golden musical notes around it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/companion/bori/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:55:42.444Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/discoBall": {
+      "path": "kpop/decorations/discoBall.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        300,
+        380
+      ],
+      "pivot": [
+        150,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Disco ball",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small mirrored disco ball with lilac and gold facets hanging from a single point at the top on a short thread",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/decorations/karaokeStage": {
+      "path": "kpop/decorations/karaokeStage.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        340,
+        260
+      ],
+      "pivot": [
+        170,
+        260
+      ],
+      "slot": "NOOK",
+      "label": "Karaoke stage",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a low round purple karaoke stage platform with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at one side, seen from slightly above",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/decorations/magpiePlush": {
+      "path": "kpop/decorations/magpiePlush.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        197,
+        200
+      ],
+      "pivot": [
+        99,
+        200
+      ],
+      "slot": "SHELF",
+      "label": "Magpie plush",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small round black-and-white plush magpie with a tiny gold star on its chest, sitting",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:22:59.642Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/musicLamp": {
+      "path": "kpop/decorations/musicLamp.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        200,
+        280
+      ],
+      "pivot": [
+        100,
+        280
+      ],
+      "slot": "LAMP",
+      "label": "Music lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small lamp shaped like a glowing golden musical note on a round purple base, seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/decorations/notePoster": {
+      "path": "kpop/decorations/notePoster.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        320,
+        210
+      ],
+      "pivot": [
+        160,
+        105
+      ],
+      "slot": "WALL",
+      "label": "Note poster",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a framed poster of three golden musical notes on a deep purple background, hanging flat on a wall and seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:24:18.129Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/plainBed": {
+      "path": "kpop/decorations/plainBed.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        540,
+        420
+      ],
+      "pivot": [
+        270,
+        420
+      ],
+      "slot": "BED",
+      "label": "Plain bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a simple child's bed with a plain purple blanket, white pillow and a low rounded headboard",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:25:03.635Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/plainLamp": {
+      "path": "kpop/decorations/plainLamp.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        200,
+        276
+      ],
+      "pivot": [
+        100,
+        276
+      ],
+      "slot": "LAMP",
+      "label": "Plain lamp",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small plain bedside lamp with a lilac shade and a wooden base, seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:25:49.316Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/plainRug": {
+      "path": "kpop/decorations/plainRug.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        620,
+        267
+      ],
+      "pivot": [
+        310,
+        134
+      ],
+      "slot": "RUG",
+      "label": "Plain rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plain round lilac rug lying flat on the floor, seen from slightly above",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:26:30.833Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/purpleCushion": {
+      "path": "kpop/decorations/purpleCushion.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        340,
+        250
+      ],
+      "pivot": [
+        170,
+        250
+      ],
+      "slot": "NOOK",
+      "label": "Purple cushion",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a plump round deep-purple floor cushion with a small gold crown printed on it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:27:21.791Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/starBed": {
+      "path": "kpop/decorations/starBed.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        640,
+        420
+      ],
+      "pivot": [
+        320,
+        420
+      ],
+      "slot": "BED",
+      "label": "Star bed",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a child's bed with a big gold star-shaped headboard and purple bedding patterned with small gold stars",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/decorations/starLights": {
+      "path": "kpop/decorations/starLights.png",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        55,
+        380
+      ],
+      "pivot": [
+        28,
+        0
+      ],
+      "slot": "HANGING",
+      "label": "Star lights",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a vertical string of glowing yellow star fairy lights hanging down from a single point at the top on a thin wire",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:28:13.919Z",
+        "status": "generated"
+      }
+    },
+    "kpop/decorations/starRug": {
+      "path": "kpop/decorations/starRug.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        620,
+        300
+      ],
+      "pivot": [
+        310,
+        150
+      ],
+      "slot": "RUG",
+      "label": "Star rug",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a round deep-purple dance rug with a big gold star in the middle and small gold stars around it, lying flat on the floor, seen from slightly above",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/decorations/trioPoster": {
+      "path": "kpop/decorations/trioPoster.svg",
+      "theme": "kpop",
+      "category": "decoration",
+      "size": [
+        320,
+        260
+      ],
+      "pivot": [
+        160,
+        130
+      ],
+      "slot": "WALL",
+      "label": "Trio poster",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a framed poster of three original cartoon girl singers side by side holding microphones, one with a long purple braid, one with pink hair, one with dark hair in buns, on a purple and gold background, hanging flat on a wall and seen straight on",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "kpop/entry/toyMic": {
+      "path": "kpop/entry/toyMic.png",
+      "theme": "kpop",
+      "category": "entry",
+      "size": [
+        175,
+        400
+      ],
+      "pivot": [
+        88,
+        400
+      ],
+      "label": "Toy microphone",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a chunky toy microphone on a tall purple stand with a round tripod base, the microphone head sparkly lilac with a small gold star on top",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:15:01.118Z",
+        "status": "generated"
+      }
+    },
+    "kpop/entry/toyMicGlow": {
+      "path": "kpop/entry/toyMicGlow.png",
+      "theme": "kpop",
+      "category": "entry",
+      "size": [
+        174,
+        400
+      ],
+      "pivot": [
+        87,
+        400
+      ],
+      "label": "Toy microphone glowing",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the same chunky toy microphone on its stand with the head glowing warm gold and two small golden musical notes floating up beside it",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/entry/toyMic"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T23:56:31.745Z",
+        "status": "generated"
+      }
+    },
+    "kpop/room/background": {
+      "path": "kpop/room/background.png",
+      "theme": "kpop",
+      "category": "room",
+      "size": [
+        1536,
+        1024
+      ],
+      "label": "K-pop room background",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the pop-fan's playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls with a soft lavender glow, a tall wooden open shelf unit with a few albums, a small record player and a potted plant at the far left, a clothes rail with nothing on it beside it, a big arched window on the upper right showing a dreamy evening city skyline under a purple sky with a soft golden arc of light, a warm honey wooden floor, a small wooden nightstand under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no string lights, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no hanging lights, no cushion, no stage, no microphone and no character or animal; keep the floor centre and the right half of the floor clear",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-13T21:16:18.731Z",
+        "status": "generated"
+      }
+    },
+    "kpop/room/thumb": {
+      "path": "kpop/room/thumb.webp",
+      "theme": "kpop",
+      "category": "room",
+      "size": [
+        960,
+        640
+      ],
+      "label": "K-pop room card thumbnail",
+      "derivedFrom": "kpop/room/background"
+    },
+    "kpop/sceneA/stage": {
+      "path": "kpop/sceneA/stage.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        969,
+        700
+      ],
+      "pivot": [
+        485,
+        700
+      ],
+      "label": "Concert stage",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small round purple concert stage with a ring of warm lights around its edge, a star-topped microphone on a stand in the middle, two round speakers and golden confetti in the air",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:03:42.585Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneA/stageFrame": {
+      "path": "kpop/sceneA/stageFrame.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        1536,
+        1024
+      ],
+      "label": "Stage frame",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small cosy concert stage seen from the audience with deep purple curtains drawn back at both sides, strings of warm star lights along the top, two round speakers and a spotlight at each side, and a large empty light rectangular panel in the centre",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:04:35.138Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneA/step/costume": {
+      "path": "kpop/sceneA/step/costume.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        300,
+        274
+      ],
+      "label": "Step costume",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small purple and gold bomber jacket on a wooden hanger",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:10:50.497Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneA/step/curtain": {
+      "path": "kpop/sceneA/step/curtain.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        300,
+        257
+      ],
+      "label": "Step curtain",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small pair of deep purple stage curtains tied back with gold cords",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:11:34.476Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneA/step/lights": {
+      "path": "kpop/sceneA/step/lights.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        245,
+        300
+      ],
+      "label": "Step lights",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small purple stage spotlight on a short stand shining a warm beam",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:12:20.929Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneA/step/speaker": {
+      "path": "kpop/sceneA/step/speaker.png",
+      "theme": "kpop",
+      "category": "sceneA",
+      "size": [
+        277,
+        300
+      ],
+      "label": "Step speaker",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small round purple loudspeaker with a gold grille",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:13:03.150Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneB/concertHall": {
+      "path": "kpop/sceneB/concertHall.png",
+      "theme": "kpop",
+      "category": "sceneB",
+      "size": [
+        600,
+        443
+      ],
+      "label": "Concert hall",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small purple concert hall front with a glowing marquee of little gold stars over the doors",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:05:26.543Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneB/tourBus": {
+      "path": "kpop/sceneB/tourBus.png",
+      "theme": "kpop",
+      "category": "sceneB",
+      "size": [
+        587,
+        400
+      ],
+      "label": "Tour bus with a parcel",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "a small friendly purple tour bus with gold stars painted on its side driving sideways, a wrapped parcel with a bow strapped on its roof and a small blue tiger cub waving from a window",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
+          "kpop/companion/bori/idle"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:06:15.024Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sceneB/window": {
+      "path": "kpop/sceneB/window.png",
+      "theme": "kpop",
+      "category": "sceneB",
+      "size": [
+        485,
+        500
+      ],
+      "label": "Playroom window at night",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a playroom window with purple curtains seen from outside at evening, warm light inside and a small star lamp on the sill",
+        "references": [
+          "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
+        ],
+        "attempts": 1,
+        "generatedAt": "2026-09-14T00:07:06.018Z",
+        "status": "generated"
+      }
+    },
+    "kpop/sound/jingle": {
+      "path": "kpop/sound/jingle.mp3",
+      "theme": "kpop",
+      "category": "sound",
+      "size": [
+        0,
+        0
+      ],
+      "label": "Showtime jingle",
+      "source": "synthesized",
+      "duration": 1.55
+    },
+    "kpop/tiles/crownClip": {
+      "path": "kpop/tiles/crownClip.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Crown hair clip",
+      "derivedFrom": "shared/heroine/extra/crownClip",
+      "tileCrop": "head"
+    },
+    "kpop/tiles/discoBall": {
+      "path": "kpop/tiles/discoBall.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Disco ball",
+      "derivedFrom": "kpop/decorations/discoBall"
+    },
+    "kpop/tiles/glitterBoots": {
+      "path": "kpop/tiles/glitterBoots.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Glitter boots",
+      "derivedFrom": "shared/heroine/shoes/glitterBoots",
+      "tileCrop": "feet"
+    },
+    "kpop/tiles/headsetMic": {
+      "path": "kpop/tiles/headsetMic.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Headset microphone",
+      "derivedFrom": "shared/heroine/extra/headsetMic",
+      "tileCrop": "head"
+    },
+    "kpop/tiles/karaokeStage": {
+      "path": "kpop/tiles/karaokeStage.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Karaoke stage",
+      "derivedFrom": "kpop/decorations/karaokeStage"
+    },
+    "kpop/tiles/magpiePlush": {
+      "path": "kpop/tiles/magpiePlush.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Magpie plush",
+      "derivedFrom": "kpop/decorations/magpiePlush"
+    },
+    "kpop/tiles/musicLamp": {
+      "path": "kpop/tiles/musicLamp.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Music lamp",
+      "derivedFrom": "kpop/decorations/musicLamp"
+    },
+    "kpop/tiles/notePoster": {
+      "path": "kpop/tiles/notePoster.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Note poster",
+      "derivedFrom": "kpop/decorations/notePoster"
+    },
+    "kpop/tiles/plainBed": {
+      "path": "kpop/tiles/plainBed.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain bed",
+      "derivedFrom": "kpop/decorations/plainBed"
+    },
+    "kpop/tiles/plainLamp": {
+      "path": "kpop/tiles/plainLamp.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain lamp",
+      "derivedFrom": "kpop/decorations/plainLamp"
+    },
+    "kpop/tiles/plainRug": {
+      "path": "kpop/tiles/plainRug.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Plain rug",
+      "derivedFrom": "kpop/decorations/plainRug"
+    },
+    "kpop/tiles/popJacket": {
+      "path": "kpop/tiles/popJacket.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Pop-star jacket",
+      "derivedFrom": "shared/heroine/figure/popJacket-buns",
+      "tileCrop": "torso"
+    },
+    "kpop/tiles/purpleCushion": {
+      "path": "kpop/tiles/purpleCushion.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Purple cushion",
+      "derivedFrom": "kpop/decorations/purpleCushion"
+    },
+    "kpop/tiles/sparkleDress": {
+      "path": "kpop/tiles/sparkleDress.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Sparkle stage dress",
+      "derivedFrom": "shared/heroine/figure/sparkleDress-buns",
+      "tileCrop": "torso"
+    },
+    "kpop/tiles/starBed": {
+      "path": "kpop/tiles/starBed.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star bed",
+      "derivedFrom": "kpop/decorations/starBed"
+    },
+    "kpop/tiles/starLights": {
+      "path": "kpop/tiles/starLights.png",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star lights",
+      "derivedFrom": "kpop/decorations/starLights"
+    },
+    "kpop/tiles/starRug": {
+      "path": "kpop/tiles/starRug.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star rug",
+      "derivedFrom": "kpop/decorations/starRug"
+    },
+    "kpop/tiles/starSneakers": {
+      "path": "kpop/tiles/starSneakers.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Star platform sneakers",
+      "derivedFrom": "shared/heroine/shoes/starSneakers",
+      "tileCrop": "feet"
+    },
+    "kpop/tiles/trioPoster": {
+      "path": "kpop/tiles/trioPoster.svg",
+      "theme": "kpop",
+      "category": "tile",
+      "size": [
+        360,
+        360
+      ],
+      "label": "Trio poster",
+      "derivedFrom": "kpop/decorations/trioPoster"
+    },
     "shared/heroine/extra/bowHeadband": {
       "path": "shared/heroine/extra/bowHeadband.png",
       "theme": "shared",
@@ -26,6 +1875,36 @@
         "generatedAt": "2026-09-12T18:45:58.335Z",
         "status": "generated"
       }
+    },
+    "shared/heroine/extra/crownClip": {
+      "path": "shared/heroine/extra/crownClip.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        110,
+        110
+      ],
+      "pivot": [
+        55,
+        55
+      ],
+      "layer": "extra",
+      "anchor": "head",
+      "label": "Crown hair clip",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small gold crown hair clip with a short clip bar, seen from the front",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      },
+      "offset": [
+        80,
+        50
+      ]
     },
     "shared/heroine/extra/flowerClip": {
       "path": "shared/heroine/extra/flowerClip.png",
@@ -56,6 +1935,88 @@
         80,
         50
       ]
+    },
+    "shared/heroine/extra/headsetMic": {
+      "path": "shared/heroine/extra/headsetMic.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        150
+      ],
+      "pivot": [
+        150,
+        105
+      ],
+      "layer": "extra",
+      "anchor": "head",
+      "label": "Headset microphone",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a thin gold performer's headset microphone seen from the front as it sits on a child's head: a slim band over the top of the head and a small microphone arm curving down to the right cheek",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/extra/heartClip": {
+      "path": "shared/heroine/extra/heartClip.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        110,
+        110
+      ],
+      "pivot": [
+        55,
+        55
+      ],
+      "layer": "extra",
+      "anchor": "head",
+      "label": "Heart hair clip",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a small pink heart hair clip with a short clip bar, seen from the front",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      },
+      "offset": [
+        80,
+        50
+      ]
+    },
+    "shared/heroine/extra/heartHeadband": {
+      "path": "shared/heroine/extra/heartHeadband.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        150
+      ],
+      "pivot": [
+        150,
+        105
+      ],
+      "layer": "extra",
+      "anchor": "head",
+      "label": "Heart headband",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pink fabric headband with two small red heart bobbles on short springs, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
     },
     "shared/heroine/extra/rocketBackpack": {
       "path": "shared/heroine/extra/rocketBackpack.png",
@@ -630,6 +2591,135 @@
         "status": "generated"
       }
     },
+    "shared/heroine/figure/heartCardigan-buns": {
+      "path": "shared/heroine/figure/heartCardigan-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/heartCardigan-loose": {
+      "path": "shared/heroine/figure/heartCardigan-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/heartCardigan-ponytail": {
+      "path": "shared/heroine/figure/heartCardigan-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
     "shared/heroine/figure/planetTee-buns": {
       "path": "shared/heroine/figure/planetTee-buns.png",
       "theme": "shared",
@@ -774,6 +2864,264 @@
         "status": "generated"
       }
     },
+    "shared/heroine/figure/popJacket-buns": {
+      "path": "shared/heroine/figure/popJacket-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/popJacket-loose": {
+      "path": "shared/heroine/figure/popJacket-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/popJacket-ponytail": {
+      "path": "shared/heroine/figure/popJacket-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/rosePyjamas-buns": {
+      "path": "shared/heroine/figure/rosePyjamas-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/rosePyjamas-loose": {
+      "path": "shared/heroine/figure/rosePyjamas-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/rosePyjamas-ponytail": {
+      "path": "shared/heroine/figure/rosePyjamas-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
     "shared/heroine/figure/spacesuit-buns": {
       "path": "shared/heroine/figure/spacesuit-buns.png",
       "theme": "shared",
@@ -916,6 +3264,135 @@
         "attempts": 1,
         "generatedAt": "2026-09-12T18:56:54.749Z",
         "status": "generated"
+      }
+    },
+    "shared/heroine/figure/sparkleDress-buns": {
+      "path": "shared/heroine/figure/sparkleDress-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, brown hair in two buns",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/sparkleDress-loose": {
+      "path": "shared/heroine/figure/sparkleDress-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, loose brown hair with a clip",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/figure/sparkleDress-ponytail": {
+      "path": "shared/heroine/figure/sparkleDress-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        900
+      ],
+      "layer": "figure",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 190,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 80,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 895,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 420,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, brown hair in a high ponytail",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, standing in the same relaxed pose as the sheet with her arms slightly out from her sides, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, plain short white ankle socks and no shoes, feet flat on the ground, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
       }
     },
     "shared/heroine/figure/starHoodie-buns": {
@@ -1286,6 +3763,86 @@
         225
       ]
     },
+    "shared/heroine/shoes/glitterBoots": {
+      "path": "shared/heroine/shoes/glitterBoots.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        200
+      ],
+      "pivot": [
+        150,
+        200
+      ],
+      "layer": "shoes",
+      "anchor": "feet",
+      "label": "Glitter boots",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of short glittery purple boots with a small gold star on each ankle, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      },
+      "clipAtAnkle": true
+    },
+    "shared/heroine/shoes/heartSlippers": {
+      "path": "shared/heroine/shoes/heartSlippers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        200
+      ],
+      "pivot": [
+        150,
+        200
+      ],
+      "layer": "shoes",
+      "anchor": "feet",
+      "label": "Heart slippers",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of fluffy pink heart-shaped slippers with a little white heart on each toe, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/shoes/heartSneakers": {
+      "path": "shared/heroine/shoes/heartSneakers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        200
+      ],
+      "pivot": [
+        150,
+        200
+      ],
+      "layer": "shoes",
+      "anchor": "feet",
+      "label": "Heart sneakers",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of pink low sneakers with small white hearts and white laces, worn with short white socks, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      },
+      "clipAtAnkle": true
+    },
     "shared/heroine/shoes/maryJanes": {
       "path": "shared/heroine/shoes/maryJanes.png",
       "theme": "shared",
@@ -1413,6 +3970,33 @@
         55,
         168
       ]
+    },
+    "shared/heroine/shoes/starSneakers": {
+      "path": "shared/heroine/shoes/starSneakers.svg",
+      "theme": "shared",
+      "category": "garment",
+      "size": [
+        300,
+        200
+      ],
+      "pivot": [
+        150,
+        200
+      ],
+      "layer": "shoes",
+      "anchor": "feet",
+      "label": "Star platform sneakers",
+      "gen": {
+        "preset": "sol-med",
+        "prompt": "a pair of white chunky platform sneakers with small gold stars on the sides, worn with white crew socks, front view, the two shoes side by side and slightly apart, standing flat as worn by the girl from the attached reference sheet, toes towards the viewer",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      },
+      "clipAtAnkle": true
     },
     "shared/heroine/sit/cloudPyjamas-buns": {
       "path": "shared/heroine/sit/cloudPyjamas-buns.png",
@@ -1801,6 +4385,135 @@
         "status": "generated"
       }
     },
+    "shared/heroine/sit/heartCardigan-buns": {
+      "path": "shared/heroine/sit/heartCardigan-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/heartCardigan-loose": {
+      "path": "shared/heroine/sit/heartCardigan-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/heartCardigan-ponytail": {
+      "path": "shared/heroine/sit/heartCardigan-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Heart cardigan, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
     "shared/heroine/sit/planetTee-buns": {
       "path": "shared/heroine/sit/planetTee-buns.png",
       "theme": "shared",
@@ -1930,6 +4643,264 @@
         "status": "generated"
       }
     },
+    "shared/heroine/sit/popJacket-buns": {
+      "path": "shared/heroine/sit/popJacket-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/popJacket-loose": {
+      "path": "shared/heroine/sit/popJacket-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/popJacket-ponytail": {
+      "path": "shared/heroine/sit/popJacket-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Pop-star jacket, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/rosePyjamas-buns": {
+      "path": "shared/heroine/sit/rosePyjamas-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/rosePyjamas-loose": {
+      "path": "shared/heroine/sit/rosePyjamas-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/rosePyjamas-ponytail": {
+      "path": "shared/heroine/sit/rosePyjamas-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Rose pyjamas, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
     "shared/heroine/sit/spacesuit-buns": {
       "path": "shared/heroine/sit/spacesuit-buns.png",
       "theme": "shared",
@@ -2057,6 +5028,135 @@
         "attempts": 1,
         "generatedAt": "2026-09-13T14:08:10.131Z",
         "status": "generated"
+      }
+    },
+    "shared/heroine/sit/sparkleDress-buns": {
+      "path": "shared/heroine/sit/sparkleDress-buns.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, brown hair in two buns, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with the same brown hair in two buns as in the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/sparkleDress-loose": {
+      "path": "shared/heroine/sit/sparkleDress-loose.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, loose brown hair with a clip, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair loose and wavy to the shoulders with a small plain yellow hair clip on the left side of the image, as in the right-hand head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
+      }
+    },
+    "shared/heroine/sit/sparkleDress-ponytail": {
+      "path": "shared/heroine/sit/sparkleDress-ponytail.svg",
+      "theme": "shared",
+      "category": "heroine",
+      "size": [
+        600,
+        600
+      ],
+      "layer": "sit",
+      "anchors": {
+        "face": {
+          "x": 300,
+          "y": 150,
+          "scale": 1
+        },
+        "head": {
+          "x": 300,
+          "y": 55,
+          "scale": 0.8
+        },
+        "feet": {
+          "x": 300,
+          "y": 595,
+          "scale": 0.78
+        },
+        "back": {
+          "x": 300,
+          "y": 330,
+          "scale": 0.9
+        }
+      },
+      "label": "Sparkle stage dress, brown hair in a high ponytail, sitting",
+      "gen": {
+        "preset": "astra-light",
+        "prompt": "the exact same seven-year-old girl heroine from the attached reference sheet (same face, same skin tone, same proportions), with her brown hair in a high ponytail tied with a yellow scrunchie, as in the middle head of the bottom row of the reference sheet, full body, front view, sitting on the ground cross-legged with her hands resting in her lap, relaxed and upright, now wearing a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt, her feet tucked under her legs and out of sight, neutral small closed-mouth smile",
+        "references": [
+          "shared/heroine/referenceSheet"
+        ],
+        "attempts": 0,
+        "generatedAt": null,
+        "status": "placeholder"
       }
     },
     "shared/heroine/sit/starHoodie-buns": {

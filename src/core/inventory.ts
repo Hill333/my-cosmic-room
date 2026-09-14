@@ -4,7 +4,7 @@
  */
 import { earnableItems, itemById, isWardrobeKind } from '../catalog/index.ts';
 import type { ItemId, Save, Theme, WardrobeKind } from './types.ts';
-import { SLOT_TYPES } from './types.ts';
+import { SLOT_TYPES, THEMES } from './types.ts';
 
 export const MAX_STARS = 24;
 
@@ -129,7 +129,7 @@ export function addStar(save: Save, theme: Theme): Save {
 export function checkInvariants(save: Save): string[] {
   const problems: string[] = [];
 
-  for (const theme of ['space', 'sweet'] as const satisfies readonly Theme[]) {
+  for (const theme of THEMES) {
     const state = save.themes[theme];
     const owned = new Set(state.owned);
     for (const id of state.owned) {
@@ -180,7 +180,7 @@ export function checkInvariants(save: Save): string[] {
   check(h.extra, 'extra', true);
 
   const everything = new Set(
-    save.themes.space.owned.concat(save.themes.sweet.owned, save.wardrobe),
+    THEMES.flatMap((theme) => save.themes[theme].owned).concat(save.wardrobe),
   );
   for (const id of save.newItems) {
     const item = itemById(id);

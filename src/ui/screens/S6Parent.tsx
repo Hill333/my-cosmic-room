@@ -23,6 +23,7 @@ import { t } from '../i18n.ts';
 import { groupKeyHandler, useFocusOnMount } from '../hooks.ts';
 import { Dialog } from '../components/Dialog.tsx';
 import { HoldButton } from '../components/HoldButton.tsx';
+import { THEMES } from '../../core/types.ts';
 
 interface Props {
   /** The screen that opened the corner; "Done" returns there (SPEC §3.9). */
@@ -353,9 +354,8 @@ export function S6Parent({ returnTo }: Props) {
           </h2>
           <p class="dialog-body">
             {t('s6.importSummary', {
-              space: pending.summary.collected.space,
-              sweet: pending.summary.collected.sweet,
-              stars: pending.summary.stars.space + pending.summary.stars.sweet,
+              prizes: THEMES.reduce((n, th) => n + pending.summary.collected[th], 0),
+              stars: THEMES.reduce((n, th) => n + pending.summary.stars[th], 0),
               date: formatDate(pending.summary.updatedAt, lang),
             })}
           </p>

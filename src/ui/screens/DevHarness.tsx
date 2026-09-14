@@ -20,6 +20,7 @@ import type {
   Theme,
   TimeValue,
 } from '../../core/types.ts';
+import { THEMES } from '../../core/types.ts';
 import { dispatch, language, newSeed, save } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
@@ -308,7 +309,7 @@ function ReducerPanel() {
     <section class="harness-section" data-testid="reducer">
       <h2>Mission reducer (store)</h2>
       <div class="harness-controls">
-        {(['space', 'sweet'] as const).map((th) => (
+        {THEMES.map((th) => (
           <button
             key={th}
             type="button"

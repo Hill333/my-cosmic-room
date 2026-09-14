@@ -32,7 +32,7 @@ export interface StoredPuzzle {
 }
 
 export interface StoredMission {
-  theme: 'space' | 'sweet';
+  theme: Theme;
   activity: 'A' | 'B';
   level: number;
   puzzles: StoredPuzzle[];
@@ -47,7 +47,7 @@ export interface StoredSave {
   version: number;
   mission: StoredMission | null;
   themes: Record<
-    'space' | 'sweet',
+    Theme,
     { owned: string[]; slots: Record<string, string>; lampOn: boolean; stars: number }
   >;
   heroine: { outfit: string; shoes: string; extra: string | null };
@@ -153,7 +153,17 @@ export function grantSpace(save: Save, decorations: string[], garments: string[]
 
 /** Grants earnable Sweet items (SPEC §10.2 pool order: Sweet Sleepover, then Sunny Garden). */
 export function grantSweet(save: Save, decorations: string[], garments: string[]): Save {
-  save.themes.sweet.owned.push(...decorations);
+  return grantItems(save, 'sweet', decorations, garments);
+}
+
+/** Grants earnable items of any room (D21: the Heart and K-pop pools work the same way). */
+export function grantItems(
+  save: Save,
+  theme: Theme,
+  decorations: string[],
+  garments: string[],
+): Save {
+  save.themes[theme].owned.push(...decorations);
   save.wardrobe.push(...garments);
   save.newItems.push(...decorations, ...garments);
   return save;

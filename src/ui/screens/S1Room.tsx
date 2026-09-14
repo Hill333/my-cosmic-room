@@ -24,6 +24,7 @@ import {
   type RoomReaction,
 } from '../components/RoomScene.tsx';
 import { useRoomWalk } from '../useRoomWalk.ts';
+import { THEME_UI } from '../themes.ts';
 
 interface Props {
   theme: Theme;
@@ -32,11 +33,6 @@ interface Props {
   /** Arriving from S5: the progression suggestion may show once (SPEC §7.1). */
   suggest?: boolean;
 }
-
-const ENTRY_ART: Record<Theme, { idle: string; react: string }> = {
-  space: { idle: 'space/entry/toyRocket', react: 'space/entry/toyRocketReaction' },
-  sweet: { idle: 'sweet/entry/toyLetterbox', react: 'sweet/entry/toyLetterboxFlag' },
-};
 
 /** Safety net: a reaction ends on `animationend`, or after this long if it never fires. */
 const REACTION_TIMEOUT_MS = 2500;
@@ -223,6 +219,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
   };
 
   const panelOpen = mode !== 'free';
+  const ui = THEME_UI[theme];
 
   return (
     <main
@@ -266,15 +263,11 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
           }}
         >
           <img
-            src={assetUrl(entryReacting ? ENTRY_ART[theme].react : ENTRY_ART[theme].idle)}
+            src={assetUrl(entryReacting ? ui.entry.react : ui.entry.idle)}
             alt=""
             draggable={false}
           />
-          {theme === 'space' ? (
-            <span class="entry-smoke" aria-hidden="true" />
-          ) : (
-            <span class="entry-envelope" aria-hidden="true" />
-          )}
+          <span class={`entry-${ui.entry.effect}`} aria-hidden="true" />
         </button>
         {import.meta.env.DEV && <DebugLoader theme={theme} />}
       </div>
@@ -344,7 +337,7 @@ export function S1Room({ theme, sparkle = null, suggest = false }: Props) {
           data-testid="mission-button"
           onClick={openBoard}
         >
-          <span aria-hidden="true">{theme === 'space' ? '🚀 ' : '✉️ '}</span>
+          <span aria-hidden="true">{ui.missionIcon} </span>
           {t('s1.mission')}
         </button>
       </div>

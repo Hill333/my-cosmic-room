@@ -1,7 +1,7 @@
 # Tick-Tock — Product Requirements
 
 Status: concept-approved PRD; ready for specification, not implementation.
-Date: 12 September 2026. Updated to require two separate playroom themes. Title: Tick-Tock (decided 13 September 2026, SPEC decision D9). The working title during concept work was "My Cosmic Room", which the concept images still show.
+Date: 12 September 2026. Updated to require two separate playroom themes; extended on 13 September 2026 with two more (Heart and K-pop, SPEC decision D21) after the child asked for them. Title: Tick-Tock (decided 13 September 2026, SPEC decision D9). The working title during concept work was "My Cosmic Room", which the concept images still show.
 
 ## 1. Purpose and audience
 
@@ -17,6 +17,7 @@ The experience offers two distinct selectable playrooms: Space Playroom and Swee
 - Analog and digital clock learning with multiple difficulty levels.
 - Two distinct playroom themes in the initial scope: Space Playroom and Sweet Playroom. Decorating and dressing up are important in both.
 - Both themes share the same game idea and learning/reward mechanics; neither is an optional later theme.
+- Two more rooms with the same mechanics, requested by the child after playing (13 September 2026): a playroom filled with hearts and a K-pop room in the spirit of the film she likes. The concept drawings in `concepts/2026-09-13-new-playrooms/` are a direction, not a literal specification (SPEC D21).
 - Games and prizes should make practice fun.
 - Include the difference between two times, explicitly including 14:30 to 19:15.
 - Elapsed-time answers should use whole and quarter hours. This PRD interprets that as 15-minute increments, including 30 and 45 minutes; the user accepted visuals displaying 4 hours 45 minutes.
@@ -149,6 +150,8 @@ The three connected space concepts and the original sweet playroom image are the
 4. [Sweet Playroom](concepts/early-playroom.png): primary reference for the second room—peach walls, mint shelves, flower cushion, hearts, toys and a friendly cat. This image establishes the sweet-room art direction; dedicated wardrobe and reward layouts for it are still to be specified using the shared interaction patterns.
 
 Preserve a consistent original character and each theme’s room between its screens. Mockup objects, exact geometry, decorative lettering and minor character variations are not binding. Functional clocks and all production text must be rendered accurately by the application rather than baked into illustrative backgrounds.
+
+5. [Heart Playroom](concepts/2026-09-13-new-playrooms/01-heart-playroom.png) and 6. [K-pop Playroom](concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png) (13 September 2026): the direction for the third and fourth rooms; see the handoff in that folder and SPEC D21 for what was kept literally (palettes, the reward tiles, the companions' species) and what was not (the "8 / 12" counter, the sample question, the film's own characters, which appear only as an original cartoon trio poster).
 
 Earlier exploration is archived in [the concepts index](concepts/README.md). The original playroom image is now an active primary reference, not superseded exploration. The town theme is not selected.
 

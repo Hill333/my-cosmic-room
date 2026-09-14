@@ -19,6 +19,7 @@ import { HeroinePreview, sitFigureFor, sleepHeadFor, type Face } from './Heroine
 import { StarChart } from './StarChart.tsx';
 import type { WalkState } from '../useRoomWalk.ts';
 import { STAGE_WIDTH } from '../Stage.tsx';
+import { THEME_UI } from '../themes.ts';
 
 export type RoomMode = 'free' | 'decorate' | 'dressup';
 
@@ -174,8 +175,9 @@ export function RoomScene({
     '--jump-dx': `${bedBox.left + bedBox.width * 0.55 - (companionBox.left + companionBox.width / 2)}px`,
     '--jump-dy': `${bedBox.top + bedBox.height * 0.45 - (companionBox.top + companionBox.height)}px`,
   };
-  // Companion reactions differ per theme (SPEC §4.3, §5.4): Pip jumps onto the bed and spins;
-  // Mimi curls up on the bed and stretches with a purr.
+  // Companion reactions differ per theme (SPEC §4.3, §5.4, `THEME_UI`): Pip jumps onto the bed
+  // and spins; Mimi curls up on the bed and stretches with a purr; Lulu hops; Bori dances.
+  const companionReact = THEME_UI[theme].companionReact;
   // The evening glow sits on the lamp, wherever the theme's LAMP slot is (SPEC §4.3).
   const lampBox = roomLayerBox(theme, 'LAMP', requireItem(slots.LAMP).art.room!);
   const lampGlow = {
@@ -186,15 +188,13 @@ export function RoomScene({
     reaction?.target === 'companion'
       ? 'special'
       : reaction?.target === 'BED'
-        ? theme === 'space'
-          ? 'cheer'
-          : 'idle'
+        ? companionReact.bedPose
         : 'idle';
   const companionClass = [
     'room-companion',
     walk?.companionWalking && 'companion-walking',
-    reaction?.target === 'companion' && (theme === 'space' ? 'react-spin' : 'react-stretch'),
-    reaction?.target === 'BED' && (theme === 'space' ? 'react-jump' : 'react-curl'),
+    reaction?.target === 'companion' && companionReact.special,
+    reaction?.target === 'BED' && companionReact.bed,
   ]
     .filter(Boolean)
     .join(' ');

@@ -9,6 +9,7 @@
  */
 import { assetUrl } from '../assets.ts';
 import { soundOn } from '../state/store.ts';
+import type { Theme } from '../core/types.ts';
 
 export type SoundName =
   | 'tap'
@@ -21,6 +22,8 @@ export type SoundName =
   | 'fanfare'
   | 'jingleSpace'
   | 'jingleSweet'
+  | 'jingleHearts'
+  | 'jingleKpop'
   | 'star';
 
 const ASSET: Record<SoundName, string> = {
@@ -34,7 +37,16 @@ const ASSET: Record<SoundName, string> = {
   fanfare: 'shared/sound/fanfare',
   jingleSpace: 'space/sound/jingle',
   jingleSweet: 'sweet/sound/jingle',
+  jingleHearts: 'hearts/sound/jingle',
+  jingleKpop: 'kpop/sound/jingle',
   star: 'shared/sound/star',
+};
+
+const JINGLE: Record<Theme, SoundName> = {
+  space: 'jingleSpace',
+  sweet: 'jingleSweet',
+  hearts: 'jingleHearts',
+  kpop: 'jingleKpop',
 };
 
 /** Playback gain per clip; the wrong-answer sound stays soft (SPEC §15.4 "wrong (soft)"). */
@@ -99,9 +111,9 @@ export function play(name: SoundName): void {
   }
 }
 
-/** The theme's launch / tea-party jingle (SPEC §15.4). */
-export function playJingle(theme: 'space' | 'sweet'): void {
-  play(theme === 'space' ? 'jingleSpace' : 'jingleSweet');
+/** The theme's launch / tea-party / heart-post / showtime jingle (SPEC §15.4). */
+export function playJingle(theme: Theme): void {
+  play(JINGLE[theme]);
 }
 
 /** True once a user gesture has unlocked audio (exposed for the development harness). */

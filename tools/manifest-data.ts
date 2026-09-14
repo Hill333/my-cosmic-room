@@ -10,10 +10,26 @@ import type {
   GenPreset,
   TileCrop,
 } from '../src/assetTypes.ts';
-import type { SlotType } from '../src/core/types.ts';
+import type { SlotType, Theme } from '../src/core/types.ts';
 
 export const SPACE_REF = 'docs/concepts/01-room-and-wardrobe.png';
 export const SWEET_REF = 'docs/concepts/early-playroom.png';
+export const HEARTS_REF = 'docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png';
+export const KPOP_REF = 'docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png';
+/** Style / composition reference per room (SPEC §15.6): the concept drawing it was designed from. */
+export const THEME_REF: Record<Theme, string> = {
+  space: SPACE_REF,
+  sweet: SWEET_REF,
+  hearts: HEARTS_REF,
+  kpop: KPOP_REF,
+};
+/** Room names as they appear in asset labels. */
+export const THEME_LABEL: Record<Theme, string> = {
+  space: 'Space',
+  sweet: 'Sweet',
+  hearts: 'Heart',
+  kpop: 'K-pop',
+};
 export const HEROINE_SHEET = 'shared/heroine/referenceSheet';
 
 /** Room-layer sizes at 2× and their pivot (bottom centre unless noted). */
@@ -30,6 +46,7 @@ export const SLOT_SIZES: Record<SlotType, { size: [number, number]; pivot: [numb
 /** Items whose silhouette does not fit the slot's default box (a wide string on the HANGING slot). */
 export const SIZE_OVERRIDES: Record<string, { size: [number, number]; pivot: [number, number] }> = {
   'sweet.bunting': { size: [720, 220], pivot: [360, 0] },
+  'hearts.heartGarland': { size: [720, 220], pivot: [360, 0] },
 };
 
 export const TILE_SIZE: [number, number] = [360, 360];
@@ -150,6 +167,134 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
     prompt: 'a framed poster of a smiling yellow sun over pastel hills',
     preset: 'sol-med',
   },
+  // Heart starters (D21)
+  'hearts.plainBed': {
+    prompt:
+      "a simple child's bed with a plain rose-pink blanket, white pillow and a low rounded headboard",
+    preset: 'astra-light',
+  },
+  'hearts.plainRug': {
+    prompt: 'a plain round soft peach rug lying flat on the floor, seen from slightly above',
+    preset: 'sol-med',
+  },
+  'hearts.plainLamp': {
+    prompt: 'a small plain bedside lamp with a peach shade and a wooden base, seen straight on',
+    preset: 'sol-med',
+  },
+  'hearts.heartDrawing': {
+    prompt:
+      "a framed child's drawing of one big pink heart with a smiling face, hanging flat on a wall and seen straight on",
+    preset: 'sol-med',
+  },
+  'hearts.heartBunny': {
+    prompt: 'a small white plush bunny sitting upright and hugging a little pink heart',
+    preset: 'sol-med',
+  },
+  'hearts.paperHearts': {
+    prompt:
+      'a vertical string of pink and red paper hearts hanging down from a single point at the top on a thin thread',
+    preset: 'sol-med',
+  },
+  'hearts.pinkCushion': {
+    prompt: 'a plump round blush-pink floor cushion',
+    preset: 'sol-med',
+  },
+  // Cosy Hearts
+  'hearts.heartBeanbag': {
+    prompt: 'a soft heart-shaped strawberry-pink beanbag on the floor with a cream heart on it',
+    preset: 'sol-med',
+  },
+  'hearts.heartRug': {
+    prompt:
+      'a big fluffy heart-shaped rug in rings of pink and cream lying flat on the floor, seen from slightly above',
+    preset: 'sol-med',
+  },
+  'hearts.glowHeartLamp': {
+    prompt:
+      'a bedside lamp shaped like a glowing pink heart on a short wooden stand, seen straight on',
+    preset: 'sol-med',
+  },
+  // Kind Notes
+  'hearts.heartBed': {
+    prompt:
+      "a child's bed with a big heart-shaped rose-pink headboard, heart-patterned pink bedding and a soft pillow",
+    preset: 'astra-light',
+  },
+  'hearts.heartGarland': {
+    prompt:
+      'a hanging garland of small pink, red and cream hearts with tiny warm fairy lights between them on a thin string',
+    preset: 'sol-med',
+  },
+  'hearts.kindNotePoster': {
+    prompt:
+      'a framed poster of a pink envelope with a red heart seal and a small pink heart floating above it, hanging flat on a wall and seen straight on',
+    preset: 'sol-med',
+  },
+  // K-pop starters (D21)
+  'kpop.plainBed': {
+    prompt:
+      "a simple child's bed with a plain purple blanket, white pillow and a low rounded headboard",
+    preset: 'astra-light',
+  },
+  'kpop.plainRug': {
+    prompt: 'a plain round lilac rug lying flat on the floor, seen from slightly above',
+    preset: 'sol-med',
+  },
+  'kpop.plainLamp': {
+    prompt: 'a small plain bedside lamp with a lilac shade and a wooden base, seen straight on',
+    preset: 'sol-med',
+  },
+  'kpop.notePoster': {
+    prompt:
+      'a framed poster of three golden musical notes on a deep purple background, hanging flat on a wall and seen straight on',
+    preset: 'sol-med',
+  },
+  'kpop.magpiePlush': {
+    prompt:
+      'a small round black-and-white plush magpie with a tiny gold star on its chest, sitting',
+    preset: 'sol-med',
+  },
+  'kpop.starLights': {
+    prompt:
+      'a vertical string of glowing yellow star fairy lights hanging down from a single point at the top on a thin wire',
+    preset: 'sol-med',
+  },
+  'kpop.purpleCushion': {
+    prompt: 'a plump round deep-purple floor cushion with a small gold crown printed on it',
+    preset: 'sol-med',
+  },
+  // Stage Lights
+  'kpop.musicLamp': {
+    prompt:
+      'a small lamp shaped like a glowing golden musical note on a round purple base, seen straight on',
+    preset: 'sol-med',
+  },
+  'kpop.karaokeStage': {
+    prompt:
+      'a low round purple karaoke stage platform with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at one side, seen from slightly above',
+    preset: 'astra-light',
+  },
+  'kpop.starRug': {
+    prompt:
+      'a round deep-purple dance rug with a big gold star in the middle and small gold stars around it, lying flat on the floor, seen from slightly above',
+    preset: 'sol-med',
+  },
+  // Fan Club
+  'kpop.starBed': {
+    prompt:
+      "a child's bed with a big gold star-shaped headboard and purple bedding patterned with small gold stars",
+    preset: 'astra-light',
+  },
+  'kpop.discoBall': {
+    prompt:
+      'a small mirrored disco ball with lilac and gold facets hanging from a single point at the top on a short thread',
+    preset: 'sol-med',
+  },
+  'kpop.trioPoster': {
+    prompt:
+      'a framed poster of three original cartoon girl singers side by side holding microphones, one with a long purple braid, one with pink hair, one with dark hair in buns, on a purple and gold background, hanging flat on a wall and seen straight on',
+    preset: 'astra-light',
+  },
 };
 
 /** Garment descriptions for the heroine reference sheet and tiles (hand-drawn SVG, not generated). */
@@ -174,6 +319,18 @@ export const GARMENT_LABELS: Record<string, string> = {
   'sweet.strawberryDress': 'strawberry dress',
   'sweet.rainbowSandals': 'rainbow sandals',
   'sweet.bowHeadband': 'bow headband',
+  'hearts.heartCardigan': 'heart cardigan',
+  'hearts.heartSneakers': 'heart sneakers',
+  'hearts.heartClip': 'heart hair clip',
+  'hearts.rosePyjamas': 'rose pyjamas',
+  'hearts.heartSlippers': 'heart slippers',
+  'hearts.heartHeadband': 'heart headband',
+  'kpop.popJacket': 'pop-star jacket',
+  'kpop.starSneakers': 'star platform sneakers',
+  'kpop.headsetMic': 'headset microphone',
+  'kpop.sparkleDress': 'sparkle stage dress',
+  'kpop.glitterBoots': 'glitter boots',
+  'kpop.crownClip': 'crown hair clip',
 };
 
 /** Heroine figures (SPEC §4.5): one raster per outfit × hairstyle, all generated from the sheet. */
@@ -207,6 +364,14 @@ export const OUTFIT_PROMPTS: Record<string, string> = {
     'soft pink long-sleeved pyjamas, top and trousers, patterned with small pastel flowers',
   strawberryDress:
     'a coral-red short-sleeved dress patterned with tiny strawberries, with a white round collar and a green leaf-shaped hem',
+  heartCardigan:
+    'a pink knitted cardigan patterned with small white hearts, buttoned over a white tee, with a pleated mint skirt',
+  rosePyjamas:
+    'soft rose-pink long-sleeved pyjamas, top and trousers, patterned with small red and white hearts',
+  popJacket:
+    'a purple bomber jacket with cream sleeves and a small gold star on the chest, open over a black tee, with a pleated lilac skirt',
+  sparkleDress:
+    'a lilac sleeveless stage dress that sparkles with small gold stars and has a short flared skirt, with a thin gold belt',
 };
 
 /** Hairstyle descriptions by figure name (the hair item's `art.figure`). */
@@ -317,6 +482,16 @@ export const OVERLAY_GEN: Record<string, OverlaySpec> = {
     'rainbow-striped sandals with a toe strap and an ankle strap, worn over short white socks',
     true,
   ),
+  heartSneakers: shoes(
+    'pink low sneakers with small white hearts and white laces, worn with short white socks',
+    true,
+  ),
+  heartSlippers: shoes('fluffy pink heart-shaped slippers with a little white heart on each toe'),
+  starSneakers: shoes(
+    'white chunky platform sneakers with small gold stars on the sides, worn with white crew socks',
+    true,
+  ),
+  glitterBoots: shoes('short glittery purple boots with a small gold star on each ankle', true),
   starClip: {
     prompt: 'a small yellow star hair clip with a short clip bar, seen from the front',
     preset: 'sol-med',
@@ -354,6 +529,42 @@ export const OVERLAY_GEN: Record<string, OverlaySpec> = {
     pivot: [180, 220],
     tileCrop: 'torso',
   },
+  heartClip: {
+    prompt: 'a small pink heart hair clip with a short clip bar, seen from the front',
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [110, 110],
+    pivot: [55, 55],
+    offset: [80, 50],
+    tileCrop: 'head',
+  },
+  heartHeadband: {
+    prompt:
+      "a pink fabric headband with two small red heart bobbles on short springs, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [300, 150],
+    pivot: [150, 105],
+    tileCrop: 'head',
+  },
+  headsetMic: {
+    prompt:
+      "a thin gold performer's headset microphone seen from the front as it sits on a child's head: a slim band over the top of the head and a small microphone arm curving down to the right cheek",
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [300, 150],
+    pivot: [150, 105],
+    tileCrop: 'head',
+  },
+  crownClip: {
+    prompt: 'a small gold crown hair clip with a short clip bar, seen from the front',
+    preset: 'sol-med',
+    anchor: 'head',
+    size: [110, 110],
+    pivot: [55, 55],
+    offset: [80, 50],
+    tileCrop: 'head',
+  },
 };
 
 /** Sound effects (SPEC §15.4), synthesized by tools/gen-sounds.ts into assets/<theme>/sound/. */
@@ -368,6 +579,8 @@ export const SOUNDS: { id: string; theme: AssetEntry['theme']; label: string }[]
   { id: 'shared/sound/fanfare', theme: 'shared', label: 'Mission complete fanfare' },
   { id: 'space/sound/jingle', theme: 'space', label: 'Launch jingle' },
   { id: 'sweet/sound/jingle', theme: 'sweet', label: 'Tea-party jingle' },
+  { id: 'hearts/sound/jingle', theme: 'hearts', label: 'Heart-post jingle' },
+  { id: 'kpop/sound/jingle', theme: 'kpop', label: 'Showtime jingle' },
   { id: 'shared/sound/star', theme: 'shared', label: 'Star earned' },
 ];
 
@@ -409,6 +622,30 @@ export const EXTRA_ASSETS: Extra[] = [
       'astra-light',
       'the pastel playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls, a tall mint-green open shelf unit with a few books and a small framed picture at the far left with trailing green ivy on top, a big arched window on the upper right showing a sunny sky, a smiling sun, distant houses and a hedge, a pale honey wooden floor, a small mint cabinet under the window, a low white skirting board, a large open floor space in the centre; the centre wall must be blank (no poster, no banner, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no mobile, no cushion, no window seat and no character or cat; keep the floor centre and the right half of the floor clear',
       [SWEET_REF],
+    ),
+  },
+  {
+    id: 'hearts/room/background',
+    theme: 'hearts',
+    category: 'room',
+    size: [3072, 2048],
+    label: 'Heart room background',
+    ...gen(
+      'astra-light',
+      'the heart-filled playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm blush-pink walls, a heart-shaped white open shelf unit with a few books and a potted plant at the far left with trailing green leaves, a small white craft desk with a heart-backed chair under it, a big arched window on the upper right showing a sunny sky, a smiling sun and distant houses, a pale honey wooden floor, a low white cabinet with a potted tulip under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no garland, no canopy, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no hanging garland, no cushion, no beanbag, no letterbox and no character or animal; keep the floor centre and the right half of the floor clear',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'kpop/room/background',
+    theme: 'kpop',
+    category: 'room',
+    size: [3072, 2048],
+    label: 'K-pop room background',
+    ...gen(
+      'astra-light',
+      "the pop-fan's playroom from the attached concept image, redrawn as an empty room in the same layout, palette and painterly cosy style: warm peach walls with a soft lavender glow, a tall wooden open shelf unit with a few albums, a small record player and a potted plant at the far left, a clothes rail with nothing on it beside it, a big arched window on the upper right showing a dreamy evening city skyline under a purple sky with a soft golden arc of light, a warm honey wooden floor, a small wooden nightstand under the window, a large open floor space in the centre; the centre wall must be blank (no poster, no string lights, no hook art) and the room must contain no bed, no rug, no lamp, no poster, no toy on the shelf, no hanging lights, no cushion, no stage, no microphone and no character or animal; keep the floor centre and the right half of the floor clear",
+      [KPOP_REF],
     ),
   },
   // Heroine reference sheet (SPEC §15.2 item 2): the figures, faces, shoes and extras below
@@ -479,6 +716,44 @@ export const EXTRA_ASSETS: Extra[] = [
       [SWEET_REF, 'sweet/companion/mimi/idle'],
     ),
   })),
+  ...(['idle', 'cheer', 'hmm', 'special'] as const).map((pose): Extra => ({
+    id: `hearts/companion/lulu/${pose}`,
+    theme: 'hearts',
+    category: 'companion',
+    size: [400, 480],
+    label: `Lulu ${pose}`,
+    ...gen(
+      'astra-light',
+      `a small friendly white bunny with long floppy ears and a pink bandana with a red heart on it, ${
+        {
+          idle: 'sitting and smiling',
+          cheer: 'jumping with both paws up, cheering',
+          hmm: 'tilting its head with a puzzled friendly "hmm" look',
+          special: 'hopping in the air with little pink hearts around it',
+        }[pose]
+      }`,
+      [HEARTS_REF, 'hearts/companion/lulu/idle'],
+    ),
+  })),
+  ...(['idle', 'cheer', 'hmm', 'special'] as const).map((pose): Extra => ({
+    id: `kpop/companion/bori/${pose}`,
+    theme: 'kpop',
+    category: 'companion',
+    size: [400, 480],
+    label: `Bori ${pose}`,
+    ...gen(
+      'astra-light',
+      `a small chunky friendly blue tiger cub with darker blue stripes, big round yellow eyes, a white belly and a purple collar with a gold heart tag, ${
+        {
+          idle: 'sitting and smiling',
+          cheer: 'standing on hind legs with paws up, cheering',
+          hmm: 'tilting its head with a puzzled friendly "hmm" look',
+          special: 'dancing on hind legs with little golden musical notes around it',
+        }[pose]
+      }`,
+      [KPOP_REF, 'kpop/companion/bori/idle'],
+    ),
+  })),
   // Mission entry objects
   {
     id: 'space/entry/toyRocket',
@@ -528,6 +803,58 @@ export const EXTRA_ASSETS: Extra[] = [
       'sol-med',
       'the same small toy letterbox with its mint flag raised and a tiny envelope popping out',
       [SWEET_REF, 'sweet/entry/toyLetterbox'],
+    ),
+  },
+  {
+    id: 'hearts/entry/heartBox',
+    theme: 'hearts',
+    category: 'entry',
+    size: [240, 300],
+    pivot: [120, 300],
+    label: 'Heart music box',
+    ...gen(
+      'sol-med',
+      'a small heart-shaped pink music box with a closed lid and a tiny gold clasp, standing on a short cream stand',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/entry/heartBoxOpen',
+    theme: 'hearts',
+    category: 'entry',
+    size: [240, 300],
+    pivot: [120, 300],
+    label: 'Heart music box open',
+    ...gen(
+      'sol-med',
+      'the same small heart-shaped pink music box with its lid open, a tiny pink envelope rising out of it and a soft glow inside',
+      [HEARTS_REF, 'hearts/entry/heartBox'],
+    ),
+  },
+  {
+    id: 'kpop/entry/toyMic',
+    theme: 'kpop',
+    category: 'entry',
+    size: [320, 400],
+    pivot: [160, 400],
+    label: 'Toy microphone',
+    ...gen(
+      'astra-light',
+      'a chunky toy microphone on a tall purple stand with a round tripod base, the microphone head sparkly lilac with a small gold star on top',
+      [KPOP_REF],
+    ),
+  },
+  {
+    id: 'kpop/entry/toyMicGlow',
+    theme: 'kpop',
+    category: 'entry',
+    size: [320, 400],
+    pivot: [160, 400],
+    label: 'Toy microphone glowing',
+    ...gen(
+      'astra-light',
+      'the same chunky toy microphone on its stand with the head glowing warm gold and two small golden musical notes floating up beside it',
+      [KPOP_REF, 'kpop/entry/toyMic'],
     ),
   },
   // Activity A scene art
@@ -624,6 +951,112 @@ export const EXTRA_ASSETS: Extra[] = [
     label: `Step ${step}`,
     ...gen('sol-med', prompt, [SWEET_REF]),
   })),
+  {
+    id: 'hearts/sceneA/craftFrame',
+    theme: 'hearts',
+    category: 'sceneA',
+    size: [3072, 2048],
+    label: 'Craft corner frame',
+    ...gen(
+      'astra-light',
+      'a cosy pink craft corner wall with heart bunting along the top, shelves of coloured paper, ribbons and jars of pencils at both sides, a sunny window at the upper left, and a large empty light rectangular panel in the centre',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/sceneA/postBag',
+    theme: 'hearts',
+    category: 'sceneA',
+    size: [600, 900],
+    pivot: [300, 900],
+    label: 'Post bag of kind notes',
+    ...gen(
+      'astra-light',
+      'a small cream canvas post bag with a red heart stitched on it, standing open with pink envelopes peeking out of the top',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/sceneA/heartBalloons',
+    theme: 'hearts',
+    category: 'sceneA',
+    size: [600, 900],
+    pivot: [300, 900],
+    label: 'Heart balloons carrying the post bag',
+    ...gen(
+      'astra-light',
+      'a bunch of five pink and red heart-shaped balloons on strings lifting a small cream post bag with a red heart on it, seen from the front',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/sceneA/balloonHearts',
+    theme: 'hearts',
+    category: 'sceneA',
+    size: [400, 500],
+    pivot: [200, 0],
+    label: 'Trail of little hearts',
+    ...gen(
+      'sol-med',
+      'a loose vertical trail of small pink, red and cream hearts of different sizes drifting downwards, spaced apart',
+      [HEARTS_REF],
+    ),
+  },
+  ...(
+    [
+      ['note', 'a small folded pink note with a red heart drawn on the front'],
+      ['envelope', 'a small pink envelope with a red heart seal'],
+      ['stamp', 'a small square postage stamp with a pink heart on it'],
+      ['ribbon', 'a small tied bow of red ribbon'],
+    ] as const
+  ).map(([step, prompt]): Extra => ({
+    id: `hearts/sceneA/step/${step}`,
+    theme: 'hearts',
+    category: 'sceneA',
+    size: [300, 300],
+    label: `Step ${step}`,
+    ...gen('sol-med', prompt, [HEARTS_REF]),
+  })),
+  {
+    id: 'kpop/sceneA/stageFrame',
+    theme: 'kpop',
+    category: 'sceneA',
+    size: [3072, 2048],
+    label: 'Stage frame',
+    ...gen(
+      'astra-light',
+      'a small cosy concert stage seen from the audience with deep purple curtains drawn back at both sides, strings of warm star lights along the top, two round speakers and a spotlight at each side, and a large empty light rectangular panel in the centre',
+      [KPOP_REF],
+    ),
+  },
+  {
+    id: 'kpop/sceneA/stage',
+    theme: 'kpop',
+    category: 'sceneA',
+    size: [1200, 700],
+    pivot: [600, 700],
+    label: 'Concert stage',
+    ...gen(
+      'astra-light',
+      'a small round purple concert stage with a ring of warm lights around its edge, a star-topped microphone on a stand in the middle, two round speakers and golden confetti in the air',
+      [KPOP_REF],
+    ),
+  },
+  ...(
+    [
+      ['lights', 'a small purple stage spotlight on a short stand shining a warm beam'],
+      ['speaker', 'a small round purple loudspeaker with a gold grille'],
+      ['costume', 'a small purple and gold bomber jacket on a wooden hanger'],
+      ['curtain', 'a small pair of deep purple stage curtains tied back with gold cords'],
+    ] as const
+  ).map(([step, prompt]): Extra => ({
+    id: `kpop/sceneA/step/${step}`,
+    theme: 'kpop',
+    category: 'sceneA',
+    size: [300, 300],
+    label: `Step ${step}`,
+    ...gen('sol-med', prompt, [KPOP_REF]),
+  })),
   // Activity B scene art
   {
     id: 'space/sceneB/planet',
@@ -683,6 +1116,78 @@ export const EXTRA_ASSETS: Extra[] = [
       'astra-light',
       'a wrapped parcel with a bow carried by three pastel balloons, with a small grey-and-white cat in a yellow bandana riding on top',
       [SWEET_REF, 'sweet/companion/mimi/idle'],
+    ),
+  },
+  {
+    id: 'hearts/sceneB/postOffice',
+    theme: 'hearts',
+    category: 'sceneB',
+    size: [600, 500],
+    label: 'Heart post office',
+    ...gen(
+      'sol-med',
+      'a small pink post office front with a heart-shaped sign over the door and a red letterbox beside it',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/sceneB/heartHouse',
+    theme: 'hearts',
+    category: 'sceneB',
+    size: [600, 500],
+    label: 'Heart house window',
+    ...gen(
+      'sol-med',
+      'a cosy cream house front with a heart-shaped window with pink curtains and a flower box below it',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'hearts/sceneB/birdLetter',
+    theme: 'hearts',
+    category: 'sceneB',
+    size: [600, 700],
+    label: 'Lovebird carrying a letter',
+    ...gen(
+      'astra-light',
+      'a small round pink lovebird flying sideways and carrying a pink envelope with a red heart seal in its beak, little hearts trailing behind',
+      [HEARTS_REF],
+    ),
+  },
+  {
+    id: 'kpop/sceneB/concertHall',
+    theme: 'kpop',
+    category: 'sceneB',
+    size: [600, 500],
+    label: 'Concert hall',
+    ...gen(
+      'sol-med',
+      'a small purple concert hall front with a glowing marquee of little gold stars over the doors',
+      [KPOP_REF],
+    ),
+  },
+  {
+    id: 'kpop/sceneB/window',
+    theme: 'kpop',
+    category: 'sceneB',
+    size: [600, 500],
+    label: 'Playroom window at night',
+    ...gen(
+      'sol-med',
+      'a playroom window with purple curtains seen from outside at evening, warm light inside and a small star lamp on the sill',
+      [KPOP_REF],
+    ),
+  },
+  {
+    id: 'kpop/sceneB/tourBus',
+    theme: 'kpop',
+    category: 'sceneB',
+    size: [600, 400],
+    label: 'Tour bus with a parcel',
+    ...gen(
+      'astra-light',
+      'a small friendly purple tour bus with gold stars painted on its side driving sideways, a wrapped parcel with a bow strapped on its roof and a small blue tiger cub waving from a window',
+      [KPOP_REF, 'kpop/companion/bori/idle'],
     ),
   },
   {

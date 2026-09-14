@@ -15,6 +15,10 @@
      panel, AT-34). */
   --coral-text: #b8432c;
   --blue: #4c7de0;
+  /* Heart and K-pop room tints (D21): a rose for the Heart chrome, a deep lilac for K-pop. */
+  --rose: #f7a8c0;
+  --violet: #7a55c8; /* 5.3:1 under white text (AT-34) */
+  --gold: #f2c14e;
   --panel: #fffaf4;
   --text: var(--plum);
   --focus: var(--plum);
@@ -241,7 +245,8 @@ button:disabled {
   inset: 0;
 }
 
-/* S0 */
+/* S0: four room cards in a row (D21), each 330 px wide so the row fits the stage with room
+   for the language switch and the corner buttons under it. */
 .s0 {
   /* The highlight stays dark enough for the star-yellow title (4.9:1 at its brightest, AT-34). */
   background: radial-gradient(circle at 20% 15%, #6a4c9e 0, var(--purple) 40%, var(--plum) 100%);
@@ -280,11 +285,11 @@ button:disabled {
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 80px;
+  gap: 32px;
 }
 .room-card {
-  width: 560px;
-  height: 560px;
+  width: 330px;
+  height: 500px;
   padding: 0;
   border: 6px solid var(--plum);
   border-radius: 48px;
@@ -314,17 +319,22 @@ button:disabled {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 190px;
-  height: 285px;
+  width: 150px;
+  height: 225px;
   transform: translateX(-50%);
 }
 .room-card-name {
   display: block;
-  padding: 18px;
-  font-size: 40px;
+  min-height: 108px;
+  padding: 14px 12px;
+  font-size: 32px;
+  line-height: 1.15;
   font-weight: 800;
   background: #fff;
   border-top: 6px solid var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .room-card-sweet .room-card-name {
   background: var(--pink);
@@ -332,12 +342,19 @@ button:disabled {
 .room-card-space .room-card-name {
   background: var(--lavender);
 }
+.room-card-hearts .room-card-name {
+  background: var(--rose);
+}
+.room-card-kpop .room-card-name {
+  background: var(--violet);
+  color: #fff;
+}
 
 .s0-footer {
   position: absolute;
   left: 48px;
   right: 48px;
-  bottom: 40px;
+  bottom: 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -472,6 +489,12 @@ button:disabled {
 }
 .clock-sweet .clock-face {
   stroke: var(--sunny);
+}
+.clock-hearts .clock-face {
+  stroke: var(--rose);
+}
+.clock-kpop .clock-face {
+  stroke: var(--gold);
 }
 .clock-ticks line {
   stroke: var(--plum);

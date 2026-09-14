@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { assetUrl } from '../../assets.ts';
 import { LANGUAGES, languageNames } from '../../strings/index.ts';
 import type { Language, Theme } from '../../core/types.ts';
+import { THEMES } from '../../core/types.ts';
 import { dispatch, language, languageChosen, lastTheme, soundOn } from '../../state/store.ts';
 import { go } from '../../state/nav.ts';
 import { t } from '../i18n.ts';
@@ -68,7 +69,7 @@ export function S0Title() {
         <p class="s0-sub">{t('s0.choose')}</p>
       </header>
       <div class="room-cards">
-        {(['space', 'sweet'] as const).map((theme) => (
+        {THEMES.map((theme) => (
           <RoomCard
             key={theme}
             theme={theme}

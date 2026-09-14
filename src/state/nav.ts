@@ -4,6 +4,7 @@
  */
 import { signal } from '@preact/signals';
 import type { ItemId, Mission, Theme } from '../core/types.ts';
+import { isTheme } from '../core/types.ts';
 import { save } from './store.ts';
 
 export type Screen =
@@ -28,7 +29,8 @@ function initialScreen(): Screen {
   if (import.meta.env.DEV && typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('screen');
-    const theme = params.get('theme') === 'sweet' ? 'sweet' : 'space';
+    const wanted = params.get('theme');
+    const theme = isTheme(wanted) ? wanted : 'space';
     if (id === 'S1') return { id: 'S1', theme };
     if (id === 'S2') return { id: 'S2', theme: save.value.settings.lastTheme };
     if (id === 'S6') return { id: 'S6', returnTo: { id: 'S0' } };

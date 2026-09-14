@@ -14,6 +14,7 @@ import {
   sleepHeadId,
 } from '../src/catalog/index.ts';
 import type { AssetEntry, AssetManifest, GenRecord } from '../src/assetTypes.ts';
+import type { Theme } from '../src/core/types.ts';
 import {
   DECORATION_GEN,
   DEFAULT_ANCHORS,
@@ -28,14 +29,15 @@ import {
   SLEEP_SIZE,
   SLOT_SIZES,
   SOUNDS,
-  SPACE_REF,
-  SWEET_REF,
+  THEME_LABEL,
+  THEME_REF,
   TILE_SIZE,
   figurePrompt,
   sitPrompt,
   sleepPrompt,
 } from './manifest-data.ts';
 import { readManifest, writeManifest } from './lib/manifest.ts';
+import { THEMES } from '../src/core/types.ts';
 
 function placeholderPath(id: string): string {
   return `${id}.svg`;
@@ -65,7 +67,7 @@ for (const item of allItems) {
     const geo = SIZE_OVERRIDES[item.id] ?? SLOT_SIZES[item.slot];
     const g = DECORATION_GEN[item.id];
     if (!g) throw new Error(`No generation prompt for ${item.id} in tools/manifest-data.ts`);
-    const ref = item.theme === 'sweet' ? SWEET_REF : SPACE_REF;
+    const ref = THEME_REF[item.theme as Theme];
     desired.set(item.art.room, {
       path: placeholderPath(item.art.room),
       theme: item.theme,
@@ -197,13 +199,13 @@ for (const sound of SOUNDS) {
 }
 
 // S0 card thumbnails (SPEC §16.3), derived from the backgrounds by tools/gen-thumbs.ts.
-for (const theme of ['space', 'sweet'] as const) {
+for (const theme of THEMES) {
   desired.set(`${theme}/room/thumb`, {
     path: `${theme}/room/thumb.webp`,
     theme,
     category: 'room',
     size: [960, 640],
-    label: `${theme === 'space' ? 'Space' : 'Sweet'} room card thumbnail`,
+    label: `${THEME_LABEL[theme]} room card thumbnail`,
     derivedFrom: `${theme}/room/background`,
   });
 }

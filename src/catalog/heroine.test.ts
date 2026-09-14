@@ -11,14 +11,16 @@ import {
   overlayStyles,
 } from './heroine.ts';
 import { allItems, defaultHeroine, figureId, heroineFigure, requireItem } from './index.ts';
+import { THEMES } from '../core/types.ts';
 
 const manifest = manifestJson as unknown as AssetManifest;
 
 describe('heroine figures and overlays (SPEC §4.5)', () => {
-  it('names one figure per outfit × hairstyle and the manifest has all 21 with anchors', () => {
+  it('names one figure per outfit × hairstyle and the manifest has all 33 with anchors', () => {
     const outfits = allItems.filter((i) => i.kind === 'outfit');
     const hairs = allItems.filter((i) => i.kind === 'hair');
-    expect(outfits).toHaveLength(7);
+    // 3 shared starters + 2 earnable outfits per room (D21).
+    expect(outfits).toHaveLength(3 + 2 * THEMES.length);
     expect(hairs).toHaveLength(3);
     for (const o of outfits) {
       for (const h of hairs) {

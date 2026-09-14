@@ -414,7 +414,12 @@ describe('AT-17 first E3 mission (reducer part)', () => {
         now: LATER,
       },
     );
-    expect(s.progress.firstE3Done).toEqual({ space: true, sweet: false });
+    expect(s.progress.firstE3Done).toEqual({
+      space: true,
+      sweet: false,
+      hearts: false,
+      kpop: false,
+    });
     for (let seed = 3; seed < 40; seed++) {
       s = startMission(s, 'space', 'B', seed);
       expect(isExample(s)).toBe(false);

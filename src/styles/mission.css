@@ -772,7 +772,8 @@
     transform: translateY(4px);
   }
 }
-.mission-sweet .journey-vehicle-img {
+.mission-sweet .journey-vehicle-img,
+.mission-hearts .journey-vehicle-img {
   animation-name: vehicle-boost-balloon, vehicle-float;
 }
 @keyframes vehicle-boost-balloon {
@@ -819,6 +820,13 @@
 .mission-sweet .journey-trail i {
   background: var(--pink);
   border-radius: 30% 30% 50% 50%;
+}
+.mission-hearts .journey-trail i {
+  background: var(--coral);
+  border-radius: 30% 30% 50% 50%;
+}
+.mission-kpop .journey-trail i {
+  background: var(--gold);
 }
 @keyframes trail-spark {
   0% {
@@ -1103,6 +1111,12 @@
 .star-chart-sweet {
   --chart-bg: var(--pink);
 }
+.star-chart-hearts {
+  --chart-bg: var(--rose);
+}
+.star-chart-kpop {
+  --chart-bg: var(--violet);
+}
 .star-chart-frame {
   fill: var(--chart-bg);
   stroke: var(--plum);
@@ -1140,7 +1154,9 @@
   font-weight: 700;
 }
 
-/* Story reaction after puzzle 4 (SPEC §3.6): launch / tea party beside the card. */
+/* Story reaction after puzzle 4 (SPEC §3.6): launch / tea party beside the card; the Heart
+   balloons rise like the rocket with a trail of little hearts for a flame, the K-pop stage
+   arrives like the tea table (`THEME_UI.celebration`, D21). */
 .celebration {
   position: absolute;
   right: 16px;
@@ -1169,6 +1185,27 @@
   animation:
     launch 2.6s cubic-bezier(0.5, 0, 0.9, 0.4) 1 forwards,
     flame-flicker 180ms ease-in-out infinite alternate;
+}
+/* The balloons drift up more gently than the rocket, and the hearts sway rather than flicker. */
+.celebration-hearts .celebration-rocket {
+  animation-timing-function: cubic-bezier(0.3, 0, 0.7, 0.6);
+  animation-duration: 3.2s;
+}
+.celebration-hearts .celebration-flame {
+  bottom: -150px;
+  width: 110px;
+  margin-left: -55px;
+  animation:
+    launch 3.2s cubic-bezier(0.3, 0, 0.7, 0.6) 1 forwards,
+    heart-sway 700ms ease-in-out infinite alternate;
+}
+@keyframes heart-sway {
+  from {
+    rotate: -6deg;
+  }
+  to {
+    rotate: 6deg;
+  }
 }
 @keyframes launch {
   0% {
@@ -1582,6 +1619,76 @@
   100% {
     opacity: 0;
     transform: translate(200px, 240px) rotate(38deg);
+  }
+}
+/* Little hearts drifting up the sides of the Heart room scenes (Hearts A and B, D21). */
+.drift-hearts {
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+.drift-hearts i {
+  position: absolute;
+  left: calc(120px + var(--i) * 420px);
+  top: 900px;
+  width: 26px;
+  height: 26px;
+  background: var(--coral);
+  clip-path: path('M13 25 L2 13 A6 6 0 0 1 13 5 A6 6 0 0 1 24 13 Z');
+  opacity: 0;
+  animation: heart-drift 6s ease-out infinite;
+  animation-delay: calc(var(--i) * 1.6s);
+}
+.drift-hearts i:nth-child(2n) {
+  background: var(--rose);
+  width: 20px;
+  height: 20px;
+}
+.drift-hearts i:nth-child(3) {
+  left: 1340px;
+}
+.drift-hearts i:nth-child(4) {
+  left: 1460px;
+}
+@keyframes heart-drift {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  20% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-360px) translateX(24px) scale(1.1);
+  }
+}
+/* A soft stage light sweeping across the top of the K-pop stage (K-pop A, D21). */
+.stage-sweep {
+  left: 0;
+  top: 0;
+  width: 1536px;
+  height: 260px;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 216, 107, 0) 40%,
+    rgba(255, 216, 107, 0.28) 50%,
+    rgba(255, 216, 107, 0) 60%,
+    transparent 100%
+  );
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  animation: stage-sweep 5s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+@keyframes stage-sweep {
+  from {
+    background-position: -40% 0;
+  }
+  to {
+    background-position: 140% 0;
   }
 }
 /* Steam from the pot on the kitchen stove (Sweet A). */
