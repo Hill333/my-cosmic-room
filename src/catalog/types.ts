@@ -1,4 +1,4 @@
-import type { ItemId, ItemKind, ItemTheme, SlotType } from '../core/types.ts';
+import type { ItemId, ItemKind, ItemTheme, SlotType, Theme } from '../core/types.ts';
 
 export type ItemReaction = 'generic' | 'lamp' | 'bed' | 'entry';
 
@@ -44,7 +44,7 @@ export interface Item {
 
 export interface Collection {
   id: string;
-  theme: 'space' | 'sweet';
+  theme: Theme;
   order: number;
   nameKey: string;
 }

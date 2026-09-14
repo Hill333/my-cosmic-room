@@ -21,6 +21,7 @@ import { DigitalDisplay } from '../components/DigitalDisplay.tsx';
 import { JumpTimeline } from '../components/JumpTimeline.tsx';
 import { MissionFrame, PuzzleFooter } from '../components/MissionFrame.tsx';
 import { ScheduleBar } from '../components/ScheduleBar.tsx';
+import { THEME_UI } from '../themes.ts';
 
 interface Props {
   mission: Mission;
@@ -65,19 +66,6 @@ export function S4ActivityB({ mission }: Props) {
   );
 }
 
-const JOURNEY = {
-  space: {
-    from: 'space/sceneB/planet',
-    to: 'space/sceneB/moon',
-    vehicle: 'space/sceneB/rocketParcel',
-  },
-  sweet: {
-    from: 'sweet/sceneB/toyShop',
-    to: 'sweet/sceneB/window',
-    vehicle: 'sweet/sceneB/balloonParcel',
-  },
-} as const;
-
 const TRAIL = [0, 1, 2, 3, 4];
 const STOPS = [1, 2, 3];
 
@@ -88,7 +76,7 @@ const STOPS = [1, 2, 3];
  * animations replay); the destination glows once the parcel arrives.
  */
 function JourneyStrip({ theme, solved }: { theme: Theme; solved: number }) {
-  const art = JOURNEY[theme];
+  const art = THEME_UI[theme].journey;
   const done = Math.min(solved, PUZZLES_PER_MISSION);
   const progress = done / PUZZLES_PER_MISSION;
   return (
@@ -215,7 +203,7 @@ function PuzzleB({ mission, feedback, onFeedback: setFeedback, onNext }: PuzzleP
             />
             <div class="journey-times-middle">
               <img
-                src={assetUrl(JOURNEY[theme].vehicle)}
+                src={assetUrl(THEME_UI[theme].journey.vehicle)}
                 alt=""
                 class="journey-times-icon"
                 draggable={false}

@@ -25,7 +25,8 @@ const save = createFreshSave();
 save.settings.language = 'en';
 for (const item of allItems) {
   if (item.starter) continue;
-  if (item.kind === 'decoration') save.themes[item.theme as 'space' | 'sweet'].owned.push(item.id);
+  if (item.kind === 'decoration' && item.theme !== 'shared')
+    save.themes[item.theme].owned.push(item.id);
   else save.wardrobe.push(item.id);
 }
 save.themes.space.slots = {

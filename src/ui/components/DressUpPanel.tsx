@@ -10,6 +10,7 @@ import { groupKeyHandler } from '../hooks.ts';
 import { t } from '../i18n.ts';
 import { play } from '../sound.ts';
 import { SidePanel } from './SidePanel.tsx';
+import { THEME_UI } from '../themes.ts';
 
 interface Props {
   theme: Theme;
@@ -26,8 +27,6 @@ const TABS: { kind: WardrobeKind; key: StringKey }[] = [
   { kind: 'hair', key: 'panel.hair' },
   { kind: 'extra', key: 'panel.extras' },
 ];
-
-const THEME_BADGE: Record<'space' | 'sweet', string> = { space: '🚀', sweet: '💗' };
 
 /**
  * Dress-up panel (SPEC §4.4): tabs Clothes / Shoes / Hair / Extras, the worn tile with a check
@@ -105,7 +104,7 @@ export function DressUpPanel({ theme, onClose, onWear, opener }: Props) {
         )}
         {items.map((item) => {
           const worn = heroine[tab] === item.id;
-          const badgeTheme = item.theme === 'space' || item.theme === 'sweet' ? item.theme : null;
+          const badgeTheme = item.theme === 'shared' ? null : item.theme;
           return (
             <button
               key={item.id}
@@ -125,7 +124,7 @@ export function DressUpPanel({ theme, onClose, onWear, opener }: Props) {
                   role="img"
                   aria-label={t(`ui.themeBadge.${badgeTheme}`)}
                 >
-                  {THEME_BADGE[badgeTheme]}
+                  {THEME_UI[badgeTheme].badge}
                 </span>
               )}
               <img src={assetUrl(item.art.tile)} alt="" draggable={false} />

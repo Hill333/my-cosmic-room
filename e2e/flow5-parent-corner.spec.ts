@@ -93,7 +93,7 @@ test('flow 5: hold the gear, lock levels, 24-hour clocks, export and import, res
   });
   const dialog = page.getByTestId('import-dialog');
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText('This file has 2 Space and 0 Sweet prizes, 7 stars');
+  await expect(dialog).toContainText('This file has 2 prizes and 7 stars');
   await page.getByTestId('import-cancel').click();
   await expect(dialog).toHaveCount(0);
   await expect.poll(async () => (await readSave(page)).themes.sweet.stars).toBe(2);

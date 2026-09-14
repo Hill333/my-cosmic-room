@@ -1,6 +1,7 @@
 import { assetUrl } from '../../assets.ts';
 import type { Theme } from '../../core/types.ts';
 import { t } from '../i18n.ts';
+import { THEME_UI } from '../themes.ts';
 
 export type CompanionPose = 'idle' | 'hmm' | 'cheer' | 'special';
 
@@ -11,9 +12,7 @@ interface Props {
   variant?: number;
 }
 
-const COMPANION: Record<Theme, string> = { space: 'pip', sweet: 'mimi' };
-
-/** Pip or Mimi (SPEC §3.6): a placeholder image per pose; the pose animates through CSS. */
+/** Pip, Mimi, Lulu or Bori (SPEC §3.6): one image per pose; the pose animates through CSS. */
 export function Companion({ theme, pose = 'idle', variant = 0 }: Props) {
   return (
     <span
@@ -23,7 +22,7 @@ export function Companion({ theme, pose = 'idle', variant = 0 }: Props) {
       data-pose={pose}
     >
       <img
-        src={assetUrl(`${theme}/companion/${COMPANION[theme]}/${pose}`)}
+        src={assetUrl(`${theme}/companion/${THEME_UI[theme].companion}/${pose}`)}
         alt=""
         draggable={false}
       />

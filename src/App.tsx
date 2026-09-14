@@ -10,12 +10,16 @@ import { S3ActivityA } from './ui/screens/S3ActivityA.tsx';
 import { S4ActivityB } from './ui/screens/S4ActivityB.tsx';
 import { S5Complete } from './ui/screens/S5Complete.tsx';
 import { S6Parent } from './ui/screens/S6Parent.tsx';
+import type { Theme } from './core/types.ts';
 
-const BACKGROUNDS = {
+/** Letterbox colour around the stage per room (SPEC §16.1), and the title screen's. */
+const BACKGROUNDS: Record<Theme | 'title', string> = {
   space: '#5A3D8A',
   sweet: '#F5B5C8',
+  hearts: '#F2A7BE',
+  kpop: '#6B4BA8',
   title: '#3B2A5E',
-} as const;
+};
 
 export function App() {
   const current = screen.value;

@@ -1,13 +1,22 @@
 /**
  * Shared types for the pure game core (SPEC §6–§11).
- * This module has no DOM or framework imports; its only runtime code is the kind predicate.
+ * This module has no DOM or framework imports; its only runtime code is the theme list and
+ * the two predicates.
  */
 
 /** Minutes since midnight, integer 0–1439 (SPEC §0). */
 export type TimeValue = number;
 
 export type Language = 'en' | 'tr' | 'nl';
-export type Theme = 'space' | 'sweet';
+/**
+ * The playrooms in the order the title screen shows them (SPEC §2, D21). Every per-theme
+ * record in the game is keyed by this list, so adding a room starts here.
+ */
+export const THEMES = ['space', 'sweet', 'hearts', 'kpop'] as const;
+export type Theme = (typeof THEMES)[number];
+export function isTheme(v: unknown): v is Theme {
+  return typeof v === 'string' && (THEMES as readonly string[]).includes(v);
+}
 export type ItemTheme = Theme | 'shared';
 export type MotionSetting = 'system' | 'reduced' | 'full';
 

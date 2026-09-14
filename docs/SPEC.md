@@ -52,6 +52,7 @@ Additional decisions made in this document that were not listed in the PRD:
 | D18 | Heroine walks in the room (13 September 2026) | Requested by the child after playing: pick the heroine, click somewhere, she walks there; the bed puts her to sleep, the nook seats her, other items react when she arrives, the companion follows. Done with the existing standing figure and CSS only (a bob while walking, a mask above the blanket or the cushion), no new art; positions are UI state, never saved (§4.3). |
 | D19 | Workbook question types (13 September 2026) | Three question types from the child's Dutch workbook ("Blok 4", quarter hours) are mixed into the existing missions rather than given a third card: **times in words** (§7.7: READ answers, MATCH and SET prompts as "quarter past 4" / "kwart over 4" / "dördü çeyrek geçiyor", about half of the reading puzzles, off via a Parent-corner switch), **SHIFT** (§7.3: "the rocket launches in 30 minutes, what time will it be?", ± quarter steps from R2) and **SCHEDULE** (§8.6: a day-plan bar of themed activities, "how long does refuelling take?"). Chosen with the user over a new activity card because the child's practice is the same four skills at the same levels, and the prize economy stays untouched. |
 | D20 | Digits and arrival puzzles (13 September 2026) | Two more kinds, developed in parallel with D19 and merged behind it: **DIGITS** (Activity A: read the clock and build the digital time with up/down buttons on a digital display; the reverse of MATCH and an input puzzle like SET; it replaces the MATCH in about half of the missions) and **ARRIVE** (Activity B: "Leaves at 14:30, the flight takes 2 h 15 min, when does it land?", pick the arrival time; the inverse of ELAPSED; one per mission). The same parallel work also produced a "time in words" kind and a "what time will it be in …" kind; those were dropped in favour of D19's words option and SHIFT, which cover them. No new art; §3.6, §3.7, §7.3, §7.5, §8.3 and §9.3 carry the rules. |
+| D21 | Heart and K-pop playrooms (13 September 2026) | Two more rooms, requested by the child after playing: **Heart Playroom** (`hearts`: blush, rose, peach and mint; Lulu the bunny; a heart music box as the way to the missions; Activity A "Kind-notes post", Activity B "Letter delivery" by lovebird; collections Cosy Hearts and Kind Notes) and **K-pop Playroom** (`kpop`: lavender, plum, turquoise and gold; Bori the blue tiger cub; a toy microphone; Activity A "Concert night", Activity B "Tour-bus delivery"; collections Stage Lights and Fan Club). The concept drawings in `docs/concepts/2026-09-13-new-playrooms/` are the direction, not a literal specification: the K-pop room keeps the film's mood (a singing trio poster, light sticks, a magpie plush, the tiger) with original art only, and the tiger is the companion rather than an earnable plush. The rooms reuse every system unchanged (§5 now reads "per room" for four rooms): the same slots, catalogue shape (7 starters, 12 earnables in two collections of six), missions, prize pairs, star charts and wardrobe sharing. The theme list is one constant (`THEMES` in `core/types.ts`) and the per-room presentation one table (`ui/themes.ts`). Save format stays v1: a save written with two rooms loads with fresh Heart and K-pop rooms (§11.3). Art is generated with the same pipeline (§15) and starts as placeholders. |
 
 Decisions the user should confirm in the next session, in priority order: D1 (language), D3 (inventory size and reward timing), D4 (slots instead of dragging), D5 (shared wardrobe, hair at launch), D11 (12-hour reading digits). D9 (title) is decided. Everything else can be changed later without rework.
 
@@ -59,9 +60,9 @@ Decisions the user should confirm in the next session, in priority order: D1 (la
 
 Included [C unless marked]:
 
-- Two complete themed playrooms with their own art, starter furniture, companion, decorations and mission presentation.
-- One shared heroine with a usable wardrobe in both rooms.
-- Activity A (read, match, set) and Activity B (elapsed time) in both themes, at all levels R1–R4 and E1–E3 [P for R4 five-minute reading being included; PRD left it open].
+- Two complete themed playrooms with their own art, starter furniture, companion, decorations and mission presentation. **D21 (13 September 2026):** two more, the Heart and K-pop playrooms, built on the same systems; "both rooms" and "two themes" below read as "every room" since then.
+- One shared heroine with a usable wardrobe in every room.
+- Activity A (read, match, set) and Activity B (elapsed time) in every theme, at all levels R1–R4 and E1–E3 [P for R4 five-minute reading being included; PRD left it open].
 - Four-puzzle missions, optional hints, no timers, no lives, no penalties [P, PRD proposed defaults].
 - Predictable rewards: 12 earnable items per theme [P], usable and never consumed.
 - Local save with export, import and reset [P].
@@ -269,7 +270,9 @@ Slots: Hair, Outfit, Shoes, Extra.
 - Two more generated sets serve the room poses (§4.3): a **sitting figure** per outfit × hairstyle (`shared/heroine/sit/<outfit>-<hair>`, 600×600, cross-legged, bottom aligned, its own `anchors` for the head, face and back overlays, no ankle cut and no shoes) and a **sleeping head** per hairstyle (`shared/heroine/sleep/<hair>`, the head alone with closed eyes, drawn rotated onto the pillow).
 - The same heroine component is used on S1, S3, S4, S5 and the S0 cards, at different scales; only the current outfit × hairstyle figure is loaded. Missions show the happy/thinking/cheering faces according to the puzzle state; the room shows the neutral figure and lights up the happy face during the heroine's tap reaction.
 
-## 5. Two-theme behaviour [P, D8]
+## 5. Per-room behaviour [P, D8, D21]
+
+Written for two rooms; since D21 there are four (`space`, `sweet`, `hearts`, `kpop`, in the title-screen order of `THEMES`), and every rule below holds per room.
 
 ### 5.1 State ownership
 
@@ -285,19 +288,28 @@ Slots: Hair, Outfit, Shoes, Extra.
 
 ### 5.2 Switching
 
-- From S1, "Rooms" opens S0; choosing the other card opens that room. Both rooms are available from the first launch; nothing is locked.
-- Switching preserves both rooms exactly. Nothing is transferred or reset.
+- From S1, "Rooms" opens S0; choosing another card opens that room. All rooms are available from the first launch; nothing is locked.
+- Switching preserves every room exactly. Nothing is transferred or reset.
 - A mission belongs to the theme it started in. Mission screens have no room switch; "Leave" asks "Leave the mission? The puzzles so far will be lost. Your room and prizes are safe." with "Leave" and "Keep going".
 
 ### 5.3 Cross-theme items
 
 - Decorations: theme-bound. A space item can never be placed in the sweet room (slots only list the current theme's inventory).
-- Clothing: shared. Every earned garment is wearable in both rooms.
+- Clothing: shared. Every earned garment is wearable in every room (its wardrobe tile carries the badge of the room it came from).
 - Prizes are always earned into the theme of the mission that was played, so the sweet counter only counts sweet items and vice versa.
 
 ### 5.4 Theme presentation differences
 
-The two rooms must differ in interaction and feedback, not only background art (PRD §5). Concretely: different entry object with its own reaction, different companion with its own reactions, different mission stories and preparation trackers, different journey strip vehicles, different collections, and different celebration animations (launch vs. tea party). The learning content, controls, question rules and reward rules are identical.
+The rooms must differ in interaction and feedback, not only background art (PRD §5). Concretely: different entry object with its own reaction, different companion with its own reactions, different mission stories and preparation trackers, different journey strip vehicles, different collections, and different celebration animations (launch vs. tea party). The learning content, controls, question rules and reward rules are identical.
+
+Per room (`ui/themes.ts`, D21):
+
+| Room | Companion | Entry object | Activity A / tracker | Activity B journey | Celebration |
+| --- | --- | --- | --- | --- | --- |
+| Space | Pip the alien (spins; jumps onto the bed) | Toy rocket (wobbles, smoke) | Rocket launch: fuel, hatch, lights, countdown | Planet → moon by rocket | The rocket launches |
+| Sweet | Mimi the cat (stretches; curls up on the bed) | Toy letterbox (flag up, envelope) | Tea-party time: cups, cake, teapot, guests | Toy shop → window by balloons | The tea table arrives, four pops |
+| Hearts | Lulu the bunny (hops; curls up on the bed) | Heart music box (lid opens, a heart floats up) | Kind-notes post: note, envelope, stamp, ribbon | Post office → heart house by lovebird | Heart balloons lift the post bag |
+| K-pop | Bori the blue tiger cub (dances; jumps onto the bed) | Toy microphone (lights up, a note pops out) | Concert night: lights, sound, costume, curtain | Concert hall → window by tour bus | The stage arrives, four pops |
 
 ## 6. Clock rendering and manipulation
 
@@ -702,14 +714,40 @@ Earnable items, in pool order. Twelve per theme, two collections of six; each co
 | Sweet | Sunny Garden | sweet.strawberryDress | outfit | Strawberry dress / Çilek elbise / Aardbeienjurk |
 | Sweet | Sunny Garden | sweet.rainbowSandals | shoes | Rainbow sandals / Gökkuşağı sandalet / Regenboogsandalen |
 | Sweet | Sunny Garden | sweet.bowHeadband | extra | Bow headband / Fiyonk taç / Haarband met strik |
+| Hearts | Cosy Hearts / Sıcacık Kalpler / Knusse hartjes | hearts.heartBeanbag | decoration, NOOK | Heart beanbag / Kalp puf / Hartjeszitzak |
+| Hearts | Cosy Hearts | hearts.heartRug | decoration, RUG | Fluffy heart rug / Tüylü kalp halı / Pluizig hartjeskleed |
+| Hearts | Cosy Hearts | hearts.glowHeartLamp | decoration, LAMP | Glowing heart lamp / Işıldayan kalp lamba / Gloeiende hartjeslamp |
+| Hearts | Cosy Hearts | hearts.heartCardigan | outfit | Heart cardigan / Kalpli hırka / Hartjesvest |
+| Hearts | Cosy Hearts | hearts.heartSneakers | shoes | Heart sneakers / Kalpli spor ayakkabı / Hartjessneakers |
+| Hearts | Cosy Hearts | hearts.heartClip | extra | Heart hair clip / Kalp saç tokası / Hartjesspeldje |
+| Hearts | Kind Notes / Sevgi Notları / Lieve briefjes | hearts.heartBed | decoration, BED | Heart bed / Kalp yatak / Hartjesbed |
+| Hearts | Kind Notes | hearts.heartGarland | decoration, HANGING | Heart garland / Kalp çelengi / Hartjesslinger met lichtjes |
+| Hearts | Kind Notes | hearts.kindNotePoster | decoration, WALL | Kind-note poster / Sevgi notu posteri / Poster met lief briefje |
+| Hearts | Kind Notes | hearts.rosePyjamas | outfit | Rose pyjamas / Gül rengi pijama / Roze pyjama |
+| Hearts | Kind Notes | hearts.heartSlippers | shoes | Heart slippers / Kalpli terlik / Hartjespantoffels |
+| Hearts | Kind Notes | hearts.heartHeadband | extra | Heart headband / Kalpli taç / Haarband met hartjes |
+| K-pop | Stage Lights / Sahne Işıkları / Podiumlichten | kpop.musicLamp | decoration, LAMP | Glowing music lamp / Işıldayan nota lamba / Gloeiende muzieklamp |
+| K-pop | Stage Lights | kpop.karaokeStage | decoration, NOOK | Karaoke stage / Karaoke sahnesi / Karaokepodium |
+| K-pop | Stage Lights | kpop.starRug | decoration, RUG | Star dance rug / Yıldızlı dans halısı / Sterrendanskleed |
+| K-pop | Stage Lights | kpop.popJacket | outfit | Pop-star jacket / Pop yıldızı ceketi / Popsterjasje |
+| K-pop | Stage Lights | kpop.starSneakers | shoes | Star platform sneakers / Yıldızlı platform ayakkabı / Sterrensneakers met plateau |
+| K-pop | Stage Lights | kpop.headsetMic | extra | Headset microphone / Kulaklıklı mikrofon / Headsetmicrofoon |
+| K-pop | Fan Club / Hayran Kulübü / Fanclub | kpop.starBed | decoration, BED | Star bed / Yıldız yatak / Sterrenbed |
+| K-pop | Fan Club | kpop.discoBall | decoration, HANGING | Disco ball / Disko topu / Discobal |
+| K-pop | Fan Club | kpop.trioPoster | decoration, WALL | Singing-trio poster / Şarkıcı üçlü posteri / Poster van het zangtrio |
+| K-pop | Fan Club | kpop.sparkleDress | outfit | Sparkle stage dress / Işıltılı sahne elbisesi / Glitterjurk voor op het podium |
+| K-pop | Fan Club | kpop.glitterBoots | shoes | Glitter boots / Simli bot / Glitterlaarsjes |
+| K-pop | Fan Club | kpop.crownClip | extra | Crown hair clip / Taç saç tokası / Kroontjesspeldje |
 
-The Moon Sleepover and Rainbow Explorer collections come from the PRD; the astronaut bunny and galaxy poster fill them to three decorations each. Sweet Sleepover comes from the PRD; Sunny Garden is new. Alien Disco remains a later candidate [D].
+The Moon Sleepover and Rainbow Explorer collections come from the PRD; the astronaut bunny and galaxy poster fill them to three decorations each. Sweet Sleepover comes from the PRD; Sunny Garden is new. Alien Disco remains a later candidate [D]. The Heart and K-pop collections (D21) follow the concept drawings' reward tiles: the heart lamp, beanbag, garland and cardigan; the karaoke stage (the microphone is part of it), music lamp and pop-star jacket. The blue tiger of the K-pop concept is Bori, the companion, not an earnable plush.
 
-Starter items (owned from the first launch, `starter: true`): the seven slot starters per room listed in §4.1 (14 decorations), plus the shared wardrobe starters in §4.4 (3 hair, 3 outfits, 2 shoes). Starters do not count toward "collected".
+Starter items (owned from the first launch, `starter: true`): the seven slot starters per room listed in §4.1 (28 decorations across four rooms; the Heart starters are a plain rose bed, peach rug, plain lamp, heart drawing, bunny with a heart, paper heart string and pink cushion; the K-pop starters a plain purple bed, lilac rug, plain lamp, music-note poster, magpie plush, star fairy lights and purple cushion), plus the shared wardrobe starters in §4.4 (3 hair, 3 outfits, 2 shoes). Starters do not count toward "collected".
 
 ### 11.3 Save format v1 [P, D6]
 
 Storage: `localStorage` key `mcr.save.v1` (current save) and `mcr.save.backup` (previous good save). Expected size under 20 KB. Written 250 ms after the last state change and synchronously on `pagehide` / `visibilitychange`.
+
+`themes` and `progress.firstE3Done` hold one entry per room in `THEMES`. A room missing from a save (one written before D21 added the Heart and K-pop rooms) loads as a fresh room (`freshThemeState`) with `firstE3Done` false; the save's own rooms are validated as before, and the next write stores all four. The version stays 1: the change is additive, like `newItems` and `timeWords`.
 
 ```
 Save {

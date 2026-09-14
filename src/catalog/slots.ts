@@ -32,30 +32,41 @@ export const FLOOR_GEOMETRY: Record<
 > = {
   space: { left: 110, right: 1460, top: 640, bottom: 935 },
   sweet: { left: 110, right: 1460, top: 640, bottom: 935 },
+  hearts: { left: 110, right: 1460, top: 640, bottom: 935 },
+  kpop: { left: 110, right: 1460, top: 640, bottom: 935 },
 };
 
 /** Where the heroine's feet land (bottom centre of the 600 × 900 canvas) and her stage height. */
 export const HEROINE_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
   space: { x: 470, y: 856, height: 450 },
   sweet: { x: 470, y: 856, height: 450 },
+  hearts: { x: 470, y: 856, height: 450 },
+  // K-pop: the standing group starts further right, clear of the rail's shelf toy.
+  kpop: { x: 600, y: 856, height: 450 },
 };
 
 /** Companion feet (bottom centre of the 400 × 480 pose) and stage height. */
 export const COMPANION_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
   space: { x: 665, y: 858, height: 230 },
   sweet: { x: 665, y: 858, height: 230 },
+  hearts: { x: 665, y: 858, height: 230 },
+  kpop: { x: 795, y: 858, height: 230 },
 };
 
-/** Mission entry object (toy rocket / letterbox): bottom centre and stage height. */
+/** Mission entry object (toy rocket / letterbox / heart box / toy mic): bottom centre and stage height. */
 export const ENTRY_GEOMETRY: Record<Theme, { x: number; y: number; height: number }> = {
   space: { x: 1420, y: 880, height: 240 },
   sweet: { x: 1462, y: 900, height: 200 },
+  hearts: { x: 1462, y: 905, height: 200 },
+  kpop: { x: 1480, y: 925, height: 240 },
 };
 
 /** Star chart poster (SPEC §10.5): a small fixed poster, top-left corner and stage width (3:2). */
 export const STAR_CHART_GEOMETRY: Record<Theme, { x: number; y: number; width: number }> = {
   space: { x: 430, y: 130, width: 172 },
   sweet: { x: 330, y: 150, width: 148 },
+  hearts: { x: 400, y: 120, width: 148 },
+  kpop: { x: 520, y: 90, width: 172 },
 };
 
 export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
@@ -84,6 +95,33 @@ export const SLOT_GEOMETRY: Record<Theme, Record<SlotType, SlotGeometry>> = {
     SHELF: { x: 140, y: 500, scale: 0.75, z: 21 },
     HANGING: { x: 640, y: 44, scale: 1, z: 22 },
     NOOK: { x: 300, y: 900, scale: 1.25, z: 52 },
+  },
+  // Hearts (D21 backdrop from docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png):
+  // the shelf toy on the free half of the heart shelf's middle board, the lamp on the heart
+  // cabinet under the window (left of the trailing plant), the poster on the blank wall, the
+  // hanging from the ceiling left of centre, the bed in front of the cabinet, the cushion in
+  // front of the craft desk.
+  hearts: {
+    BED: { x: 1080, y: 890, scale: 1.25, z: 50 },
+    RUG: { x: 560, y: 800, scale: 1.2, z: 10 },
+    LAMP: { x: 1380, y: 452, scale: 0.85, z: 20 },
+    WALL: { x: 760, y: 300, scale: 0.9, z: 12 },
+    SHELF: { x: 230, y: 298, scale: 0.75, z: 21 },
+    HANGING: { x: 640, y: 44, scale: 1, z: 22 },
+    NOOK: { x: 300, y: 900, scale: 1.25, z: 52 },
+  },
+  // K-pop (D21 backdrop from 02-kpop-demon-hunters-playroom.png): the shelf toy on the
+  // empty lower board of the clothes rail (the shelf unit is full of albums), the lamp on
+  // the nightstand under the window, the poster on the blank wall, the hanging from the
+  // ceiling centre, the bed in front of the window wall, the cushion in front of the shelf unit.
+  kpop: {
+    BED: { x: 1180, y: 850, scale: 1.35, z: 50 },
+    RUG: { x: 690, y: 800, scale: 1.2, z: 10 },
+    LAMP: { x: 1410, y: 492, scale: 0.85, z: 20 },
+    WALL: { x: 700, y: 370, scale: 0.9, z: 12 },
+    SHELF: { x: 410, y: 542, scale: 0.75, z: 21 },
+    HANGING: { x: 900, y: 40, scale: 1.1, z: 22 },
+    NOOK: { x: 250, y: 900, scale: 1.25, z: 52 },
   },
 };
 

@@ -2,6 +2,55 @@
 
 All notable changes to Tick-Tock. Milestones follow docs/SPEC.md §18.
 
+## Unreleased — Heart and K-pop playrooms (D21)
+
+Two more rooms beside Space and Sweet, requested by the child after playing
+([docs/concepts/2026-09-13-new-playrooms/](docs/concepts/2026-09-13-new-playrooms/) is the
+direction; SPEC D21 records what was kept and what was not):
+
+- **Heart Playroom** (`hearts`): Lulu the bunny (hops; curls up on the bed), a heart music box
+  as the way to the missions, "Kind-notes post" (note, envelope, stamp, ribbon; the heart
+  balloons lift the post bag when it is done) and "Letter delivery" by lovebird; collections
+  Cosy Hearts (heart beanbag, fluffy heart rug, glowing heart lamp, heart cardigan, heart
+  sneakers, heart hair clip) and Kind Notes (heart bed, heart garland, kind-note poster, rose
+  pyjamas, heart slippers, heart headband).
+- **K-pop Playroom** (`kpop`): Bori the blue tiger cub (dances; jumps onto the bed), a toy
+  microphone, "Concert night" (lights, sound, costume, curtain; the stage arrives) and
+  "Tour-bus delivery"; collections Stage Lights (glowing music lamp, karaoke stage, star dance
+  rug, pop-star jacket, star platform sneakers, headset microphone) and Fan Club (star bed,
+  disco ball, singing-trio poster, sparkle stage dress, glitter boots, crown hair clip). Original
+  art only: the film's characters appear as an original cartoon trio poster, and the tiger is
+  the companion rather than an earnable plush.
+- One theme list (`THEMES` in `core/types.ts`) and one presentation table (`ui/themes.ts`:
+  companion, entry object, mission scenes, tracker icons, journey art, celebration) replace
+  the `space | sweet` records and ternaries that were spread over the screens, so a room is
+  one catalogue file, one `THEME_UI` entry, one slot-geometry entry, its strings and its art.
+- Save format stays v1: a save written with two rooms loads with fresh Heart and K-pop rooms
+  and keeps everything else (`save.test.ts` "four rooms", `e2e/flow7-new-rooms` 7c). The
+  Parent-corner import summary now totals prizes and stars over every room.
+- Title screen: four 330 px cards in a row, each looking at its room's recognisable side
+  (window or shelving; the empty backdrops are blank in the middle), with the room's
+  companion beside the heroine and an icon before the name, and a deeper rose for the Heart
+  card so it reads apart from Sweet (`cardIcon`, `cardFocus` in `THEME_UI`); Heart and K-pop tints (`--rose`, `--violet`,
+  `--gold`) on cards, panel headers, clock rims, star charts and the letterbox colour; two
+  more jingles (`tools/gen-sounds.ts`); drifting hearts and a stage-light sweep in the mission
+  scenes.
+- **Art: all 92 generated.** 52 via Codex CLI (13–14 September: backdrops, starters,
+  companion poses, entry objects, scene pieces, tracker icons, four Heart earnables), with the
+  slot geometry, entry, star chart and K-pop home points tuned on the backdrops; when the
+  Codex weekly window filled, the other 40 (the remaining earnables, eight overlays, the 24
+  heroine figures of the four new outfits) via **Meta Muse Image on OpenRouter**, a new
+  `--backend openrouter` of `tools/gen-assets.ts` (same prompts and reference images, the
+  `/api/v1/images` endpoint, key from `.env.local`; $0.01 and ~20 s an image). A side-by-side
+  on eight assets found it comparable; its figures are the same girl, so the overlays snap on.
+  The manifest records the model per file (`gen.model`). Two prompts were tightened on the
+  way (beds and the stage name their three-quarter view; head accessories say "no head, no
+  hair, no face", which Muse otherwise draws). See [docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
+- Tests: catalogue and heroine tests run over every room; `save.test.ts` four-room migration;
+  Playwright `flow7-new-rooms` (a Heart mission with the beanbag placed and the cardigan worn
+  in the K-pop room; a K-pop delivery with the jacket worn and the music lamp lighting the
+  room; an old two-room save loading). 184 unit, 36 e2e.
+
 ## Unreleased — workbook question types (D19) and two more kinds (D20)
 
 - **DIGITS** (D20, Activity A): "Write this time in digits." Read the clock and build the

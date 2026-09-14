@@ -3,10 +3,12 @@ import type { Activity, Theme } from '../../core/types.ts';
 /**
  * Decorative life in the scene behind the mission panel (SPEC §3.6): twinkles on the stars
  * the backdrop already draws, a shooting star through the cockpit window, the radar sweep and
- * blinking console lamps in Space; sparkles and pot steam in Sweet. Everything is CSS,
+ * blinking console lamps in Space; sparkles and pot steam in Sweet; drifting hearts in the
+ * Heart room; sparkles and a sweeping stage light in the K-pop room. Everything is CSS,
  * `aria-hidden`, never interactive, and hidden entirely under reduced motion (base.css).
  * Positions are stage px on the 1536 × 1024 backdrop, measured from the art, and all lie
- * outside the panel (x 268–1268, y 80–940).
+ * outside the panel (x 268–1268, y 80–940). The Heart and K-pop spots are first guesses on
+ * placeholder backdrops (D21); measure them again once the scene art lands.
  */
 
 interface Spot {
@@ -43,6 +45,21 @@ const TWINKLES: Record<Theme, Record<Activity, Spot[]>> = {
     ],
   },
   sweet: { A: [], B: [] },
+  hearts: { A: [], B: [] },
+  kpop: {
+    // String lights above the stage and the city window's stars.
+    A: [
+      { x: 200, y: 90, s: 44, d: 0 },
+      { x: 1330, y: 96, s: 44, d: 0.8 },
+      { x: 120, y: 300, s: 36, d: 1.5 },
+      { x: 1420, y: 310, s: 36, d: 0.4 },
+    ],
+    B: [
+      { x: 1360, y: 120, s: 44, d: 0 },
+      { x: 1450, y: 220, s: 36, d: 1.1 },
+      { x: 1390, y: 330, s: 32, d: 0.5 },
+    ],
+  },
 };
 
 const SPARKLES: Record<Theme, Record<Activity, Spot[]>> = {
@@ -65,6 +82,34 @@ const SPARKLES: Record<Theme, Record<Activity, Spot[]>> = {
       { x: 1310, y: 120, s: 28, d: 0.9 },
       { x: 1480, y: 200, s: 24, d: 1.6 },
       { x: 1400, y: 350, s: 26, d: 0.2 },
+    ],
+  },
+  hearts: {
+    // Around the window and the heart shelving on both sides of the panel.
+    A: [
+      { x: 110, y: 160, s: 30, d: 0 },
+      { x: 230, y: 280, s: 22, d: 1.1 },
+      { x: 70, y: 430, s: 26, d: 0.5 },
+      { x: 1330, y: 160, s: 28, d: 0.8 },
+      { x: 1460, y: 250, s: 22, d: 1.7 },
+      { x: 1390, y: 410, s: 26, d: 0.3 },
+    ],
+    B: [
+      { x: 90, y: 150, s: 30, d: 0 },
+      { x: 200, y: 300, s: 22, d: 1.3 },
+      { x: 1310, y: 120, s: 28, d: 0.9 },
+      { x: 1470, y: 210, s: 24, d: 1.6 },
+      { x: 1400, y: 360, s: 26, d: 0.2 },
+    ],
+  },
+  kpop: {
+    A: [
+      { x: 90, y: 500, s: 26, d: 0.2 },
+      { x: 1440, y: 520, s: 26, d: 0.9 },
+    ],
+    B: [
+      { x: 110, y: 420, s: 24, d: 0.4 },
+      { x: 1480, y: 440, s: 24, d: 1.2 },
     ],
   },
 };
@@ -108,13 +153,22 @@ export function SceneLife({ theme, activity }: Props) {
         </>
       )}
       {space && activity === 'B' && <span class="shooting-star shooting-star-room" />}
-      {!space && activity === 'A' && (
+      {theme === 'sweet' && activity === 'A' && (
         <span class="steam">
           <i style={{ '--i': 0 }} />
           <i style={{ '--i': 1 }} />
           <i style={{ '--i': 2 }} />
         </span>
       )}
+      {theme === 'hearts' && (
+        <span class="drift-hearts">
+          <i style={{ '--i': 0 }} />
+          <i style={{ '--i': 1 }} />
+          <i style={{ '--i': 2 }} />
+          <i style={{ '--i': 3 }} />
+        </span>
+      )}
+      {theme === 'kpop' && activity === 'A' && <span class="stage-sweep" />}
     </div>
   );
 }

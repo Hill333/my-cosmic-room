@@ -11,6 +11,7 @@ import { groupKeyHandler, useFocusOnMount } from '../hooks.ts';
 import { play, playJingle } from '../sound.ts';
 import { RoomScene } from '../components/RoomScene.tsx';
 import { StarChart } from '../components/StarChart.tsx';
+import { THEME_UI } from '../themes.ts';
 
 interface Props {
   mission: Mission;
@@ -167,32 +168,40 @@ function previewState(
   return { slots, heroine };
 }
 
-const TEA_STEPS = ['cups', 'cake', 'teapot', 'guests'] as const;
-
 /**
- * Story reaction after the fourth puzzle (SPEC §3.6, §5.4): the rocket launches past the card
- * in Space; in Sweet the tea table arrives and the cups, cake, teapot and guests pop in. Pure
- * CSS, decorative, ends on its own (instantly under reduced motion).
+ * Story reaction after the fourth puzzle (SPEC §3.6, §5.4, `THEME_UI.celebration`): a
+ * vehicle lifts off past the card (the Space rocket, the Heart balloons), or a set arrives and
+ * its four preparation steps pop in (the Sweet tea table, the K-pop stage). Pure CSS,
+ * decorative, ends on its own (instantly under reduced motion).
  */
 function Celebration({ theme }: { theme: Mission['theme'] }) {
   // The jingle plays with the celebration (SPEC §15.4); after a reload it stays silent
   // because no gesture has unlocked audio yet.
   useEffect(() => playJingle(theme), [theme]);
-  if (theme === 'space') {
+  const ui = THEME_UI[theme];
+  if (ui.celebration.kind === 'launch') {
     return (
-      <div class="celebration celebration-space" aria-hidden="true" data-testid="celebration">
-        <img src={assetUrl('space/sceneA/launchFlame')} alt="" class="celebration-flame" />
-        <img src={assetUrl('space/sceneA/rocket')} alt="" class="celebration-rocket" />
+      <div
+        class={`celebration celebration-${theme} celebration-launch`}
+        aria-hidden="true"
+        data-testid="celebration"
+      >
+        <img src={assetUrl(ui.celebration.flame)} alt="" class="celebration-flame" />
+        <img src={assetUrl(ui.celebration.vehicle)} alt="" class="celebration-rocket" />
       </div>
     );
   }
   return (
-    <div class="celebration celebration-sweet" aria-hidden="true" data-testid="celebration">
-      <img src={assetUrl('sweet/sceneA/teaTable')} alt="" class="celebration-table" />
-      {TEA_STEPS.map((step, i) => (
+    <div
+      class={`celebration celebration-${theme} celebration-arrive`}
+      aria-hidden="true"
+      data-testid="celebration"
+    >
+      <img src={assetUrl(ui.celebration.set)} alt="" class="celebration-table" />
+      {ui.steps.map((step, i) => (
         <img
           key={step}
-          src={assetUrl(`sweet/sceneA/step/${step}`)}
+          src={assetUrl(`${theme}/sceneA/step/${step}`)}
           alt=""
           class="celebration-step"
           style={{ '--i': i }}

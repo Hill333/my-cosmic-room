@@ -1,10 +1,19 @@
 # Concept image index
 
-All six images are preserved locally in this directory. Generated with the built-in image-generation tool on 12 September 2026 for visual exploration, not as executable screens. The three connected concepts were positively received by the user.
+All eight images are preserved locally in this directory. Generated with the built-in image-generation tool (six on 12 September 2026, two on 13 September) for visual exploration, not as executable screens. The three connected concepts were positively received by the user.
 
-## Current direction: two playrooms, shared gameplay
+## Current direction: four playrooms, shared gameplay
 
-Space Playroom uses the three connected concepts below. Sweet Playroom uses the original pastel room as a primary reference. Both are required; the sweet room is not replaced by the space room.
+Space Playroom uses the three connected concepts below. Sweet Playroom uses the original pastel room as a primary reference. Both are required; the sweet room is not replaced by the space room. The Heart and K-pop playrooms (D21) have their own dated folder:
+
+| File | Purpose |
+| --- | --- |
+| [2026-09-13-new-playrooms/START_HERE.md](2026-09-13-new-playrooms/START_HERE.md) | The concept-stage handoff for the two rooms: what the drawings fix and what they leave open |
+| [2026-09-13-new-playrooms/01-heart-playroom.png](2026-09-13-new-playrooms/01-heart-playroom.png) | **Heart Playroom reference:** blush, rose, peach and mint; heart rug, shelving, nook, garland and lamp; bunny toys |
+| [2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png](2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png) | **K-pop Playroom reference:** lavender, plum and gold; karaoke stage, microphones, light sticks, blue tiger, magpie, evening city window |
+| [2026-09-13-new-playrooms/prompts.md](2026-09-13-new-playrooms/prompts.md) | The generation prompts of both drawings |
+
+Both are the direction, not the specification: the room and item art of `assets/hearts/` and `assets/kpop/` is generated from them with the pipeline of SPEC §15 (`tools/manifest-data.ts` names them as the references), and the game's own screens (real clocks, real counters, the existing mission flows) replace the panels the drawings sketch.
 
 | File | Purpose |
 | --- | --- |

@@ -8,6 +8,7 @@ import { go, missionScreen } from '../../state/nav.ts';
 import type { StringKey } from '../../strings/index.ts';
 import { t } from '../i18n.ts';
 import { groupKeyHandler, useFocusOnMount } from '../hooks.ts';
+import { THEME_UI } from '../themes.ts';
 
 interface Props {
   theme: Theme;
@@ -15,10 +16,6 @@ interface Props {
 
 const READING: ReadingLevel[] = [1, 2, 3, 4];
 const ELAPSED: ElapsedLevel[] = [1, 2, 3];
-const CARD_ART: Record<Theme, Record<Activity, string>> = {
-  space: { A: 'space/sceneA/rocket', B: 'space/sceneB/rocketParcel' },
-  sweet: { A: 'sweet/sceneA/teaTable', B: 'sweet/sceneB/balloonParcel' },
-};
 
 /**
  * S2 Mission board (SPEC §3.5): two mission cards with level chips and Start, the prizes
@@ -126,7 +123,7 @@ function MissionCard({ theme, activity, onStart, children }: CardProps) {
       data-testid={`mission-card-${activity}`}
     >
       <img
-        src={assetUrl(CARD_ART[theme][activity])}
+        src={assetUrl(THEME_UI[theme].cardArt[activity])}
         alt=""
         class="mission-card-art"
         draggable={false}

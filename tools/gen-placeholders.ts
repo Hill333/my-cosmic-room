@@ -27,24 +27,66 @@ const PALETTE = {
   blue: '#4C7DE0',
 };
 
+/** Placeholder tints per room (shared assets use the Space tints). */
+const THEME_TINTS: Record<
+  AssetEntry['theme'],
+  { wall: string; floor: string; item: string; companion: string; scene: string }
+> = {
+  space: {
+    wall: PALETTE.peach,
+    floor: '#D8C5F2',
+    item: PALETTE.lavender,
+    companion: '#7FDCD0',
+    scene: PALETTE.lilac,
+  },
+  shared: {
+    wall: PALETTE.peach,
+    floor: '#D8C5F2',
+    item: PALETTE.lavender,
+    companion: '#7FDCD0',
+    scene: PALETTE.lilac,
+  },
+  sweet: {
+    wall: '#F9D6C8',
+    floor: '#EBC1A6',
+    item: PALETTE.pink,
+    companion: '#D9D9E3',
+    scene: PALETTE.sunny,
+  },
+  hearts: {
+    wall: '#FBD3DC',
+    floor: '#EBC1A6',
+    item: '#F7A8C0',
+    companion: '#FFFFFF',
+    scene: '#F9C6D2',
+  },
+  kpop: {
+    wall: '#E9DAF7',
+    floor: '#D9B98F',
+    item: '#B48BE0',
+    companion: '#7FB3F0',
+    scene: '#C9A6F2',
+  },
+};
+
 function fillFor(entry: AssetEntry): string {
-  const theme = entry.theme;
+  const tints = THEME_TINTS[entry.theme];
   switch (entry.category) {
     case 'room':
-      return theme === 'sweet' ? '#F9D6C8' : PALETTE.peach;
+      return tints.wall;
     case 'decoration':
     case 'tile':
-      return theme === 'sweet' ? PALETTE.pink : PALETTE.lavender;
+      return tints.item;
     case 'garment':
     case 'heroine':
       return PALETTE.mint;
     case 'companion':
-      return theme === 'sweet' ? '#D9D9E3' : '#7FDCD0';
+      return tints.companion;
     case 'entry':
       return PALETTE.coral;
     case 'sceneA':
     case 'sceneB':
-      return theme === 'sweet' ? PALETTE.sunny : PALETTE.lilac;
+      return tints.scene;
     case 'ui':
     case 'logo':
     case 'sound':
@@ -119,7 +161,7 @@ function svgFor(entry: AssetEntry): string {
     body = heroineLayer(entry, w, h);
   } else if (entry.category === 'room') {
     // Room: wall, floor band and faint markers where the seven slots go.
-    body = `<rect width="${w}" height="${h}" fill="${fillFor(entry)}"/><rect y="${h * 0.68}" width="${w}" height="${h * 0.32}" fill="${entry.theme === 'sweet' ? '#EBC1A6' : '#D8C5F2'}"/>${label(entry, w, h * 0.5)}`;
+    body = `<rect width="${w}" height="${h}" fill="${fillFor(entry)}"/><rect y="${h * 0.68}" width="${w}" height="${h * 0.32}" fill="${THEME_TINTS[entry.theme].floor}"/>${label(entry, w, h * 0.5)}`;
   } else {
     const r = Math.min(w, h) * 0.18;
     body = `<rect x="6" y="6" width="${w - 12}" height="${h - 12}" rx="${r}" fill="${fillFor(entry)}" stroke="${PALETTE.plum}" stroke-width="6"/>${label(entry, w, h)}`;

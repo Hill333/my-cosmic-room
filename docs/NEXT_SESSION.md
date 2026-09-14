@@ -1,13 +1,60 @@
 # Release handoff: 0.1.0 release candidate
 
 Every milestone (M0 to M5, the M3b heroine and backdrop rework, the Tick-Tock title, the
-heroine ankle and hair-gap fixes, the walking heroine of 13 September 2026, D18, and the
-question types of the same day: the workbook kinds D19 and DIGITS / ARRIVE D20) is
-implemented and committed (see [CHANGELOG.md](../CHANGELOG.md)). The build passes
+heroine ankle and hair-gap fixes, the walking heroine of 13 September 2026, D18, the
+question types of the same day: the workbook kinds D19 and DIGITS / ARRIVE D20, and the
+Heart and K-pop playrooms D21) is implemented and committed (see
+[CHANGELOG.md](../CHANGELOG.md)). The build passes
 `npm run lint && npm run typecheck && npm test && npm run build && npm run e2e`
-(179 unit tests, 33 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
+(184 unit tests, 36 end-to-end tests). Nothing is deployed, tagged or pushed. What remains
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
+
+## First: QA of the two new rooms' art (D21)
+
+The Heart and K-pop playrooms play end to end with all 92 of their assets generated and
+post-processed (`npm run dev`, then the third and fourth cards; `?screen=S1&theme=hearts` /
+`&theme=kpop`). 52 came from Codex CLI (13–14 September 2026: backdrops, starters, companion
+poses, entry objects, scene pieces, tracker icons, four Heart earnables) and, after the Codex
+weekly window filled, the other 40 from **Meta Muse Image via OpenRouter**
+(`npm run assets:gen -- --backend openrouter`, $0.01 an image, ~20 s each: the remaining
+earnables, the eight shoe / extra overlays and the 24 heroine figures of the four new
+outfits). `gen.model` in the manifest says which model made each file. A side-by-side test
+on eight assets found Muse comparable (cleaner single objects, equal characters and rooms,
+one miss: a bed drawn front-on until the prompt named the three-quarter view), and its
+figures are the same girl as the Codex ones, so the overlays snap on without retuning.
+Checked already: the star bed and heart bed (she sleeps on the pillow), the beanbag and the
+karaoke stage (she sits), every new outfit × shoe (`node tools/heroine-matrix.ts`).
+
+1. Art QA and approval as in item 2 below, for the new entries too. Look in particular at:
+   the headset microphone (`shared/heroine/extra/headsetMic`, a thin gold band that reads
+   small on the figure; nudge its `scale` with `?debug=heroine`), Lulu's `special` pose (more
+   stylised eyes than her other poses), and the twelve new figures' anchors (`?debug=heroine`;
+   post-processing's first guesses fit the matrix, but check the thinking face on each).
+2. The `SceneLife` spots for the Heart and K-pop scenes (`src/ui/components/SceneLife.tsx`)
+   were guessed before the scene art existed; measure them on `hearts/sceneA/craftFrame` and
+   `kpop/sceneA/stageFrame` now (the craft-corner window at the upper left and its shelves
+   at the right; the stage's string lights along the top).
+3. The celebration boxes (`.celebration-hearts` with the balloons, the K-pop
+   `celebration-arrive` with the stage) in `mission.css`: play a mission to the end in each
+   room and see that the balloons rise past the card and the stage lands beside it.
+4. Check the entry effects (the heart out of the music box, the note out of the microphone)
+   sit right on the reaction art (`.entry-heart`, `.entry-note` in `room.css`).
+5. `node tools/screenshots.ts` wants the two rooms added (it shoots Space and Sweet only).
+
+Both backends stay available for regenerations: `npm run assets:gen -- --regen <id>` uses
+Codex (the presets of D16), `-- --backend openrouter --regen <id>` uses Muse (the key in a
+gitignored `.env.local`, `OPENROUTER_API_KEY=...`), and `--variant <name>` with either makes
+a candidate next to the current file instead of replacing it.
+
+Decisions taken on the way, easy to flip: the Heart companion is a bunny (Lulu), not the
+concept's cat, so the child does not meet two cats (Mimi is the Sweet cat); the K-pop tiger
+is the companion (Bori), not an earnable plush; the film's trio appears only as an original
+cartoon poster (`kpop.trioPoster`), light sticks and albums stay in the backdrop prompt; the
+Heart missions are the kind-notes post and a lovebird's letter, the K-pop missions the
+concert set-up and a tour-bus delivery. Each of these is one line in `THEME_UI`, a catalogue
+file, or a prompt in `tools/manifest-data.ts`. The Turkish and Dutch strings of the two rooms
+are drafts for the native-speaker review (item 6).
 
 ## Your checklist
 
@@ -49,7 +96,10 @@ checklist, followed by the known limitations and the open spec questions.
    read `src/strings/tr.ts` and `src/strings/nl.ts`. Layout and glyphs are verified; wording
    is not. Start with the longest sentences: the S2 mission descriptions
    (`mission.*.desc`), the S6 level descriptions (`level.*.desc`) and import summary
-   (`s6.importSummary`), and the hint captions (`hint.*`). Then the workbook additions
+   (`s6.importSummary`), and the hint captions (`hint.*`). Then the D21 rooms: everything
+   keyed `*.hearts*` and `*.kpop*` plus `collection.hearts.*`, `collection.kpop.*`,
+   `item.hearts.*`, `item.kpop.*` (the Dutch room names hyphenate as "Hartjes-speelkamer" /
+   "K-pop-speelkamer"; check the K-pop `sched.*` and `a.shift.*` phrasing). Then the workbook additions
    (D19, [NEW_QUESTION_TYPES.md](NEW_QUESTION_TYPES.md)): the times in words `words.m0` …
    `words.m55` (Dutch "10 voor half 4", Turkish case endings from `core/words.ts` — check
    "on ikiyi", "altıya"), the day-plan activity names `sched.*` (they sit inside "Hoe lang

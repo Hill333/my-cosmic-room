@@ -22,7 +22,7 @@ import type {
   Theme,
   ThemeState,
 } from './types.ts';
-import { SLOT_TYPES } from './types.ts';
+import { isTheme, SLOT_TYPES, THEMES } from './types.ts';
 
 export const SAVE_VERSION = 1 as const;
 // "mcr" is the legacy storage prefix from the working title "My Cosmic Room". The game was
@@ -69,11 +69,17 @@ export function freshThemeState(theme: Theme): ThemeState {
   };
 }
 
+function perTheme<T>(make: (theme: Theme) => T): Record<Theme, T> {
+  const record = {} as Record<Theme, T>;
+  for (const theme of THEMES) record[theme] = make(theme);
+  return record;
+}
+
 export function freshProgress(): Progress {
   return {
     recentReadingTargets: [],
     recentElapsedPairs: [],
-    firstE3Done: { space: false, sweet: false },
+    firstE3Done: perTheme(() => false),
     suggestion: { A: { streak: 0, declinedAt: null }, B: { streak: 0, declinedAt: null } },
     history: [],
   };
@@ -102,7 +108,7 @@ export function createFreshSave(now: Date = new Date()): Save {
     settings: freshSettings(),
     heroine: { ...defaultHeroine },
     wardrobe: starterWardrobe().map((i) => i.id),
-    themes: { space: freshThemeState('space'), sweet: freshThemeState('sweet') },
+    themes: perTheme(freshThemeState),
     progress: freshProgress(),
     mission: null,
     newItems: [],
@@ -122,7 +128,6 @@ const isStringArray = (v: unknown): v is string[] =>
 const isBool = (v: unknown): v is boolean => typeof v === 'boolean';
 const isIso = (v: unknown): v is string => typeof v === 'string' && !Number.isNaN(Date.parse(v));
 const isLanguage = (v: unknown): v is Language => v === 'en' || v === 'tr' || v === 'nl';
-const isTheme = (v: unknown): v is Theme => v === 'space' || v === 'sweet';
 const isMotion = (v: unknown): v is MotionSetting =>
   v === 'system' || v === 'reduced' || v === 'full';
 const isIntIn = (v: unknown, lo: number, hi: number): v is number =>
@@ -205,8 +210,12 @@ function validateProgress(v: unknown): Progress | string {
   ) {
     return 'progress.recentElapsedPairs';
   }
+  // A room added after the save was written (D21) simply has no first-E3 record yet.
   const f = v['firstE3Done'];
-  if (!isRecord(f) || !isBool(f['space']) || !isBool(f['sweet'])) return 'progress.firstE3Done';
+  if (!isRecord(f)) return 'progress.firstE3Done';
+  for (const theme of THEMES) {
+    if (!(f[theme] === undefined || isBool(f[theme]))) return `progress.firstE3Done.${theme}`;
+  }
   const s = v['suggestion'];
   if (!isRecord(s)) return 'progress.suggestion';
   const sug = {} as Progress['suggestion'];
@@ -229,7 +238,7 @@ function validateProgress(v: unknown): Progress | string {
   return {
     recentReadingTargets: [...(targets as number[])],
     recentElapsedPairs: (pairs as [number, number][]).map((p) => [p[0], p[1]]),
-    firstE3Done: { space: f['space'], sweet: f['sweet'] },
+    firstE3Done: perTheme((theme) => f[theme] === true),
     suggestion: sug,
     history: history.slice(-20),
   };
@@ -314,10 +323,18 @@ export function validateSave(value: unknown): ValidationResult {
   if (!isStringArray(migrated['wardrobe'])) return fail('wardrobe');
   const themes = migrated['themes'];
   if (!isRecord(themes)) return fail('themes');
-  const space = validateThemeState(themes['space'], 'themes.space');
-  if (typeof space === 'string') return fail(space);
-  const sweet = validateThemeState(themes['sweet'], 'themes.sweet');
-  if (typeof sweet === 'string') return fail(sweet);
+  // Rooms added after the save was written (the Heart and K-pop rooms, D21) start fresh; the
+  // save's own rooms are validated as before, so a two-room save loads with four rooms.
+  const themeStates = {} as Record<Theme, ThemeState>;
+  for (const theme of THEMES) {
+    if (themes[theme] === undefined) {
+      themeStates[theme] = freshThemeState(theme);
+      continue;
+    }
+    const state = validateThemeState(themes[theme], `themes.${theme}`);
+    if (typeof state === 'string') return fail(state);
+    themeStates[theme] = state;
+  }
   const progress = validateProgress(migrated['progress']);
   if (typeof progress === 'string') return fail(progress);
   const mission = validateMission(migrated['mission']);
@@ -338,7 +355,7 @@ export function validateSave(value: unknown): ValidationResult {
       extra: heroine['extra'] as string | null,
     },
     wardrobe: [...migrated['wardrobe']],
-    themes: { space, sweet },
+    themes: themeStates,
     progress,
     mission,
     newItems: [...newItems],
@@ -498,8 +515,8 @@ export function importSave(text: string): ImportResult {
     ok: true,
     save,
     summary: {
-      collected: { space: collected(save, 'space'), sweet: collected(save, 'sweet') },
-      stars: { space: save.themes.space.stars, sweet: save.themes.sweet.stars },
+      collected: perTheme((theme) => collected(save, theme)),
+      stars: perTheme((theme) => save.themes[theme].stars),
       language: save.settings.language,
       updatedAt: save.updatedAt,
     },
@@ -518,7 +535,5 @@ function collected(save: Save, theme: Theme): number {
 }
 
 function isStarterId(id: string): boolean {
-  return starterDecorations('space')
-    .concat(starterDecorations('sweet'))
-    .some((i) => i.id === id);
+  return THEMES.some((theme) => starterDecorations(theme).some((i) => i.id === id));
 }
