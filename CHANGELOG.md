@@ -28,7 +28,10 @@ direction; SPEC D21 records what was kept and what was not):
 - Save format stays v1: a save written with two rooms loads with fresh Heart and K-pop rooms
   and keeps everything else (`save.test.ts` "four rooms", `e2e/flow7-new-rooms` 7c). The
   Parent-corner import summary now totals prizes and stars over every room.
-- Title screen: four 330 px cards in a row; Heart and K-pop tints (`--rose`, `--violet`,
+- Title screen: four 330 px cards in a row, each looking at its room's recognisable side
+  (window or shelving; the empty backdrops are blank in the middle), with the room's
+  companion beside the heroine and an icon before the name, and a deeper rose for the Heart
+  card so it reads apart from Sweet (`cardIcon`, `cardFocus` in `THEME_UI`); Heart and K-pop tints (`--rose`, `--violet`,
   `--gold`) on cards, panel headers, clock rims, star charts and the letterbox colour; two
   more jingles (`tools/gen-sounds.ts`); drifting hearts and a stage-light sweep in the mission
   scenes.

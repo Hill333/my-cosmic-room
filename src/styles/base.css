@@ -16,7 +16,7 @@
   --coral-text: #b8432c;
   --blue: #4c7de0;
   /* Heart and K-pop room tints (D21): a rose for the Heart chrome, a deep lilac for K-pop. */
-  --rose: #f7a8c0;
+  --rose: #ee7fa4; /* deeper than Sweet's pink so the two rooms read apart; 4.9:1 under plum */
   --violet: #7a55c8; /* 5.3:1 under white text (AT-34) */
   --gold: #f2c14e;
   --panel: #fffaf4;
@@ -317,11 +317,28 @@ button:disabled {
 }
 .room-card-heroine {
   position: absolute;
-  left: 50%;
+  left: 56%;
   bottom: 0;
   width: 150px;
   height: 225px;
   transform: translateX(-50%);
+}
+/* The room's companion sits at her side, in front of the rug line, smaller than in the room. */
+.room-card-companion {
+  position: absolute;
+  left: 22%;
+  bottom: 2px;
+  width: 92px;
+  height: 110px;
+  transform: translateX(-50%);
+}
+.room-card-companion .companion,
+.room-card-companion .companion img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
 }
 .room-card-name {
   display: block;
@@ -335,6 +352,10 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.room-card-icon {
+  margin-right: 10px;
+  font-size: 30px;
 }
 .room-card-sweet .room-card-name {
   background: var(--pink);

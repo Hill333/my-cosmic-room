@@ -21,6 +21,14 @@ export interface ThemeUi {
   missionIcon: string;
   /** Badge on earned garments in the wardrobe (SPEC §4.4). */
   badge: string;
+  /** Icon before the room's name on its title-screen card (SPEC §3.3). */
+  cardIcon: string;
+  /**
+   * Which side of the backdrop the card thumbnail shows (CSS `object-position` x): the
+   * empty backdrops are blank in the middle by design, so the card looks at the window or
+   * the shelving that makes the room recognisable.
+   */
+  cardFocus: 'left' | 'right';
   /** S2 mission card art. */
   cardArt: Record<Activity, string>;
   /** The scene behind the mission panel (SPEC §3.6): a set for A, the room for B. */
@@ -46,6 +54,8 @@ export const THEME_UI: Record<Theme, ThemeUi> = {
     },
     missionIcon: '🚀',
     badge: '🚀',
+    cardIcon: '🚀',
+    cardFocus: 'right',
     cardArt: { A: 'space/sceneA/rocket', B: 'space/sceneB/rocketParcel' },
     scene: { A: 'space/sceneA/cockpitFrame', B: 'space/room/background' },
     steps: ['fuel', 'hatch', 'lights', 'countdown'],
@@ -71,6 +81,8 @@ export const THEME_UI: Record<Theme, ThemeUi> = {
     },
     missionIcon: '✉️',
     badge: '💗',
+    cardIcon: '🌸',
+    cardFocus: 'left',
     cardArt: { A: 'sweet/sceneA/teaTable', B: 'sweet/sceneB/balloonParcel' },
     scene: { A: 'sweet/sceneA/kitchenFrame', B: 'sweet/room/background' },
     steps: ['cups', 'cake', 'teapot', 'guests'],
@@ -90,6 +102,8 @@ export const THEME_UI: Record<Theme, ThemeUi> = {
     entry: { idle: 'hearts/entry/heartBox', react: 'hearts/entry/heartBoxOpen', effect: 'heart' },
     missionIcon: '💌',
     badge: '💖',
+    cardIcon: '💗',
+    cardFocus: 'left',
     cardArt: { A: 'hearts/sceneA/postBag', B: 'hearts/sceneB/birdLetter' },
     scene: { A: 'hearts/sceneA/craftFrame', B: 'hearts/room/background' },
     steps: ['note', 'envelope', 'stamp', 'ribbon'],
@@ -113,6 +127,8 @@ export const THEME_UI: Record<Theme, ThemeUi> = {
     entry: { idle: 'kpop/entry/toyMic', react: 'kpop/entry/toyMicGlow', effect: 'note' },
     missionIcon: '🎤',
     badge: '🎵',
+    cardIcon: '🎤',
+    cardFocus: 'right',
     cardArt: { A: 'kpop/sceneA/stage', B: 'kpop/sceneB/tourBus' },
     scene: { A: 'kpop/sceneA/stageFrame', B: 'kpop/room/background' },
     steps: ['lights', 'speaker', 'costume', 'curtain'],
