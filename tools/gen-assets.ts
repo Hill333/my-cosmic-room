@@ -3,6 +3,13 @@
  *
  *   node tools/gen-assets.ts [--smoke] [--only <id>...] [--regen <id>...] [--preset <p>]
  *                            [--limit <n>] [--dry-run] [--variant <name>] [--log <path>]
+ *                            [--backend codex|openrouter] [--model <id>]
+ *
+ * Backends: `codex` (default) drives Codex CLI with the D16 presets; `openrouter` posts the
+ * same prompt and reference images to OpenRouter's image API (`--model`, default
+ * `meta/muse-image`), reading `OPENROUTER_API_KEY` from the environment or `.env.local`.
+ * The usage guard below applies to Codex only. `--variant muse --backend openrouter` on
+ * generated entries makes side-by-side candidates without touching the current files.
  *
  * Generates every entry whose gen.status is 'placeholder' (or the ids named with --regen),
  * never touches 'approved' entries, and records preset, attempts and timestamps in the
@@ -20,7 +27,14 @@
  * (default assets/.gen/run.log, ignored by git).
  */
 import { spawnSync } from 'node:child_process';
-import { appendFileSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import type { AssetEntry, GenPreset } from '../src/assetTypes.ts';
 import { formatLimits, readCodexLimits, type CodexLimits } from './codex-limits.ts';
@@ -52,6 +66,9 @@ const FIGURE_CLAUSE =
 const LOGO_CLAUSE =
   'Single lettering lockup, centred, plain white background, no other text or words, no shadow, no watermark; spell the title exactly as given.';
 
+type Backend = 'codex' | 'openrouter';
+const DEFAULT_OPENROUTER_MODEL = 'meta/muse-image';
+
 interface Args {
   smoke: boolean;
   only: string[];
@@ -61,6 +78,8 @@ interface Args {
   dryRun: boolean;
   variant: string | null;
   log: string;
+  backend: Backend;
+  model: string | null;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -73,6 +92,8 @@ function parseArgs(argv: string[]): Args {
     dryRun: false,
     variant: null,
     log: resolve(ASSETS_DIR, '.gen', 'run.log'),
+    backend: 'codex',
+    model: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
@@ -85,6 +106,11 @@ function parseArgs(argv: string[]): Args {
     else if (a === '--limit') args.limit = Number(next());
     else if (a === '--variant') args.variant = next();
     else if (a === '--log') args.log = resolve(ROOT, next());
+    else if (a === '--backend') {
+      const b = next();
+      if (b !== 'codex' && b !== 'openrouter') throw new Error(`Unknown backend ${b}`);
+      args.backend = b;
+    } else if (a === '--model') args.model = next();
     else throw new Error(`Unknown argument ${a}`);
   }
   return args;
@@ -157,16 +183,19 @@ function referenceFile(ref: string, manifest: ReturnType<typeof readManifest>): 
   return existsSync(file) && !file.endsWith('.svg') ? file : null;
 }
 
+function clauseFor(entry: AssetEntry): string {
+  return entry.category === 'room' || (entry.category === 'sceneA' && entry.size[0] > 2000)
+    ? ROOM_CLAUSE
+    : entry.category === 'heroine' && entry.layer === 'figure'
+      ? FIGURE_CLAUSE
+      : entry.category === 'logo'
+        ? LOGO_CLAUSE
+        : SINGLE_OBJECT;
+}
+
 function buildPrompt(id: string, entry: AssetEntry, variant: string | null): string {
   const [w, h] = entry.size;
-  const clause =
-    entry.category === 'room' || (entry.category === 'sceneA' && entry.size[0] > 2000)
-      ? ROOM_CLAUSE
-      : entry.category === 'heroine' && entry.layer === 'figure'
-        ? FIGURE_CLAUSE
-        : entry.category === 'logo'
-          ? LOGO_CLAUSE
-          : SINGLE_OBJECT;
+  const clause = clauseFor(entry);
   const out = `assets/.gen/${id}${variant ? '.' + variant : ''}.png`;
   return (
     `You are generating one piece of game art. Use your image generation tool. ${STYLE_BLOCK} ` +
@@ -222,8 +251,128 @@ function runCodex(
   return { ok, log, seconds, limited: !ok && LIMIT_PATTERN.test(output) };
 }
 
+// --- OpenRouter backend ------------------------------------------------------------------
+
+/** `OPENROUTER_API_KEY` from the environment, else from a gitignored `.env.local` at the root. */
+function openRouterKey(): string {
+  if (process.env['OPENROUTER_API_KEY']) return process.env['OPENROUTER_API_KEY'];
+  const envFile = resolve(ROOT, '.env.local');
+  if (existsSync(envFile)) {
+    for (const line of readFileSync(envFile, 'utf8').split('\n')) {
+      const m = /^\s*OPENROUTER_API_KEY\s*=\s*"?([^"\s]+)"?\s*$/.exec(line);
+      if (m) return m[1]!;
+    }
+  }
+  throw new Error('OPENROUTER_API_KEY is not set (environment or .env.local)');
+}
+
+/** The image API's aspect ratios; the closest one to the asset's box (the pipeline crops later). */
+function aspectRatioFor([w, h]: [number, number]): string {
+  const ratios: [string, number][] = [
+    ['1:1', 1],
+    ['4:3', 4 / 3],
+    ['3:4', 3 / 4],
+    ['3:2', 3 / 2],
+    ['2:3', 2 / 3],
+    ['16:9', 16 / 9],
+    ['9:16', 9 / 16],
+  ];
+  const r = w / h;
+  return ratios.reduce((best, cur) =>
+    Math.abs(cur[1] - r) < Math.abs(best[1] - r) ? cur : best,
+  )[0];
+}
+
+function dataUrl(file: string): string {
+  const ext = file.toLowerCase().split('.').pop();
+  const type =
+    ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : ext === 'webp' ? 'image/webp' : 'image/png';
+  return `data:${type};base64,${readFileSync(file).toString('base64')}`;
+}
+
+/** The prompt for a plain image model: the same style block, subject and clause, no tool talk. */
+function buildImagePrompt(entry: AssetEntry, refs: string[]): string {
+  const [w, h] = entry.size;
+  const refNote = refs.length
+    ? ` The attached image${refs.length > 1 ? 's are' : ' is a'} style reference${refs.length > 1 ? 's' : ''} for the same game: match ${refs.length > 1 ? 'their' : 'its'} line weight, palette and character design; do not copy ${refs.length > 1 ? 'them' : 'it'} as a whole.`
+    : '';
+  return (
+    `${STYLE_BLOCK} Subject: ${entry.gen!.prompt}. ${clauseFor(entry)} ` +
+    `The image will be shown at about ${w}x${h} pixels.${refNote}`
+  );
+}
+
+async function runOpenRouter(
+  id: string,
+  entry: AssetEntry,
+  refs: string[],
+  model: string,
+  dryRun: boolean,
+  variant: string | null,
+): Promise<{ ok: boolean; log: string; seconds: number; limited: boolean }> {
+  const out = rawPath(id, variant);
+  mkdirSync(dirname(out), { recursive: true });
+  const suffix = variant ? '.' + variant : '';
+  const prompt = buildImagePrompt(entry, refs);
+  const body: Record<string, unknown> = {
+    model,
+    prompt,
+    aspect_ratio: aspectRatioFor(entry.size),
+    resolution: '1K',
+    output_format: 'png',
+  };
+  if (refs.length) {
+    body['input_references'] = refs.map((f) => ({
+      type: 'image_url',
+      image_url: { url: dataUrl(f) },
+    }));
+  }
+  const cmdLine = `POST https://openrouter.ai/api/v1/images model=${model} aspect=${body['aspect_ratio']} refs=${refs.length}\n${prompt}`;
+  if (dryRun) return { ok: true, log: cmdLine, seconds: 0, limited: false };
+  const started = Date.now();
+  let output: string;
+  let ok = false;
+  let limited = false;
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/images', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${openRouterKey()}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://github.com/Hill333/my-cosmic-room',
+        'X-Title': 'Tick-Tock asset generation',
+      },
+      body: JSON.stringify(body),
+    });
+    const text = await res.text();
+    if (!res.ok) {
+      output = `HTTP ${res.status}\n${text.slice(0, 2000)}`;
+      limited = res.status === 429 || LIMIT_PATTERN.test(text);
+    } else {
+      const json = JSON.parse(text) as {
+        data?: { b64_json?: string; media_type?: string }[];
+        usage?: unknown;
+      };
+      const b64 = json.data?.[0]?.b64_json;
+      if (!b64) output = `no image in response: ${text.slice(0, 2000)}`;
+      else {
+        writeFileSync(out, Buffer.from(b64, 'base64'));
+        ok = statSync(out).size > 0;
+        output = `wrote ${out} (${json.data?.[0]?.media_type ?? 'image'}); usage ${JSON.stringify(json.usage ?? null)}`;
+      }
+    }
+  } catch (err) {
+    output = `request failed: ${(err as Error).message}`;
+  }
+  const seconds = Math.round((Date.now() - started) / 1000);
+  const log = `${cmdLine}\n\n--- ${ok ? 'ok' : 'failed'} after ${seconds}s ---\n${output}`;
+  writeFileSync(resolve(ASSETS_DIR, '.gen', `${id}${suffix}.log`), log);
+  return { ok, log, seconds, limited };
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
+  const model = args.backend === 'openrouter' ? (args.model ?? DEFAULT_OPENROUTER_MODEL) : null;
   runLog = args.log;
   const manifest = readManifest();
   let candidates = Object.entries(manifest.assets).filter(([, e]) => e.gen);
@@ -251,25 +400,33 @@ async function main(): Promise<void> {
     console.log('gen-assets: nothing to generate');
     return;
   }
-  console.log(`gen-assets: ${candidates.length} asset(s)${args.dryRun ? ' (dry run)' : ''}`);
+  console.log(
+    `gen-assets: ${candidates.length} asset(s)${model ? ` via OpenRouter ${model}` : ''}${args.dryRun ? ' (dry run)' : ''}`,
+  );
   if (!args.dryRun)
     log(
-      `run start: ${candidates.length} asset(s)${args.variant ? ` variant ${args.variant}` : ''}: ${candidates.map(([id]) => id).join(', ')}`,
+      `run start: ${candidates.length} asset(s)${model ? ` via OpenRouter ${model}` : ''}${args.variant ? ` variant ${args.variant}` : ''}: ${candidates.map(([id]) => id).join(', ')}`,
     );
 
   let failures = 0;
   let index = 0;
   for (const [id, entry] of candidates) {
     index += 1;
+    // An entry that lists itself (the idle pose the other poses reference) never gets its own
+    // earlier output as a reference, so a regeneration or a variant starts from the concept.
     const refs = entry
-      .gen!.references.map((r) => referenceFile(r, manifest))
+      .gen!.references.filter((r) => r !== id)
+      .map((r) => referenceFile(r, manifest))
       .filter((r): r is string => r !== null);
     const preset = entry.gen!.preset;
-    if (!args.dryRun) await guardLimits(`before ${id}`);
+    const usedModel = model ?? PRESETS[preset].model;
+    if (!args.dryRun && !model) await guardLimits(`before ${id}`);
     process.stdout.write(
-      `- [${index}/${candidates.length}] ${id} [${preset} → ${PRESETS[preset].model}/${PRESETS[preset].effort}] ... `,
+      `- [${index}/${candidates.length}] ${id} [${model ? model : `${preset} → ${PRESETS[preset].model}/${PRESETS[preset].effort}`}] ... `,
     );
-    let result = runCodex(id, entry, refs, args.dryRun, args.variant);
+    let result = model
+      ? await runOpenRouter(id, entry, refs, model, args.dryRun, args.variant)
+      : runCodex(id, entry, refs, args.dryRun, args.variant);
     if (args.dryRun) {
       console.log('\n  ' + result.log);
       continue;
@@ -281,16 +438,19 @@ async function main(): Promise<void> {
       console.log(`limit reached during the run; pausing`);
       log(`${id}: output mentions a usage limit after ${result.seconds}s; pausing and retrying`);
       await sleep(RESET_GRACE_MS);
-      await guardLimits(`retry ${retry + 1} of ${id}`);
-      result = runCodex(id, entry, refs, false, args.variant);
+      if (!model) await guardLimits(`retry ${retry + 1} of ${id}`);
+      result = model
+        ? await runOpenRouter(id, entry, refs, model, false, args.variant)
+        : runCodex(id, entry, refs, false, args.variant);
       entry.gen!.attempts += 1;
     }
-    const after = await readCodexLimits().catch(() => null);
+    const after = model ? null : await readCodexLimits().catch(() => null);
     const raw = `assets/.gen/${id}${args.variant ? '.' + args.variant : ''}.png`;
     if (result.ok) {
       if (!args.variant) {
         entry.gen!.generatedAt = new Date().toISOString();
         entry.gen!.status = 'generated';
+        entry.gen!.model = usedModel;
       }
       console.log(`ok → ${raw} (${result.seconds}s; ${counter(after)})`);
       log(
@@ -318,6 +478,7 @@ async function main(): Promise<void> {
         generatedAt: entry.gen!.generatedAt,
         status: entry.gen!.status,
       };
+      if (entry.gen!.model) target.gen.model = entry.gen!.model;
       writeManifest(fresh);
     }
   }

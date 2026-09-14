@@ -59,7 +59,7 @@
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png",
           "hearts/companion/lulu/idle"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-13T21:11:25.589Z",
         "status": "generated"
       }
@@ -155,7 +155,7 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-14T00:15:25.786Z",
         "status": "generated"
       }
@@ -236,15 +236,15 @@
       }
     },
     "hearts/decorations/heartRug": {
-      "path": "hearts/decorations/heartRug.svg",
+      "path": "hearts/decorations/heartRug.png",
       "theme": "hearts",
       "category": "decoration",
       "size": [
-        620,
+        405,
         300
       ],
       "pivot": [
-        310,
+        203,
         150
       ],
       "slot": "RUG",
@@ -255,21 +255,22 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:32:32.869Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "hearts/decorations/kindNotePoster": {
-      "path": "hearts/decorations/kindNotePoster.svg",
+      "path": "hearts/decorations/kindNotePoster.png",
       "theme": "hearts",
       "category": "decoration",
       "size": [
-        320,
+        209,
         260
       ],
       "pivot": [
-        160,
+        105,
         130
       ],
       "slot": "WALL",
@@ -280,9 +281,10 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:32:54.044Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "hearts/decorations/paperHearts": {
@@ -474,7 +476,7 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-13T21:13:16.956Z",
         "status": "generated"
       }
@@ -657,7 +659,7 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/01-heart-playroom.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-14T00:10:04.029Z",
         "status": "generated"
       }
@@ -779,7 +781,7 @@
       "derivedFrom": "hearts/decorations/heartBunny"
     },
     "hearts/tiles/heartCardigan": {
-      "path": "hearts/tiles/heartCardigan.svg",
+      "path": "hearts/tiles/heartCardigan.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -791,7 +793,7 @@
       "tileCrop": "torso"
     },
     "hearts/tiles/heartClip": {
-      "path": "hearts/tiles/heartClip.svg",
+      "path": "hearts/tiles/heartClip.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -825,7 +827,7 @@
       "derivedFrom": "hearts/decorations/heartGarland"
     },
     "hearts/tiles/heartHeadband": {
-      "path": "hearts/tiles/heartHeadband.svg",
+      "path": "hearts/tiles/heartHeadband.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -837,7 +839,7 @@
       "tileCrop": "head"
     },
     "hearts/tiles/heartRug": {
-      "path": "hearts/tiles/heartRug.svg",
+      "path": "hearts/tiles/heartRug.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -848,7 +850,7 @@
       "derivedFrom": "hearts/decorations/heartRug"
     },
     "hearts/tiles/heartSlippers": {
-      "path": "hearts/tiles/heartSlippers.svg",
+      "path": "hearts/tiles/heartSlippers.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -860,7 +862,7 @@
       "tileCrop": "feet"
     },
     "hearts/tiles/heartSneakers": {
-      "path": "hearts/tiles/heartSneakers.svg",
+      "path": "hearts/tiles/heartSneakers.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -872,7 +874,7 @@
       "tileCrop": "feet"
     },
     "hearts/tiles/kindNotePoster": {
-      "path": "hearts/tiles/kindNotePoster.svg",
+      "path": "hearts/tiles/kindNotePoster.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -938,7 +940,7 @@
       "derivedFrom": "hearts/decorations/plainRug"
     },
     "hearts/tiles/rosePyjamas": {
-      "path": "hearts/tiles/rosePyjamas.svg",
+      "path": "hearts/tiles/rosePyjamas.png",
       "theme": "hearts",
       "category": "tile",
       "size": [
@@ -1028,21 +1030,21 @@
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
           "kpop/companion/bori/idle"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-13T23:55:42.444Z",
         "status": "generated"
       }
     },
     "kpop/decorations/discoBall": {
-      "path": "kpop/decorations/discoBall.svg",
+      "path": "kpop/decorations/discoBall.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
-        300,
+        263,
         380
       ],
       "pivot": [
-        150,
+        132,
         0
       ],
       "slot": "HANGING",
@@ -1053,34 +1055,36 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:33:14.278Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/decorations/karaokeStage": {
-      "path": "kpop/decorations/karaokeStage.svg",
+      "path": "kpop/decorations/karaokeStage.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
         340,
-        260
+        237
       ],
       "pivot": [
         170,
-        260
+        237
       ],
       "slot": "NOOK",
       "label": "Karaoke stage",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a low round purple karaoke stage platform with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at one side, seen from slightly above",
+        "prompt": "a low round purple karaoke stage platform seen from the front and slightly above, with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at its right side, the top of the platform clear so a child can sit on it",
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:33:29.811Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/decorations/magpiePlush": {
@@ -1109,15 +1113,15 @@
       }
     },
     "kpop/decorations/musicLamp": {
-      "path": "kpop/decorations/musicLamp.svg",
+      "path": "kpop/decorations/musicLamp.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
-        200,
+        167,
         280
       ],
       "pivot": [
-        100,
+        84,
         280
       ],
       "slot": "LAMP",
@@ -1128,9 +1132,10 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:34:02.929Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/decorations/notePoster": {
@@ -1153,7 +1158,7 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-13T21:24:18.129Z",
         "status": "generated"
       }
@@ -1259,28 +1264,29 @@
       }
     },
     "kpop/decorations/starBed": {
-      "path": "kpop/decorations/starBed.svg",
+      "path": "kpop/decorations/starBed.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
-        640,
+        591,
         420
       ],
       "pivot": [
-        320,
+        296,
         420
       ],
       "slot": "BED",
       "label": "Star bed",
       "gen": {
         "preset": "astra-light",
-        "prompt": "a child's bed with a big gold star-shaped headboard and purple bedding patterned with small gold stars",
+        "prompt": "a child's single bed seen from the front in a three-quarter view with its headboard at the left end, a big gold star-shaped headboard, purple bedding patterned with small gold stars and a soft pillow at the head",
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:34:23.774Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/decorations/starLights": {
@@ -1309,15 +1315,15 @@
       }
     },
     "kpop/decorations/starRug": {
-      "path": "kpop/decorations/starRug.svg",
+      "path": "kpop/decorations/starRug.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
-        620,
+        423,
         300
       ],
       "pivot": [
-        310,
+        212,
         150
       ],
       "slot": "RUG",
@@ -1328,22 +1334,23 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:34:34.915Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/decorations/trioPoster": {
-      "path": "kpop/decorations/trioPoster.svg",
+      "path": "kpop/decorations/trioPoster.png",
       "theme": "kpop",
       "category": "decoration",
       "size": [
         320,
-        260
+        247
       ],
       "pivot": [
         160,
-        130
+        124
       ],
       "slot": "WALL",
       "label": "Trio poster",
@@ -1353,9 +1360,10 @@
         "references": [
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:34:59.258Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "kpop/entry/toyMic": {
@@ -1402,7 +1410,7 @@
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
           "kpop/entry/toyMic"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-13T23:56:31.745Z",
         "status": "generated"
       }
@@ -1598,7 +1606,7 @@
           "docs/concepts/2026-09-13-new-playrooms/02-kpop-demon-hunters-playroom.png",
           "kpop/companion/bori/idle"
         ],
-        "attempts": 1,
+        "attempts": 2,
         "generatedAt": "2026-09-14T00:06:15.024Z",
         "status": "generated"
       }
@@ -1636,7 +1644,7 @@
       "duration": 1.55
     },
     "kpop/tiles/crownClip": {
-      "path": "kpop/tiles/crownClip.svg",
+      "path": "kpop/tiles/crownClip.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1648,7 +1656,7 @@
       "tileCrop": "head"
     },
     "kpop/tiles/discoBall": {
-      "path": "kpop/tiles/discoBall.svg",
+      "path": "kpop/tiles/discoBall.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1659,7 +1667,7 @@
       "derivedFrom": "kpop/decorations/discoBall"
     },
     "kpop/tiles/glitterBoots": {
-      "path": "kpop/tiles/glitterBoots.svg",
+      "path": "kpop/tiles/glitterBoots.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1671,7 +1679,7 @@
       "tileCrop": "feet"
     },
     "kpop/tiles/headsetMic": {
-      "path": "kpop/tiles/headsetMic.svg",
+      "path": "kpop/tiles/headsetMic.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1683,7 +1691,7 @@
       "tileCrop": "head"
     },
     "kpop/tiles/karaokeStage": {
-      "path": "kpop/tiles/karaokeStage.svg",
+      "path": "kpop/tiles/karaokeStage.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1705,7 +1713,7 @@
       "derivedFrom": "kpop/decorations/magpiePlush"
     },
     "kpop/tiles/musicLamp": {
-      "path": "kpop/tiles/musicLamp.svg",
+      "path": "kpop/tiles/musicLamp.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1760,7 +1768,7 @@
       "derivedFrom": "kpop/decorations/plainRug"
     },
     "kpop/tiles/popJacket": {
-      "path": "kpop/tiles/popJacket.svg",
+      "path": "kpop/tiles/popJacket.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1783,7 +1791,7 @@
       "derivedFrom": "kpop/decorations/purpleCushion"
     },
     "kpop/tiles/sparkleDress": {
-      "path": "kpop/tiles/sparkleDress.svg",
+      "path": "kpop/tiles/sparkleDress.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1795,7 +1803,7 @@
       "tileCrop": "torso"
     },
     "kpop/tiles/starBed": {
-      "path": "kpop/tiles/starBed.svg",
+      "path": "kpop/tiles/starBed.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1817,7 +1825,7 @@
       "derivedFrom": "kpop/decorations/starLights"
     },
     "kpop/tiles/starRug": {
-      "path": "kpop/tiles/starRug.svg",
+      "path": "kpop/tiles/starRug.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1828,7 +1836,7 @@
       "derivedFrom": "kpop/decorations/starRug"
     },
     "kpop/tiles/starSneakers": {
-      "path": "kpop/tiles/starSneakers.svg",
+      "path": "kpop/tiles/starSneakers.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1840,7 +1848,7 @@
       "tileCrop": "feet"
     },
     "kpop/tiles/trioPoster": {
-      "path": "kpop/tiles/trioPoster.svg",
+      "path": "kpop/tiles/trioPoster.png",
       "theme": "kpop",
       "category": "tile",
       "size": [
@@ -1877,16 +1885,16 @@
       }
     },
     "shared/heroine/extra/crownClip": {
-      "path": "shared/heroine/extra/crownClip.svg",
+      "path": "shared/heroine/extra/crownClip.png",
       "theme": "shared",
       "category": "garment",
       "size": [
         110,
-        110
+        89
       ],
       "pivot": [
         55,
-        55
+        45
       ],
       "layer": "extra",
       "anchor": "head",
@@ -1897,9 +1905,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:35:32.216Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       },
       "offset": [
         80,
@@ -1937,42 +1946,43 @@
       ]
     },
     "shared/heroine/extra/headsetMic": {
-      "path": "shared/heroine/extra/headsetMic.svg",
+      "path": "shared/heroine/extra/headsetMic.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        300,
-        150
+        137,
+        141
       ],
       "pivot": [
-        150,
-        105
+        69,
+        99
       ],
       "layer": "extra",
       "anchor": "head",
       "label": "Headset microphone",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a thin gold performer's headset microphone seen from the front as it sits on a child's head: a slim band over the top of the head and a small microphone arm curving down to the right cheek",
+        "prompt": "a thin gold performer's headset microphone shown alone from the front: a slim curved band that would go over the top of a head and a small microphone arm curving down to the lower right; no head, no hair and no face in the picture",
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 3,
+        "generatedAt": "2026-09-14T19:49:58.441Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/extra/heartClip": {
-      "path": "shared/heroine/extra/heartClip.svg",
+      "path": "shared/heroine/extra/heartClip.png",
       "theme": "shared",
       "category": "garment",
       "size": [
         110,
-        110
+        94
       ],
       "pivot": [
         55,
-        55
+        47
       ],
       "layer": "extra",
       "anchor": "head",
@@ -1983,9 +1993,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:36:09.290Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       },
       "offset": [
         80,
@@ -1993,15 +2004,15 @@
       ]
     },
     "shared/heroine/extra/heartHeadband": {
-      "path": "shared/heroine/extra/heartHeadband.svg",
+      "path": "shared/heroine/extra/heartHeadband.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        300,
+        182,
         150
       ],
       "pivot": [
-        150,
+        91,
         105
       ],
       "layer": "extra",
@@ -2009,13 +2020,14 @@
       "label": "Heart headband",
       "gen": {
         "preset": "sol-med",
-        "prompt": "a pink fabric headband with two small red heart bobbles on short springs, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+        "prompt": "a pink fabric headband with two small red heart bobbles on short springs, shown alone from the front, the band curving down at both ends as it would over the top of a head; no head, no hair and no face in the picture",
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 3,
+        "generatedAt": "2026-09-14T19:50:13.428Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/extra/rocketBackpack": {
@@ -2592,7 +2604,7 @@
       }
     },
     "shared/heroine/figure/heartCardigan-buns": {
-      "path": "shared/heroine/figure/heartCardigan-buns.svg",
+      "path": "shared/heroine/figure/heartCardigan-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2613,8 +2625,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 801,
+          "legX": [
+            237,
+            362
+          ]
         },
         "back": {
           "x": 300,
@@ -2629,13 +2646,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:31:44.796Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/heartCardigan-loose": {
-      "path": "shared/heroine/figure/heartCardigan-loose.svg",
+      "path": "shared/heroine/figure/heartCardigan-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2656,8 +2674,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 784,
+          "legX": [
+            236,
+            360
+          ]
         },
         "back": {
           "x": 300,
@@ -2672,13 +2695,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:36:50.800Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/heartCardigan-ponytail": {
-      "path": "shared/heroine/figure/heartCardigan-ponytail.svg",
+      "path": "shared/heroine/figure/heartCardigan-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2700,7 +2724,12 @@
         "feet": {
           "x": 300,
           "y": 895,
-          "scale": 0.78
+          "scale": 0.78,
+          "cutY": 790,
+          "legX": [
+            237,
+            357
+          ]
         },
         "back": {
           "x": 300,
@@ -2715,9 +2744,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:37:08.188Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/planetTee-buns": {
@@ -2865,7 +2895,7 @@
       }
     },
     "shared/heroine/figure/popJacket-buns": {
-      "path": "shared/heroine/figure/popJacket-buns.svg",
+      "path": "shared/heroine/figure/popJacket-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2886,8 +2916,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 786,
+          "legX": [
+            235,
+            360
+          ]
         },
         "back": {
           "x": 300,
@@ -2902,13 +2937,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:37:23.675Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/popJacket-loose": {
-      "path": "shared/heroine/figure/popJacket-loose.svg",
+      "path": "shared/heroine/figure/popJacket-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2929,8 +2965,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 796,
+          "legX": [
+            237,
+            360
+          ]
         },
         "back": {
           "x": 300,
@@ -2945,13 +2986,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:37:41.266Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/popJacket-ponytail": {
-      "path": "shared/heroine/figure/popJacket-ponytail.svg",
+      "path": "shared/heroine/figure/popJacket-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -2972,8 +3014,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 796,
+          "legX": [
+            238,
+            355
+          ]
         },
         "back": {
           "x": 300,
@@ -2988,13 +3035,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:37:55.176Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/rosePyjamas-buns": {
-      "path": "shared/heroine/figure/rosePyjamas-buns.svg",
+      "path": "shared/heroine/figure/rosePyjamas-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3015,8 +3063,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 808,
+          "legX": [
+            240,
+            356
+          ]
         },
         "back": {
           "x": 300,
@@ -3031,13 +3084,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:38:07.490Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/rosePyjamas-loose": {
-      "path": "shared/heroine/figure/rosePyjamas-loose.svg",
+      "path": "shared/heroine/figure/rosePyjamas-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3058,8 +3112,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 834,
+          "legX": [
+            238,
+            357
+          ]
         },
         "back": {
           "x": 300,
@@ -3074,13 +3133,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:38:21.250Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/rosePyjamas-ponytail": {
-      "path": "shared/heroine/figure/rosePyjamas-ponytail.svg",
+      "path": "shared/heroine/figure/rosePyjamas-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3101,8 +3161,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 800,
+          "legX": [
+            237,
+            347
+          ]
         },
         "back": {
           "x": 300,
@@ -3117,9 +3182,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:38:38.523Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/spacesuit-buns": {
@@ -3267,7 +3333,7 @@
       }
     },
     "shared/heroine/figure/sparkleDress-buns": {
-      "path": "shared/heroine/figure/sparkleDress-buns.svg",
+      "path": "shared/heroine/figure/sparkleDress-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3288,8 +3354,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 788,
+          "legX": [
+            237,
+            358
+          ]
         },
         "back": {
           "x": 300,
@@ -3304,13 +3375,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:38:53.096Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/sparkleDress-loose": {
-      "path": "shared/heroine/figure/sparkleDress-loose.svg",
+      "path": "shared/heroine/figure/sparkleDress-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3331,8 +3403,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 798,
+          "legX": [
+            234,
+            356
+          ]
         },
         "back": {
           "x": 300,
@@ -3347,13 +3424,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:39:10.945Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/sparkleDress-ponytail": {
-      "path": "shared/heroine/figure/sparkleDress-ponytail.svg",
+      "path": "shared/heroine/figure/sparkleDress-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -3374,8 +3452,13 @@
         },
         "feet": {
           "x": 300,
-          "y": 895,
-          "scale": 0.78
+          "y": 896,
+          "scale": 0.78,
+          "cutY": 803,
+          "legX": [
+            238,
+            350
+          ]
         },
         "back": {
           "x": 300,
@@ -3390,9 +3473,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:39:24.675Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/figure/starHoodie-buns": {
@@ -3764,16 +3848,16 @@
       ]
     },
     "shared/heroine/shoes/glitterBoots": {
-      "path": "shared/heroine/shoes/glitterBoots.svg",
+      "path": "shared/heroine/shoes/glitterBoots.png",
       "theme": "shared",
       "category": "garment",
       "size": [
         300,
-        200
+        186
       ],
       "pivot": [
         150,
-        200
+        186
       ],
       "layer": "shoes",
       "anchor": "feet",
@@ -3784,23 +3868,28 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:39:53.568Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       },
-      "clipAtAnkle": true
+      "clipAtAnkle": true,
+      "footX": [
+        64,
+        233
+      ]
     },
     "shared/heroine/shoes/heartSlippers": {
-      "path": "shared/heroine/shoes/heartSlippers.svg",
+      "path": "shared/heroine/shoes/heartSlippers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
         300,
-        200
+        191
       ],
       "pivot": [
         150,
-        200
+        191
       ],
       "layer": "shoes",
       "anchor": "feet",
@@ -3811,21 +3900,26 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
-      }
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:40:17.317Z",
+        "status": "generated",
+        "model": "meta/muse-image"
+      },
+      "footX": [
+        74,
+        225
+      ]
     },
     "shared/heroine/shoes/heartSneakers": {
-      "path": "shared/heroine/shoes/heartSneakers.svg",
+      "path": "shared/heroine/shoes/heartSneakers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
-        300,
+        289,
         200
       ],
       "pivot": [
-        150,
+        145,
         200
       ],
       "layer": "shoes",
@@ -3837,11 +3931,16 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:40:32.826Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       },
-      "clipAtAnkle": true
+      "clipAtAnkle": true,
+      "footX": [
+        65,
+        223
+      ]
     },
     "shared/heroine/shoes/maryJanes": {
       "path": "shared/heroine/shoes/maryJanes.png",
@@ -3972,16 +4071,16 @@
       ]
     },
     "shared/heroine/shoes/starSneakers": {
-      "path": "shared/heroine/shoes/starSneakers.svg",
+      "path": "shared/heroine/shoes/starSneakers.png",
       "theme": "shared",
       "category": "garment",
       "size": [
         300,
-        200
+        191
       ],
       "pivot": [
         150,
-        200
+        191
       ],
       "layer": "shoes",
       "anchor": "feet",
@@ -3992,11 +4091,16 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:41:02.336Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       },
-      "clipAtAnkle": true
+      "clipAtAnkle": true,
+      "footX": [
+        69,
+        229
+      ]
     },
     "shared/heroine/sit/cloudPyjamas-buns": {
       "path": "shared/heroine/sit/cloudPyjamas-buns.png",
@@ -4386,7 +4490,7 @@
       }
     },
     "shared/heroine/sit/heartCardigan-buns": {
-      "path": "shared/heroine/sit/heartCardigan-buns.svg",
+      "path": "shared/heroine/sit/heartCardigan-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4407,7 +4511,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4423,13 +4527,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:41:25.557Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/heartCardigan-loose": {
-      "path": "shared/heroine/sit/heartCardigan-loose.svg",
+      "path": "shared/heroine/sit/heartCardigan-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4450,7 +4555,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4466,13 +4571,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:41:50.026Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/heartCardigan-ponytail": {
-      "path": "shared/heroine/sit/heartCardigan-ponytail.svg",
+      "path": "shared/heroine/sit/heartCardigan-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4493,7 +4599,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4509,9 +4615,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:42:11.737Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/planetTee-buns": {
@@ -4644,7 +4751,7 @@
       }
     },
     "shared/heroine/sit/popJacket-buns": {
-      "path": "shared/heroine/sit/popJacket-buns.svg",
+      "path": "shared/heroine/sit/popJacket-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4665,7 +4772,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4681,13 +4788,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:42:32.822Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/popJacket-loose": {
-      "path": "shared/heroine/sit/popJacket-loose.svg",
+      "path": "shared/heroine/sit/popJacket-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4708,7 +4816,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4724,13 +4832,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:42:56.757Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/popJacket-ponytail": {
-      "path": "shared/heroine/sit/popJacket-ponytail.svg",
+      "path": "shared/heroine/sit/popJacket-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4751,7 +4860,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4767,13 +4876,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:43:13.478Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/rosePyjamas-buns": {
-      "path": "shared/heroine/sit/rosePyjamas-buns.svg",
+      "path": "shared/heroine/sit/rosePyjamas-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4794,7 +4904,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4810,13 +4920,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:43:35.438Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/rosePyjamas-loose": {
-      "path": "shared/heroine/sit/rosePyjamas-loose.svg",
+      "path": "shared/heroine/sit/rosePyjamas-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4837,7 +4948,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4853,13 +4964,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:44:00.531Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/rosePyjamas-ponytail": {
-      "path": "shared/heroine/sit/rosePyjamas-ponytail.svg",
+      "path": "shared/heroine/sit/rosePyjamas-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -4880,7 +4992,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -4896,9 +5008,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:44:39.858Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/spacesuit-buns": {
@@ -5031,7 +5144,7 @@
       }
     },
     "shared/heroine/sit/sparkleDress-buns": {
-      "path": "shared/heroine/sit/sparkleDress-buns.svg",
+      "path": "shared/heroine/sit/sparkleDress-buns.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -5052,7 +5165,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -5068,13 +5181,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:45:03.135Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/sparkleDress-loose": {
-      "path": "shared/heroine/sit/sparkleDress-loose.svg",
+      "path": "shared/heroine/sit/sparkleDress-loose.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -5095,7 +5209,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -5111,13 +5225,14 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:45:20.141Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/sparkleDress-ponytail": {
-      "path": "shared/heroine/sit/sparkleDress-ponytail.svg",
+      "path": "shared/heroine/sit/sparkleDress-ponytail.png",
       "theme": "shared",
       "category": "heroine",
       "size": [
@@ -5138,7 +5253,7 @@
         },
         "feet": {
           "x": 300,
-          "y": 595,
+          "y": 600,
           "scale": 0.78
         },
         "back": {
@@ -5154,9 +5269,10 @@
         "references": [
           "shared/heroine/referenceSheet"
         ],
-        "attempts": 0,
-        "generatedAt": null,
-        "status": "placeholder"
+        "attempts": 1,
+        "generatedAt": "2026-09-14T19:45:32.586Z",
+        "status": "generated",
+        "model": "meta/muse-image"
       }
     },
     "shared/heroine/sit/starHoodie-buns": {

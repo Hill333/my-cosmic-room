@@ -32,13 +32,17 @@ direction; SPEC D21 records what was kept and what was not):
   `--gold`) on cards, panel headers, clock rims, star charts and the letterbox colour; two
   more jingles (`tools/gen-sounds.ts`); drifting hearts and a stage-light sweep in the mission
   scenes.
-- **Art: 52 of 92 generated** (13–14 September): both backdrops, all starters, companion
-  poses, entry objects, scene pieces, tracker icons and four Heart earnables are real art,
-  post-processed, with the slot geometry, entry, star chart and K-pop home points tuned on
-  the backdrops. The generator stopped at the Codex weekly cap; the 40 left (eight earnable
-  decorations, eight overlays, the 24 heroine figures for the four new outfits) stay SVG
-  placeholders until the window resets on 19 September. See
-  [docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
+- **Art: all 92 generated.** 52 via Codex CLI (13–14 September: backdrops, starters,
+  companion poses, entry objects, scene pieces, tracker icons, four Heart earnables), with the
+  slot geometry, entry, star chart and K-pop home points tuned on the backdrops; when the
+  Codex weekly window filled, the other 40 (the remaining earnables, eight overlays, the 24
+  heroine figures of the four new outfits) via **Meta Muse Image on OpenRouter**, a new
+  `--backend openrouter` of `tools/gen-assets.ts` (same prompts and reference images, the
+  `/api/v1/images` endpoint, key from `.env.local`; $0.01 and ~20 s an image). A side-by-side
+  on eight assets found it comparable; its figures are the same girl, so the overlays snap on.
+  The manifest records the model per file (`gen.model`). Two prompts were tightened on the
+  way (beds and the stage name their three-quarter view; head accessories say "no head, no
+  hair, no face", which Muse otherwise draws). See [docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
 - Tests: catalogue and heroine tests run over every room; `save.test.ts` four-room migration;
   Playwright `flow7-new-rooms` (a Heart mission with the beanbag placed and the cardigan worn
   in the K-pop room; a K-pop delivery with the jacket worn and the music lamp lighting the

@@ -271,7 +271,7 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
   },
   'kpop.karaokeStage': {
     prompt:
-      'a low round purple karaoke stage platform with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at one side, seen from slightly above',
+      'a low round purple karaoke stage platform seen from the front and slightly above, with a ring of small warm lights around its edge and a star-topped toy microphone on a stand at its right side, the top of the platform clear so a child can sit on it',
     preset: 'astra-light',
   },
   'kpop.starRug': {
@@ -282,7 +282,7 @@ export const DECORATION_GEN: Record<string, { prompt: string; preset: GenPreset 
   // Fan Club
   'kpop.starBed': {
     prompt:
-      "a child's bed with a big gold star-shaped headboard and purple bedding patterned with small gold stars",
+      "a child's single bed seen from the front in a three-quarter view with its headboard at the left end, a big gold star-shaped headboard, purple bedding patterned with small gold stars and a soft pillow at the head",
     preset: 'astra-light',
   },
   'kpop.discoBall': {
@@ -540,7 +540,7 @@ export const OVERLAY_GEN: Record<string, OverlaySpec> = {
   },
   heartHeadband: {
     prompt:
-      "a pink fabric headband with two small red heart bobbles on short springs, seen from the front as it sits on the top of a child's head, the band curving down at both ends",
+      'a pink fabric headband with two small red heart bobbles on short springs, shown alone from the front, the band curving down at both ends as it would over the top of a head; no head, no hair and no face in the picture',
     preset: 'sol-med',
     anchor: 'head',
     size: [300, 150],
@@ -549,7 +549,7 @@ export const OVERLAY_GEN: Record<string, OverlaySpec> = {
   },
   headsetMic: {
     prompt:
-      "a thin gold performer's headset microphone seen from the front as it sits on a child's head: a slim band over the top of the head and a small microphone arm curving down to the right cheek",
+      "a thin gold performer's headset microphone shown alone from the front: a slim curved band that would go over the top of a head and a small microphone arm curving down to the lower right; no head, no hair and no face in the picture",
     preset: 'sol-med',
     anchor: 'head',
     size: [300, 150],

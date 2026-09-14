@@ -53,6 +53,8 @@ export interface GenRecord {
   generatedAt: string | null;
   status: GenStatus;
   fallback?: string;
+  /** The model that made the current file (a Codex preset's model, or an OpenRouter model id). */
+  model?: string;
 }
 
 export interface AssetEntry {

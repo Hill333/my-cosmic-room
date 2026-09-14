@@ -11,3 +11,5 @@ e2e/.auth/
 assets/.gen/**/*.last.md
 assets/.gen/**/*.log
 tools/.scratch
+# Local secrets (OPENROUTER_API_KEY=... for tools/gen-assets.ts --backend openrouter)
+.env.local

@@ -10,38 +10,42 @@ Heart and K-pop playrooms D21) is implemented and committed (see
 before the release is "done" in the sense of SPEC §18 needs a person; this file is that
 checklist, followed by the known limitations and the open spec questions.
 
-## First: finish the art of the two new rooms (D21)
+## First: QA of the two new rooms' art (D21)
 
-The Heart and K-pop playrooms play end to end (`npm run dev`, then the third and fourth
-cards; `?screen=S1&theme=hearts` / `&theme=kpop`). Of their 92 generated assets, **52 are
-made and post-processed** (run of 13–14 September 2026: both backdrops, all 14 starters, all
-8 companion poses, the 4 entry objects, the 20 scene pieces and tracker icons, and the Heart
-bed, beanbag, glowing lamp and garland); the generator then stopped itself at 95 % of the
-Codex weekly window, which **resets on 19 September 2026 at 10:15**. The **40 remaining**
-are still SVG placeholders with their prompts in the manifest: 8 earnable decorations
-(`hearts.heartRug`, `hearts.kindNotePoster`, the six K-pop earnables), the 8 shoe / extra
-overlays and the 24 heroine figures (four outfits × three hairstyles, standing and sitting).
-Their dependency roots exist, so the order no longer matters:
+The Heart and K-pop playrooms play end to end with all 92 of their assets generated and
+post-processed (`npm run dev`, then the third and fourth cards; `?screen=S1&theme=hearts` /
+`&theme=kpop`). 52 came from Codex CLI (13–14 September 2026: backdrops, starters, companion
+poses, entry objects, scene pieces, tracker icons, four Heart earnables) and, after the Codex
+weekly window filled, the other 40 from **Meta Muse Image via OpenRouter**
+(`npm run assets:gen -- --backend openrouter`, $0.01 an image, ~20 s each: the remaining
+earnables, the eight shoe / extra overlays and the 24 heroine figures of the four new
+outfits). `gen.model` in the manifest says which model made each file. A side-by-side test
+on eight assets found Muse comparable (cleaner single objects, equal characters and rooms,
+one miss: a bed drawn front-on until the prompt named the three-quarter view), and its
+figures are the same girl as the Codex ones, so the overlays snap on without retuning.
+Checked already: the star bed and heart bed (she sleeps on the pillow), the beanbag and the
+karaoke stage (she sits), every new outfit × shoe (`node tools/heroine-matrix.ts`).
 
-1. After the reset, `node tools/codex-limits.ts`, then `npm run assets:gen` (every remaining
-   placeholder; the run pauses itself when the five-hour window fills). Do not run
-   `build-manifest` meanwhile. About 40 assets at 0.5 % of the weekly window each.
-2. `npm run assets:post` (cut-outs, tiles, first-guess anchors for the new figures).
-3. Tune on the real art: the `rest` spots of `kpop.starBed` and `kpop.karaokeStage` (the
-   stage has a first guess in `catalog/kpop.ts`; the Heart bed and beanbag were checked and
-   the defaults fit); `?debug=heroine` for the twelve new figures' anchors and the four new
-   shoes (the same routine as item 3 below); the `SceneLife` spots for the Heart and K-pop
-   scenes (`src/ui/components/SceneLife.tsx`, guessed before the scene art existed) and the
-   celebration boxes (`.celebration-hearts` with the balloons, the K-pop `celebration-arrive`
-   with the stage) in `mission.css`.
+1. Art QA and approval as in item 2 below, for the new entries too. Look in particular at:
+   the headset microphone (`shared/heroine/extra/headsetMic`, a thin gold band that reads
+   small on the figure; nudge its `scale` with `?debug=heroine`), Lulu's `special` pose (more
+   stylised eyes than her other poses), and the twelve new figures' anchors (`?debug=heroine`;
+   post-processing's first guesses fit the matrix, but check the thinking face on each).
+2. The `SceneLife` spots for the Heart and K-pop scenes (`src/ui/components/SceneLife.tsx`)
+   were guessed before the scene art existed; measure them on `hearts/sceneA/craftFrame` and
+   `kpop/sceneA/stageFrame` now (the craft-corner window at the upper left and its shelves
+   at the right; the stage's string lights along the top).
+3. The celebration boxes (`.celebration-hearts` with the balloons, the K-pop
+   `celebration-arrive` with the stage) in `mission.css`: play a mission to the end in each
+   room and see that the balloons rise past the card and the stage lands beside it.
 4. Check the entry effects (the heart out of the music box, the note out of the microphone)
    sit right on the reaction art (`.entry-heart`, `.entry-note` in `room.css`).
-5. Art QA and approval as in item 2 below, for the new entries too; then
-   `node tools/screenshots.ts` wants the two rooms added (it shoots Space and Sweet only).
+5. `node tools/screenshots.ts` wants the two rooms added (it shoots Space and Sweet only).
 
-Already done on the real backdrops: `SLOT_GEOMETRY`, `ENTRY_GEOMETRY`, `STAR_CHART_GEOMETRY`
-and the K-pop home points in `src/catalog/slots.ts` (the K-pop standing group starts further
-right so the shelf toy on the clothes rail shows), and the S0 thumbnails.
+Both backends stay available for regenerations: `npm run assets:gen -- --regen <id>` uses
+Codex (the presets of D16), `-- --backend openrouter --regen <id>` uses Muse (the key in a
+gitignored `.env.local`, `OPENROUTER_API_KEY=...`), and `--variant <name>` with either makes
+a candidate next to the current file instead of replacing it.
 
 Decisions taken on the way, easy to flip: the Heart companion is a bunny (Lulu), not the
 concept's cat, so the child does not meet two cats (Mimi is the Sweet cat); the K-pop tiger

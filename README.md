@@ -10,7 +10,7 @@ Browser clock-learning game concept for a seven-year-old: four distinct playroom
 Current state: **release candidate 0.1.0**, milestones M0 to M5 implemented (see
 [CHANGELOG.md](CHANGELOG.md)): Space and Sweet playable end to end with generated art, sounds,
 reduced motion, the accessibility review ([docs/ACCESSIBILITY_REVIEW.md](docs/ACCESSIBILITY_REVIEW.md)),
-the performance budget and a static build. The Heart and K-pop playrooms (D21, 13 September 2026) are playable end to end with their rooms, companions and mission scenes generated; the earnable decorations, garments and heroine figures of the new outfits are still placeholders until the Codex weekly window resets. Not
+the performance budget and a static build. The Heart and K-pop playrooms (D21, 13–14 September 2026) are playable end to end with all their art generated (Codex CLI and Meta Muse Image via OpenRouter), none of it approved yet. Not
 deployed. What remains is the user's: the parent-and-child play session, the art generation
 and approval, a native-speaker wording review and the deployment itself; see
 [docs/NEXT_SESSION.md](docs/NEXT_SESSION.md).
@@ -39,6 +39,7 @@ npm run assets:gen -- --smoke  # generate one sol-med and one astra-light asset 
 npm run assets:gen             # generate every placeholder entry (raw PNGs in assets/.gen/)
 npm run assets:gen -- --only <id> --only <id>   # named entries; --regen <id> redoes a generated one
 npm run assets:gen -- --regen <id> --variant b  # a candidate next to the main file (assets/.gen/<id>.b.png)
+npm run assets:gen -- --backend openrouter      # the same, through OpenRouter (default model meta/muse-image; key in .env.local)
 node tools/codex-limits.ts     # the Codex usage windows the generator pauses on (see assets/.gen/run.log)
 npm run assets:post            # background removal, crop, resize, tile copy, manifest update
 npm run assets:post -- --only <id> --force      # redo named entries that already have a PNG
@@ -49,6 +50,13 @@ npm run measure                # first-load timings of dist/ under network throt
 node tools/screenshots.ts      # review screenshots of the Space and Sweet rooms and the dress-up panel into docs/screenshots/
 node tools/heroine-matrix.ts   # contact sheet of every outfit × shoe into docs/screenshots/heroine-shoes-matrix.png
 ```
+
+Two generation backends share the prompts and reference images in `assets/manifest.json`:
+Codex CLI (the default; the D16 presets `astra-light` / `sol-med`, paced by the Codex usage
+windows) and OpenRouter (`--backend openrouter`, default model `meta/muse-image`, about $0.01
+an image; put `OPENROUTER_API_KEY=...` in a gitignored `.env.local` at the root). Each
+generated entry records the model that made it in `gen.model`. `--variant <name>` with either
+backend writes a candidate next to the current file for a side-by-side.
 
 ### Walking (SPEC §4.3)
 
